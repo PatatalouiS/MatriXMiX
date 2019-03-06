@@ -29,7 +29,6 @@ class Matrix
     std::vector<double>& operator [] ( const unsigned int indice );
     const std::vector<double>& operator [] ( const unsigned int indice ) const;
     friend std::ostream& operator << ( std::ostream& flux, const Matrix & m );
-    
 };
 
 

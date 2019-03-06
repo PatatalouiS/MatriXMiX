@@ -22,6 +22,10 @@ int main ( void )
     b[1][1] = 57;
     c.getVal(6) = 12;
     cout << a << endl << b << endl << c << endl << d << endl;
-    
+	
+	a = c;
+	
+	cout << a << endl;
+	
     return 0;
 }
