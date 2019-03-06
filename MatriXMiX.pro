@@ -6,7 +6,7 @@ TEMPLATE = app
 TARGET = MatriXMiX
 INCLUDEPATH += .
 DESTDIR = ./bin
-OBJECTS_DIR = ./obj
+OBJECTS_DIR = ./obj/
 
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
