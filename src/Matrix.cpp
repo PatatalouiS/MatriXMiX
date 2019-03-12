@@ -688,13 +688,42 @@ const Matrix Matrix:: operator ^ (const int & p)
 
 
 
-bool Matrix:: isOperator (const string & chaine)
+bool isOperator (const string & chaine)
 {
     return ( (chaine.compare("+")  ==  0)
         ||  (chaine.compare("-")  ==  0)
         ||  (chaine.compare("/") == 0)
         || (chaine.compare("^") == 0)
         || (chaine.compare("*") == 0));
+}
+
+
+vector<string> decoupe (const string & expression)
+{
+    unsigned int j=0, taille=expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
+
+    for (unsigned int i=0; i<taille; i++)
+    {
+        c=expression[i];
+
+        if(isOperator(c))
+        {
+            tab.push_back(temp);
+            tab.push_back(c);
+            temp="";
+        }
+        else
+        {
+            temp+=c;
+            cout << temp << endl;
+        }
+    }
+    tab.push_back(temp);
+
+    return tab;
 }
 
 
@@ -716,6 +745,5 @@ Matrix Matrix:: calculate (const string & op, const string & a, const string & b
 
     if(op=="/")
         return m_a/m_b;
-
 
 }

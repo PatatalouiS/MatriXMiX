@@ -21,9 +21,14 @@ int main ( void )
     Matrix d (4, 4, VectorX {1,2,3,4,5,6,7,8,1,10,11,12,13,14,15,0},"MatriceD");
     Matrix c;
 
-    a.saveMatrix();d.saveMatrix();
-    c=c.calculate("+","A","MatriceD");
-    cout << a << endl << b << endl << c << endl ;
+    string chaine;
+    chaine="Hana+Tarik+";
+
+    vector<string> tableau;
+    tableau=decoupe(chaine);
+    cout << tableau[0] <<" " << tableau[1] << " " << tableau[2] << tableau[3] << endl;
+
+
 
 
     return 0;

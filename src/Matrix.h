@@ -270,12 +270,14 @@ class Matrix
 private:
     const std::string saveRights(const std::string & filename, const std::string & matrixname);
 
-    bool isOperator (const std::string & chaine);
+
 
 };
 
 Matrix identityMatrix(const unsigned int & n);
 
+std::vector<std::string> decoupe (const std::string & expression);
 
+bool isOperator (const std::string & chaine);
 
 #endif
