@@ -1,6 +1,8 @@
 
 #include <iostream>
+#include <math.h>
 #include "Matrix.h"
+#include "Fraction.h"
 
 
 using namespace std;
@@ -12,20 +14,17 @@ using namespace std;
 int main ( void )
 {
    // Exemples d'utilisation //
-    
-    Matrix a;
-    Matrix b (3, 3);
-    Matrix c (3, 3, VectorX {1,2,3,4,5,6,7,8,9});
-    Matrix d (c);
-    cout << a << endl << b << endl << c << endl << d << endl;
-    
-    b[1][1] = 57;
-    c.getVal(6) = 12;
-    cout << a << endl << b << endl << c << endl << d << endl;
-	
-	a = c;
-	
-	cout << a << endl;
-	
+
+
+    Matrix a (4, 4, VectorX {1,2,3,4,5,6,7,8,1,10,11,12,13,14,15,0});
+    Matrix b (4, 4, VectorX {1,2,3,4,5,6,7,8,1,10,11,12,13,14,15,0});
+    Matrix c;
+
+    c=a*(b^-1);
+    cout << a << endl << b << endl << c << endl ;
+
+
     return 0;
 }
+
+
