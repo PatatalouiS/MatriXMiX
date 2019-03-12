@@ -263,7 +263,7 @@ class Matrix
      */
     const Matrix operator ^ (const int & p);
 
-    const std::string saveRights(const std::string & filename);
+    const std::string saveRights(const std::string & filename, const std::string & matrixname);
 
 
 };

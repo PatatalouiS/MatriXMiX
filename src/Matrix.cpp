@@ -396,8 +396,6 @@ Matrix Matrix:: powerMat(Matrix & m, const int & p)
 }
 
 
-
-
 void Matrix:: saveMatrix (const string & matrixname)
 {
 
@@ -411,19 +409,25 @@ void Matrix:: saveMatrix (const string & matrixname)
     }
 
     string testRights;
-    testRights=saveRights(filename);
+    testRights=saveRights(filename,matrixname);
 
     if (testRights.empty())
     {
         file << "Matrix" << endl;
 
     }
-    else if (testRights!="Matrix")
+    else if (testRights=="used")
     {
-        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
-        // MAXIME GESTION ERREUR
+        cout << "Une matrice du même nom a déjà été sauvergardée"
+                "\nVeuillez sélectionner un autre nom" << endl;
         exit(EXIT_FAILURE);
     }
+        else if(testRights!="Matrix")
+        {
+            cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
+            // MAXIME GESTION ERREUR
+            exit(EXIT_FAILURE);
+        }
 
     file << endl << matrixname << endl;
     file << getRows() << " " << getCols() << endl;
@@ -444,7 +448,8 @@ void Matrix:: saveMatrix (const string & matrixname)
 
 }
 
-const string Matrix:: saveRights(const string & filename)
+
+const string Matrix:: saveRights(const string & filename, const string & matrixname)
 {
     ifstream file (filename.c_str());
 
@@ -454,8 +459,16 @@ const string Matrix:: saveRights(const string & filename)
         exit(EXIT_FAILURE);
     }
 
-    string first_string;
+    string first_string, stringpos;
+
     file >> first_string;
+
+    while(!file.eof())
+    {
+        file >> stringpos;
+        if(stringpos==matrixname)
+            return string("used");
+    }
 
     return first_string;
 
