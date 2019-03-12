@@ -62,14 +62,14 @@ class Matrix
      * @details récupère le nombre de lignes d'une matrice
      * @return \e unsigned int
      */
-    unsigned int getRows() const;
+    unsigned int getNbRows() const;
 
     /**
      * @brief Accesseur
      * @details récupère le nombre de colonne d'une matrice
      * @return \e unsigned int
      */
-    unsigned int getCols() const;
+    unsigned int getNbCols() const;
 
     /**
      * @brief Génère une matrice aléatoire
@@ -77,7 +77,7 @@ class Matrix
      * @param c
      * @return \e Matrix
      */
-    Matrix randomMatrix(const unsigned int & r, const unsigned int & c);
+    void randomMatrix ();
 
     /**
      * @brief Matrice identité
@@ -126,7 +126,7 @@ class Matrix
      * @brief Retourne vrai si la matrice est carrée
      * @return \e bool
      */
-    bool squareMatrix() const;
+    bool IsSQMatrix() const;
 
     /**
      * @brief Retourne vrai si la matrice est égale à celle passée en paramètre
