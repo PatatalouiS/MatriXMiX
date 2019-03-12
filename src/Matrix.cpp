@@ -55,7 +55,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const Vector
 
 
 Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
-{
+{	
     cols = m.cols;
     rows = m.rows;
 }
