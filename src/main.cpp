@@ -21,7 +21,7 @@ int main ( void )
     Matrix c;
 
     c=(a^-1)*b;
-    //juste pour tester
+    //juste pour tester n°2
     cout << a << endl << b << endl << c << endl ;
 
 
