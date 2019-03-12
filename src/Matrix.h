@@ -5,6 +5,9 @@
 
 #include <vector>
 #include "VectorX.h"
+#include <string.h>
+
+
 
 
 class Matrix
@@ -260,10 +263,13 @@ class Matrix
      */
     const Matrix operator ^ (const int & p);
 
+    const std::string saveRights(const std::string & filename);
+
 
 };
 
 Matrix identityMatrix(const unsigned int & n);
+
 
 
 #endif

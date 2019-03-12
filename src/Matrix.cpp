@@ -382,66 +382,125 @@ Matrix Matrix:: powerMat(Matrix & m, const int & p)
         return (m.identityMatrix());
     }
     else if(p>0)
-        {
-            Matrix copie(m);
-            return copie*(copie.powerMat(copie,p-1));
-        }
-        else
-        {
-            Matrix copie(m.inverse());
-            return (copie.powerMat(copie,-p));
-        }
+    {
+        Matrix copie(m);
+        return copie*(copie.powerMat(copie,p-1));
+    }
+    else
+    {
+        Matrix copie(m.inverse());
+        return (copie.powerMat(copie,-p));
+    }
 
 
 }
 
 
-void Matrix:: saveMatrix (const std::string & filename)
+
+
+void Matrix:: saveMatrix (const string & matrixname)
 {
-    std:: ofstream fichier (filename.c_str());
 
-    assert(fichier.is_open());
+    string filename ("../sauvegarde.txt");
+    ofstream file (filename.c_str(), ios::app);
 
-    fichier << getRows() << " " << getCols() << endl;
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string testRights;
+    testRights=saveRights(filename);
+
+    if (testRights.empty())
+    {
+        file << "Matrix" << endl;
+
+    }
+    else if (testRights!="Matrix")
+    {
+        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
+        // MAXIME GESTION ERREUR
+        exit(EXIT_FAILURE);
+    }
+
+    file << endl << matrixname << endl;
+    file << getRows() << " " << getCols() << endl;
 
     for (unsigned int i = 0; i < getRows(); i++)
     {
         for (unsigned int j = 0; j < getCols(); j++)
         {
 
-            fichier << tab[i][j] << " ";
+            file << tab[i][j] << " ";
         }
-        fichier << endl;
+        file << endl;
     }
 
-    fichier.close();
-
     cout << "Sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
+
+    file.close();
+
+}
+
+const string Matrix:: saveRights(const string & filename)
+{
+    ifstream file (filename.c_str());
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string first_string;
+    file >> first_string;
+
+    return first_string;
 
 }
 
 
 void Matrix:: readMatrix(const string & filename)
 {
-    std:: ifstream fichier (filename.c_str());
+    ifstream file (filename.c_str());
 
-    assert(fichier.is_open());
-
-    fichier >> rows >> cols;
-
-    tab = vector<vector<double>> (rows, vector<double> (cols, 0));
-
-    for (unsigned int i = 0; i < getRows(); i++)
+    if(!file.is_open())
     {
-        for (unsigned int j = 0; j < getCols(); j++)
-        {
-            fichier >> tab[i][j];
-        }
-
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
     }
 
-    fichier.close();
-    cout << "ouverture réussie" << endl << endl;
+    string testfile;
+    file >> testfile ;
+
+    if( testfile == "Matrix")
+    {
+
+        file >> rows >> cols;
+
+        tab = vector<vector<double>> (rows, vector<double> (cols, 0));
+
+        for (unsigned int i = 0; i < getRows(); i++)
+        {
+            for (unsigned int j = 0; j < getCols(); j++)
+            {
+                file >> tab[i][j];
+            }
+
+        }
+
+        file.close();
+        cout << "ouverture réussie" << endl << endl;
+    }
+    else
+    {
+        cout << "Erreur" << endl ;
+        // exception QT Maxime
+    }
+
+
 
 }
 

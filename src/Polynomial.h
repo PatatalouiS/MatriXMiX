@@ -20,7 +20,7 @@ public:
     Polynomial(const unsigned int & d);
     Polynomial(const unsigned int & d, const VectorX & values);
     Polynomial(const Polynomial & p);
-    ~Polynomial ();
+   // ~Polynomial ();
 
 
 

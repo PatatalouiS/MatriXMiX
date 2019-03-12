@@ -39,4 +39,4 @@ Polynomial :: Polynomial(const unsigned int & d, const VectorX & values)
 }
 
 
-Polynomial :: ~Polynomial ();
+//Polynomial :: ~Polynomial ();
