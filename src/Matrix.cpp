@@ -475,8 +475,9 @@ const string Matrix:: saveRights(const string & filename, const string & matrixn
 }
 
 
-void Matrix:: readMatrix(const string & filename)
+void Matrix:: readMatrix(const string & matrixname)
 {
+    string filename("../sauvegarde.txt");
     ifstream file (filename.c_str());
 
     if(!file.is_open())
@@ -490,7 +491,16 @@ void Matrix:: readMatrix(const string & filename)
 
     if( testfile == "Matrix")
     {
-
+        while(!file.eof() && testfile!=matrixname)
+        {
+            file >> testfile;
+        }
+        if (file.eof())
+        {
+            cout << "Cette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
+            exit(EXIT_FAILURE);
+        }
+        
         file >> rows >> cols;
 
         tab = vector<vector<double>> (rows, vector<double> (cols, 0));

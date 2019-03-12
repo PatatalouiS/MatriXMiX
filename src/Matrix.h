@@ -206,7 +206,7 @@ class Matrix
      * @@brief Interpréte un fichier .txt pour construire une matrice
      * @param filename (string)
      */
-    void readMatrix(const std::string & filename);
+    void readMatrix(const std::string & matrixname);
 
     /**
      * @brief Calcul de la trace d'une Matrice
