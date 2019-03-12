@@ -18,18 +18,20 @@ Matrix:: Matrix () : tab ( vector<vector<double>> ())
 {
     rows = 0;
     cols = 0;
+    name = "";
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols) :
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const string & n) :
         tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 {
     this->cols = cols;
     this->rows = rows;
+    name=n;
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values )
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values, const std::string & n)
 {
     if ( values.size() != rows * cols )
     {
@@ -39,6 +41,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const Vector
 
     this->cols = cols;
     this->rows = rows;
+    this->name=n;
 
     vector<double> temp;
 
@@ -60,6 +63,7 @@ Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 {
     cols = m.cols;
     rows = m.rows;
+    name = m.name;
 }
 
 
@@ -139,7 +143,7 @@ unsigned int Matrix:: getCols() const
 
 Matrix Matrix:: randomMatrix(const unsigned int & r, const unsigned int & c)
 {
-    Matrix m(r,c);
+    Matrix m(r,c,"random");
 
     srand(time(NULL));
 
@@ -177,7 +181,7 @@ Matrix Matrix:: identityMatrix()
 
 Matrix identityMatrix(const unsigned int & n)
 {
-    Matrix m(n,n);
+    Matrix m(n,n,"identity");
 
     for (unsigned int i=0; i<n; i++)
     {
@@ -396,8 +400,10 @@ Matrix Matrix:: powerMat(Matrix & m, const int & p)
 }
 
 
-void Matrix:: saveMatrix (const string & matrixname)
+void Matrix:: saveMatrix ()
 {
+
+    string matrixname(this->name);
 
     string filename ("../sauvegarde.txt");
     ofstream file (filename.c_str(), ios::app);
@@ -500,7 +506,7 @@ void Matrix:: readMatrix(const string & matrixname)
             cout << "Cette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
             exit(EXIT_FAILURE);
         }
-        
+
         file >> rows >> cols;
 
         tab = vector<vector<double>> (rows, vector<double> (cols, 0));
@@ -547,7 +553,7 @@ Matrix Matrix :: subMatrix(const unsigned int & a, const unsigned int & b)
     unsigned int r=getRows();
     unsigned int c=getCols();
 
-    Matrix sub(r-1,c-1);
+    Matrix sub(r-1,c-1,"sub");
 
     for(unsigned int i=0; i<r; i++)
     {
@@ -573,7 +579,7 @@ Matrix Matrix :: subMatrix(const unsigned int & a, const unsigned int & b)
 
 double Matrix:: determinant(unsigned int dim)
 {
-    Matrix submatrix (dim,dim);
+    Matrix submatrix (dim,dim,"sub");
     double det = 0;
 
     if (dim == 2)
@@ -616,8 +622,8 @@ Matrix Matrix::coMatrix()
     unsigned int r=getRows();
     unsigned int c=getCols();
 
-    Matrix com(r,c);
-    Matrix sub(r-1,c-1);
+    Matrix com(r,c,"comatrice");
+    Matrix sub(r-1,c-1,"sousmatrice");
 
     for (unsigned int i=0; i<r; i++)
     {
@@ -643,7 +649,7 @@ Matrix Matrix:: inverse()
     }
     else
     {
-        Matrix temp(getRows(),getCols()), inverse(getRows(),getCols());
+        Matrix temp(getRows(),getCols(),"temp"), inverse(getRows(),getCols(),"inverse");
         temp=(*this).coMatrix();
         temp=temp.transposeMatrix();
         inverse=temp*(1/det);
@@ -678,4 +684,38 @@ const Matrix Matrix:: operator / (const Matrix & m)
 const Matrix Matrix:: operator ^ (const int & p)
 {
     return powerMatrix(p);
+}
+
+
+
+bool Matrix:: isOperator (const string & chaine)
+{
+    return ( (chaine.compare("+")  ==  0)
+        ||  (chaine.compare("-")  ==  0)
+        ||  (chaine.compare("/") == 0)
+        || (chaine.compare("^") == 0)
+        || (chaine.compare("*") == 0));
+}
+
+
+Matrix Matrix:: calculate (const string & op, const string & a, const string & b)
+{
+    Matrix m_a;
+    Matrix m_b;
+    m_a.readMatrix(a);
+    m_b.readMatrix(b);
+
+    if(op=="+")
+        return m_a+m_b;
+
+    if(op=="-")
+        return m_a-m_b;
+
+    if(op=="*")
+        return m_a*m_b;
+
+    if(op=="/")
+        return m_a/m_b;
+
+
 }

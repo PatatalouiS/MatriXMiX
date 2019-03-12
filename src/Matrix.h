@@ -17,6 +17,7 @@ class Matrix
     unsigned int rows;
     unsigned int cols;
     std::vector<std::vector<double>> tab;
+    std::string name;
 
     public:
 
@@ -31,7 +32,7 @@ class Matrix
      * @param rows (nombre de lignes)
      * @param cols (nombre de colonnes)
      */
-    Matrix ( const unsigned int rows, const unsigned int cols );
+    Matrix ( const unsigned int rows, const unsigned int cols, const std::string & n);
 
     /**
      * @brief Constructeur
@@ -40,7 +41,7 @@ class Matrix
      * @param cols (nombre de colonnes)
      * @param values (vecteur de valeurs à introduire dans la matrice)
      */
-    Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values );
+    Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values, const std::string & n);
 
     /**
      * @brief Constructeur par copie
@@ -200,7 +201,7 @@ class Matrix
      * @brief Sauvegarde d'une matrice dans un fichier .txt
      * @param filename (string)
      */
-    void saveMatrix(const std::string & filename);
+    void saveMatrix();
 
     /**
      * @@brief Interpréte un fichier .txt pour construire une matrice
@@ -263,8 +264,13 @@ class Matrix
      */
     const Matrix operator ^ (const int & p);
 
+    Matrix calculate (const std::string & op, const std::string & a, const std::string & b);
+
+
+private:
     const std::string saveRights(const std::string & filename, const std::string & matrixname);
 
+    bool isOperator (const std::string & chaine);
 
 };
 
