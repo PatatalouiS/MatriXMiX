@@ -7,7 +7,7 @@
 #include "VectorX.h"
 
 
-enum initMatrix { ZERO, IDENTITY, RANDOM };
+
 
 
 class Matrix
@@ -23,11 +23,13 @@ class Matrix
 
     public:
     
+    // type énuméré pour l'initialisation
+    enum initMatrix { Z, I, R };
+    
    // Constructeurs et Destructeurs
     Matrix ();
     Matrix ( const unsigned int rows, const unsigned int cols, const double value );
-    Matrix ( const unsigned int rows, const unsigned int cols, enum initMatrix type = ZERO );
-    Matrix ( const unsigned int rowsAndCols, enum initMatrix = ZERO );
+    Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z );
     Matrix ( const unsigned int rows, const unsigned int cols, const VectorX& values );
     Matrix ( const Matrix & m );
     ~Matrix ();

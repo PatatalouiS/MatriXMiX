@@ -18,7 +18,7 @@ Matrix:: Matrix () : tab ( vector<vector<double>> ())
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, enum initMatrix type ) :
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type ) :
 tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 {
     this->cols = cols;
@@ -26,8 +26,8 @@ tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
     
     switch ( type )
     {
-        case ZERO: break;
-        case RANDOM:
+        case Z: break;
+        case R:
         {
             srand(time(NULL));
             
@@ -40,7 +40,7 @@ tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
             }
             break;
         }
-        case IDENTITY:
+        case I:
         {
             if ( cols != rows )
             {
@@ -55,12 +55,6 @@ tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
         }
         default: break;
     }
-}
-
-
-Matrix:: Matrix (unsigned int rowsAndCols, enum initMatrix type) :
-Matrix (rowsAndCols, rowsAndCols, type)
-{
 }
 
 
@@ -550,7 +544,7 @@ const Matrix Matrix:: operator ^ (const int & p) const
     
     if ( p == 0 )
     {
-        return Matrix (rows, IDENTITY);
+        return Matrix (rows, I);
     }
     
     if ( p == -1 )
