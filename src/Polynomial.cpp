@@ -1,6 +1,4 @@
-//
-// Created by tarik on 09/03/19.
-//
+
 
 #include <iostream>
 #include <vector>
@@ -38,5 +36,3 @@ Polynomial :: Polynomial(const unsigned int & d, const VectorX & values)
 
 }
 
-
-//Polynomial :: ~Polynomial ();

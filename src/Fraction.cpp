@@ -134,3 +134,4 @@ Fraction Fraction::double2Fraction(const double & f)
     fraction.simplifie();
     return fraction;
 }
+
