@@ -66,6 +66,12 @@ tab (vector<vector<double>>(rows,vector<double> (cols, value)))
 }
 
 
+Matrix Matrix:: ID ( const unsigned int size )
+{
+    return Matrix(size, size, Matrix::I); 
+}
+
+
 Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values )
 {
     if ( values.size() != rows * cols )

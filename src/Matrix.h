@@ -4,10 +4,10 @@
 
 
 #include <vector>
+#include <string>
 #include "VectorX.h"
 
-
-
+#define NONAME "";
 
 
 class Matrix
@@ -16,12 +16,18 @@ class Matrix
 
     unsigned int rows;
     unsigned int cols;
+    std::string name;
     std::vector<std::vector<double>> tab;
     
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     double determinant(unsigned int dim) const;
 
     public:
+    
+    
+    // Fonction statique, renvoie, la matrice identité demandée
+    static Matrix ID ( const unsigned int size );
+    
     
     // type énuméré pour l'initialisation
     enum initMatrix { Z, I, R };
@@ -60,7 +66,7 @@ class Matrix
     bool IsSQMatrix() const;
     void saveMatrix(const std::string & filename) const;
     void readMatrix(const std::string & filename);
-};
+}; 
 
 
 #endif
