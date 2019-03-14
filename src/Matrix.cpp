@@ -218,6 +218,57 @@ const Matrix Matrix:: operator * (const double & lambda) const
 }
 
 
+const Matrix Matrix:: operator / (const Matrix & m) const
+{
+    if ( !m.IsSQMatrix() )
+    {
+        cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
+        exit (EXIT_FAILURE);
+    }
+    
+    if ( m.determinant()==0 )
+    {
+        cerr << "division impossible, la metrice diviseur n'est pas inversible !" << endl;
+        exit(EXIT_FAILURE);
+    }
+    return (*this) * m.inverse();
+}
+
+
+const Matrix Matrix:: operator ^ (const int & p) const
+{
+    if ( p < -1 )
+    {
+        cerr << "Erreur, la puissance demandée est invalide ! " << endl;
+        exit(EXIT_FAILURE);
+    }
+    
+    if ( !IsSQMatrix() )
+    {
+        cerr << "Erreur, la matrice n'est pas carrée ! " << endl;
+        exit(EXIT_FAILURE);
+    }
+    
+    if ( p == 0 )
+    {
+        return Matrix (rows, I);
+    }
+    
+    if ( p == -1 )
+    {
+        return inverse();
+    }
+    
+    Matrix temp (*this);
+    
+    for ( int i = 1; i < p; ++i )
+    {
+        temp = temp * temp;
+    }
+    return temp;
+}
+
+
 bool Matrix:: operator == (const Matrix & m ) const
 {
     if ((m.cols == cols) && (m.rows == rows))
@@ -532,7 +583,7 @@ double& Matrix:: getVal ( const unsigned int indice )
         exit ( EXIT_FAILURE );
     }
 
-    return tab[indice/rows][indice%rows];
+    return tab[indice/rows][indice%rows]; 
 }
 
 
@@ -720,5 +771,3 @@ void Matrix:: cleanSaves()
     cout << "Fichier de sauvegarde nettoyé" << endl << endl;
 
 }
-
-

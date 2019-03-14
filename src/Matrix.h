@@ -43,7 +43,7 @@ public:
     // Constructeurs et Destructeurs
     Matrix ( const std::string& name = NONAME);
     Matrix ( const unsigned int rows, const unsigned int cols, const double value, const std::string& name = NONAME );
-    Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z, const std::string& name = NONAME  );
+    Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z, const std::string& name = NONAME );
     Matrix ( const unsigned int rows, const unsigned int cols, const VectorX& values, const std::string& name = NONAME  );
     Matrix ( const Matrix & m, const std::string& name = NONAME );
     
