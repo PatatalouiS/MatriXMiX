@@ -14,6 +14,8 @@ class MatrixLibrary
     private:
     
     std::vector<Matrix> library;
+    
+    
     bool exist(const Matrix& m);
     
     
