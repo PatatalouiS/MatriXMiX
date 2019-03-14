@@ -5,24 +5,40 @@
 #include <cassert>
 #include <cmath>
 #include <ctime>
+#include <stack>
 #include "Matrix.h"
 
 
 using namespace std;
 
 
-Matrix:: Matrix () : tab ( vector<vector<double>> ())
+
+// ********* CONSTRUCTEURS / DESTRUCTEUR *********
+
+
+Matrix:: Matrix (const string& name) : tab ( vector<vector<double>> ())
 {
     rows = 0;
     cols = 0;
+    this->name = name;
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type ) :
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double value, const string& name ) :
+tab (vector<vector<double>>(rows,vector<double> (cols, value)))
+{
+    this->rows = rows;
+    this->cols = cols;
+    this->name = name;
+}
+
+
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type, const string& name ) :
 tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 {
     this->cols = cols;
     this->rows = rows;
+    this->name = name;
     
     switch ( type )
     {
@@ -58,21 +74,7 @@ tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double value ) :
-tab (vector<vector<double>>(rows,vector<double> (cols, value)))
-{
-    this->rows = rows;
-    this->cols = cols;
-}
-
-
-Matrix Matrix:: ID ( const unsigned int size )
-{
-    return Matrix(size, size, Matrix::I); 
-}
-
-
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values )
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values, const string& name )
 {
     if ( values.size() != rows * cols )
     {
@@ -82,6 +84,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const Vector
 
     this->cols = cols;
     this->rows = rows;
+    this->name = name;
 
     vector<double> temp;
 
@@ -98,81 +101,11 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const Vector
 }
 
 
-
-Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
+Matrix:: Matrix (const Matrix & m, const string& name) : tab ( vector<vector<double>> (m.tab))
 {	
     cols = m.cols;
     rows = m.rows;
-}
-
-
-double& Matrix:: getVal ( const unsigned int indice )
-{
-    if ( indice >= (rows * cols))
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-
-    return tab[indice/rows][indice%rows];
-}
-
-
-
-double Matrix:: getVal ( const unsigned int indice ) const
-{
-    if ( indice >= (rows * cols))
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-
-    return tab[indice/rows][indice%rows];
-}
-
-
-
-vector<double>&  Matrix:: operator [] ( const unsigned int indice )
-{
-    if ( indice >= rows)
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-    return tab[indice];
-}
-
-
-
-const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
-{
-    if ( indice >= rows)
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-    return tab[indice];
-}
-
-
-ostream& operator << ( ostream& flux, const Matrix & m )
-{
-    for ( auto i : m.tab )
-    {
-        for ( auto j : i )
-        {
-            if((int)(j*1000000)==0)
-            {
-                flux << "0" << "  ";
-            }
-            else
-            {
-                flux << j << "  ";
-            }
-        }
-        flux << endl;
-    }
-    return flux;
+    this->name = name;
 }
 
 
@@ -181,37 +114,22 @@ Matrix:: ~Matrix ()
 }
 
 
-unsigned int Matrix:: getNbRows() const
+
+// ******** FONCTIONS STATIQUES *********
+
+
+Matrix Matrix:: ID ( const unsigned int size )
 {
-    return rows;
+    return Matrix(size, size, Matrix::I);
 }
 
 
-unsigned int Matrix:: getNbCols() const
-{
-    return cols;
-}
 
 
-Matrix Matrix:: transposeMatrix() const
-{
-    Matrix copie(*this);
-
-    for (unsigned int i=0; i<copie.rows; i++)
-    {
-        for (unsigned int j=0; j<copie.cols; j++)
-        {
-            copie[i][j]=tab[j][i];
-        }
-    }
-    return copie;
-}
 
 
-bool Matrix:: IsSQMatrix() const
-{
-    return rows==cols;
-}
+
+// ******* FONCTIONS DE CALCUL ALGEBRIQUE ET OPERATEURS DE CALCUL ********
 
 
 const Matrix Matrix:: operator+ (const Matrix & m) const
@@ -256,17 +174,17 @@ const Matrix Matrix:: operator- (const Matrix & m) const
 }
 
 
-const Matrix Matrix:: operator* (const Matrix & m) const
+const Matrix Matrix:: operator * (const Matrix & m) const
 {
     if (cols != m.rows)
     {
         cout << "Multiplication impossible!" << endl << "A * B->Le nombre de ligne de A = nombre de colonne de B!" << endl;
         exit ( EXIT_FAILURE );
     }
-
+    
     double s;
     Matrix copie(*this);
-        
+    
     for (unsigned int i=0; i<copie.rows; i++)
     {
         for (unsigned int j=0; j<m.cols; j++)
@@ -281,7 +199,6 @@ const Matrix Matrix:: operator* (const Matrix & m) const
     }
     return copie;
 }
-
 
 
 const Matrix Matrix:: operator * (const double & lambda) const
@@ -328,53 +245,6 @@ bool Matrix::operator != (const Matrix & m) const
 }
 
 
-void Matrix:: saveMatrix (const std::string & filename) const
-{
-    std:: ofstream fichier (filename.c_str());
-
-    assert(fichier.is_open());
-
-    fichier << rows << " " << cols << endl;
-
-    for (unsigned int i = 0; i < rows; i++)
-    {
-        for (unsigned int j = 0; j < cols; j++)
-        {
-
-            fichier << tab[i][j] << " ";
-        }
-        fichier << endl;
-    }
-
-    fichier.close();
-
-    cout << "Sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
-}
-
-
-void Matrix:: readMatrix(const string & filename)
-{
-    std:: ifstream fichier (filename.c_str());
-
-    assert(fichier.is_open());
-
-    fichier >> rows >> cols;
-
-    tab = vector<vector<double>> (rows, vector<double> (cols, 0));
-
-    for (unsigned int i = 0; i < rows; i++)
-    {
-        for (unsigned int j = 0; j < cols; j++)
-        {
-            fichier >> tab[i][j];
-        }
-    }
-
-    fichier.close();
-    cout << "ouverture réussie" << endl << endl;
-}
-
-
 double Matrix:: traceMatrix() const
 {
     if ( !IsSQMatrix() )
@@ -384,7 +254,7 @@ double Matrix:: traceMatrix() const
     }
     
     double s = 0;
-
+    
     for ( unsigned int i=0; i<rows; i++)
     {
         s += tab[i][i];
@@ -393,14 +263,94 @@ double Matrix:: traceMatrix() const
 }
 
 
+double Matrix:: determinant() const
+{
+    if ( !IsSQMatrix() )
+    {
+        cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
+        exit (EXIT_FAILURE);
+    }
+    return determinant(rows);
+}
+
+
+Matrix Matrix::coMatrix() const
+{
+    if ( !IsSQMatrix() )
+    {
+        cerr << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
+        exit (EXIT_FAILURE);
+    }
+    
+    
+    Matrix com(rows,cols);
+    Matrix sub(rows - 1, cols-1);
+    
+    for(unsigned int i = 0; i < rows; i++)
+    {
+        for(unsigned int j = 0; j < cols; j++)
+        {
+            sub=subMatrix(i,j);
+            com[i][j]=pow(-1,i+j)*sub.determinant();
+        }
+    }
+    return com;
+}
+
+
+Matrix Matrix:: transposeMatrix() const
+{
+    Matrix copie(*this);
+    
+    for (unsigned int i=0; i<copie.rows; i++)
+    {
+        for (unsigned int j=0; j<copie.cols; j++)
+        {
+            copie[i][j]=tab[j][i];
+        }
+    }
+    return copie;
+}
+
+
+Matrix Matrix:: inverse() const
+{
+    if ( !IsSQMatrix() )
+    {
+        cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
+        exit (EXIT_FAILURE);
+    }
+    
+    if (determinant()==0)
+    {
+        cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
+        exit(EXIT_FAILURE);
+    }
+    
+    Matrix temp(rows,cols), inverse(rows,cols);
+    temp=(*this).coMatrix();
+    temp=temp.transposeMatrix();
+    inverse=temp*(1/determinant());
+    return inverse;
+}
+
+
+
+
+
+
+
+// ********   FONCTIONS PRIVEES   ***********
+
+
 Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
 {
     unsigned int ii = 0, jj = 0;
     unsigned int r = rows;
     unsigned int c = cols;
-
+    
     Matrix sub(r-1,c-1);
-
+    
     for(unsigned int i=0; i<r; i++)
     {
         jj=0;
@@ -427,7 +377,7 @@ double Matrix:: determinant(unsigned int dim) const
     double det = 0;
     int subi = 0;
     int subj = 0;
-
+    
     if ( dim == 1 )
     {
         return tab[0][0];
@@ -437,7 +387,7 @@ double Matrix:: determinant(unsigned int dim) const
     {
         return ((tab[0][0] * tab[1][1]) - (tab[1][0] * tab[0][1]));
     }
-  
+    
     for ( unsigned int x = 0; x < dim; x++)
     {
         subi = 0;
@@ -460,109 +410,291 @@ double Matrix:: determinant(unsigned int dim) const
 }
 
 
-double Matrix:: determinant() const
+bool isOperator (const string & chaine)
 {
-    if ( !IsSQMatrix() )
-    {
-        cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
-        exit (EXIT_FAILURE);
-    }
-    return determinant(rows);
+    return ( (chaine.compare("+")  ==  0)
+            ||  (chaine.compare("-")  ==  0)
+            ||  (chaine.compare("/") == 0)
+            || (chaine.compare("^") == 0)
+            || (chaine.compare("*") == 0));
 }
 
 
-Matrix Matrix::coMatrix() const
+vector<string> decoupe (const string & expression)
 {
-    if ( !IsSQMatrix() )
-    {
-        cerr << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
-        exit (EXIT_FAILURE);
-    }
+    unsigned int i, taille=expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
     
-  
-    Matrix com(rows,cols);
-    Matrix sub(rows - 1, cols-1);
-
-    for(unsigned int i = 0; i < rows; i++)
+    for (i=0; i<taille; i++)
     {
-        for(unsigned int j = 0; j < cols; j++)
+        c=expression[i];
+        
+        if(isOperator(c))
         {
-            sub=subMatrix(i,j);
-            com[i][j]=pow(-1,i+j)*sub.determinant();
+            tab.push_back(temp);
+            tab.push_back(c);
+            temp="";
+        }
+        else
+        {
+            temp+=c;
+            cout << temp << endl;
         }
     }
-    return com;
+    tab.push_back(temp);
+    
+    return tab;
 }
 
 
-Matrix Matrix:: inverse() const
+const string Matrix:: saveRights(const string & filename, const string & matrixname)
 {
-    if ( !IsSQMatrix() )
-    {
-        cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
-        exit (EXIT_FAILURE);
-    }
+    ifstream file (filename.c_str());
     
-    if (determinant()==0)
+    if(!file.is_open())
     {
-        cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
         exit(EXIT_FAILURE);
     }
     
-    Matrix temp(rows,cols), inverse(rows,cols);
-    temp=(*this).coMatrix();
-    temp=temp.transposeMatrix();
-    inverse=temp*(1/determinant());
-    return inverse;
+    string first_string, stringpos;
+    
+    file >> first_string;
+    
+    while(!file.eof())
+    {
+        file >> stringpos;
+        if(stringpos==matrixname)
+            return string("used");
+    }
+    
+    return first_string;
+    
 }
 
 
-const Matrix Matrix:: operator / (const Matrix & m) const
+
+
+
+
+// *********   FONCTIONS DIVERSES ET ACCESSEURS    *********
+
+
+unsigned int Matrix:: getNbRows() const
 {
-    if ( !m.IsSQMatrix() )
-    {
-        cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
-        exit (EXIT_FAILURE);
-    }
-    
-    if ( m.determinant()==0 )
-    {
-        cerr << "division impossible, la metrice diviseur n'est pas inversible !" << endl;
-        exit(EXIT_FAILURE);
-    }
-    return (*this) * m.inverse();
+    return rows;
 }
 
 
-const Matrix Matrix:: operator ^ (const int & p) const
+unsigned int Matrix:: getNbCols() const
 {
-    if ( p < -1 )
-    {
-        cerr << "Erreur, la puissance demandée est invalide ! " << endl;
-        exit(EXIT_FAILURE);
-    }
-    
-    if ( !IsSQMatrix() )
-    {
-        cerr << "Erreur, la matrice n'est pas carrée ! " << endl;
-        exit(EXIT_FAILURE);
-    }
-    
-    if ( p == 0 )
-    {
-        return Matrix (rows, I);
-    }
-    
-    if ( p == -1 )
-    {
-        return inverse();
-    }
-    
-    Matrix temp (*this);
-    
-    for ( int i = 1; i < p; ++i )
-    {
-        temp = temp * temp;
-    }
-    return temp;
+    return cols;
 }
+
+
+string Matrix:: getName() const
+{
+    return name;
+}
+
+
+double& Matrix:: getVal ( const unsigned int indice )
+{
+    if ( indice >= (rows * cols))
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+
+    return tab[indice/rows][indice%rows];
+}
+
+
+double Matrix:: getVal ( const unsigned int indice ) const
+{
+    if ( indice >= (rows * cols))
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+
+    return tab[indice/rows][indice%rows];
+}
+
+
+vector<double>&  Matrix:: operator [] ( const unsigned int indice )
+{
+    if ( indice >= rows)
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+    return tab[indice];
+}
+
+
+
+const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
+{
+    if ( indice >= rows)
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+    return tab[indice];
+}
+
+
+ostream& operator << ( ostream& flux, const Matrix & m )
+{
+    for ( auto i : m.tab )
+    {
+        for ( auto j : i )
+        {
+            if((int)(j*1000000)==0)
+            {
+                flux << "0" << "  ";
+            }
+            else
+            {
+                flux << j << "  ";
+            }
+        }
+        flux << endl;
+    }
+    return flux;
+}
+
+
+bool Matrix:: IsSQMatrix() const
+{
+    return rows==cols;
+}
+
+
+void Matrix:: saveMatrix ()
+{
+    
+    string matrixname(this->name);
+    
+    string filename ("/Users/maximeolivie/Documents/Licence_informatique/L2/Semestre_2/LIFAP4/MatriXMiX/data/sauvegarde.txt");
+    ofstream file (filename.c_str(), ios::app);
+    
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+    
+    string testRights;
+    testRights=saveRights(filename,matrixname);
+    
+    if (testRights.empty())
+    {
+        file << "Matrix" << endl;
+        
+    }
+    else if (testRights=="used")
+    {
+        cout << "Une matrice du même nom a déjà été sauvergardée"
+        "\nVeuillez sélectionner un autre nom" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else if(testRights!="Matrix")
+    {
+        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
+        // MAXIME GESTION ERREUR
+        exit(EXIT_FAILURE);
+    }
+    
+    file << endl << matrixname << endl;
+    file << getNbRows() << " " << getNbCols() << endl;
+    
+    for (unsigned int i = 0; i < getNbRows(); i++)
+    {
+        for (unsigned int j = 0; j < getNbCols(); j++)
+        {
+            
+            file << tab[i][j] << " ";
+        }
+        file << endl;
+    }
+    
+    cout << "La sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
+    
+    file.close();
+    
+}
+
+
+void Matrix:: readMatrix(const string & matrixname)
+{
+    string filename("/Users/maximeolivie/Documents/Licence_informatique/L2/Semestre_2/LIFAP4/MatriXMiX/data/sauvegarde.txt");
+    ifstream file (filename.c_str());
+    
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+    
+    string testfile;
+    file >> testfile ;
+    
+    if( testfile == "Matrix")
+    {
+        while(!file.eof() && testfile!=matrixname)
+        {
+            file >> testfile;
+        }
+        if (file.eof())
+        {
+            cout << "Cette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
+            exit(EXIT_FAILURE);
+        }
+        
+        file >> rows >> cols;
+        
+        tab = vector<vector<double>> (rows, vector<double> (cols, 0));
+        
+        for (unsigned int i = 0; i < getNbRows(); i++)
+        {
+            for (unsigned int j = 0; j < getNbCols(); j++)
+            {
+                file >> tab[i][j];
+            }
+            
+        }
+        
+        file.close();
+        cout << "ouverture réussie" << endl << endl;
+    }
+    else
+    {
+        cout << "Erreur" << endl ;
+        // exception QT Maxime
+    }
+    
+    
+    
+}
+
+
+void cleanSaves()
+{
+    string filename("/Users/maximeolivie/Documents/Licence_informatique/L2/Semestre_2/LIFAP4/MatriXMiX/data/sauvegarde.txt");
+    ofstream file (filename.c_str());
+    
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+    
+    file.close();
+    cout << "Fichier de sauvegarde nettoyé" << endl << endl;
+    
+}
+
