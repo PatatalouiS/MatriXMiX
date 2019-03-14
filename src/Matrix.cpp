@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const string PATH = "../../data/sauvergarde.txt";
+const string PATH = "../../data/sauvegarde.txt";
 
 
 
@@ -412,7 +412,7 @@ double Matrix:: determinant(unsigned int dim) const
 }
 
 
-bool isOperator (const string & chaine)
+bool Matrix:: isOperator (const string & chaine)
 {
     return ( (chaine == "+")
              ||  (chaine == "-")
@@ -422,7 +422,7 @@ bool isOperator (const string & chaine)
 }
 
 
-vector<string> decoupe (const string & expression)
+vector<string> Matrix:: decoupe (const string & expression)
 {
     unsigned int i, taille=expression.length();
     vector<string> tab;
@@ -448,6 +448,28 @@ vector<string> decoupe (const string & expression)
     tab.push_back(temp);
 
     return tab;
+}
+
+
+Matrix Matrix:: calculate (const string & op, const string & a, const string & b)
+{
+    Matrix m_a;
+    Matrix m_b;
+    m_a.readMatrix(a);
+    m_b.readMatrix(b);
+
+    if(op=="+")
+        return m_a+m_b;
+
+    if(op=="-")
+        return m_a-m_b;
+
+    if(op=="*")
+        return m_a*m_b;
+
+    if(op=="/")
+        return m_a/m_b;
+
 }
 
 
@@ -537,7 +559,6 @@ vector<double>&  Matrix:: operator [] ( const unsigned int indice )
 }
 
 
-
 const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
 {
     if ( indice >= rows)
@@ -600,7 +621,7 @@ void Matrix:: saveMatrix ()
     }
     else if (testRights=="used")
     {
-        cout << "Une matrice du même nom a déjà été sauvergardée"
+        cout << "Une matrice du même nom a déjà été sauvegardée"
                 "\nVeuillez sélectionner un autre nom" << endl;
         exit(EXIT_FAILURE);
     }
@@ -684,7 +705,7 @@ void Matrix:: readMatrix(const string & matrixname)
 }
 
 
-void cleanSaves()
+void Matrix:: cleanSaves()
 {
     string filename(PATH);
     ofstream file (filename.c_str());
@@ -699,3 +720,5 @@ void cleanSaves()
     cout << "Fichier de sauvegarde nettoyé" << endl << endl;
 
 }
+
+
