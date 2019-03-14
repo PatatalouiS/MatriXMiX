@@ -11,6 +11,8 @@
 
 using namespace std;
 
+const string PATH = "../../data/sauvergarde.txt";
+
 
 
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
@@ -25,7 +27,7 @@ Matrix:: Matrix (const string& name) : tab ( vector<vector<double>> ())
 
 
 Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double value, const string& name ) :
-tab (vector<vector<double>>(rows,vector<double> (cols, value)))
+        tab (vector<vector<double>>(rows,vector<double> (cols, value)))
 {
     this->rows = rows;
     this->cols = cols;
@@ -34,19 +36,19 @@ tab (vector<vector<double>>(rows,vector<double> (cols, value)))
 
 
 Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type, const string& name ) :
-tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
+        tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 {
     this->cols = cols;
     this->rows = rows;
     this->name = name;
-    
+
     switch ( type )
     {
         case Z: break;
         case R:
         {
             srand(time(NULL));
-            
+
             for ( auto& i : tab )
             {
                 for ( auto& j : i )
@@ -63,7 +65,7 @@ tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
                 cerr << "Initialisatin d'une matrice identité impossible (rows != cols)" << endl;
                 exit(EXIT_FAILURE);
             }
-            
+
             for ( unsigned int i = 0; i < rows; ++i )
             {
                 tab[i][i] = 1;
@@ -102,7 +104,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const Vector
 
 
 Matrix:: Matrix (const Matrix & m, const string& name) : tab ( vector<vector<double>> (m.tab))
-{	
+{
     cols = m.cols;
     rows = m.rows;
     this->name = name;
@@ -139,9 +141,9 @@ const Matrix Matrix:: operator+ (const Matrix & m) const
         cout << "Addition impossible!" << endl;
         exit ( EXIT_FAILURE );
     }
-    
+
     Matrix copie(*this);
-    
+
     for (unsigned int i=0; i< rows; i++)
     {
         for (unsigned int j=0; j< cols; j++)
@@ -160,9 +162,9 @@ const Matrix Matrix:: operator- (const Matrix & m) const
         cout << "Soustraction impossible!" << endl;
         exit (EXIT_FAILURE);
     }
-    
+
     Matrix copie(*this);
-    
+
     for (unsigned int i=0; i<m.rows; i++)
     {
         for (unsigned int j=0; j<m.cols; j++)
@@ -181,10 +183,10 @@ const Matrix Matrix:: operator * (const Matrix & m) const
         cout << "Multiplication impossible!" << endl << "A * B->Le nombre de ligne de A = nombre de colonne de B!" << endl;
         exit ( EXIT_FAILURE );
     }
-    
+
     double s;
     Matrix copie(*this);
-    
+
     for (unsigned int i=0; i<copie.rows; i++)
     {
         for (unsigned int j=0; j<m.cols; j++)
@@ -204,7 +206,7 @@ const Matrix Matrix:: operator * (const Matrix & m) const
 const Matrix Matrix:: operator * (const double & lambda) const
 {
     Matrix copie(*this);
-    
+
     for (unsigned int i=0; i < rows; i++)
     {
         for (unsigned int j=0; j < cols; j++)
@@ -252,9 +254,9 @@ double Matrix:: traceMatrix() const
         cerr << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
     }
-    
+
     double s = 0;
-    
+
     for ( unsigned int i=0; i<rows; i++)
     {
         s += tab[i][i];
@@ -281,11 +283,11 @@ Matrix Matrix::coMatrix() const
         cerr << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
     }
-    
-    
+
+
     Matrix com(rows,cols);
     Matrix sub(rows - 1, cols-1);
-    
+
     for(unsigned int i = 0; i < rows; i++)
     {
         for(unsigned int j = 0; j < cols; j++)
@@ -301,7 +303,7 @@ Matrix Matrix::coMatrix() const
 Matrix Matrix:: transposeMatrix() const
 {
     Matrix copie(*this);
-    
+
     for (unsigned int i=0; i<copie.rows; i++)
     {
         for (unsigned int j=0; j<copie.cols; j++)
@@ -320,13 +322,13 @@ Matrix Matrix:: inverse() const
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
     }
-    
+
     if (determinant()==0)
     {
         cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
         exit(EXIT_FAILURE);
     }
-    
+
     Matrix temp(rows,cols), inverse(rows,cols);
     temp=(*this).coMatrix();
     temp=temp.transposeMatrix();
@@ -348,9 +350,9 @@ Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
     unsigned int ii = 0, jj = 0;
     unsigned int r = rows;
     unsigned int c = cols;
-    
+
     Matrix sub(r-1,c-1);
-    
+
     for(unsigned int i=0; i<r; i++)
     {
         jj=0;
@@ -377,17 +379,17 @@ double Matrix:: determinant(unsigned int dim) const
     double det = 0;
     int subi = 0;
     int subj = 0;
-    
+
     if ( dim == 1 )
     {
         return tab[0][0];
     }
-    
+
     if (dim == 2)
     {
         return ((tab[0][0] * tab[1][1]) - (tab[1][0] * tab[0][1]));
     }
-    
+
     for ( unsigned int x = 0; x < dim; x++)
     {
         subi = 0;
@@ -413,10 +415,10 @@ double Matrix:: determinant(unsigned int dim) const
 bool isOperator (const string & chaine)
 {
     return ( (chaine.compare("+")  ==  0)
-            ||  (chaine.compare("-")  ==  0)
-            ||  (chaine.compare("/") == 0)
-            || (chaine.compare("^") == 0)
-            || (chaine.compare("*") == 0));
+             ||  (chaine.compare("-")  ==  0)
+             ||  (chaine.compare("/") == 0)
+             || (chaine.compare("^") == 0)
+             || (chaine.compare("*") == 0));
 }
 
 
@@ -426,11 +428,11 @@ vector<string> decoupe (const string & expression)
     vector<string> tab;
     string c, temp;
     temp="";
-    
+
     for (i=0; i<taille; i++)
     {
         c=expression[i];
-        
+
         if(isOperator(c))
         {
             tab.push_back(temp);
@@ -444,7 +446,7 @@ vector<string> decoupe (const string & expression)
         }
     }
     tab.push_back(temp);
-    
+
     return tab;
 }
 
@@ -452,26 +454,26 @@ vector<string> decoupe (const string & expression)
 const string Matrix:: saveRights(const string & filename, const string & matrixname)
 {
     ifstream file (filename.c_str());
-    
+
     if(!file.is_open())
     {
         cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
         exit(EXIT_FAILURE);
     }
-    
+
     string first_string, stringpos;
-    
+
     file >> first_string;
-    
+
     while(!file.eof())
     {
         file >> stringpos;
         if(stringpos==matrixname)
             return string("used");
     }
-    
+
     return first_string;
-    
+
 }
 
 
@@ -576,30 +578,30 @@ bool Matrix:: IsSQMatrix() const
 
 void Matrix:: saveMatrix ()
 {
-    
+
     string matrixname(this->name);
-    
-    string filename ("/Users/maximeolivie/Documents/Licence_informatique/L2/Semestre_2/LIFAP4/MatriXMiX/data/sauvegarde.txt");
+
+    string filename ("PATH");
     ofstream file (filename.c_str(), ios::app);
-    
+
     if(!file.is_open())
     {
         cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
         exit(EXIT_FAILURE);
     }
-    
+
     string testRights;
     testRights=saveRights(filename,matrixname);
-    
+
     if (testRights.empty())
     {
         file << "Matrix" << endl;
-        
+
     }
     else if (testRights=="used")
     {
         cout << "Une matrice du même nom a déjà été sauvergardée"
-        "\nVeuillez sélectionner un autre nom" << endl;
+                "\nVeuillez sélectionner un autre nom" << endl;
         exit(EXIT_FAILURE);
     }
     else if(testRights!="Matrix")
@@ -608,41 +610,41 @@ void Matrix:: saveMatrix ()
         // MAXIME GESTION ERREUR
         exit(EXIT_FAILURE);
     }
-    
+
     file << endl << matrixname << endl;
     file << getNbRows() << " " << getNbCols() << endl;
-    
+
     for (unsigned int i = 0; i < getNbRows(); i++)
     {
         for (unsigned int j = 0; j < getNbCols(); j++)
         {
-            
+
             file << tab[i][j] << " ";
         }
         file << endl;
     }
-    
+
     cout << "La sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
-    
+
     file.close();
-    
+
 }
 
 
 void Matrix:: readMatrix(const string & matrixname)
 {
-    string filename("/Users/maximeolivie/Documents/Licence_informatique/L2/Semestre_2/LIFAP4/MatriXMiX/data/sauvegarde.txt");
+    string filename("PATH");
     ifstream file (filename.c_str());
-    
+
     if(!file.is_open())
     {
         cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
         exit(EXIT_FAILURE);
     }
-    
+
     string testfile;
     file >> testfile ;
-    
+
     if( testfile == "Matrix")
     {
         while(!file.eof() && testfile!=matrixname)
@@ -654,20 +656,20 @@ void Matrix:: readMatrix(const string & matrixname)
             cout << "Cette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
             exit(EXIT_FAILURE);
         }
-        
+
         file >> rows >> cols;
-        
+
         tab = vector<vector<double>> (rows, vector<double> (cols, 0));
-        
+
         for (unsigned int i = 0; i < getNbRows(); i++)
         {
             for (unsigned int j = 0; j < getNbCols(); j++)
             {
                 file >> tab[i][j];
             }
-            
+
         }
-        
+
         file.close();
         cout << "ouverture réussie" << endl << endl;
     }
@@ -676,25 +678,24 @@ void Matrix:: readMatrix(const string & matrixname)
         cout << "Erreur" << endl ;
         // exception QT Maxime
     }
-    
-    
-    
+
+
+
 }
 
 
 void cleanSaves()
 {
-    string filename("/Users/maximeolivie/Documents/Licence_informatique/L2/Semestre_2/LIFAP4/MatriXMiX/data/sauvegarde.txt");
+    string filename(PATH);
     ofstream file (filename.c_str());
-    
+
     if(!file.is_open())
     {
         cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
         exit(EXIT_FAILURE);
     }
-    
+
     file.close();
     cout << "Fichier de sauvegarde nettoyé" << endl << endl;
-    
-}
 
+}
