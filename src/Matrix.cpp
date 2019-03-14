@@ -493,8 +493,8 @@ vector<string> Matrix:: decoupe (const string & expression)
         else
         {
             temp+=c;
-            cout << temp << endl;
         }
+
     }
     tab.push_back(temp);
 
@@ -768,6 +768,81 @@ void Matrix:: cleanSaves()
     }
 
     file.close();
-    cout << "Fichier de sauvegarde nettoyé" << endl << endl;
+    cout << "!!!!!! Fichier de sauvegarde nettoyé" << endl << endl;
+
+}
+
+
+bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
+{
+    switch (opd[0])
+    {
+        case '*':
+            return ((opg[0] == '*') || (opg[0] == '/'));
+
+        case '/':
+            return ((opg[0] == '*') || (opg[0] == '/'));
+
+        case '+':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
+
+        case '-':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
+        default: return false;
+    }
+}
+
+
+vector<string> Matrix:: polonaise(const std::string & chaine)
+{
+    stack<string> p;
+    vector<string> notation_polonaise, expression;
+    expression = decoupe(chaine);
+
+    unsigned int i;
+
+    for (i = 0; i < expression.size(); i++)
+    {
+        if ((!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") &&
+            (expression[i] != "="))
+        {
+            notation_polonaise.push_back(expression[i]);
+            cout << notation_polonaise[notation_polonaise.size()-1] << endl;
+        }
+        else if ( (expression[i] == "(") || (expression[i] == "=") )
+        {
+            p.push(expression[i]);
+        }
+        else if (isOperator(expression[i]))
+        {
+
+            while (priorite_sup_egal(expression[i],p.top()))
+            {
+                notation_polonaise.push_back(p.top());
+                p.pop();
+            }
+
+            p.push(expression[i]);
+        }
+        else if (expression[i] == ")")
+        {
+            do
+            {
+                notation_polonaise.push_back(p.top());
+                p.pop();
+
+            }while (p.top() !=  "(");
+            p.pop();
+        }
+
+    }
+
+    while (!p.empty())
+    {
+        notation_polonaise.push_back(p.top());
+        p.pop();
+    }
+
+    return notation_polonaise;
 
 }
