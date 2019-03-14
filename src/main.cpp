@@ -30,8 +30,12 @@ int main ( void )
     a.readMatrix("Matricetest");
     
     cout << a << endl;
+
+
+
     
-    
+    c.cleanSaves();
+
     
     return 0;
 }

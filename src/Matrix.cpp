@@ -414,11 +414,11 @@ double Matrix:: determinant(unsigned int dim) const
 
 bool isOperator (const string & chaine)
 {
-    return ( (chaine.compare("+")  ==  0)
-             ||  (chaine.compare("-")  ==  0)
-             ||  (chaine.compare("/") == 0)
-             || (chaine.compare("^") == 0)
-             || (chaine.compare("*") == 0));
+    return ( (chaine == "+")
+             ||  (chaine == "-")
+             ||  (chaine == "/")
+             || (chaine == "^")
+             || (chaine == "*"));
 }
 
 
