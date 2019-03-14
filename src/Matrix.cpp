@@ -508,7 +508,7 @@ double& Matrix:: getVal ( const unsigned int indice )
         exit ( EXIT_FAILURE );
     }
 
-    return tab[indice/rows][indice%rows];
+    return tab[indice/rows][indice%rows]; 
 }
 
 
