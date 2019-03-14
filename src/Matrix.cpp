@@ -18,7 +18,7 @@ const string PATH = "../../data/sauvegarde.txt";
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
 
 
-Matrix:: Matrix (const string& name) : tab ( vector<vector<double>> ())
+Matrix:: Matrix (const string& name) : tab (vector<vector<double>> ())
 {
     rows = 0;
     cols = 0;
@@ -26,8 +26,8 @@ Matrix:: Matrix (const string& name) : tab ( vector<vector<double>> ())
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double value, const string& name ) :
-        tab (vector<vector<double>>(rows,vector<double> (cols, value)))
+Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const double value, const string& name) :
+        tab(vector<vector<double>>(rows, vector<double> (cols, value)))
 {
     this->rows = rows;
     this->cols = cols;
@@ -35,23 +35,23 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type, const string& name ) :
+Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type, const string& name) :
         tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 {
     this->cols = cols;
     this->rows = rows;
     this->name = name;
 
-    switch ( type )
+    switch (type)
     {
         case Z: break;
         case R:
         {
             srand(time(NULL));
 
-            for ( auto& i : tab )
+            for (auto& i : tab)
             {
-                for ( auto& j : i )
+                for (auto& j : i)
                 {
                     j = (rand()% 20000) + 10000;
                 }
@@ -60,13 +60,13 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
         }
         case I:
         {
-            if ( cols != rows )
+            if (cols != rows)
             {
                 cerr << "Initialisatin d'une matrice identité impossible (rows != cols)" << endl;
                 exit(EXIT_FAILURE);
             }
 
-            for ( unsigned int i = 0; i < rows; ++i )
+            for (unsigned int i = 0; i < rows; ++i)
             {
                 tab[i][i] = 1;
             }
@@ -76,9 +76,9 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values, const string& name )
+Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const VectorX & values, const string& name)
 {
-    if ( values.size() != rows * cols )
+    if (values.size() != rows * cols)
     {
         cout << "Erreur : la dimension du vecteur passé en paramètre ne correspond pas aux dimensions de la matrice" << endl;
         exit ( EXIT_FAILURE );
@@ -103,7 +103,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const Vector
 }
 
 
-Matrix:: Matrix (const Matrix & m, const string& name) : tab ( vector<vector<double>> (m.tab))
+Matrix:: Matrix (const Matrix & m, const string& name) : tab (vector<vector<double>> (m.tab))
 {
     cols = m.cols;
     rows = m.rows;
@@ -120,7 +120,7 @@ Matrix:: ~Matrix ()
 // ******** FONCTIONS STATIQUES *********
 
 
-Matrix Matrix:: ID ( const unsigned int size )
+Matrix Matrix:: ID (const unsigned int size)
 {
     return Matrix(size, size, Matrix::I);
 }
@@ -139,7 +139,7 @@ const Matrix Matrix:: operator+ (const Matrix & m) const
     if ( (rows!=m.rows) || (cols!=m.cols) )
     {
         cout << "Addition impossible!" << endl;
-        exit ( EXIT_FAILURE );
+        exit (EXIT_FAILURE);
     }
 
     Matrix copie(*this);
@@ -773,76 +773,121 @@ void Matrix:: cleanSaves()
 }
 
 
-bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Matrix::testRegression()
 {
-    switch (opd[0])
+    Matrix a(8, 12, R, "MatriceA");
+    Matrix b(12, 8, R, "MatriceB");
+    Matrix c(8, 8, R, "MatriceC");
+    Matrix d(8, 8, R, "MatriceD");
+    Matrix e("MatriceE");
+
+    cout << "Matrice générée aléatoirement: " << a.getName() << " =" << endl << a << endl;
+    cout << "Matrice générée aléatoirement: " << b.getName() << " =" << endl << b << endl;
+    cout << "Matrice générée aléatoirement: " << c.getName() << " =" << endl << c << endl;
+
+    e = a * b;
+    cout << "A*B = " << endl << e << endl;
+
+    e = c + d;
+    cout << "C+D = " << endl << e << endl;
+
+    if (c.determinant()!=0)
     {
-        case '*':
-            return ((opg[0] == '*') || (opg[0] == '/'));
+        e = c^-1;
+        cout << "C^-1 = " << endl << e << endl;
 
-        case '/':
-            return ((opg[0] == '*') || (opg[0] == '/'));
+        e = c * c^-1;
+        cout << "C^-1 * C = " << endl << e << endl;
 
-        case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-
-        case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-        default: return false;
+        if (d.determinant()!=0)
+        {
+            e = c / d;
+            cout << "C/D = " << endl << e << endl;
+        }
+        else
+        {
+            cout << "det(D)=0 ... La matrice D n'est donc pas inversible" << endl;
+        }
     }
-}
-
-
-vector<string> Matrix:: polonaise(const std::string & chaine)
-{
-    stack<string> p;
-    vector<string> notation_polonaise, expression;
-    expression = decoupe(chaine);
-
-    unsigned int i;
-
-    for (i = 0; i < expression.size(); i++)
+    else
     {
-        if ((!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") &&
-            (expression[i] != "="))
-        {
-            notation_polonaise.push_back(expression[i]);
-            cout << notation_polonaise[notation_polonaise.size()-1] << endl;
-        }
-        else if ( (expression[i] == "(") || (expression[i] == "=") )
-        {
-            p.push(expression[i]);
-        }
-        else if (isOperator(expression[i]))
-        {
-
-            while (priorite_sup_egal(expression[i],p.top()))
-            {
-                notation_polonaise.push_back(p.top());
-                p.pop();
-            }
-
-            p.push(expression[i]);
-        }
-        else if (expression[i] == ")")
-        {
-            do
-            {
-                notation_polonaise.push_back(p.top());
-                p.pop();
-
-            }while (p.top() !=  "(");
-            p.pop();
-        }
-
+        cout << "det(C)=0 ... La matrice C n'est donc pas inversible" << endl;
     }
 
-    while (!p.empty())
-    {
-        notation_polonaise.push_back(p.top());
-        p.pop();
-    }
-
-    return notation_polonaise;
 
 }

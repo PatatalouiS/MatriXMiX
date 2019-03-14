@@ -80,9 +80,11 @@ public:
     void readMatrix(const std::string & matrixname);
     void cleanSaves();
 
-    bool priorite_sup_egal (const std::string & opd, const std::string & opg);
-    std::vector<std::string> polonaise (const std::string & chaine);
 
+
+
+
+    void testRegression();
 
 };
 
