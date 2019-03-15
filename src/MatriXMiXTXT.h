@@ -12,8 +12,11 @@ class MatriXMiXTXT
     MatrixLibrary lib;
     
     
+    void MsgEmptyLib () const;
     void addMatrixMenu ();
     void showLibrary () const;
+    void addition ();
+    
     
 
     public:

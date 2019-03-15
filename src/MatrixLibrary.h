@@ -3,13 +3,13 @@
 #define _MATRIX_LIBRARY_
 
 #include "Matrix.h"
-#include <vector>
+#include <map>
 
 class MatrixLibrary
 {
     private:
     
-    std::vector<Matrix> tab;
+    std::map<std::string,Matrix> tab;
     
     public:
     
@@ -21,10 +21,8 @@ class MatrixLibrary
     bool exist (const Matrix& m) const;
     void print () const;
     void addMatrix (const Matrix& m);
-
+    const Matrix* search (const std::string& name) const;
 };
-
-
 
 
 #endif

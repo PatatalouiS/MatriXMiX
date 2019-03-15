@@ -6,7 +6,7 @@ using namespace std;
 
 
 
-MatrixLibrary:: MatrixLibrary () : tab (vector<Matrix>())
+MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
 {
 }
 
@@ -30,34 +30,35 @@ bool MatrixLibrary:: empty () const
 
 bool MatrixLibrary:: exist (const Matrix& m) const
 {
-    return false; // TEMPORAIRE
+    return (tab.count(m.getName()) != 0);
 }
 
 
 void MatrixLibrary:: print () const
 {
-    if (tab.size() == 0)
+    for(const auto& Mat: tab)
     {
-        cout << "Aucune Matrice n'est rentrée !" << endl;
+        cout << "Matrice " << Mat.second.getName() << " : ";
+        cout << endl << endl << Mat.second << endl;;
     }
-    else
-    {
-        for(const auto& Mat: tab)
-        {
-            cout << "Matrice " << Mat.getName() << " : " << endl << Mat << endl;
-        }
-        cout << endl;
-    }
+    cout << endl;
 }
+
 
 
 void MatrixLibrary:: addMatrix ( const Matrix& m )
 {
-    if (exist(m))
-    {
-        cerr << "Erreur, la matrice" << m.getName() << " existe déjà !" << endl;
-        exit(EXIT_FAILURE);
-    }
-    tab.push_back(m);
+    tab.insert({m.getName(), m});
 }
 
+
+const Matrix* MatrixLibrary:: search (const std::string& name) const
+{
+    Matrix();
+    
+    if (tab.count(name) == 0)
+    {
+        return NULL;
+    }
+    return &tab.at(name);
+}
