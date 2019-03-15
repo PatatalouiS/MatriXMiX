@@ -4,16 +4,23 @@
 
 #include "MatrixLibrary.h"
 
+
 class MatriXMiXTXT
 {
     private:
     
     MatrixLibrary lib;
-    void show () const;
     
+    
+    void addMatrixMenu ();
+    void showLibrary () const;
+    
+
     public:
     
-    void loop ();
+    void mainMenu ();
+    
+    
 };
 
 

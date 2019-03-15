@@ -6,7 +6,7 @@ using namespace std;
 
 
 
-MatrixLibrary:: MatrixLibrary () : library (vector<Matrix>())
+MatrixLibrary:: MatrixLibrary () : tab (vector<Matrix>())
 {
 }
 
@@ -16,17 +16,48 @@ MatrixLibrary:: ~MatrixLibrary()
 }
 
 
+unsigned int MatrixLibrary:: size () const
+{
+    return tab.size();
+}
+
+
+bool MatrixLibrary:: empty () const
+{
+    return size() == 0;
+}
+
+
+bool MatrixLibrary:: exist (const Matrix& m) const
+{
+    return false; // TEMPORAIRE
+}
+
+
+void MatrixLibrary:: print () const
+{
+    if (tab.size() == 0)
+    {
+        cout << "Aucune Matrice n'est rentrée !" << endl;
+    }
+    else
+    {
+        for(const auto& Mat: tab)
+        {
+            cout << "Matrice " << Mat.getName() << " : " << endl << Mat << endl;
+        }
+        cout << endl;
+    }
+}
+
+
 void MatrixLibrary:: addMatrix ( const Matrix& m )
 {
     if (exist(m))
     {
-        cerr << "Erreur, ce nom de Matrice existe déja ! " << endl;
-        exit (EXIT_FAILURE);
+        cerr << "Erreur, la matrice" << m.getName() << " existe déjà !" << endl;
+        exit(EXIT_FAILURE);
     }
-    library.push_back(m);
+    tab.push_back(m);
 }
 
-
-bool MatrixLibrary:: exist (const Matrix& m)
-{
-}
