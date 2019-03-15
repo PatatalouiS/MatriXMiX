@@ -70,6 +70,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
             {
                 tab[i][i] = 1;
             }
+            break;
         }
         default: break;
     }
@@ -103,11 +104,11 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const Vector
 }
 
 
-Matrix:: Matrix (const Matrix & m, const string& name) : tab ( vector<vector<double>> (m.tab))
+Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 {
     cols = m.cols;
     rows = m.rows;
-    this->name = name;
+    this->name = m.name;
 }
 
 
@@ -547,7 +548,7 @@ unsigned int Matrix:: getNbCols() const
 }
 
 
-string Matrix:: getName() const
+const string& Matrix:: getName() const
 {
     return name;
 }
@@ -729,9 +730,6 @@ void Matrix:: readMatrix(const string & matrixname)
         cout << "Erreur" << endl ;
         // exception QT Maxime
     }
-
-
-
 }
 
 
@@ -750,3 +748,43 @@ void cleanSaves()
     cout << "Fichier de sauvegarde nettoyé" << endl << endl;
 
 }
+
+
+void Matrix:: setMatrixKB ()
+{
+    cout << "Saisir le nom de la matrice : ";
+    cin >> name;
+    cout << "Saisir nblignes : ";
+    cin >> rows;
+    cout << "Saisir nbColonnes : ";
+    cin >> cols;
+    
+    tab.resize(rows, vector<double>(cols));
+    
+    for(unsigned int i = 1; i <= rows; ++i)
+    {
+        for(unsigned int j = 1; j <= cols; ++j)
+        {
+            cout << endl << "Saisir coeff " << "(" << i << " , " << j << ")" << ": ";
+            cin >> tab[i-1][j-1];
+        }
+    }
+}
+
+
+void Matrix:: setMatrixRA ()
+{
+    cout << "Saisir le nom de la matrice : ";
+    cin >> name;
+    cout << "Saisir nblignes : ";
+    cin >> rows;
+    cout << "Saisir nbColonnes : ";
+    cin >> cols;
+    
+    tab = Matrix(rows, cols, Matrix::R).tab;
+}
+
+
+
+
+
