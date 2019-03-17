@@ -2,8 +2,8 @@
 #include "MatrixLibrary.h"
 #include <iostream>
 
-using namespace std;
 
+using namespace std;
 
 
 MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
@@ -22,43 +22,42 @@ unsigned int MatrixLibrary:: size () const
 }
 
 
-bool MatrixLibrary:: empty () const
+bool MatrixLibrary:: isEmpty () const
 {
     return size() == 0;
 }
 
 
-bool MatrixLibrary:: exist (const Matrix& m) const
+bool MatrixLibrary:: exist (const string& name) const
 {
-    return (tab.count(m.getName()) != 0);
+    return (tab.count(name) != 0);
 }
 
 
 void MatrixLibrary:: print () const
 {
     for(const auto& Mat: tab)
-    {
-        cout << "Matrice " << Mat.second.getName() << " : ";
+    { 
+        cout << "Matrice " << Mat.first << " : ";
         cout << endl << endl << Mat.second << endl;;
     }
     cout << endl;
 }
 
 
-
-void MatrixLibrary:: addMatrix ( const Matrix& m )
+void MatrixLibrary:: addMatrix (const string& name, const Matrix& m)
 {
-    tab.insert({m.getName(), m});
+    tab.insert({name, m});
 }
 
 
-const Matrix* MatrixLibrary:: search (const std::string& name) const
+const Matrix* MatrixLibrary:: find (const string& name) const
 {
-    Matrix();
-    
     if (tab.count(name) == 0)
     {
         return NULL;
     }
     return &tab.at(name);
 }
+
+

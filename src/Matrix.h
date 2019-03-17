@@ -9,16 +9,12 @@
 #include <string.h>
 
 
-const std::string NONAME = "";
-
-
 class Matrix
 {
 private:
     
     unsigned int rows;
     unsigned int cols;
-    std::string name;
     std::vector<std::vector<double>> tab;
     
     
@@ -41,10 +37,10 @@ public:
     enum initMatrix { Z, I, R };
     
     // Constructeurs et Destructeurs
-    Matrix (const std::string& name = NONAME);
-    Matrix (const unsigned int rows, const unsigned int cols, const double value, const std::string& name = NONAME);
-    Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z, const std::string& name = NONAME);
-    Matrix (const unsigned int rows, const unsigned int cols, const VectorX& values, const std::string& name = NONAME);
+    Matrix ();
+    Matrix (const unsigned int rows, const unsigned int cols, const double value);
+    Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z);
+    Matrix (const unsigned int rows, const unsigned int cols, const VectorX& values);
     Matrix (const Matrix & m);
     ~Matrix ();
     

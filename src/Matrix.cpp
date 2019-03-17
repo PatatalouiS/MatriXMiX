@@ -18,29 +18,26 @@ const string PATH = "../../data/sauvergarde.txt";
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
 
 
-Matrix:: Matrix (const string& name) : tab ( vector<vector<double>> ())
+Matrix:: Matrix () : tab ( vector<vector<double>> ())
 {
     rows = 0;
     cols = 0;
-    this->name = name;
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double value, const string& name ) :
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double value) :
         tab (vector<vector<double>>(rows,vector<double> (cols, value)))
 {
     this->rows = rows;
     this->cols = cols;
-    this->name = name;
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type, const string& name ) :
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type) :
         tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 {
     this->cols = cols;
     this->rows = rows;
-    this->name = name;
 
     switch ( type )
     {
@@ -77,7 +74,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values, const string& name )
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values)
 {
     if ( values.size() != rows * cols )
     {
@@ -87,7 +84,6 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const Vector
 
     this->cols = cols;
     this->rows = rows;
-    this->name = name;
 
     vector<double> temp;
 
@@ -108,7 +104,6 @@ Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 {
     cols = m.cols;
     rows = m.rows;
-    this->name = m.name;
 }
 
 
@@ -548,12 +543,6 @@ unsigned int Matrix:: getNbCols() const
 }
 
 
-const string& Matrix:: getName() const
-{
-    return name;
-}
-
-
 double& Matrix:: getVal ( const unsigned int indice )
 {
     if ( indice >= (rows * cols))
@@ -628,59 +617,58 @@ bool Matrix:: IsSQMatrix() const
 }
 
 
-void Matrix:: saveMatrix ()
-{
-
-    string matrixname(this->name);
-
-    string filename ("PATH");
-    ofstream file (filename.c_str(), ios::app);
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    string testRights;
-    testRights=saveRights(filename,matrixname);
-
-    if (testRights.empty())
-    {
-        file << "Matrix" << endl;
-
-    }
-    else if (testRights=="used")
-    {
-        cout << "Une matrice du même nom a déjà été sauvergardée"
-                "\nVeuillez sélectionner un autre nom" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else if(testRights!="Matrix")
-    {
-        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
-        // MAXIME GESTION ERREUR
-        exit(EXIT_FAILURE);
-    }
-
-    file << endl << matrixname << endl;
-    file << getNbRows() << " " << getNbCols() << endl;
-
-    for (unsigned int i = 0; i < getNbRows(); i++)
-    {
-        for (unsigned int j = 0; j < getNbCols(); j++)
-        {
-
-            file << tab[i][j] << " ";
-        }
-        file << endl;
-    }
-
-    cout << "La sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
-
-    file.close();
-
-}
+//void Matrix:: saveMatrix ()
+//{
+//
+//    string matrixname(this->name);
+//
+//    string filename ("PATH");
+//    ofstream file (filename.c_str(), ios::app);
+//
+//    if(!file.is_open())
+//    {
+//        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    string testRights;
+//    testRights=saveRights(filename,matrixname);
+//
+//    if (testRights.empty())
+//    {
+//        file << "Matrix" << endl;
+//
+//    }
+//    else if (testRights=="used")
+//    {
+//        cout << "Une matrice du même nom a déjà été sauvergardée"
+//                "\nVeuillez sélectionner un autre nom" << endl;
+//        exit(EXIT_FAILURE);
+//    }
+//    else if(testRights!="Matrix")
+//    {
+//        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
+//        // MAXIME GESTION ERREUR
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    file << endl << matrixname << endl;
+//    file << getNbRows() << " " << getNbCols() << endl;
+//
+//    for (unsigned int i = 0; i < getNbRows(); i++)
+//    {
+//        for (unsigned int j = 0; j < getNbCols(); j++)
+//        {
+//
+//            file << tab[i][j] << " ";
+//        }
+//        file << endl;
+//    }
+//
+//    cout << "La sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
+//
+//    file.close();
+//}
 
 
 void Matrix:: readMatrix(const string & matrixname)
@@ -752,8 +740,6 @@ void cleanSaves()
 
 void Matrix:: setMatrixKB ()
 {
-    cout << "Saisir le nom de la matrice : ";
-    cin >> name;
     cout << "Saisir nblignes : ";
     cin >> rows;
     cout << "Saisir nbColonnes : ";
@@ -774,8 +760,6 @@ void Matrix:: setMatrixKB ()
 
 void Matrix:: setMatrixRA ()
 {
-    cout << "Saisir le nom de la matrice : ";
-    cin >> name;
     cout << "Saisir nblignes : ";
     cin >> rows;
     cout << "Saisir nbColonnes : ";

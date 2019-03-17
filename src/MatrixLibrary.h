@@ -5,23 +5,24 @@
 #include "Matrix.h"
 #include <map>
 
+
 class MatrixLibrary
 {
-    private:
-    
-    std::map<std::string,Matrix> tab;
-    
-    public:
-    
+	private:
+	
+	std::map<std::string, Matrix> tab;
+	
+	public:
+	
     MatrixLibrary ();
     ~MatrixLibrary ();
     
     unsigned int size () const;
-    bool empty () const;
-    bool exist (const Matrix& m) const;
+    bool isEmpty () const;
+	bool exist (const std::string& name) const;
     void print () const;
-    void addMatrix (const Matrix& m);
-    const Matrix* search (const std::string& name) const;
+	void addMatrix (const std::string& name, const Matrix& m);
+	const Matrix* find (const std::string& name) const;
 };
 
 
