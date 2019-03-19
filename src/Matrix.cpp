@@ -11,11 +11,12 @@
 
 using namespace std;
 
-const string PATH = "../../data/sauvergarde.txt";
+const string PATH = "../../data/sauvegarde.txt";
 
 
 
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
+
 
 
 Matrix:: Matrix () : tab ( vector<vector<double>> ())
@@ -39,16 +40,16 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
     this->cols = cols;
     this->rows = rows;
 
-    switch ( type )
+    switch (type)
     {
         case Z: break;
         case R:
         {
             srand(time(NULL));
 
-            for ( auto& i : tab )
+            for (auto& i : tab)
             {
-                for ( auto& j : i )
+                for (auto& j : i)
                 {
                     j = (rand()% 20000) + 10000;
                 }
@@ -57,13 +58,13 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
         }
         case I:
         {
-            if ( cols != rows )
+            if (cols != rows)
             {
                 cerr << "Initialisatin d'une matrice identité impossible (rows != cols)" << endl;
                 exit(EXIT_FAILURE);
             }
 
-            for ( unsigned int i = 0; i < rows; ++i )
+            for (unsigned int i = 0; i < rows; ++i)
             {
                 tab[i][i] = 1;
             }
@@ -76,7 +77,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
 
 Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values)
 {
-    if ( values.size() != rows * cols )
+    if (values.size() != rows * cols)
     {
         cout << "Erreur : la dimension du vecteur passé en paramètre ne correspond pas aux dimensions de la matrice" << endl;
         exit ( EXIT_FAILURE );
@@ -116,7 +117,7 @@ Matrix:: ~Matrix ()
 // ******** FONCTIONS STATIQUES *********
 
 
-Matrix Matrix:: ID ( const unsigned int size )
+Matrix Matrix:: ID (const unsigned int size)
 {
     return Matrix(size, size, Matrix::I);
 }
@@ -135,7 +136,7 @@ const Matrix Matrix:: operator+ (const Matrix & m) const
     if ( (rows!=m.rows) || (cols!=m.cols) )
     {
         cout << "Addition impossible!" << endl;
-        exit ( EXIT_FAILURE );
+        exit (EXIT_FAILURE);
     }
 
     Matrix copie(*this);
@@ -221,7 +222,6 @@ const Matrix Matrix:: operator / (const Matrix & m) const
         cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
         exit (EXIT_FAILURE);
     }
-    
     if ( m.determinant()==0 )
     {
         cerr << "division impossible, la metrice diviseur n'est pas inversible !" << endl;
@@ -238,26 +238,26 @@ const Matrix Matrix:: operator ^ (const int & p) const
         cerr << "Erreur, la puissance demandée est invalide ! " << endl;
         exit(EXIT_FAILURE);
     }
-    
+
     if ( !IsSQMatrix() )
     {
         cerr << "Erreur, la matrice n'est pas carrée ! " << endl;
         exit(EXIT_FAILURE);
     }
-    
+
     if ( p == 0 )
     {
         return Matrix (rows, I);
     }
-    
+
     if ( p == -1 )
     {
         return inverse();
     }
-    
+
     Matrix temp (*this);
     Matrix temp2 (*this);
-    
+
     for ( int i = 1; i < p; ++i )
     {
         temp = temp * temp2;
@@ -460,19 +460,19 @@ double Matrix:: determinant(unsigned int dim) const
 }
 
 
-bool isOperator (const string & chaine)
+bool Matrix:: isOperator (const string & chaine)
 {
-    return ( (chaine.compare("+")  ==  0)
-             ||  (chaine.compare("-")  ==  0)
-             ||  (chaine.compare("/") == 0)
-             || (chaine.compare("^") == 0)
-             || (chaine.compare("*") == 0));
+    return ( (chaine == "+")
+             ||  (chaine == "-")
+             ||  (chaine == "/")
+             || (chaine == "^")
+             || (chaine == "*"));
 }
 
 
-vector<string> decoupe (const string & expression)
+vector<string> Matrix:: decoupe (const string & expression)
 {
-    unsigned int i, taille=expression.length();
+    unsigned int i,taille =expression.length();
     vector<string> tab;
     string c, temp;
     temp="";
@@ -481,21 +481,43 @@ vector<string> decoupe (const string & expression)
     {
         c=expression[i];
 
-        if(isOperator(c))
+        if((isOperator(c)) || (c == ")") || (c == "(") || (c == "=") )
         {
-            tab.push_back(temp);
+            if (temp.length()!=0) tab.push_back(temp);
             tab.push_back(c);
             temp="";
         }
-        else
+        else if (!c.empty())
         {
             temp+=c;
-            cout << temp << endl;
         }
+
     }
     tab.push_back(temp);
 
     return tab;
+}
+
+
+Matrix Matrix:: calculate (const string & op, const string & a, const string & b)
+{
+    Matrix m_a;
+    Matrix m_b;
+    m_a.readMatrix(a);
+    m_b.readMatrix(b);
+
+    if(op=="+")
+        return m_a+m_b;
+
+    if(op=="-")
+        return m_a-m_b;
+
+    if(op=="*")
+        return m_a*m_b;
+
+    if(op=="/")
+        return m_a/m_b;
+
 }
 
 
@@ -579,7 +601,6 @@ vector<double>&  Matrix:: operator [] ( const unsigned int indice )
 }
 
 
-
 const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
 {
     if ( indice >= rows)
@@ -618,63 +639,66 @@ bool Matrix:: IsSQMatrix() const
 }
 
 
-//void Matrix:: saveMatrix ()
-//{
-//
-//    string matrixname(this->name);
-//
-//    string filename ("PATH");
-//    ofstream file (filename.c_str(), ios::app);
-//
-//    if(!file.is_open())
-//    {
-//        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    string testRights;
-//    testRights=saveRights(filename,matrixname);
-//
-//    if (testRights.empty())
-//    {
-//        file << "Matrix" << endl;
-//
-//    }
-//    else if (testRights=="used")
-//    {
-//        cout << "Une matrice du même nom a déjà été sauvergardée"
-//                "\nVeuillez sélectionner un autre nom" << endl;
-//        exit(EXIT_FAILURE);
-//    }
-//    else if(testRights!="Matrix")
-//    {
-//        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
-//        // MAXIME GESTION ERREUR
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    file << endl << matrixname << endl;
-//    file << getNbRows() << " " << getNbCols() << endl;
-//
-//    for (unsigned int i = 0; i < getNbRows(); i++)
-//    {
-//        for (unsigned int j = 0; j < getNbCols(); j++)
-//        {
-//
-//            file << tab[i][j] << " ";
-//        }
-//        file << endl;
-//    }
-//
-//    cout << "La sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
-//
-//    file.close();
-//}
+
+/*void Matrix:: saveMatrix ()
+{
+
+    string matrixname(this->name);
+
+    string filename (PATH);
+    ofstream file (filename.c_str(), ios::app);
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string testRights;
+    testRights=saveRights(filename,matrixname);
+
+    if (testRights.empty())
+    {
+        file << "Matrix" << endl;
+
+    }
+    else if (testRights=="used")
+    {
+        cout << "Une matrice du même nom a déjà été sauvegardée"
+                "\nVeuillez sélectionner un autre nom" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else if(testRights!="Matrix")
+    {
+        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
+        // MAXIME GESTION ERREUR
+        exit(EXIT_FAILURE);
+    }
+
+    file << endl << matrixname << endl;
+    file << getNbRows() << " " << getNbCols() << endl;
+
+    for (unsigned int i = 0; i < getNbRows(); i++)
+    {
+        for (unsigned int j = 0; j < getNbCols(); j++)
+        {
+
+            file << tab[i][j] << " ";
+        }
+        file << endl;
+    }
+
+    cout << "La sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
+
+    file.close();
+
+}*/
+
 
 
 void Matrix:: readMatrix(const string & matrixname)
 {
-    string filename("PATH");
+    string filename(PATH);
     ifstream file (filename.c_str());
 
     if(!file.is_open())
@@ -694,6 +718,7 @@ void Matrix:: readMatrix(const string & matrixname)
         }
         if (file.eof())
         {
+            cout << "Problème avec " << matrixname << endl;
             cout << "Cette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
             exit(EXIT_FAILURE);
         }
@@ -722,7 +747,7 @@ void Matrix:: readMatrix(const string & matrixname)
 }
 
 
-void cleanSaves()
+void Matrix:: cleanSaves()
 {
     string filename(PATH);
     ofstream file (filename.c_str());
@@ -734,10 +759,158 @@ void cleanSaves()
     }
 
     file.close();
-    cout << "Fichier de sauvegarde nettoyé" << endl << endl;
+    cout << "!!!!!! Fichier de sauvegarde nettoyé" << endl << endl;
 
 }
 
+
+/*void Matrix::testRegression()
+{
+    Matrix a(8, 12, R, "MatriceA");
+    Matrix b(12, 8, R, "MatriceB");
+    Matrix c(8, 8, R, "MatriceC");
+    Matrix d(8, 8, R, "MatriceD");
+    Matrix e("MatriceE");
+
+    cout << "Matrice générée aléatoirement: " << a.getName() << " =" << endl << a << endl;
+    cout << "Matrice générée aléatoirement: " << b.getName() << " =" << endl << b << endl;
+    cout << "Matrice générée aléatoirement: " << c.getName() << " =" << endl << c << endl;
+
+    e = a * b;
+    cout << "A*B = " << endl << e << endl;
+
+    e = c + d;
+    cout << "C+D = " << endl << e << endl;
+
+    if (c.determinant()!=0)
+    {
+        e = c^-1;
+        cout << "C^-1 = " << endl << e << endl;
+
+        e = c * c^-1;
+        cout << "C^-1 * C = " << endl << e << endl;
+
+        if (d.determinant()!=0)
+        {
+            e = c / d;
+            cout << "C/D = " << endl << e << endl;
+        }
+        else
+        {
+            cout << "det(D)=0 ... La matrice D n'est donc pas inversible" << endl;
+        }
+    }
+    else
+    {
+        cout << "det(C)=0 ... La matrice C n'est donc pas inversible" << endl;
+    }
+}*/
+
+
+bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
+{
+    switch (opd[0])
+    {
+        case '*':
+            return ((opg[0] == '*') || (opg[0] == '/'));
+
+        case '/':
+            return ((opg[0] == '*') || (opg[0] == '/'));
+
+        case '+':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
+
+        case '-':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
+        default: return false;
+    }
+}
+
+
+void Matrix:: polonaise(const std::string & chaine , std::vector<std::string> & notation_polonaise)
+{
+    stack<string> p;
+    vector<string> expression;
+    expression = decoupe(chaine);
+
+    int i;
+
+    for (i = 0; i < expression.size(); i++)
+    {
+        if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
+        {
+            notation_polonaise.push_back(expression[i]);
+        }
+        else if ( (expression[i] == "(") || (expression[i] == "=") )
+        {
+            p.push(expression[i]);
+        }
+        else if (isOperator(expression[i]))
+        {
+            if (!p.empty())
+            {
+                while (priorite_sup_egal(expression[i],p.top()))
+                {
+                    notation_polonaise.push_back(p.top());
+                    p.pop();
+                }
+            }
+
+            p.push(expression[i]);
+
+        }
+        else if (expression[i] == ")")
+        {
+            do
+            {
+                notation_polonaise.push_back(p.top());
+                p.pop();
+
+            }while (p.top() !=  "(");
+            p.pop();
+        }
+    }
+
+    while (!p.empty())
+    {
+        notation_polonaise.push_back(p.top());
+        p.pop();
+    }
+}
+
+
+
+/*Matrix Matrix:: expressionCalcul(const std::string & chaine)
+{
+    vector<string> polish;
+    polonaise(chaine,polish);
+    stack<string> pile;
+    Matrix temp("ppp4");
+    temp.saveMatrix();
+    unsigned int i;
+    unsigned int taille=polish.size();
+
+    for (i = 0; i < taille; i++ )
+    {
+        if (isOperator(polish[i]))
+        {
+            string b = pile.top();
+            pile.pop();
+            string a=pile.top();
+            pile.pop();
+
+            temp=calculate(polish[i],a,b);
+            pile.push(temp.getName());
+            temp.saveMatrix();
+        }
+        else
+        {
+            pile.push(polish[i]);
+        }
+    }
+    temp.readMatrix(pile.top());
+    return temp;
+}*/
 
 void Matrix:: setMatrixKB ()
 {

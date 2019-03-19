@@ -19,10 +19,10 @@ void cl()
 
 void wait()
 {
-	int c;
-    std::cout << endl << "Appuyez sur ENTREE pour continuer..." << std::endl;
- 	c = getchar();
- 	c = getchar();
+    int c;
+    std::cout << "Appuyez sur ENTREE pour continuer..." << std::endl;
+    c = getchar();
+    c = getchar();
 }
 
 
