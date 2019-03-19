@@ -1,15 +1,9 @@
 
 #include <iostream>
-#include <math.h>
-#include "Matrix.h"
-#include "VectorX.h"
-#include "MatrixLibrary.h"
+#include "MatriXMiXTXT.h"
 
 
 using namespace std;
-
-
-
 
 
 int main ( void )
