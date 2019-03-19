@@ -218,6 +218,57 @@ const Matrix Matrix:: operator * (const double & lambda) const
 }
 
 
+const Matrix Matrix:: operator / (const Matrix & m) const
+{
+    if ( !m.IsSQMatrix() )
+    {
+        cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
+        exit (EXIT_FAILURE);
+    }
+
+    if ( m.determinant()==0 )
+    {
+        cerr << "division impossible, la metrice diviseur n'est pas inversible !" << endl;
+        exit(EXIT_FAILURE);
+    }
+    return (*this) * m.inverse();
+}
+
+
+const Matrix Matrix:: operator ^ (const int & p) const
+{
+    if ( p < -1 )
+    {
+        cerr << "Erreur, la puissance demandée est invalide ! " << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if ( !IsSQMatrix() )
+    {
+        cerr << "Erreur, la matrice n'est pas carrée ! " << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if ( p == 0 )
+    {
+        return Matrix (rows, I);
+    }
+
+    if ( p == -1 )
+    {
+        return inverse();
+    }
+
+    Matrix temp (*this);
+
+    for ( int i = 1; i < p; ++i )
+    {
+        temp = temp * temp;
+    }
+    return temp;
+}
+
+
 bool Matrix:: operator == (const Matrix & m ) const
 {
     if ((m.cols == cols) && (m.rows == rows))
@@ -424,7 +475,7 @@ bool Matrix:: isOperator (const string & chaine)
 
 vector<string> Matrix:: decoupe (const string & expression)
 {
-    unsigned int i, taille=expression.length();
+    unsigned int i,taille =expression.length();
     vector<string> tab;
     string c, temp;
     temp="";
@@ -433,21 +484,43 @@ vector<string> Matrix:: decoupe (const string & expression)
     {
         c=expression[i];
 
-        if(isOperator(c))
+        if((isOperator(c)) || (c == ")") || (c == "(") || (c == "=") )
         {
-            tab.push_back(temp);
+            if (temp.length()!=0) tab.push_back(temp);
             tab.push_back(c);
             temp="";
         }
-        else
+        else if (!c.empty())
         {
             temp+=c;
-            cout << temp << endl;
         }
+
     }
     tab.push_back(temp);
 
     return tab;
+}
+
+
+Matrix Matrix:: calculate (const string & op, const string & a, const string & b)
+{
+    Matrix m_a;
+    Matrix m_b;
+    m_a.readMatrix(a);
+    m_b.readMatrix(b);
+
+    if(op=="+")
+        return m_a+m_b;
+
+    if(op=="-")
+        return m_a-m_b;
+
+    if(op=="*")
+        return m_a*m_b;
+
+    if(op=="/")
+        return m_a/m_b;
+
 }
 
 
@@ -473,79 +546,6 @@ const string Matrix:: saveRights(const string & filename, const string & matrixn
     }
 
     return first_string;
-
-}
-
-bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
-{
-    switch (opd[0])
-    {
-        case '*':
-            return ((opg[0] == '*') || (opg[0] == '/'));
-
-        case '/':
-            return ((opg[0] == '*') || (opg[0] == '/'));
-
-        case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-
-        case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-        default: return false;
-    }
-}
-
-std::vector<std::string> Matrix:: polonaise(const std::string & chaine)
-{
-    stack<string> p;
-    vector<string> notation_polonaise, expression;
-    expression = decoupe(chaine);
-
-    int i;
-
-    for (i = 0; i < expression.size(); i++)
-    {
-        if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
-        {
-            cout<<expression[i]<<endl;
-            notation_polonaise.push_back(expression[i]);
-            cout<<notation_polonaise[notation_polonaise.size()-1]<<endl;
-        }
-        else if ( (expression[i] == "(") || (expression[i] == "=") )
-        {
-            p.push(expression[i]);
-        }
-        else if (isOperator(expression[i]))
-        {
-
-            while (priorite_sup_egal(expression[i],p.top()))
-            {
-                notation_polonaise.push_back(p.top());
-                p.pop();
-            }
-
-            p.push(expression[i]);
-        }
-        else if (expression[i] == ")")
-        {
-            do
-            {
-                notation_polonaise.push_back(p.top());
-                p.pop();
-
-            }while (p.top() !=  "(");
-            p.pop();
-        }
-
-    }
-
-    while (!p.empty())
-    {
-        notation_polonaise.push_back(p.top());
-        p.pop();
-    }
-
-    return notation_polonaise;
 
 }
 
@@ -608,7 +608,6 @@ vector<double>&  Matrix:: operator [] ( const unsigned int indice )
     }
     return tab[indice];
 }
-
 
 
 const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
@@ -752,12 +751,10 @@ void Matrix:: readMatrix(const string & matrixname)
         // exception QT Maxime
     }
 
-
-
 }
 
 
-void cleanSaves()
+void Matrix:: cleanSaves()
 {
     string filename(PATH);
     ofstream file (filename.c_str());
@@ -771,4 +768,76 @@ void cleanSaves()
     file.close();
     cout << "Fichier de sauvegarde nettoyé" << endl << endl;
 
+}
+
+
+bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
+{
+    switch (opd[0])
+    {
+        case '*':
+            return ((opg[0] == '*') || (opg[0] == '/'));
+
+        case '/':
+            return ((opg[0] == '*') || (opg[0] == '/'));
+
+        case '+':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
+
+        case '-':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
+        default: return false;
+    }
+}
+
+
+void Matrix:: polonaise(const std::string & chaine , std::vector<std::string> & notation_polonaise)
+{
+    stack<string> p;
+    vector<string> expression;
+    expression = decoupe(chaine);
+
+    int i;
+
+    for (i = 0; i < expression.size(); i++)
+    {
+        if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
+        {
+            notation_polonaise.push_back(expression[i]);
+        }
+        else if ( (expression[i] == "(") || (expression[i] == "=") )
+        {
+            p.push(expression[i]);
+        }
+        else if (isOperator(expression[i]))
+        {
+            if (!p.empty())
+            {
+                while (priorite_sup_egal(expression[i],p.top()))
+                {
+                    notation_polonaise.push_back(p.top());
+                    p.pop();
+                }
+            }
+
+            p.push(expression[i]);
+
+        }
+        else if (expression[i] == ")")
+        {
+            do
+            {
+                notation_polonaise.push_back(p.top());
+                p.pop();
+
+            }while (p.top() !=  "(");
+            p.pop();
+        }
+    }
+
+    while (!p.empty())
+    {
+        notation_polonaise.push_back(p.top());
+        p.pop();
+    }
 }

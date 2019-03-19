@@ -33,10 +33,19 @@ int main ( void )
 
     vector<string> polo;
     Matrix c;
-    polo=c.polonaise("a+b");
-    
-    
-    
+    c.polonaise("variable=((objet-1)+x*tmp/8)/25-12",polo);
+
+    for (int i=0; i<polo.size();i++){
+        cout<<polo[i]<<' ';
+    }
+
+
+    /*Matrix c;
+    vector<string> nota =c.decoupe(" variable = ( ( objet - 1 ) + x * tmp / 8 ) / 25 - 12 ");
+    for (int i=0; i< nota.size();i++) {
+        cout << nota[i] <<"";
+    }*/
+
     return 0;
 }
 
