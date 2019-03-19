@@ -13,6 +13,8 @@ class MatriXMiXTXT
 	
 	
 	void binaryOperation (const char op) const;
+	void binaryOperationPow() const;
+	void unaryOperation(const char op) const;
     void MsgEmptyLib () const;
 	
 	
@@ -22,6 +24,10 @@ class MatriXMiXTXT
 	void soustraction () const;
 	void multiplication () const;
 	void division () const;
+	void puissance () const;
+	void trace() const;
+	void determinant() const;
+	void inverse() const;
     
     
 
