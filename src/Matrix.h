@@ -9,16 +9,12 @@
 #include <string.h>
 
 
-const std::string NONAME = "";
-
-
 class Matrix
 {
 private:
     
     unsigned int rows;
     unsigned int cols;
-    std::string name;
     std::vector<std::vector<double>> tab;
     
     
@@ -43,12 +39,11 @@ public:
     enum initMatrix { Z, I, R };
     
     // Constructeurs et Destructeurs
-    Matrix ( const std::string& name = NONAME);
-    Matrix ( const unsigned int rows, const unsigned int cols, const double value, const std::string& name = NONAME );
-    Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z, const std::string& name = NONAME );
-    Matrix ( const unsigned int rows, const unsigned int cols, const VectorX& values, const std::string& name = NONAME  );
-    Matrix ( const Matrix & m, const std::string& name = NONAME );
-    
+    Matrix ();
+    Matrix (const unsigned int rows, const unsigned int cols, const double value);
+    Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z);
+    Matrix (const unsigned int rows, const unsigned int cols, const VectorX& values);
+    Matrix (const Matrix & m);
     ~Matrix ();
     
     
@@ -71,7 +66,7 @@ public:
     //Fonctions diverses et accesseurs
     unsigned int getNbRows() const;
     unsigned int getNbCols() const;
-    std::string getName() const;
+    const std::string& getName() const;
     double& getVal ( const unsigned int indice );
     double getVal ( const unsigned int indice ) const;
     std::vector<double>& operator [] ( const unsigned int indice );
@@ -82,13 +77,9 @@ public:
     void readMatrix(const std::string & matrixname);
     void cleanSaves();
     Matrix expressionCalcul(const std::string & chaine);
-
-
-
-
-
     void testRegression();
-
+    void setMatrixKB();
+    void setMatrixRA();
 };
 
 

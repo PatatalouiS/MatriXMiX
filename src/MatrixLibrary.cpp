@@ -2,11 +2,11 @@
 #include "MatrixLibrary.h"
 #include <iostream>
 
+
 using namespace std;
 
 
-
-MatrixLibrary:: MatrixLibrary () : library (vector<Matrix>())
+MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
 {
 }
 
@@ -16,17 +16,48 @@ MatrixLibrary:: ~MatrixLibrary()
 }
 
 
-void MatrixLibrary:: addMatrix ( const Matrix& m )
+unsigned int MatrixLibrary:: size () const
 {
-    if (exist(m))
-    {
-        cerr << "Erreur, ce nom de Matrice existe déja ! " << endl;
-        exit (EXIT_FAILURE);
+    return tab.size();
+}
+
+
+bool MatrixLibrary:: isEmpty () const
+{
+    return size() == 0;
+}
+
+
+bool MatrixLibrary:: exist (const string& name) const
+{
+    return (tab.count(name) != 0);
+}
+
+
+void MatrixLibrary:: print () const
+{
+    for(const auto& Mat: tab)
+    { 
+        cout << "Matrice " << Mat.first << " : ";
+        cout << endl << endl << Mat.second << endl;;
     }
-    library.push_back(m);
+    cout << endl;
 }
 
 
-bool MatrixLibrary:: exist (const Matrix& m)
+void MatrixLibrary:: addMatrix (const string& name, const Matrix& m)
 {
+    tab.insert({name, m});
 }
+
+
+const Matrix* MatrixLibrary:: find (const string& name) const
+{
+    if (tab.count(name) == 0)
+    {
+        return NULL;
+    }
+    return &tab.at(name);
+}
+
+

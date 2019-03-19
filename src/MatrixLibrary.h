@@ -2,32 +2,28 @@
 #ifndef _MATRIX_LIBRARY_
 #define _MATRIX_LIBRARY_
 
-
 #include "Matrix.h"
-#include <vector>
-
-
+#include <map>
 
 
 class MatrixLibrary
 {
-    private:
-    
-    std::vector<Matrix> library;
-    
-    
-    bool exist(const Matrix& m);
-    
-    
-    public:
-    
+	private:
+	
+	std::map<std::string, Matrix> tab;
+	
+	public:
+	
     MatrixLibrary ();
     ~MatrixLibrary ();
+    
     unsigned int size () const;
-    void addMatrix (const Matrix& m);
+    bool isEmpty () const;
+	bool exist (const std::string& name) const;
+    void print () const;
+	void addMatrix (const std::string& name, const Matrix& m);
+	const Matrix* find (const std::string& name) const;
 };
-
-
 
 
 #endif

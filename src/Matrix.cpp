@@ -18,29 +18,27 @@ const string PATH = "../../data/sauvegarde.txt";
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
 
 
-Matrix:: Matrix (const string& name) : tab (vector<vector<double>> ())
+
+Matrix:: Matrix () : tab ( vector<vector<double>> ())
 {
     rows = 0;
     cols = 0;
-    this->name = name;
 }
 
 
-Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const double value, const string& name) :
-        tab(vector<vector<double>>(rows, vector<double> (cols, value)))
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double value) :
+        tab (vector<vector<double>>(rows,vector<double> (cols, value)))
 {
     this->rows = rows;
     this->cols = cols;
-    this->name = name;
 }
 
 
-Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type, const string& name) :
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type) :
         tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 {
     this->cols = cols;
     this->rows = rows;
-    this->name = name;
 
     switch (type)
     {
@@ -70,13 +68,14 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const enum in
             {
                 tab[i][i] = 1;
             }
+            break;
         }
         default: break;
     }
 }
 
 
-Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const VectorX & values, const string& name)
+Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values)
 {
     if (values.size() != rows * cols)
     {
@@ -86,7 +85,6 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const VectorX
 
     this->cols = cols;
     this->rows = rows;
-    this->name = name;
 
     vector<double> temp;
 
@@ -103,11 +101,10 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const VectorX
 }
 
 
-Matrix:: Matrix (const Matrix & m, const string& name) : tab (vector<vector<double>> (m.tab))
+Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 {
     cols = m.cols;
     rows = m.rows;
-    this->name = name;
 }
 
 
@@ -568,12 +565,6 @@ unsigned int Matrix:: getNbCols() const
 }
 
 
-string Matrix:: getName() const
-{
-    return name;
-}
-
-
 double& Matrix:: getVal ( const unsigned int indice )
 {
     if ( indice >= (rows * cols))
@@ -647,7 +638,8 @@ bool Matrix:: IsSQMatrix() const
 }
 
 
-void Matrix:: saveMatrix ()
+
+/*void Matrix:: saveMatrix ()
 {
 
     string matrixname(this->name);
@@ -699,7 +691,8 @@ void Matrix:: saveMatrix ()
 
     file.close();
 
-}
+}*/
+
 
 
 void Matrix:: readMatrix(const string & matrixname)
@@ -750,7 +743,6 @@ void Matrix:: readMatrix(const string & matrixname)
         cout << "Erreur" << endl ;
         // exception QT Maxime
     }
-
 }
 
 
@@ -771,7 +763,7 @@ void Matrix:: cleanSaves()
 }
 
 
-void Matrix::testRegression()
+/*void Matrix::testRegression()
 {
     Matrix a(8, 12, R, "MatriceA");
     Matrix b(12, 8, R, "MatriceB");
@@ -811,9 +803,7 @@ void Matrix::testRegression()
     {
         cout << "det(C)=0 ... La matrice C n'est donc pas inversible" << endl;
     }
-
-
-}
+}*/
 
 
 bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
@@ -888,7 +878,8 @@ void Matrix:: polonaise(const std::string & chaine , std::vector<std::string> & 
 }
 
 
-Matrix Matrix:: expressionCalcul(const std::string & chaine)
+
+/*Matrix Matrix:: expressionCalcul(const std::string & chaine)
 {
     vector<string> polish;
     polonaise(chaine,polish);
@@ -918,4 +909,39 @@ Matrix Matrix:: expressionCalcul(const std::string & chaine)
     }
     temp.readMatrix(pile.top());
     return temp;
+}*/
+
+void Matrix:: setMatrixKB ()
+{
+    cout << "Saisir nblignes : ";
+    cin >> rows;
+    cout << "Saisir nbColonnes : ";
+    cin >> cols;
+    
+    tab.resize(rows, vector<double>(cols));
+    
+    for(unsigned int i = 1; i <= rows; ++i)
+    {
+        for(unsigned int j = 1; j <= cols; ++j)
+        {
+            cout << endl << "Saisir coeff " << "(" << i << " , " << j << ")" << ": ";
+            cin >> tab[i-1][j-1];
+        }
+    }
 }
+
+
+void Matrix:: setMatrixRA ()
+{
+    cout << "Saisir nblignes : ";
+    cin >> rows;
+    cout << "Saisir nbColonnes : ";
+    cin >> cols;
+    
+    tab = Matrix(rows, cols, Matrix::R).tab;
+}
+
+
+
+
+

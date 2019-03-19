@@ -276,7 +276,7 @@ TARGET        = bin/MatriXMiX.app/Contents/MacOS/MatriXMiX
 ####### Custom Variables
 EXPORT_QMAKE_MAC_SDK = macosx10.14
 EXPORT_QMAKE_MAC_SDK_VERSION = 10.14
-EXPORT_QMAKE_XCODE_DEVELOPER_PATH = /Library/Developer/CommandLineTools
+EXPORT_QMAKE_XCODE_DEVELOPER_PATH = /Applications/Xcode.app/Contents/Developer
 EXPORT_VALID_ARCHS = x86_64
 EXPORT_ACTIVE_ARCHS = $(filter $(EXPORT_VALID_ARCHS), $(ARCHS))
 EXPORT_ARCH_ARGS = $(foreach arch, $(if $(EXPORT_ACTIVE_ARCHS), $(EXPORT_ACTIVE_ARCHS), $(EXPORT_VALID_ARCHS)), -arch $(arch))
@@ -764,9 +764,10 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-obj/main.o: src/main.cpp src/Matrix.h \
-		src/VectorX.h \
-		src/MatrixLibrary.h
+obj/main.o: src/main.cpp src/MatriXMiXTXT.h \
+		src/MatrixLibrary.h \
+		src/Matrix.h \
+		src/VectorX.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/main.o src/main.cpp
 
 obj/Matrix.o: src/Matrix.cpp src/Matrix.h \
@@ -783,7 +784,10 @@ obj/Polynomial.o: src/Polynomial.cpp src/VectorX.h \
 obj/Fraction.o: src/Fraction.cpp src/Fraction.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/Fraction.o src/Fraction.cpp
 
-obj/MatriXMiXTXT.o: src/MatriXMiXTXT.cpp 
+obj/MatriXMiXTXT.o: src/MatriXMiXTXT.cpp src/MatriXMiXTXT.h \
+		src/MatrixLibrary.h \
+		src/Matrix.h \
+		src/VectorX.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/MatriXMiXTXT.o src/MatriXMiXTXT.cpp
 
 obj/MatrixLibrary.o: src/MatrixLibrary.cpp src/MatrixLibrary.h \
