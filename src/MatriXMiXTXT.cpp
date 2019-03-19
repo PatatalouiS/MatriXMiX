@@ -14,8 +14,10 @@ void cl()
 
 void wait()
 {
+    int c;
     std::cout << "Appuyez sur ENTREE pour continuer..." << std::endl;
-    system("read -n1 -p '' key");
+    c = getchar();
+    c = getchar();
 }
 
 
