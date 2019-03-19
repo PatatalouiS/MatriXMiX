@@ -1,11 +1,6 @@
 
 #include <iostream>
 #include "MatriXMiXTXT.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include <termios.h>
-#include <curses.h>
-#include <stdio.h>
 
 using namespace std;
 
@@ -13,16 +8,14 @@ using namespace std;
 // NON PORTABLE, UNIX UNIQUEMENT
 void cl()
 {
-    int a = system("clear");
-    a = a;
+    system("clear");
 }
 
 void wait()
 {
-    int c;
     std::cout << "Appuyez sur ENTREE pour continuer..." << std::endl;
-    c = getchar();
-    c = getchar();
+    getchar();
+    getchar();
 }
 
 
