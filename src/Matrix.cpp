@@ -256,10 +256,11 @@ const Matrix Matrix:: operator ^ (const int & p) const
     }
 
     Matrix temp (*this);
+    Matrix temp2 (*this);
 
     for ( int i = 1; i < p; ++i )
     {
-        temp = temp * temp;
+        temp = temp * temp2;
     }
     return temp;
 }

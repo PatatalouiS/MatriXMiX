@@ -1,7 +1,11 @@
 
 #include <iostream>
 #include "MatriXMiXTXT.h"
-
+#include <stdlib.h>
+#include <unistd.h>
+#include <termios.h>
+#include <curses.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -9,7 +13,8 @@ using namespace std;
 // NON PORTABLE, UNIX UNIQUEMENT
 void cl()
 {
-    system("clear");
+    int a = system("clear");
+    a = a;
 }
 
 void wait()
@@ -19,8 +24,6 @@ void wait()
     c = getchar();
     c = getchar();
 }
-
-
 
 
 // Sous fonctions pour faciliter l'écriture du menu
@@ -74,8 +77,59 @@ void MatriXMiXTXT:: binaryOperation (const char op) const
 	wait();
 }
 
+void MatriXMiXTXT:: binaryOperationPow() const
+{
+	string name;
+	int pow;
 
+	cout << "Entrez le nom de la Matrice : ";
+	cin >> name;
 
+	const Matrix* op = lib.find(name);
+
+	if (op == NULL)
+	{
+		cerr << "Erreur, Il n'existe pas de matrice nommée " << name << "!" << endl;
+		wait();
+		return;
+	}	
+
+	cout << "Entrez la puissance : ";
+	cin >> pow;
+
+	cout << endl << "Resultat de " << name << " " << '^' << " "<< pow << " est :" << endl << endl;
+	cout << ((*op) ^ pow);
+	wait();
+
+}
+
+void MatriXMiXTXT:: unaryOperation(const char op) const
+{
+	string name;
+
+	cout << "Entrez le nom de la matrice : ";
+	cin >> name;
+
+	const Matrix* op1 = lib.find(name);
+
+	if (op1 == NULL)
+	{
+		cerr << "Erreur, Il n'existe pas de matrice nommée " << name << "!" << endl;
+		wait();
+		return;
+	}
+
+	cout << endl << "Resultat est : " << endl << endl;	
+
+	switch(op)
+	{
+		case 't' : cout << op1->traceMatrix(); break;
+		case 'd' : cout << op1->determinant(); break;
+		case 'i' : cout << op1->inverse(); break;
+		default: break;
+	}
+	wait();
+}
 
 // Fonctions de menu
 
@@ -98,7 +152,11 @@ void MatriXMiXTXT:: mainMenu ()
         cout << "3 - Addition de Matrices (A+B) "<< endl;
 		cout << "4 - Soustraction de Matrices (A-B)" << endl;
 		cout << "5 - Multiplication de Matrices (A*B)" << endl;
-		cout << "6 - Division de Matrices (A/B) " << endl << endl;
+		cout << "6 - Division de Matrices (A/B) " << endl;
+		cout << "7 - Puissance d'une Matrice (A^n)" << endl;
+		cout << "8 - Trace d'une Matrice" << endl;
+		cout << "9 - Determinant d'une Matrice " << endl;
+		cout << "10- Inverse d'une Matrice " << endl << endl;
         cout << "0 - Quitter " << endl << endl << "Votre choix : " ;
         cin >> choice;
         
@@ -110,6 +168,10 @@ void MatriXMiXTXT:: mainMenu ()
 			case 4 : soustraction(); break;
 			case 5 : multiplication(); break;
 			case 6 : division(); break;
+			case 7 : puissance(); break;
+			case 8 : trace() ; break;
+			case 9 : determinant() ; break;
+			case 10: inverse() ; break;
             case 0 : quit = true; break;
             default: break;
         }
@@ -253,7 +315,7 @@ void MatriXMiXTXT:: division() const
 {
 	cl();
 	cout << "===================================================" << endl;
-	cout << "================= MULTIPLICATION ==================" << endl;
+	cout << "==================== DIVISION =====================" << endl;
 	cout << "===================================================" << endl << endl;
 	
 	if (lib.isEmpty())
@@ -266,6 +328,72 @@ void MatriXMiXTXT:: division() const
 	}
 }
 
+void MatriXMiXTXT::puissance() const
+{
+	cl();
+	cout << "===================================================" << endl;
+	cout << "==================== PUISSANCE ====================" << endl;
+	cout << "===================================================" << endl << endl;
 
+	if (lib.isEmpty())
+	{
+		MsgEmptyLib();
+	}
+	else
+	{
+		binaryOperationPow();
+	}
+}
+
+void MatriXMiXTXT::trace() const
+{
+	cl();
+	cout << "===================================================" << endl;
+	cout << "====================== TRACE ======================" << endl;
+	cout << "===================================================" << endl << endl;
+
+	if (lib.isEmpty())
+	{
+		MsgEmptyLib();
+	}
+	else
+	{
+		unaryOperation('t');
+	}
+}
+
+void MatriXMiXTXT::determinant() const
+{
+	cl();
+	cout << "===================================================" << endl;
+	cout << "=================== DETERMINANT ===================" << endl;
+	cout << "===================================================" << endl << endl;
+
+	if (lib.isEmpty())
+	{
+		MsgEmptyLib();
+	}
+	else
+	{
+		unaryOperation('d');
+	}
+}
+
+void MatriXMiXTXT::inverse() const
+{
+	cl();
+	cout << "===================================================" << endl;
+	cout << "===================== INVERSE =====================" << endl;
+	cout << "===================================================" << endl << endl;
+
+	if (lib.isEmpty())
+	{
+		MsgEmptyLib();
+	}
+	else
+	{
+		unaryOperation('i');
+	}
+}
 
 
