@@ -81,6 +81,7 @@ public:
     void saveMatrix();
     void readMatrix(const std::string & matrixname);
     void cleanSaves();
+    Matrix expressionCalcul(const std::string & chaine);
 
 };
 

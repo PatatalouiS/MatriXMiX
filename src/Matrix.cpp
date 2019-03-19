@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const string PATH = "../../data/sauvergarde.txt";
+const string PATH = "../../data/sauvegarde.txt";
 
 
 
@@ -653,7 +653,7 @@ void Matrix:: saveMatrix ()
 
     string matrixname(this->name);
 
-    string filename ("PATH");
+    string filename (PATH);
     ofstream file (filename.c_str(), ios::app);
 
     if(!file.is_open())
@@ -672,7 +672,7 @@ void Matrix:: saveMatrix ()
     }
     else if (testRights=="used")
     {
-        cout << "Une matrice du même nom a déjà été sauvergardée"
+        cout << "Une matrice du même nom a déjà été sauvegardée"
                 "\nVeuillez sélectionner un autre nom" << endl;
         exit(EXIT_FAILURE);
     }
@@ -705,7 +705,7 @@ void Matrix:: saveMatrix ()
 
 void Matrix:: readMatrix(const string & matrixname)
 {
-    string filename("PATH");
+    string filename(PATH);
     ifstream file (filename.c_str());
 
     if(!file.is_open())
@@ -725,6 +725,7 @@ void Matrix:: readMatrix(const string & matrixname)
         }
         if (file.eof())
         {
+            cout << "Problème avec " << matrixname << endl;
             cout << "Cette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
             exit(EXIT_FAILURE);
         }
@@ -840,4 +841,37 @@ void Matrix:: polonaise(const std::string & chaine , std::vector<std::string> & 
         notation_polonaise.push_back(p.top());
         p.pop();
     }
+}
+
+
+Matrix Matrix:: expressionCalcul(const std::string & chaine)
+{
+    vector<string> polish;
+    polonaise(chaine,polish);
+    stack<string> pile;
+    Matrix temp("ppp4");
+    temp.saveMatrix();
+    unsigned int i;
+    unsigned int taille=polish.size();
+
+    for (i = 0; i < taille; i++ )
+    {
+        if (isOperator(polish[i]))
+        {
+            string b = pile.top();
+            pile.pop();
+            string a=pile.top();
+            pile.pop();
+
+            temp=calculate(polish[i],a,b);
+            pile.push(temp.getName());
+            temp.saveMatrix();
+        }
+        else
+        {
+            pile.push(polish[i]);
+        }
+    }
+    temp.readMatrix(pile.top());
+    return temp;
 }
