@@ -6,7 +6,7 @@
 
 
 
-typedef std::vector<float> VectorX;
+typedef std::vector<double> VectorX;
 
 
 

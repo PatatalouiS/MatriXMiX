@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -182,21 +181,22 @@ const Matrix Matrix:: operator * (const Matrix & m) const
     }
 
     double s;
-    Matrix copie(*this);
+    Matrix temp(rows, m.cols, Matrix::Z);
 
-    for (unsigned int i=0; i<copie.rows; i++)
+    for (unsigned int i=0; i<rows; i++)
     {
         for (unsigned int j=0; j<m.cols; j++)
         {
             s=0;
-            for (unsigned int k=0; k<copie.rows; k++)
+            for (unsigned int k=0; k<cols; k++)
             {
                 s+=tab[i][k]*(m[k][j]);
             }
-            copie[i][j]=s;
+            temp[i][j]=s;
         }
     }
-    return copie;
+    return temp;
+
 }
 
 
@@ -256,10 +256,11 @@ const Matrix Matrix:: operator ^ (const int & p) const
     }
 
     Matrix temp (*this);
+    Matrix temp2 (*this);
 
     for ( int i = 1; i < p; ++i )
     {
-        temp = temp * temp;
+        temp = temp * temp2;
     }
     return temp;
 }
@@ -573,7 +574,7 @@ double& Matrix:: getVal ( const unsigned int indice )
         exit ( EXIT_FAILURE );
     }
 
-    return tab[indice/rows][indice%rows]; 
+    return tab[indice/rows][indice%rows];
 }
 
 
@@ -763,47 +764,193 @@ void Matrix:: cleanSaves()
 }
 
 
-/*void Matrix::testRegression()
+void Matrix::testRegression()
 {
-    Matrix a(8, 12, R, "MatriceA");
-    Matrix b(12, 8, R, "MatriceB");
-    Matrix c(8, 8, R, "MatriceC");
-    Matrix d(8, 8, R, "MatriceD");
-    Matrix e("MatriceE");
+    cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
 
-    cout << "Matrice générée aléatoirement: " << a.getName() << " =" << endl << a << endl;
-    cout << "Matrice générée aléatoirement: " << b.getName() << " =" << endl << b << endl;
-    cout << "Matrice générée aléatoirement: " << c.getName() << " =" << endl << c << endl;
+    double tra, det ;
 
-    e = a * b;
-    cout << "A*B = " << endl << e << endl;
+    Matrix a(5, 5, {-19,-4,-12,17,4,19,-14,-5,-3,18,-4,-1,-13,0,19,16,5,-25,-22,-23,-9,-9,22,-9,21});
+    Matrix b(5, 5, {-13,-24,13,-23,-5,5,12,-24,1,-18,21,-2,-21,-5,-4,-15,13,-11,14,8,12,5,8,-24,-2});
+    Matrix c(4, 5, {6,2,0,0,-14,21,-6,21,-16,19,-25,8,-24,-1,-12,15,-6,3,-17,21});
+    Matrix d(4, 5, {7,7,14,-13,-12,-7,-10,4,-2,-9,-7,-17,-13,-5,-6,5,19,-15,-3,-21});
+    Matrix e(5, 4, {24,-7,15,5,10,-24,-2,-3,-9,-19,5,-9,-5,-22,20,18,-21,18,22,-24});
+    Matrix f(5, 5, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25});
+    Matrix g(3, 3, {1,2,3,4,5,6,7,8,0});
 
-    e = c + d;
-    cout << "C+D = " << endl << e << endl;
+    Matrix r1(5, 5, {-32,-28,1,-6,-1,24,-2,-29,-2,0,17,-3,-34,-5,15,1,18,-36,-8,-15,3,-4,30,-33,19});
+    Matrix r2(4, 5, {13,9,14,-13,-26,14,-16,25,-18,10,-32,-9,-37,-6,-18,20,13,-12,-20,0});
+    Matrix r3(5, 5, {-6,20,-25,40,9,14,-26,19,-4,36,-25,1,8,5,23,31,-8,-14,-36,-31,-21,-14,14,15,23});
+    Matrix r4(4, 4, {458,-342,-222,360,-64,292,530,-810,-47,245,-795,337,-83,734,374,-744});
+    Matrix r5(3, 3, {-16,8,-1,14,-7,2,-1,2,-1});
+    Matrix r6(5, 5, {-16687473,-2859275,4429957,38295027,6405675,11243373,2777717,844201,-31171603,-3135973,-12584028,-3513568,10329116,6874376,20116276,24146480,10255020,-32022704,-24798036,-33093968,-8375425,-5884917,24096783,-17068165,33210649});
+    Matrix r7(3, 3, {1,0,0,0,1,0,0,0,1});
 
-    if (c.determinant()!=0)
+    Matrix x(3, 3);
+    Matrix y(4, 4);
+    Matrix z(5, 5);
+
+    cout << "Matrice A =" << endl << a << endl;
+    cout << "Matrice B =" << endl << b << endl;
+    cout << "Matrice C =" << endl << c << endl;
+    cout << "Matrice D =" << endl << d << endl;
+    cout << "Matrice E =" << endl << e << endl;
+    cout << "Matrice F =" << endl << f << endl;
+    cout << "Matrice G =" << endl << g << endl;
+
+
+    cout << "! Addition de 2 matrices carrées: 5*5 + 5*5" << endl;
+    if ( (a.getNbRows()==b.getNbRows()) && (a.getNbCols()==b.getNbCols()) )
     {
-        e = c^-1;
-        cout << "C^-1 = " << endl << e << endl;
-
-        e = c * c^-1;
-        cout << "C^-1 * C = " << endl << e << endl;
-
-        if (d.determinant()!=0)
-        {
-            e = c / d;
-            cout << "C/D = " << endl << e << endl;
-        }
-        else
-        {
-            cout << "det(D)=0 ... La matrice D n'est donc pas inversible" << endl;
-        }
-    }
-    else
+        z = a + b;
+        cout << "Résultat attendu: A+B =" << endl << r1 << endl;
+        cout << "Résultat produit par l'application: A+B =" << endl << z ;
+        if(r1 == z)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl ;
+        cout << endl ;
+    } else
     {
-        cout << "det(C)=0 ... La matrice C n'est donc pas inversible" << endl;
+        cout << "Matrices A et B de tailles différentes"
+                "\nAddition impossible!" << endl;
     }
-}*/
+
+    cout << "! Addition de 2 matrices non carrées: 4*5 + 4*5" << endl;
+    if ( (c.getNbRows()==d.getNbRows()) && (c.getNbCols()==d.getNbCols()) )
+    {
+        z = c + d;
+        cout << "Résultat attendu: C+D =" << endl << r2 << endl;
+        cout << "Résultat produit par l'application: A+C =" << endl << z ;
+        if(r2 == z)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl ;
+        cout << endl ;
+    } else
+    {
+        cout << "Matrices C et D de tailles différentes"
+                "\nAddition impossible! " << endl;
+    }
+
+    cout << "! Soustraction de matrices non carrées: 4*5 - 4*5" << endl;
+    if ( (a.getNbRows()==b.getNbRows()) && (a.getNbCols()==b.getNbCols()) )
+    {
+        z = a - b;
+        cout << "Résultat attendu: A-B =" << endl << r3 << endl;
+        cout << "Résultat produit par l'application: A-B =" << endl << z ;
+        if(r3 == z)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl ;
+        cout << endl ;
+    } else
+    {
+        cout << "Matrices A et B de tailles différentes"
+                "\nSoustraction impossible! " << endl;
+    }
+
+    cout << "! Multiplication de 2 matrices: 4*5 * 5*4" << endl;
+    if (b.getNbRows()==a.getNbCols())
+    {
+        y = c * e;
+        cout << "Résultat attendu: C*E =" << endl << r4 << endl;
+        cout << "Résultat produit par l'application: C*E =" << endl << y ;
+        if(r4 == y)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl ;
+        cout << endl ;
+    } else {
+        cout << "Matrices C et E de tailles incompatibles"
+                "\nMultiplication impossible!" << endl;
+    }
+
+    cout << "! Calcul de trace" << endl;
+    if (a.getNbRows()==a.getNbCols())
+    {
+        tra = a.traceMatrix();
+        cout << "Résultat attendu: tr(A) = -47" << endl;
+        cout << "Résultat produit par l'application: tr(A) = " << tra << endl;
+        if(tra == -47)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl;
+    } else {
+        cout << "La matrice A n'est pas carrée"
+                "\nCalcul de trace impossible!" << endl;
+    }
+
+    cout << "! Calcul de déterminant" << endl;
+    if (f.getNbRows()==f.getNbCols())
+    {
+        det = f.determinant();
+        cout << "Résultat attendu: det(F) = 0" << endl;
+        cout << "Résultat produit par l'application: det(F) = " << det << endl;
+        if(det == 0)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl;
+    } else {
+        cout << "La matrice A n'est pas carrée"
+                "\nCalcul de déterminant impossible!" << endl << endl;
+    }
+
+    if (a.getNbRows()==a.getNbCols())
+    {
+        det = a.determinant();
+        cout << "Résultat attendu: det(A) = 8366164" << endl;
+        cout << "Résultat produit par l'application: tr(A) = " << det << endl;
+        if(det == 8366164)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl;
+    } else {
+        cout << "La matrice A n'est pas carrée"
+                "\nCalcul de déterminant impossible!" << endl;
+    }
+
+    cout << "! Calcul d'inverse et test de l'opérateur scale*Matrix" << endl;
+    if (g.getNbRows()==g.getNbCols())
+    {
+        x = (g^-1)*9;
+        cout << "Résultat attendu: 9*G^-1 = " << endl << r5 << endl;
+        cout << "Résultat produit par l'application: 9*G^-1 = " << endl << x ;
+        if(r5 == x)
+            cout << "Mêmes résultats, poursuite..." << endl ;
+        cout << endl ;
+        cout << endl ;
+    } else {
+        cout << "La matrice G n'est pas carrée"
+                "\nCalcul d'inverse impossible!" << endl;
+    }
+
+    cout << "! Calcul de puissance" << endl;
+    if (a.getNbRows()==a.getNbCols())
+    {
+        z = a^5;
+        cout << "Résultat attendu: A^5 = " << endl << r6 << endl;
+        cout << "Résultat produit par l'application: A^5 = " << endl << z ;
+        if(r6 == z)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl ;
+        cout << endl ;
+    } else {
+        cout << "La matrice A n'est pas carrée"
+                "\nCalcul de puissance impossible!" << endl;
+    }
+
+    cout << "! Dernier test " << endl;
+    if (g.getNbRows()==g.getNbCols())
+    {
+        x = g*(g^-1);
+        cout << "Résultat attendu: G*G^-1 = " << endl << r7 << endl;
+        cout << "Résultat produit par l'application: G*G^-1 = " << endl << x ;
+        if(r7 == x)
+            cout << "Mêmes résultats, poursuite..." << endl ;
+        cout << endl ;
+        cout << endl ;
+    } else {
+        cout << "La matrice G n'est pas carrée"
+                "\nCalcul d'inverse impossible!" << endl;
+    }
+
+    cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
+
+}
 
 
 bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
@@ -878,7 +1025,6 @@ void Matrix:: polonaise(const std::string & chaine , std::vector<std::string> & 
 }
 
 
-
 /*Matrix Matrix:: expressionCalcul(const std::string & chaine)
 {
     vector<string> polish;
@@ -917,9 +1063,9 @@ void Matrix:: setMatrixKB ()
     cin >> rows;
     cout << "Saisir nbColonnes : ";
     cin >> cols;
-    
+
     tab.resize(rows, vector<double>(cols));
-    
+
     for(unsigned int i = 1; i <= rows; ++i)
     {
         for(unsigned int j = 1; j <= cols; ++j)
@@ -937,11 +1083,6 @@ void Matrix:: setMatrixRA ()
     cin >> rows;
     cout << "Saisir nbColonnes : ";
     cin >> cols;
-    
+
     tab = Matrix(rows, cols, Matrix::R).tab;
 }
-
-
-
-
-

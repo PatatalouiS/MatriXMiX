@@ -1,4 +1,3 @@
-
 #include "MatrixLibrary.h"
 #include <iostream>
 
@@ -37,7 +36,7 @@ bool MatrixLibrary:: exist (const string& name) const
 void MatrixLibrary:: print () const
 {
     for(const auto& Mat: tab)
-    { 
+    {
         cout << "Matrice " << Mat.first << " : ";
         cout << endl << endl << Mat.second << endl;;
     }
