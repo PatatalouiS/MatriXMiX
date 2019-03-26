@@ -17,7 +17,7 @@ class MatrixLibrary
     MatrixLibrary ();
     ~MatrixLibrary ();
     
-    unsigned int size () const;
+    unsigned int long size () const;
     bool isEmpty () const;
 	bool exist (const std::string& name) const;
     void print () const;

@@ -16,7 +16,7 @@ MatrixLibrary:: ~MatrixLibrary()
 }
 
 
-unsigned int MatrixLibrary:: size () const
+unsigned long int MatrixLibrary:: size () const
 {
     return tab.size();
 }
