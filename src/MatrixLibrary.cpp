@@ -61,3 +61,10 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 }
 
 
+void MatrixLibrary:: erase (const string & name)
+{
+    if(tab.erase(name)!=1)
+    {
+        cout << "Suppression non effectuée" << endl;
+    }
+}

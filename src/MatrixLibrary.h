@@ -23,6 +23,7 @@ class MatrixLibrary
     void print () const;
 	void addMatrix (const std::string& name, const Matrix& m);
 	const Matrix* find (const std::string& name) const;
+	void erase (const std:: string & name);
 };
 
 
