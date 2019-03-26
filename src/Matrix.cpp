@@ -182,21 +182,21 @@ const Matrix Matrix:: operator * (const Matrix & m) const
     }
 
     double s;
-    Matrix copie(*this);
+    Matrix temp(rows, m.cols, Matrix::Z);
 
-    for (unsigned int i=0; i<copie.rows; i++)
+    for (unsigned int i=0; i<rows; i++)
     {
         for (unsigned int j=0; j<m.cols; j++)
         {
             s=0;
-            for (unsigned int k=0; k<copie.rows; k++)
+            for (unsigned int k=0; k<cols; k++)
             {
                 s+=tab[i][k]*(m[k][j]);
             }
-            copie[i][j]=s;
+            temp[i][j]=s;
         }
     }
-    return copie;
+    return temp;
 }
 
 
