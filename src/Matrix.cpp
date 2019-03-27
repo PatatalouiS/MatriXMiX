@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -196,7 +197,6 @@ const Matrix Matrix:: operator * (const Matrix & m) const
         }
     }
     return temp;
-
 }
 
 
@@ -574,7 +574,7 @@ double& Matrix:: getVal ( const unsigned int indice )
         exit ( EXIT_FAILURE );
     }
 
-    return tab[indice/rows][indice%rows];
+    return tab[indice/rows][indice%rows]; 
 }
 
 
@@ -1025,6 +1025,7 @@ void Matrix:: polonaise(const std::string & chaine , std::vector<std::string> & 
 }
 
 
+
 /*Matrix Matrix:: expressionCalcul(const std::string & chaine)
 {
     vector<string> polish;
@@ -1063,9 +1064,9 @@ void Matrix:: setMatrixKB ()
     cin >> rows;
     cout << "Saisir nbColonnes : ";
     cin >> cols;
-
+    
     tab.resize(rows, vector<double>(cols));
-
+    
     for(unsigned int i = 1; i <= rows; ++i)
     {
         for(unsigned int j = 1; j <= cols; ++j)
@@ -1083,6 +1084,11 @@ void Matrix:: setMatrixRA ()
     cin >> rows;
     cout << "Saisir nbColonnes : ";
     cin >> cols;
-
+    
     tab = Matrix(rows, cols, Matrix::R).tab;
 }
+
+
+
+
+

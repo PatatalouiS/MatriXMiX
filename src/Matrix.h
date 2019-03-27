@@ -1,3 +1,4 @@
+
 #ifndef _MATRIX_H
 #define _MATRIX_H
 
@@ -11,13 +12,13 @@
 class Matrix
 {
 private:
-
+    
     unsigned int rows;
     unsigned int cols;
     std::vector<std::vector<double>> tab;
-
-
-
+    
+    
+    
 private:
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     double determinant(unsigned int dim) const;
@@ -27,16 +28,16 @@ private:
     const std::string saveRights(const std::string & filename, const std::string & matrixname);
     bool priorite_sup_egal (const std::string & opd,const std::string & opg);
     void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
-
+    
 public:
 
     // Fonction statique, renvoie, la matrice identité demandée
     static Matrix ID ( const unsigned int size );
-
-
+    
+    
     // type énuméré pour l'initialisation
     enum initMatrix { Z, I, R };
-
+    
     // Constructeurs et Destructeurs
     Matrix ();
     Matrix (const unsigned int rows, const unsigned int cols, const double value);
@@ -44,8 +45,8 @@ public:
     Matrix (const unsigned int rows, const unsigned int cols, const VectorX& values);
     Matrix (const Matrix & m);
     ~Matrix ();
-
-
+    
+    
     //Fonctions de calcul algébrique et opérateur de calculs
     const Matrix operator + (const Matrix & m) const;
     const Matrix operator - (const Matrix & m) const;
@@ -60,11 +61,12 @@ public:
     Matrix coMatrix() const;
     Matrix transposeMatrix() const;
     Matrix inverse() const;
-
-
+ 
+    
     //Fonctions diverses et accesseurs
     unsigned int getNbRows() const;
     unsigned int getNbCols() const;
+    const std::string& getName() const;
     double& getVal ( const unsigned int indice );
     double getVal ( const unsigned int indice ) const;
     std::vector<double>& operator [] ( const unsigned int indice );
@@ -82,3 +84,4 @@ public:
 
 
 #endif
+

@@ -1,3 +1,4 @@
+
 #include "MatrixLibrary.h"
 #include <iostream>
 
@@ -15,7 +16,7 @@ MatrixLibrary:: ~MatrixLibrary()
 }
 
 
-unsigned int MatrixLibrary:: size () const
+unsigned long int MatrixLibrary:: size () const
 {
     return tab.size();
 }
@@ -36,7 +37,7 @@ bool MatrixLibrary:: exist (const string& name) const
 void MatrixLibrary:: print () const
 {
     for(const auto& Mat: tab)
-    {
+    { 
         cout << "Matrice " << Mat.first << " : ";
         cout << endl << endl << Mat.second << endl;;
     }
@@ -60,3 +61,10 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 }
 
 
+void MatrixLibrary:: erase (const string & name)
+{
+    if(tab.erase(name)!=1)
+    {
+        cout << "Suppression non effectuée" << endl;
+    }
+}
