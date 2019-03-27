@@ -11,7 +11,7 @@
 
 class Polynomial
 {
-private:
+public:
     unsigned int degree;
     std::vector<double> tab;
 
@@ -21,6 +21,10 @@ public:
     Polynomial(const unsigned int & d, const VectorX & values);
     Polynomial(const Polynomial & p);
     ~Polynomial ();
+    friend std::ostream& operator << ( std::ostream& flux, const Polynomial & p);
+    const Polynomial operator +(const Polynomial & p);
+    const Polynomial operator -(const Polynomial & p);
+    const Polynomial operator *(const Polynomial & p);
 
 
 
