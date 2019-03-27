@@ -20,7 +20,8 @@ HEADERS += src/Matrix.h \
 	src/Fraction.h \
 	src/MatriXMiXTXT.h \
 	src/MatrixLibrary.h \
-	src/MainWindow.h
+	src/MainWindow.h \
+    src/LibraryWindow.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -29,6 +30,7 @@ SOURCES += src/main.cpp \
 	src/Fraction.cpp \
 	src/MatriXMiXTXT.cpp \
 	src/MatrixLibrary.cpp \
-	src/MainWindow.cpp
+	src/MainWindow.cpp \
+    src/LibraryWindow.cpp
 
 
