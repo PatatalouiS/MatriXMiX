@@ -1,15 +1,16 @@
 
-#include <iostream>
-#include "MatriXMiXTXT.h"
+#include <QApplication>
+#include "MainWindow.h"
 
 using namespace std;
 
 
-int main ( void )
+int main (int argc, char* argv[])
 {
-    MatriXMiXTXT app;
-    app.mainMenu();
-    return 0;
+    QApplication app(argc, argv);
+    MainWindow* win = new MainWindow;
+    win->show();
+    return app.exec();
 }
 
 
