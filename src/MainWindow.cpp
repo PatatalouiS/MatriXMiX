@@ -3,10 +3,15 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QVBoxLayout>
+#include <QDir>
+#include <QDebug>
+#include <QApplication>
+#include <QFileInfo>
 
 
 MainWindow:: MainWindow() : QMainWindow()
 {
+    lib = new LibraryWindow(this);
     QWidget* mainWidget = new QWidget(this);
     QWidget* headerWidget = new QWidget;
     QVBoxLayout* mainLayout = new QVBoxLayout;
@@ -14,8 +19,9 @@ MainWindow:: MainWindow() : QMainWindow()
     QGridLayout* operationLayout = new QGridLayout;
     QFont font ("Arial");
     font.setPointSize(16);
-    
-    QPixmap im ("/Users/maximeolivie/Desktop/Test_Qt/Logo maths.jpg");
+	
+	QDir::setCurrent("../");
+	QPixmap im (QDir::currentPath() + "/data/Logo_maths.jpg");
     im = im.scaled(200, 100);
     QLabel* logo = new QLabel;
     logo->setPixmap(im);
@@ -52,11 +58,10 @@ MainWindow:: MainWindow() : QMainWindow()
         tempWidget->setCursor(Qt::PointingHandCursor);
         tempWidget->setFont(font);
         connect(tempWidget, &QPushButton::clicked,
-            [i, this] ()
-            {
-                this->computeChoice(i);
-                    
-            });
+                [i, this] () -> void
+                {
+                    this->compute_choice(i);
+                });
         operations.append(tempWidget);
         operationLayout->addWidget(tempWidget, i/3, (i%3));
     }
@@ -65,6 +70,8 @@ MainWindow:: MainWindow() : QMainWindow()
     QPushButton* openLibrary = new QPushButton("Ouvrir la librairie");
     operationLayout->addWidget(openLibrary, 3, 2);
     operations.append(openLibrary);
+    connect(openLibrary, &QPushButton::clicked, this, &MainWindow::show_library);
+    // fin bouton temporaire
     
     mainLayout->setContentsMargins(0, 25, 0, 0);
     mainLayout->addWidget(headerWidget);
@@ -75,14 +82,19 @@ MainWindow:: MainWindow() : QMainWindow()
 }
 
 
-void MainWindow:: computeChoice (const unsigned int choice)
+void MainWindow:: compute_choice (const unsigned int choice)
 {
     close();
+}
+
+void MainWindow:: show_library()
+{
+    lib->show();
+    hide();
 }
 
 
 MainWindow:: ~MainWindow()
 {
-    
 }
 

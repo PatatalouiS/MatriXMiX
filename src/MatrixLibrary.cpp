@@ -68,3 +68,8 @@ void MatrixLibrary:: erase (const string & name)
         cout << "Suppression non effectuée" << endl;
     }
 }
+
+const std::map<std::string, Matrix>& MatrixLibrary:: data () const
+{
+    return tab;
+}
