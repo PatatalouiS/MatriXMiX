@@ -3,13 +3,20 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = MatriXMiX
-INCLUDEPATH += .
+CONFIG += link_prl qt debug release
+QT += core gui xml  svg widgets printsupport
+
+
+INCLUDEPATH += ext/lib
+LIBS += -L"ext/jkqtmathtextlib"  -ljkqtmathtextlib
+
+
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
+MOC_DIR = ./moc
+TARGET = MatriXMiX
 
 DEFINES += QT_DEPRECATED_WARNINGS
-QT += widgets
 
 
 # Input
