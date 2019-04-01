@@ -10,7 +10,6 @@ QT += core gui xml  svg widgets printsupport
 INCLUDEPATH += ext/lib
 LIBS += -L"ext/jkqtmathtextlib"  -ljkqtmathtextlib
 
-
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
 MOC_DIR = ./moc
