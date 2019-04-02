@@ -20,7 +20,8 @@ MainWindow:: MainWindow() : QMainWindow()
     QFont font ("Arial");
     font.setPointSize(16);
 	
-	QDir::setCurrent("../");
+    //QDir::setCurrent(");
+    qDebug() << QDir::currentPath();
 	QPixmap im (QDir::currentPath() + "/data/Logo_maths.jpg");
     im = im.scaled(200, 100);
     QLabel* logo = new QLabel;
