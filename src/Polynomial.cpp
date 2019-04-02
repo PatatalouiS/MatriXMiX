@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <math.h>
 #include "VectorX.h"
 #include "Polynomial.h"
 
@@ -111,11 +112,12 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)
 
 ostream& operator << (ostream& flux, const Polynomial & p)
 {
-    for ( auto i : p.tab )
+    unsigned int i;
+    for (i=0; i<=p.degree; i++)
     {
-        flux << i << " ";
+        flux << p.tab[i] << " ";
     }
-
+    cout << endl;
     return flux;
 }
 
@@ -123,24 +125,70 @@ ostream& operator << (ostream& flux, const Polynomial & p)
 const Polynomial Polynomial:: operator *(const Polynomial & p)
 {
     unsigned int i,j,k,d=degree+p.degree;
+    double c;
     Polynomial result(d);
 
-    for(i=0; i<d; i++)
-        result.tab[i]=0;
 
-    for(i=0; i<d; i++)
+    for(i=0; i<=d; i++)
     {
-        for(j=0; j<degree; j++)
+        c=0.0;
+        for(j=0; j<=degree; j++)
         {
-            for(k=0; k<p.degree; k++)
+            for(k=0; k<=degree; k++)
             {
-                if(i==k+j)
+                if(j+k==i)
                 {
-                    result.tab[i]+=(tab[j]+p.tab[k]);
+                    c+=tab[j]*p.tab[k];
                 }
-
             }
         }
+        result.tab[i]=c;
     }
     return result;
+}
+
+
+const Polynomial Polynomial:: operator *(const float & scale)
+{
+    unsigned int i;
+    for (i=0; i<=degree; i++)
+    {
+        tab[i]*=scale;
+    }
+    return (*this);
+}
+
+
+void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, double & x2)
+{
+    if (degree!=2)
+    {
+        cout << "C'est pas du second degré ça :/" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    double a,b,c;
+    a=tab[2];
+    b=tab[1];
+    c=tab[0];
+
+    double delta=b*b-4*a*c;
+
+    if(delta<0)
+    {
+        nbsolution=0;
+    }
+        else if (delta==0)
+        {
+            nbsolution=1;
+            x1=-b/(2*a);
+        }
+        else
+            {
+                nbsolution=2;
+                double r=sqrt(delta);
+                x1=(-b-r)/(2*a);
+                x2=(-b+r)/(2*a);
+            }
+
 }
