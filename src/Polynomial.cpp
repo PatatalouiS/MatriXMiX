@@ -8,6 +8,10 @@
 
 using namespace std;
 
+
+const double EPSILON=0.00001;
+
+
 Polynomial :: Polynomial() : tab (1,0)
 {
     degree=0;
@@ -46,6 +50,44 @@ Polynomial::Polynomial(const Polynomial &p) : tab (vector<double>(p.tab))
 
 Polynomial::~Polynomial()
 {
+}
+
+
+void Polynomial:: check(Polynomial & p)
+{
+    for(unsigned int i=0; i<=p.degree; i++)
+    {
+        if(abs(p.tab[i])<EPSILON)
+        {
+            p.tab[i]=0;
+        }
+
+    }
+}
+
+
+ostream& operator << (ostream& flux, const Polynomial & p)
+{
+    unsigned int i;
+    for (i=0; i<=p.degree; i++)
+    {
+        flux << p.tab[i] << " ";
+    }
+    cout << endl;
+    return flux;
+}
+
+
+Polynomial& Polynomial:: operator =(const Polynomial & p)
+{
+    degree=p.degree;
+    unsigned int i;
+    for (i=0; i<=degree; i++)
+    {
+        tab[i]=p.tab[i];
+    }
+
+    return (*this);
 }
 
 
@@ -110,40 +152,28 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)
 }
 
 
-ostream& operator << (ostream& flux, const Polynomial & p)
-{
-    unsigned int i;
-    for (i=0; i<=p.degree; i++)
-    {
-        flux << p.tab[i] << " ";
-    }
-    cout << endl;
-    return flux;
-}
-
-
 const Polynomial Polynomial:: operator *(const Polynomial & p)
 {
     unsigned int i,j,k,d=degree+p.degree;
-    double c;
     Polynomial result(d);
 
+    for(i=0; i<=d; i++)
+        result.tab[i]=0;
 
     for(i=0; i<=d; i++)
     {
-        c=0.0;
         for(j=0; j<=degree; j++)
         {
-            for(k=0; k<=degree; k++)
+            for(k=0; k<=p.degree; k++)
             {
                 if(j+k==i)
                 {
-                    c+=tab[j]*p.tab[k];
+                    result.tab[i]+=tab[j]*p.tab[k];
                 }
             }
         }
-        result.tab[i]=c;
     }
+    check(result);
     return result;
 }
 
@@ -155,7 +185,37 @@ const Polynomial Polynomial:: operator *(const float & scale)
     {
         tab[i]*=scale;
     }
+    check(*this);
     return (*this);
+}
+
+
+const Polynomial Polynomial:: division (const Polynomial & divisor, Polynomial & reste)
+{
+    Polynomial quotient(degree-divisor.degree);
+    Polynomial copy(*this);
+    unsigned int i=0,j;
+    while ( degree-i >= divisor.degree)
+    {
+        quotient.tab[degree-divisor.degree-i]=copy.tab[degree-i]/divisor.tab[divisor.degree];
+        //cout<<quotient.tab[degree-divisor.degree-i]<<endl;
+
+        for ( j=i; j<=divisor.degree; j++)
+        {
+            copy.tab[degree-j]=copy.tab[degree-j]-divisor.tab[divisor.degree-(j-i)]*
+                                                  quotient.tab[degree-divisor.degree-i];
+        }
+        i++;
+    }
+
+    // cout<<quotient;
+    // cout<<(*this);
+    // cout<<divisor;
+    // cout<<(quotient*divisor);
+    reste=(*this)-(quotient*divisor);
+    //cout<<reste;
+
+    return quotient;
 }
 
 
@@ -168,9 +228,11 @@ void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, doubl
     }
 
     double a,b,c;
-    a=tab[2];
-    b=tab[1];
-    c=tab[0];
+    Polynomial copie(*this);
+    check(copie);
+    a=copie.tab[2];
+    b=copie.tab[1];
+    c=copie.tab[0];
 
     double delta=b*b-4*a*c;
 
