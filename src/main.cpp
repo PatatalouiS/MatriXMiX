@@ -11,6 +11,7 @@ int main (void)
     Polynomial p1(5, {-5,1,0,3,0,1});
     Polynomial p2(1, {0, 1});
     Polynomial p3;
+    Polynomial p4;
 
     unsigned int a;
     double b,c;
