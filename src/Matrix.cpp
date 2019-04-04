@@ -6,6 +6,8 @@
 #include <cmath>
 #include <ctime>
 #include <stack>
+#include <utility>
+#include <eigen3/Eigen/Dense>
 #include "Matrix.h"
 
 
@@ -1089,6 +1091,74 @@ void Matrix:: setMatrixRA ()
 }
 
 
+Eigen::MatrixXd Matrix:: class2Eigen ()
+{
+    unsigned int i,j,r,c;
+    r = getNbRows();
+    c = getNbCols();
+    Eigen:: MatrixXd m(r,c);
+
+    for(i=0 ; i<r ; i++)
+    {
+        for(j=0 ; j<c ; j++)
+        {
+            m(i,j) = tab[i][j] ;
+        }
+    }
+
+    return m;
+}
 
 
+Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
+{
+    unsigned int i,j;
+    unsigned int r,c;
+    r = (unsigned int) m.rows();
+    c = (unsigned int) m.cols();
+    Matrix a(r,c);
 
+    for(i=0 ; i<r ; i++)
+    {
+        for(j=0 ; j<c ; j++)
+        {
+            a.tab[i][j] = m(i,j) ;
+        }
+    }
+
+    return a;
+}
+
+
+Matrix Matrix:: diagonalise ()
+{
+    Matrix m;
+    Eigen:: MatrixXd a,b;
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
+    b = res.pseudoEigenvalueMatrix();
+    m = eigen2Class(b);
+
+    return m;
+
+}
+
+
+vector<double> Matrix:: valeurspropres()
+{
+    unsigned int i, n=getNbRows();
+    vector<double> result;
+    pair <double,double> p;
+
+    Eigen::MatrixXd a;
+    a = class2Eigen();
+
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+
+    for (unsigned int i=0; i<n; i++)
+    {
+        result.push_back()
+    }
+
+    return result;
+}
