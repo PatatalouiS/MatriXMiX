@@ -21,7 +21,8 @@ MainWindow:: MainWindow() : QMainWindow()
     font.setPointSize(16);
 	
     //QDir::setCurrent(");
-    qDebug() << QDir::currentPath();
+    qDebug() << QDir::currentPath() << endl;
+    qDebug() << QCoreApplication::applicationFilePath() << endl;
 	QPixmap im (QDir::currentPath() + "/data/Logo_maths.jpg");
     im = im.scaled(200, 100);
     QLabel* logo = new QLabel;
@@ -64,7 +65,7 @@ MainWindow:: MainWindow() : QMainWindow()
                     this->compute_choice(i);
                 });
         operations.append(tempWidget);
-        operationLayout->addWidget(tempWidget, i/3, (i%3));
+        operationLayout->addWidget(tempWidget, i/3, i%3);
     }
     
     //bouton temporaire :
