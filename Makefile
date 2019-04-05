@@ -376,7 +376,8 @@ compiler_clean: compiler_moc_predefs_clean
 obj/main.o: src/main.cpp src/MatriXMiXTXT.h \
 		src/MatrixLibrary.h \
 		src/Matrix.h \
-		src/VectorX.h
+		src/VectorX.h \
+		src/Polynomial.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/main.o src/main.cpp
 
 obj/Matrix.o: src/Matrix.cpp src/Matrix.h \

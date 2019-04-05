@@ -80,7 +80,7 @@ public:
     void testRegression();
     void setMatrixKB();
     void setMatrixRA();
-    std::vector<double> valeurspropres();
+    std::vector<std::complex<double>> eigenValues();
     Matrix diagonalise ();
 
 private:

@@ -1130,6 +1130,25 @@ Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
 }
 
 
+vector<complex<double>> Matrix:: eigenValues()
+{
+    unsigned int i, n=getNbRows();
+    vector<complex<double>> result;
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+
+    for (i=0; i<n; i++)
+    {
+        result.push_back(m.eigenvalues()(i));
+        cout << result[i] << endl;
+    }
+
+    return result;
+}
+
+
 Matrix Matrix:: diagonalise ()
 {
     Matrix m;
@@ -1141,24 +1160,4 @@ Matrix Matrix:: diagonalise ()
 
     return m;
 
-}
-
-
-vector<double> Matrix:: valeurspropres()
-{
-    unsigned int i, n=getNbRows();
-    vector<double> result;
-    pair <double,double> p;
-
-    Eigen::MatrixXd a;
-    a = class2Eigen();
-
-    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
-
-    for (unsigned int i=0; i<n; i++)
-    {
-        result.push_back()
-    }
-
-    return result;
 }
