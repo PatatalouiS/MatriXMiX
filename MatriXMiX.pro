@@ -3,8 +3,8 @@
 ######################################################################
 
 TEMPLATE = app
-CONFIG += link_prl qt debug release
-QT += core gui xml  svg widgets printsupport
+CONFIG += link_prl qt debug_and_release
+QT += core gui xml svg widgets printsupport
 
 
 INCLUDEPATH += ext/lib
@@ -27,7 +27,9 @@ HEADERS += src/Matrix.h \
 	src/MatriXMiXTXT.h \
 	src/MatrixLibrary.h \
 	src/MainWindow.h \
-    src/LibraryWindow.h
+    src/LibraryWindow.h \
+    src/AddMatrixWidget.h \
+    src/ShowMatrixWidget.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -37,6 +39,8 @@ SOURCES += src/main.cpp \
 	src/MatriXMiXTXT.cpp \
 	src/MatrixLibrary.cpp \
 	src/MainWindow.cpp \
-    src/LibraryWindow.cpp
+    src/LibraryWindow.cpp \
+    src/AddMatrixWidget.cpp \
+    src/ShowMatrixWidget.cpp
 
 
