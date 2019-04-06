@@ -186,8 +186,43 @@ const Polynomial Polynomial:: operator *(const float & scale)
     {
         tab[i]*=scale;
     }
-    (*this).check();
+    check();
     return (*this);
 }
 
 
+void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, double & x2)
+{
+    if (degree!=2)
+    {
+        cout << "C'est pas du second degré ça :/" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    double a,b,c;
+    Polynomial copie(*this);
+    copie.check();
+    a=copie.tab[2];
+    b=copie.tab[1];
+    c=copie.tab[0];
+
+    double delta=b*b-4*a*c;
+
+    if(delta<0)
+    {
+        nbsolution=0;
+    }
+        else if (delta==0)
+        {
+            nbsolution=1;
+            x1=-b/(2*a);
+        }
+        else
+            {
+                nbsolution=2;
+                double r=sqrt(delta);
+                x1=(-b-r)/(2*a);
+                x2=(-b+r)/(2*a);
+            }
+
+}
