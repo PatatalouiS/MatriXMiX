@@ -53,13 +53,13 @@ Polynomial::~Polynomial()
 }
 
 
-void Polynomial:: check(Polynomial & p)
+void Polynomial:: check()
 {
-    for(unsigned int i=0; i<=p.degree; i++)
+    for(unsigned int i=0; i<=degree; i++)
     {
-        if(abs(p.tab[i])<EPSILON)
+        if(abs(tab[i])<EPSILON)
         {
-            p.tab[i]=0;
+            tab[i]=0;
         }
 
     }
@@ -69,6 +69,7 @@ void Polynomial:: check(Polynomial & p)
 ostream& operator << (ostream& flux, const Polynomial & p)
 {
     unsigned int i;
+
     for (i=0; i<=p.degree; i++)
     {
         flux << p.tab[i] << " ";
@@ -78,7 +79,7 @@ ostream& operator << (ostream& flux, const Polynomial & p)
 }
 
 
-Polynomial& Polynomial:: operator =(const Polynomial & p)
+Polynomial& Polynomial:: operator = (const Polynomial & p)
 {
     degree=p.degree;
     unsigned int i;
@@ -173,7 +174,7 @@ const Polynomial Polynomial:: operator *(const Polynomial & p)
             }
         }
     }
-    check(result);
+    result.check();
     return result;
 }
 
@@ -185,37 +186,8 @@ const Polynomial Polynomial:: operator *(const float & scale)
     {
         tab[i]*=scale;
     }
-    check(*this);
+    check();
     return (*this);
-}
-
-
-const Polynomial Polynomial:: division (const Polynomial & divisor, Polynomial & reste)
-{
-    Polynomial quotient(degree-divisor.degree);
-    Polynomial copy(*this);
-    unsigned int i=0,j;
-    while ( degree-i >= divisor.degree)
-    {
-        quotient.tab[degree-divisor.degree-i]=copy.tab[degree-i]/divisor.tab[divisor.degree];
-        //cout<<quotient.tab[degree-divisor.degree-i]<<endl;
-
-        for ( j=i; j<=divisor.degree; j++)
-        {
-            copy.tab[degree-j]=copy.tab[degree-j]-divisor.tab[divisor.degree-(j-i)]*
-                                                  quotient.tab[degree-divisor.degree-i];
-        }
-        i++;
-    }
-
-    // cout<<quotient;
-    // cout<<(*this);
-    // cout<<divisor;
-    // cout<<(quotient*divisor);
-    reste=(*this)-(quotient*divisor);
-    //cout<<reste;
-
-    return quotient;
 }
 
 
@@ -229,7 +201,7 @@ void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, doubl
 
     double a,b,c;
     Polynomial copie(*this);
-    check(copie);
+    copie.check();
     a=copie.tab[2];
     b=copie.tab[1];
     c=copie.tab[0];
@@ -254,3 +226,5 @@ void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, doubl
             }
 
 }
+
+

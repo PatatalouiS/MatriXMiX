@@ -13,8 +13,8 @@
 
 using namespace std;
 
+const double EPSILON = 0.0000001;
 const string PATH = "../../data/sauvegarde.txt";
-
 
 
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
@@ -1142,7 +1142,6 @@ vector<complex<double>> Matrix:: eigenValues()
     for (i=0; i<n; i++)
     {
         result.push_back(m.eigenvalues()(i));
-        cout << result[i] << endl;
     }
 
     return result;
@@ -1159,5 +1158,4 @@ Matrix Matrix:: diagonalise ()
     m = eigen2Class(b);
 
     return m;
-
 }
