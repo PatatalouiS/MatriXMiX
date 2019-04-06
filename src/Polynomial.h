@@ -28,8 +28,7 @@ public:
     const Polynomial operator -(const Polynomial & p);
     const Polynomial operator *(const Polynomial & p);
     const Polynomial operator *(const float & scale);
-    const Polynomial division (const Polynomial & divisor,Polynomial & reste);
-    void equation2degre (unsigned int & nbsolution, double & x1, double & x2);
+
 
 
 };
