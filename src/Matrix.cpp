@@ -6,6 +6,7 @@
 #include <cmath>
 #include <ctime>
 #include <stack>
+#include <eigen3/Eigen/Dense>
 #include "Matrix.h"
 
 
@@ -1087,8 +1088,3 @@ void Matrix:: setMatrixRA ()
     
     tab = Matrix(rows, cols, Matrix::R).tab;
 }
-
-
-
-
-
