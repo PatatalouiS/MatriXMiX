@@ -4,11 +4,14 @@
 
 TEMPLATE = app
 CONFIG += link_prl qt debug_and_release
-QT += core gui xml svg widgets printsupport
+#QT += core gui xml svg widgets printsupport
 
+QT += widgets
 
-INCLUDEPATH += ext/lib
-LIBS += -L"ext/jkqtmathtextlib"  -ljkqtmathtextlib
+include(ext/lib/jkqtmathtext.pri);
+
+#INCLUDEPATH += ext/lib/
+#LIBS += -L"ext/jkqtmathtextlib/"  -ljkqtmathtextlib
 
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
