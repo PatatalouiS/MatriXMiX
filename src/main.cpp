@@ -1,26 +1,27 @@
 
 #include <QApplication>
+#include <iostream>
 #include <QDir>
+#include <QDebug>
 #include "MainWindow.h"
 #include "LibraryWindow.h"
 
-#if defined(Q_OS_MACX)
 
-bool a = QDir::setCurrent("../../../data");
-const QString C_PATH = QDir::currentPath();
-
-#endif
 
 
 
 using namespace std;
 
+extern const string APP_PATH = QDir(QApplication::applicationDirPath() + "/../../../").absolutePath().toStdString();
 
 int main (int argc, char* argv[])
 {
     QApplication app(argc, argv);
+
+    QDir(QApplication::applicationDirPath() + "/../../../").absolutePath().toStdString();
+
     //MainWindow* win = new MainWindow;
-    LibraryWindow* win = new LibraryWindow(NULL);
+    LibraryWindow* win = new LibraryWindow(nullptr);
     win->show();
     return app.exec();
 }

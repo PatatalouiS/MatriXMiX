@@ -20,7 +20,6 @@ MainWindow:: MainWindow() : QMainWindow()
     QFont font ("Arial");
     font.setPointSize(16);
 	
-    //QDir::setCurrent(");
     qDebug() << QDir::currentPath() << endl;
     qDebug() << QCoreApplication::applicationFilePath() << endl;
 	QPixmap im (QDir::currentPath() + "/data/Logo_maths.jpg");

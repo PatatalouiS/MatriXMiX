@@ -8,8 +8,10 @@
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
 {
     QHBoxLayout* showMatrixLayout = new QHBoxLayout;
-	imgSelected = new QLabel;
+    showMatrixLayout->setAlignment(Qt::AlignCenter);
+	imgSelected = new QLabel(this);
     showMatrixLayout->addWidget(imgSelected);
+
     setLayout(showMatrixLayout);
 }
 

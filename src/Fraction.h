@@ -15,7 +15,6 @@ private:
 
     int numerateur, denominateur;
 
-
 public:
 
     Fraction();

@@ -28,22 +28,34 @@ LibraryWindow:: LibraryWindow (QWidget* main) : QWidget(main)
     matrixView->setShowGrid(false);
     matrixView->setAlternatingRowColors(true);
 	matrixView->setStyleSheet("* {alternate-background-color: #d6d1d0;background-color: white;}"
-
 							  "QHeaderView::section { background-color: #bdcef0; border: 0px;}");
 
+    edit = new QPushButton("Editer");
+    remove = new QPushButton("Supprimer");
+    edit->setMinimumSize(100,50);
+    remove->setMinimumSize(100,50);
+    QHBoxLayout* viewFooterLayout = new QHBoxLayout;
+    viewFooterLayout->addWidget(edit);
+    viewFooterLayout->addWidget(remove);
+
+    QVBoxLayout* matrixViewLayout = new QVBoxLayout;
+    matrixViewLayout->addWidget(matrixView);
+    matrixViewLayout->addLayout(viewFooterLayout);
 
     QTabWidget* choice = new QTabWidget;
     choice->addTab(showMatrixWidget, "Visualiser");
     choice->addTab(addMatrixWidget, "Ajouter");
 
-    QHBoxLayout* subMenu = new QHBoxLayout;
-    subMenu->addWidget(matrixView);
-    subMenu->addWidget(choice);
-    setLayout(subMenu);
+    QHBoxLayout* mainLayout = new QHBoxLayout;
+    mainLayout->addLayout(matrixViewLayout);
+    mainLayout->addWidget(choice);
+
+    setLayout(mainLayout);
 
     connect(this, &LibraryWindow::close, main, &QWidget::show);
     connect(matrixView->selectionModel(), &QItemSelectionModel::selectionChanged,
             this, &LibraryWindow::compute_selection);
+    //connect(edit, &QPushButton::clicked, this, &LibraryWindow::editMatrix);
 }
 
 
@@ -67,6 +79,16 @@ void LibraryWindow:: updateView (QList<QStandardItem*> newLine)
     matrixModel->appendRow(newLine);
     matrixView->sortByColumn(0, Qt::AscendingOrder);
 }
+
+//void LibraryWindow:: editMatrix ()
+//{
+//    int currentRow = matrixView->currentIndex().row();
+//	QString currentName = matrixModel->item(currentRow, 0)->data(2).toString();
+
+//	const Matrix*;
+
+//	addMatrixWidget->fillWithMatrix(lib.find(currentName));
+//}
 
 
 LibraryWindow:: ~LibraryWindow()
