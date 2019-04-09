@@ -66,7 +66,6 @@ public:
     //Fonctions diverses et accesseurs
     unsigned int getNbRows() const;
     unsigned int getNbCols() const;
-    const std::string& getName() const;
     double& getVal ( const unsigned int indice );
     double getVal ( const unsigned int indice ) const;
     std::vector<double>& operator [] ( const unsigned int indice );
@@ -80,14 +79,20 @@ public:
     void testRegression();
     void setMatrixKB();
     void setMatrixRA();
-    bool isDiagonalisable();
-    std::vector<std::complex<double>> eigenValues();
+    std::vector<double> eigenValues();
     Matrix diagonalise ();
+    std::vector<VectorX> eigenVectors();
     Matrix transferMatrix();
+    void allMatrix (Matrix & transferA, Matrix & diagonal, Matrix & transferB);
+    std::vector<std::pair<double,VectorX>> allEigen();
+
 
 private:
     Eigen::MatrixXd class2Eigen ();
     Matrix eigen2Class(const Eigen::MatrixXd & m);
+    bool isDiagonalisable();
+
+
 };
 
 

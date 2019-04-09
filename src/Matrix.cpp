@@ -1130,39 +1130,59 @@ Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
 }
 
 
-vector<complex<double>> Matrix:: eigenValues()
+vector<double> Matrix:: eigenValues()
 {
-    unsigned int i, n=getNbRows();
-    vector<complex<double>> result;
+    unsigned int i,n;
+    vector<double> result;
     Eigen::MatrixXd a;
 
     a = class2Eigen();
     Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+    n = (unsigned int)m.eigenvalues().size();
 
     for (i=0; i<n; i++)
     {
-        result.push_back(m.eigenvalues()(i));
+        result.push_back(m.eigenvalues()(i).real());
     }
 
     return result;
 }
 
 
-Matrix Matrix:: diagonalise ()
+bool Matrix:: isDiagonalisable()
 {
-    if (isDiagonalisable())
-    {
-        Matrix m;
-        Eigen:: MatrixXd a,b;
-        a = class2Eigen();
-        Eigen::EigenSolver<Eigen::MatrixXd> res(a);
-        b = res.pseudoEigenvalueMatrix();
-        m = eigen2Class(b);
+    unsigned int i,n;
+    Eigen::MatrixXd a;
 
-        return m;
+    if (!IsSQMatrix())
+        return false;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+    n = (unsigned int)m.eigenvalues().size();
+
+    for (i=0; i<n; i++)
+    {
+        if (m.eigenvalues()(i).imag()!=0)
+            return false;
     }
-    Matrix z(0,0);
-    return z;
+
+    return true;
+}
+
+
+Matrix Matrix:: diagonalise()
+{
+
+    Matrix m;
+    Eigen:: MatrixXd a,b;
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
+    b = res.pseudoEigenvalueMatrix();
+    m = eigen2Class(b);
+
+    return m;
+
 }
 
 
@@ -1177,26 +1197,73 @@ Matrix Matrix::transferMatrix()
 
     result=eigen2Class(m.pseudoEigenvectors());
 
+    cout << m.pseudoEigenvectors() << endl << endl;
+
     return result;
 
 }
 
 
-bool Matrix:: isDiagonalisable()
+vector<VectorX> Matrix:: eigenVectors()
 {
-    unsigned int i, n=getNbRows();
-    Eigen::MatrixXd a;
-    complex<double> c;
+    unsigned int i, j, n=getNbRows();
+    vector<VectorX> tab;
+    VectorX temp;
 
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+    Matrix a(n,n);
+    a=transferMatrix();
 
-    for (i=0; i<n; i++)
+    for(i=0; i<n; i++)
     {
-        c=m.eigenvalues()(i);
-        if (c.imag()!=0)
-            return false;
+        temp.clear();
+
+        for(j=0; j<n; j++)
+        {
+            temp.push_back(a[j][i]);
+        }
+
+        tab.push_back(temp);
     }
 
-    return true;
+    return tab;
+
+}
+
+
+void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C)
+{
+   if (!isDiagonalisable())
+   {
+       cout << "La matrice n'est pas diagonalisable dans R" << endl;
+       return ;
+   }
+
+   transferC2B=transferMatrix();
+   diagonal=diagonalise();
+   transferB2C=(transferC2B^-1);
+
+}
+
+
+vector<pair<double,VectorX>> Matrix:: allEigen()
+{
+    unsigned int i,n;
+    vector<VectorX> e_vector;
+    vector<double> e_value;
+    pair<double,VectorX> temp;
+    vector<pair<double,VectorX>> result;
+
+    e_value=eigenValues();
+    e_vector=eigenVectors();
+    n=e_value.size();
+
+    for(i=0; i<n; i++)
+    {
+        temp = make_pair(e_value[i],e_vector[i]);
+        result.push_back(temp) ;
+    }
+
+    return result;
+
+
 }
