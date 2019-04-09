@@ -1150,12 +1150,53 @@ vector<complex<double>> Matrix:: eigenValues()
 
 Matrix Matrix:: diagonalise ()
 {
-    Matrix m;
-    Eigen:: MatrixXd a,b;
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
-    b = res.pseudoEigenvalueMatrix();
-    m = eigen2Class(b);
+    if (isDiagonalisable())
+    {
+        Matrix m;
+        Eigen:: MatrixXd a,b;
+        a = class2Eigen();
+        Eigen::EigenSolver<Eigen::MatrixXd> res(a);
+        b = res.pseudoEigenvalueMatrix();
+        m = eigen2Class(b);
 
-    return m;
+        return m;
+    }
+    Matrix z(0,0);
+    return z;
+}
+
+
+Matrix Matrix::transferMatrix()
+{
+    unsigned int i, n=getNbRows();
+    Matrix result(n,n);
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+
+    result=eigen2Class(m.pseudoEigenvectors());
+
+    return result;
+
+}
+
+
+bool Matrix:: isDiagonalisable()
+{
+    unsigned int i, n=getNbRows();
+    Eigen::MatrixXd a;
+    complex<double> c;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+
+    for (i=0; i<n; i++)
+    {
+        c=m.eigenvalues()(i);
+        if (c.imag()!=0)
+            return false;
+    }
+
+    return true;
 }

@@ -80,8 +80,10 @@ public:
     void testRegression();
     void setMatrixKB();
     void setMatrixRA();
+    bool isDiagonalisable();
     std::vector<std::complex<double>> eigenValues();
     Matrix diagonalise ();
+    Matrix transferMatrix();
 
 private:
     Eigen::MatrixXd class2Eigen ();
