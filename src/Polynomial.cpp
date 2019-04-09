@@ -12,15 +12,15 @@ using namespace std;
 const double EPSILON=0.00001;
 
 
-Polynomial :: Polynomial() : tab (1,0)
+Polynomial :: Polynomial() : tab (vector<double>(1,0))
 {
-    degree=0;
+    this->degree=0;
 }
 
 
-Polynomial :: Polynomial(const unsigned int & d) : tab(d,1)
+Polynomial :: Polynomial(const unsigned int & d) : tab(vector<double>(d+1,1))
 {
-    degree=d;
+    this->degree=d;
 }
 
 
@@ -81,7 +81,8 @@ ostream& operator << (ostream& flux, const Polynomial & p)
 
 Polynomial& Polynomial:: operator = (const Polynomial & p)
 {
-    degree=p.degree;
+    this->degree=p.degree;
+    tab=vector<double>(this->degree+1,0);
     unsigned int i;
     for (i=0; i<=degree; i++)
     {
@@ -228,3 +229,46 @@ void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, doubl
 }
 
 
+const Polynomial Polynomial:: division (const Polynomial & divisor, Polynomial & reste)
+{
+    Polynomial quotient(degree - divisor.degree);
+    Polynomial copy(*this);
+
+    unsigned int i = 0, j, tampon;
+    unsigned long k;
+
+    while (copy.degree - i >= divisor.degree)
+    {
+        quotient.tab[copy.degree - divisor.degree - i] = copy.tab[degree - i] / divisor.tab[divisor.degree];
+
+        for (j = i; j <= divisor.degree; j++)
+        {
+            copy.tab[copy.degree - j] = copy.tab[copy.degree - j] - divisor.tab[divisor.degree - (j - i)] *
+                                                          quotient.tab[copy.degree - divisor.degree - i];
+
+        }
+        i++;
+    }
+
+    copy=quotient*divisor;
+    reste = (*this) - copy;
+
+    tampon=0;
+    k=reste.degree;
+    while (reste.tab[k]==0)
+    {
+        tampon++;
+        k--;
+    }
+    reste.degree=reste.degree-tampon;
+
+
+    if (reste.degree>divisor.degree)
+    {
+        Polynomial quotient2 (reste.degree-divisor.degree);
+        quotient2=reste.division(divisor,reste);
+        quotient=quotient+quotient2;
+    }
+
+    return quotient;
+}
