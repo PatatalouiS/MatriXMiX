@@ -7,7 +7,7 @@
 #include <ctime>
 #include <stack>
 #include <utility>
-#include <eigen3/Eigen/Dense>
+//#include <eigen3/Eigen/Dense>
 #include "Matrix.h"
 
 
@@ -47,7 +47,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
         case Z: break;
         case R:
         {
-            srand(time(NULL));
+            srand(static_cast<unsigned>(time(nullptr)));
 
             for (auto& i : tab)
             {
@@ -767,6 +767,7 @@ void Matrix:: cleanSaves()
 }
 
 
+
 void Matrix::testRegression()
 {
     cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
@@ -817,7 +818,6 @@ void Matrix::testRegression()
         cout << "Matrices A et B de tailles différentes"
                 "\nAddition impossible!" << endl;
     }
-<<<<<<< HEAD
 
     cout << "! Addition de 2 matrices non carrées: 4*5 + 4*5" << endl;
     if ( (c.getNbRows()==d.getNbRows()) && (c.getNbCols()==d.getNbCols()) )
@@ -842,22 +842,11 @@ void Matrix::testRegression()
         cout << "Résultat attendu: A-B =" << endl << r3 << endl;
         cout << "Résultat produit par l'application: A-B =" << endl << z ;
         if(r3 == z)
-=======
-
-    cout << "! Addition de 2 matrices non carrées: 4*5 + 4*5" << endl;
-    if ( (c.getNbRows()==d.getNbRows()) && (c.getNbCols()==d.getNbCols()) )
-    {
-        z = c + d;
-        cout << "Résultat attendu: C+D =" << endl << r2 << endl;
-        cout << "Résultat produit par l'application: A+C =" << endl << z ;
-        if(r2 == z)
->>>>>>> origin/calcul_matriciel_tarik
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl ;
         cout << endl ;
     } else
     {
-<<<<<<< HEAD
         cout << "Matrices A et B de tailles différentes"
                 "\nSoustraction impossible! " << endl;
     }
@@ -911,55 +900,10 @@ void Matrix::testRegression()
         cout << "Résultat attendu: det(A) = 8366164" << endl;
         cout << "Résultat produit par l'application: tr(A) = " << det << endl;
         if(det == 8366164)
-=======
-        cout << "Matrices C et D de tailles différentes"
-                "\nAddition impossible! " << endl;
-    }
-
-    cout << "! Soustraction de matrices non carrées: 4*5 - 4*5" << endl;
-    if ( (a.getNbRows()==b.getNbRows()) && (a.getNbCols()==b.getNbCols()) )
-    {
-        z = a - b;
-        cout << "Résultat attendu: A-B =" << endl << r3 << endl;
-        cout << "Résultat produit par l'application: A-B =" << endl << z ;
-        if(r3 == z)
-            cout << "Mêmes résultats, poursuite..." << endl;
-        cout << endl ;
-        cout << endl ;
-    } else
-    {
-        cout << "Matrices A et B de tailles différentes"
-                "\nSoustraction impossible! " << endl;
-    }
-
-    cout << "! Multiplication de 2 matrices: 4*5 * 5*4" << endl;
-    if (b.getNbRows()==a.getNbCols())
-    {
-        y = c * e;
-        cout << "Résultat attendu: C*E =" << endl << r4 << endl;
-        cout << "Résultat produit par l'application: C*E =" << endl << y ;
-        if(r4 == y)
-            cout << "Mêmes résultats, poursuite..." << endl;
-        cout << endl ;
-        cout << endl ;
-    } else {
-        cout << "Matrices C et E de tailles incompatibles"
-                "\nMultiplication impossible!" << endl;
-    }
-
-    cout << "! Calcul de trace" << endl;
-    if (a.getNbRows()==a.getNbCols())
-    {
-        tra = a.traceMatrix();
-        cout << "Résultat attendu: tr(A) = -47" << endl;
-        cout << "Résultat produit par l'application: tr(A) = " << tra << endl;
-        if(tra == -47)
->>>>>>> origin/calcul_matriciel_tarik
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
     } else {
         cout << "La matrice A n'est pas carrée"
-<<<<<<< HEAD
                 "\nCalcul de déterminant impossible!" << endl;
     }
 
@@ -1000,45 +944,6 @@ void Matrix::testRegression()
         cout << "Résultat attendu: G*G^-1 = " << endl << r7 << endl;
         cout << "Résultat produit par l'application: G*G^-1 = " << endl << x ;
         if(r7 == x)
-=======
-                "\nCalcul de trace impossible!" << endl;
-    }
-
-    cout << "! Calcul de déterminant" << endl;
-    if (f.getNbRows()==f.getNbCols())
-    {
-        det = f.determinant();
-        cout << "Résultat attendu: det(F) = 0" << endl;
-        cout << "Résultat produit par l'application: det(F) = " << det << endl;
-        if(det == 0)
-            cout << "Mêmes résultats, poursuite..." << endl;
-        cout << endl;
-    } else {
-        cout << "La matrice A n'est pas carrée"
-                "\nCalcul de déterminant impossible!" << endl << endl;
-    }
-
-    if (a.getNbRows()==a.getNbCols())
-    {
-        det = a.determinant();
-        cout << "Résultat attendu: det(A) = 8366164" << endl;
-        cout << "Résultat produit par l'application: tr(A) = " << det << endl;
-        if(det == 8366164)
-            cout << "Mêmes résultats, poursuite..." << endl;
-        cout << endl;
-    } else {
-        cout << "La matrice A n'est pas carrée"
-                "\nCalcul de déterminant impossible!" << endl;
-    }
-
-    cout << "! Calcul d'inverse et test de l'opérateur scale*Matrix" << endl;
-    if (g.getNbRows()==g.getNbCols())
-    {
-        x = (g^-1)*9;
-        cout << "Résultat attendu: 9*G^-1 = " << endl << r5 << endl;
-        cout << "Résultat produit par l'application: 9*G^-1 = " << endl << x ;
-        if(r5 == x)
->>>>>>> origin/calcul_matriciel_tarik
             cout << "Mêmes résultats, poursuite..." << endl ;
         cout << endl ;
         cout << endl ;
@@ -1047,42 +952,11 @@ void Matrix::testRegression()
                 "\nCalcul d'inverse impossible!" << endl;
     }
 
-<<<<<<< HEAD
-=======
-    cout << "! Calcul de puissance" << endl;
-    if (a.getNbRows()==a.getNbCols())
-    {
-        z = a^5;
-        cout << "Résultat attendu: A^5 = " << endl << r6 << endl;
-        cout << "Résultat produit par l'application: A^5 = " << endl << z ;
-        if(r6 == z)
-            cout << "Mêmes résultats, poursuite..." << endl;
-        cout << endl ;
-        cout << endl ;
-    } else {
-        cout << "La matrice A n'est pas carrée"
-                "\nCalcul de puissance impossible!" << endl;
-    }
-
-    cout << "! Dernier test " << endl;
-    if (g.getNbRows()==g.getNbCols())
-    {
-        x = g*(g^-1);
-        cout << "Résultat attendu: G*G^-1 = " << endl << r7 << endl;
-        cout << "Résultat produit par l'application: G*G^-1 = " << endl << x ;
-        if(r7 == x)
-            cout << "Mêmes résultats, poursuite..." << endl ;
-        cout << endl ;
-        cout << endl ;
-    } else {
-        cout << "La matrice G n'est pas carrée"
-                "\nCalcul d'inverse impossible!" << endl;
-    }
-
->>>>>>> origin/calcul_matriciel_tarik
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 
 }
+
+
 
 
 bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
@@ -1221,7 +1095,7 @@ void Matrix:: setMatrixRA ()
 }
 
 
-Eigen::MatrixXd Matrix:: class2Eigen ()
+/*Eigen::MatrixXd Matrix:: class2Eigen ()
 {
     unsigned int i,j,r,c;
     r = getNbRows();
@@ -1414,6 +1288,6 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
    diagonal=diagonalise();
    transferB2C=(transferC2B^-1);
 
-}
+}*/
 
 

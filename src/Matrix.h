@@ -7,7 +7,7 @@
 #include <string>
 #include "VectorX.h"
 #include <string.h>
-#include <eigen3/Eigen/Dense>
+//#include <eigen3/Eigen/Dense>
 
 class Matrix
 {
@@ -28,8 +28,8 @@ private:
     const std::string saveRights(const std::string & filename, const std::string & matrixname);
     bool priorite_sup_egal (const std::string & opd,const std::string & opg);
     void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
-    Eigen::MatrixXd class2Eigen ();
-    Matrix eigen2Class(const Eigen::MatrixXd & m);
+   // Eigen::MatrixXd class2Eigen ();
+    //Matrix eigen2Class(const Eigen::MatrixXd & m);
     
 public:
 
