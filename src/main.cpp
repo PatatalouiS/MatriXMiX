@@ -11,16 +11,16 @@ using namespace std;
 int main (void)
 {
 
-    Matrix a(3,3,{1,2,3,4,5,6,7,8,9});
+    Matrix a(3,3,{1,1,1,1,1,1,1,1,1});
 
-    VectorX v;
-    v.push_back(0.70710);
-    v.push_back(0.70710);
-    cout << v[0] << " " << v[1] << endl;
-    cout << v[0] << " " << v[1] << endl;
+    cout << a << endl;
 
+    a.allEigen();
 
-
+    if (a.isDiagonalisable())
+        cout << "Diagonalisable" << endl;
+    else
+        cout << "Pas diagonalisable" << endl;
 
     return 0;
 

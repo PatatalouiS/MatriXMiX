@@ -28,6 +28,8 @@ private:
     const std::string saveRights(const std::string & filename, const std::string & matrixname);
     bool priorite_sup_egal (const std::string & opd,const std::string & opg);
     void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
+    Eigen::MatrixXd class2Eigen ();
+    Matrix eigen2Class(const Eigen::MatrixXd & m);
     
 public:
 
@@ -71,7 +73,7 @@ public:
     std::vector<double>& operator [] ( const unsigned int indice );
     const std::vector<double>& operator [] ( const unsigned int indice ) const;
     friend std::ostream& operator << ( std::ostream& flux, const Matrix & m );
-    bool IsSQMatrix() const;
+    bool isSQMatrix() const;
     void saveMatrix();
     void readMatrix(const std::string & matrixname);
     void cleanSaves();
@@ -79,17 +81,14 @@ public:
     void testRegression();
     void setMatrixKB();
     void setMatrixRA();
+    
+    //Fonctions d'étude poussée des matrices et utilisation de la librairie externe eigen3
     std::vector<double> eigenValues();
     Matrix diagonalise ();
     std::vector<VectorX> eigenVectors();
     Matrix transferMatrix();
-    void allMatrix (Matrix & transferA, Matrix & diagonal, Matrix & transferB);
     std::vector<std::pair<double,VectorX>> allEigen();
-
-
-private:
-    Eigen::MatrixXd class2Eigen ();
-    Matrix eigen2Class(const Eigen::MatrixXd & m);
+    void allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C);
     bool isDiagonalisable();
 
 
