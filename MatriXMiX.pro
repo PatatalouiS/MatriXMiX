@@ -4,14 +4,9 @@
 
 TEMPLATE = app
 CONFIG += link_prl qt debug_and_release
-#QT += core gui xml svg widgets printsupport
-
 QT += widgets
 
 include(ext/lib/jkqtmathtext.pri);
-
-#INCLUDEPATH += ext/lib/
-#LIBS += -L"ext/jkqtmathtextlib/"  -ljkqtmathtextlib
 
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
@@ -19,7 +14,6 @@ MOC_DIR = ./moc
 TARGET = MatriXMiX
 
 DEFINES += QT_DEPRECATED_WARNINGS
-
 
 # Input
 
