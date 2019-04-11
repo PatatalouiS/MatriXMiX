@@ -24,6 +24,10 @@ class MatrixLibrary
 	void addMatrix (const std::string& name, const Matrix& m);
 	const Matrix* find (const std::string& name) const;
 	void erase (const std:: string & name);
+	bool isOperator (const std::string & chaine);
+	std::vector<std::string> decoupe (const std::string & expression);
+	Matrix calculate (const std::string & op, const std::string & a, const std::string & b);
+	bool priorite_sup_egal (const std::string & opd,const std::string & opg);
 };
 
 

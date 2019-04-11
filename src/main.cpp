@@ -41,6 +41,32 @@ int main (void)
     resultat=reste+quotient*diviseur;
     cout<<resultat;*/
 
+    MatrixLibrary lib;
+    vector<string> resultat;
+    string expression("((objet-1)+x*tmp/8)/25-12");
+
+    Matrix a (2,2,{1,0,0,1});
+    Matrix b (2,2,{0,0,0,1});
+    Matrix res;
+
+
+
+    lib.addMatrix("identite",a);
+    lib.addMatrix("matriceb",b);
+
+
+    //lib.print();
+
+    res=lib.calculate("+","identie","matriceb");
+    cout<<res;
+
+    resultat=lib.decoupe(expression);
+    /*for (int i=0; i<resultat.size(); i++)
+    {
+        cout<<resultat[i]<<endl;
+    }*/
+
+
     return 0;
 
 }
