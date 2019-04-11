@@ -25,6 +25,9 @@ class MatrixLibrary
 	const Matrix* find (const std::string& name) const;
 	void erase (const std:: string & name);
     const std::map<std::string, Matrix>& data () const;
+    bool isAuthorisedName(const std::string & name);
+    bool isName(const std::string & chaine);
+    bool isFloat(const std::string & chaine);
 };
 
 

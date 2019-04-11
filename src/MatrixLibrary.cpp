@@ -75,3 +75,61 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
     return tab;
 }
 
+
+bool MatrixLibrary:: isAuthorisedName(const string & chaine)
+{
+    unsigned int i=0;
+    long int s=chaine.length();
+
+    while (i<s)
+    {
+        if ( ((chaine[i]>'A') && (chaine[i]<'Z'))
+            || ((chaine[i]>'a') && (chaine[i]<'z'))
+            || ((chaine[i]>'0') && (chaine[i]<'9')) )
+            i++;
+        else return false;
+    }
+
+    return true;
+}
+
+
+bool MatrixLibrary:: isName(const string & chaine)
+{
+    unsigned int i=0;
+    long int s=chaine.length();
+
+    while (i<s)
+    {
+        if ( ((chaine[i]>'A') && (chaine[i]<'Z'))
+             || ((chaine[i]>'a') && (chaine[i]<'z')) )
+            i++;
+        else return false;
+    }
+
+    return true;
+}
+
+
+bool MatrixLibrary:: isFloat(const string & chaine)
+{
+    long int i=0, nbcoma=0;
+    long int s=chaine.length();
+
+    while (i<s)
+    {
+        if (chaine[i]=='.')
+            nbcoma++;
+        else if (! ((chaine[i]>='0') && (chaine[i]<='9')) )
+            return false ;
+
+        if (nbcoma > 1)
+            return false;
+
+        i++;
+    }
+
+    return true;
+}
+
+

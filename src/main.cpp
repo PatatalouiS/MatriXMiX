@@ -21,9 +21,7 @@ int main (int argc, char* argv[])
     //MainWindow* win = new MainWindow;
     LibraryWindow* win = new LibraryWindow(nullptr);
     win->show();
-      Eigen::MatrixXd m(2,2);
-    m << 1, 2,3,4;
-    cout << m;
+
     return app.exec();
 
 }
