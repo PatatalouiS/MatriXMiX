@@ -6,13 +6,15 @@
 #include <cmath>
 #include <ctime>
 #include <stack>
+#include <utility>
+#include <eigen3/Eigen/Dense>
 #include "Matrix.h"
 
 
 using namespace std;
 
+const double EPSILON = 0.000001;
 const string PATH = "../../data/sauvegarde.txt";
-
 
 
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
@@ -139,16 +141,16 @@ const Matrix Matrix:: operator+ (const Matrix & m) const
         exit (EXIT_FAILURE);
     }
 
-    Matrix copie(*this);
+    Matrix copy(*this);
 
     for (unsigned int i=0; i< rows; i++)
     {
         for (unsigned int j=0; j< cols; j++)
         {
-            copie[i][j]=copie[i][j]+m[i][j];
+            copy[i][j]=copy[i][j]+m[i][j];
         }
     }
-    return copie;
+    return copy;
 }
 
 
@@ -160,16 +162,16 @@ const Matrix Matrix:: operator- (const Matrix & m) const
         exit (EXIT_FAILURE);
     }
 
-    Matrix copie(*this);
+    Matrix copy(*this);
 
     for (unsigned int i=0; i<m.rows; i++)
     {
         for (unsigned int j=0; j<m.cols; j++)
         {
-            copie[i][j]=copie[i][j]-m[i][j];
+            copy[i][j]=copy[i][j]-m[i][j];
         }
     }
-    return copie;
+    return copy;
 }
 
 
@@ -202,22 +204,22 @@ const Matrix Matrix:: operator * (const Matrix & m) const
 
 const Matrix Matrix:: operator * (const double & lambda) const
 {
-    Matrix copie(*this);
+    Matrix copy(*this);
 
     for (unsigned int i=0; i < rows; i++)
     {
         for (unsigned int j=0; j < cols; j++)
         {
-            copie[i][j]=lambda*copie[i][j];
+            copy[i][j]=lambda*copy[i][j];
         }
     }
-    return copie;
+    return copy;
 }
 
 
 const Matrix Matrix:: operator / (const Matrix & m) const
 {
-    if ( !m.IsSQMatrix() )
+    if ( !m.isSQMatrix() )
     {
         cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
         exit (EXIT_FAILURE);
@@ -239,7 +241,7 @@ const Matrix Matrix:: operator ^ (const int & p) const
         exit(EXIT_FAILURE);
     }
 
-    if ( !IsSQMatrix() )
+    if ( !isSQMatrix() )
     {
         cerr << "Erreur, la matrice n'est pas carrée ! " << endl;
         exit(EXIT_FAILURE);
@@ -282,10 +284,8 @@ bool Matrix:: operator == (const Matrix & m ) const
         }
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 
@@ -297,7 +297,7 @@ bool Matrix::operator != (const Matrix & m) const
 
 double Matrix:: traceMatrix() const
 {
-    if ( !IsSQMatrix() )
+    if ( !isSQMatrix() )
     {
         cerr << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
@@ -315,7 +315,7 @@ double Matrix:: traceMatrix() const
 
 double Matrix:: determinant() const
 {
-    if ( !IsSQMatrix() )
+    if ( !isSQMatrix() )
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
@@ -326,7 +326,7 @@ double Matrix:: determinant() const
 
 Matrix Matrix::coMatrix() const
 {
-    if ( !IsSQMatrix() )
+    if ( !isSQMatrix() )
     {
         cerr << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
@@ -350,22 +350,22 @@ Matrix Matrix::coMatrix() const
 
 Matrix Matrix:: transposeMatrix() const
 {
-    Matrix copie(*this);
+    Matrix copy(*this);
 
-    for (unsigned int i=0; i<copie.rows; i++)
+    for (unsigned int i=0; i<copy.rows; i++)
     {
-        for (unsigned int j=0; j<copie.cols; j++)
+        for (unsigned int j=0; j<copy.cols; j++)
         {
-            copie[i][j]=tab[j][i];
+            copy[i][j]=tab[j][i];
         }
     }
-    return copie;
+    return copy;
 }
 
 
 Matrix Matrix:: inverse() const
 {
-    if ( !IsSQMatrix() )
+    if ( !isSQMatrix() )
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
@@ -472,12 +472,13 @@ bool Matrix:: isOperator (const string & chaine)
 
 vector<string> Matrix:: decoupe (const string & expression)
 {
-    unsigned int i,taille =expression.length();
+    unsigned int i;
+    long int l =expression.length();
     vector<string> tab;
     string c, temp;
     temp="";
 
-    for (i=0; i<taille; i++)
+    for (i=0; i<l; i++)
     {
         c=expression[i];
 
@@ -518,6 +519,8 @@ Matrix Matrix:: calculate (const string & op, const string & a, const string & b
     if(op=="/")
         return m_a/m_b;
 
+    Matrix e(1,1,{0});
+    return e;
 }
 
 
@@ -633,7 +636,7 @@ ostream& operator << ( ostream& flux, const Matrix & m )
 }
 
 
-bool Matrix:: IsSQMatrix() const
+bool Matrix:: isSQMatrix() const
 {
     return rows==cols;
 }
@@ -814,6 +817,7 @@ void Matrix::testRegression()
         cout << "Matrices A et B de tailles différentes"
                 "\nAddition impossible!" << endl;
     }
+<<<<<<< HEAD
 
     cout << "! Addition de 2 matrices non carrées: 4*5 + 4*5" << endl;
     if ( (c.getNbRows()==d.getNbRows()) && (c.getNbCols()==d.getNbCols()) )
@@ -838,11 +842,22 @@ void Matrix::testRegression()
         cout << "Résultat attendu: A-B =" << endl << r3 << endl;
         cout << "Résultat produit par l'application: A-B =" << endl << z ;
         if(r3 == z)
+=======
+
+    cout << "! Addition de 2 matrices non carrées: 4*5 + 4*5" << endl;
+    if ( (c.getNbRows()==d.getNbRows()) && (c.getNbCols()==d.getNbCols()) )
+    {
+        z = c + d;
+        cout << "Résultat attendu: C+D =" << endl << r2 << endl;
+        cout << "Résultat produit par l'application: A+C =" << endl << z ;
+        if(r2 == z)
+>>>>>>> origin/calcul_matriciel_tarik
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl ;
         cout << endl ;
     } else
     {
+<<<<<<< HEAD
         cout << "Matrices A et B de tailles différentes"
                 "\nSoustraction impossible! " << endl;
     }
@@ -896,10 +911,55 @@ void Matrix::testRegression()
         cout << "Résultat attendu: det(A) = 8366164" << endl;
         cout << "Résultat produit par l'application: tr(A) = " << det << endl;
         if(det == 8366164)
+=======
+        cout << "Matrices C et D de tailles différentes"
+                "\nAddition impossible! " << endl;
+    }
+
+    cout << "! Soustraction de matrices non carrées: 4*5 - 4*5" << endl;
+    if ( (a.getNbRows()==b.getNbRows()) && (a.getNbCols()==b.getNbCols()) )
+    {
+        z = a - b;
+        cout << "Résultat attendu: A-B =" << endl << r3 << endl;
+        cout << "Résultat produit par l'application: A-B =" << endl << z ;
+        if(r3 == z)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl ;
+        cout << endl ;
+    } else
+    {
+        cout << "Matrices A et B de tailles différentes"
+                "\nSoustraction impossible! " << endl;
+    }
+
+    cout << "! Multiplication de 2 matrices: 4*5 * 5*4" << endl;
+    if (b.getNbRows()==a.getNbCols())
+    {
+        y = c * e;
+        cout << "Résultat attendu: C*E =" << endl << r4 << endl;
+        cout << "Résultat produit par l'application: C*E =" << endl << y ;
+        if(r4 == y)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl ;
+        cout << endl ;
+    } else {
+        cout << "Matrices C et E de tailles incompatibles"
+                "\nMultiplication impossible!" << endl;
+    }
+
+    cout << "! Calcul de trace" << endl;
+    if (a.getNbRows()==a.getNbCols())
+    {
+        tra = a.traceMatrix();
+        cout << "Résultat attendu: tr(A) = -47" << endl;
+        cout << "Résultat produit par l'application: tr(A) = " << tra << endl;
+        if(tra == -47)
+>>>>>>> origin/calcul_matriciel_tarik
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
     } else {
         cout << "La matrice A n'est pas carrée"
+<<<<<<< HEAD
                 "\nCalcul de déterminant impossible!" << endl;
     }
 
@@ -940,6 +1000,45 @@ void Matrix::testRegression()
         cout << "Résultat attendu: G*G^-1 = " << endl << r7 << endl;
         cout << "Résultat produit par l'application: G*G^-1 = " << endl << x ;
         if(r7 == x)
+=======
+                "\nCalcul de trace impossible!" << endl;
+    }
+
+    cout << "! Calcul de déterminant" << endl;
+    if (f.getNbRows()==f.getNbCols())
+    {
+        det = f.determinant();
+        cout << "Résultat attendu: det(F) = 0" << endl;
+        cout << "Résultat produit par l'application: det(F) = " << det << endl;
+        if(det == 0)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl;
+    } else {
+        cout << "La matrice A n'est pas carrée"
+                "\nCalcul de déterminant impossible!" << endl << endl;
+    }
+
+    if (a.getNbRows()==a.getNbCols())
+    {
+        det = a.determinant();
+        cout << "Résultat attendu: det(A) = 8366164" << endl;
+        cout << "Résultat produit par l'application: tr(A) = " << det << endl;
+        if(det == 8366164)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl;
+    } else {
+        cout << "La matrice A n'est pas carrée"
+                "\nCalcul de déterminant impossible!" << endl;
+    }
+
+    cout << "! Calcul d'inverse et test de l'opérateur scale*Matrix" << endl;
+    if (g.getNbRows()==g.getNbCols())
+    {
+        x = (g^-1)*9;
+        cout << "Résultat attendu: 9*G^-1 = " << endl << r5 << endl;
+        cout << "Résultat produit par l'application: 9*G^-1 = " << endl << x ;
+        if(r5 == x)
+>>>>>>> origin/calcul_matriciel_tarik
             cout << "Mêmes résultats, poursuite..." << endl ;
         cout << endl ;
         cout << endl ;
@@ -948,6 +1047,39 @@ void Matrix::testRegression()
                 "\nCalcul d'inverse impossible!" << endl;
     }
 
+<<<<<<< HEAD
+=======
+    cout << "! Calcul de puissance" << endl;
+    if (a.getNbRows()==a.getNbCols())
+    {
+        z = a^5;
+        cout << "Résultat attendu: A^5 = " << endl << r6 << endl;
+        cout << "Résultat produit par l'application: A^5 = " << endl << z ;
+        if(r6 == z)
+            cout << "Mêmes résultats, poursuite..." << endl;
+        cout << endl ;
+        cout << endl ;
+    } else {
+        cout << "La matrice A n'est pas carrée"
+                "\nCalcul de puissance impossible!" << endl;
+    }
+
+    cout << "! Dernier test " << endl;
+    if (g.getNbRows()==g.getNbCols())
+    {
+        x = g*(g^-1);
+        cout << "Résultat attendu: G*G^-1 = " << endl << r7 << endl;
+        cout << "Résultat produit par l'application: G*G^-1 = " << endl << x ;
+        if(r7 == x)
+            cout << "Mêmes résultats, poursuite..." << endl ;
+        cout << endl ;
+        cout << endl ;
+    } else {
+        cout << "La matrice G n'est pas carrée"
+                "\nCalcul d'inverse impossible!" << endl;
+    }
+
+>>>>>>> origin/calcul_matriciel_tarik
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 
 }
@@ -968,7 +1100,7 @@ bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
 
         case '-':
             return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-        default: return false;
+            default: return false;
     }
 }
 
@@ -1089,6 +1221,199 @@ void Matrix:: setMatrixRA ()
 }
 
 
+Eigen::MatrixXd Matrix:: class2Eigen ()
+{
+    unsigned int i,j,r,c;
+    r = getNbRows();
+    c = getNbCols();
+    Eigen:: MatrixXd m(r,c);
 
+    for(i=0 ; i<r ; i++)
+    {
+        for(j=0 ; j<c ; j++)
+        {
+            m(i,j) = tab[i][j] ;
+        }
+    }
+
+    return m;
+}
+
+
+Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
+{
+    unsigned int i,j;
+    unsigned int r,c;
+    r = (unsigned int) m.rows();
+    c = (unsigned int) m.cols();
+    Matrix a(r,c);
+
+    for(i=0 ; i<r ; i++)
+    {
+        for(j=0 ; j<c ; j++)
+        {
+            a.tab[i][j] = m(i,j) ;
+        }
+    }
+
+    return a;
+}
+
+
+vector<double> Matrix:: eigenValues()
+{
+    unsigned int i,n;
+    vector<double> result;
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+    n = (unsigned int)m.eigenvalues().size();
+
+    for (i=0; i<n; i++)
+    {
+        if(abs(m.eigenvalues()(i).real()) < EPSILON)
+            result.push_back(0);
+        else
+            result.push_back(m.eigenvalues()(i).real());
+    }
+
+    return result;
+}
+
+
+bool Matrix:: isDiagonalisable()
+{
+
+    unsigned int i,j;
+    long int s;
+    vector<pair<double,VectorX>> check;
+
+    if (!isSQMatrix())
+        return false;
+
+    check = allEigen();
+    s = check.size();
+
+    for(i=0; i<s; i++)
+    {
+        for(j=0; j<s; j++)
+        {
+            if( (i!=j) && (check[i].second==check[j].second) )
+                return false;
+
+        }
+
+    }
+
+    return true;
+}
+
+
+Matrix Matrix:: diagonalise()
+{
+
+    Matrix m;
+    Eigen:: MatrixXd a,b;
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
+    b = res.pseudoEigenvalueMatrix();
+    m = eigen2Class(b);
+
+    return m;
+
+}
+
+
+Matrix Matrix::transferMatrix()
+{
+    unsigned int i, j, n=getNbRows();
+    Matrix result(n,n);
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+
+    result=eigen2Class(m.pseudoEigenvectors());
+
+    for(i=0; i<n; i++)
+    {
+
+        for(j=0; j<n; j++)
+        {
+            if (abs(result[i][j]) < EPSILON)
+                result[i][j]=0;
+        }
+
+    }
+
+    return result;
+
+}
+
+
+vector<VectorX> Matrix:: eigenVectors()
+{
+    unsigned int i, j, n=getNbRows();
+    vector<VectorX> tab;
+    VectorX temp;
+
+    Matrix a(n,n);
+    a=transferMatrix();
+
+    for(i=0; i<n; i++)
+    {
+        temp.clear();
+
+        for(j=0; j<n; j++)
+        {
+            temp.push_back(a[j][i]);
+        }
+
+        tab.push_back(temp);
+    }
+
+    return tab;
+
+}
+
+
+vector<pair<double,VectorX>> Matrix:: allEigen()
+{
+    unsigned int i;
+    long int n;
+    vector<VectorX> e_vector;
+    vector<double> e_value;
+    pair<double,VectorX> temp;
+    vector<pair<double,VectorX>> result;
+
+    e_value=eigenValues();
+    e_vector=eigenVectors();
+    n=e_value.size();
+
+    for(i=0; i<n; i++)
+    {
+        temp = make_pair(e_value[i],e_vector[i]);
+        result.push_back(temp) ;
+    }
+
+    return result;
+
+}
+
+
+void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C)
+{
+   if (!isDiagonalisable())
+   {
+       cout << "La matrice n'est pas diagonalisable dans R" << endl;
+       return ;
+   }
+
+   transferC2B=transferMatrix();
+   diagonal=diagonalise();
+   transferB2C=(transferC2B^-1);
+
+}
 
 

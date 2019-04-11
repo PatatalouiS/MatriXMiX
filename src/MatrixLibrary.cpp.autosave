@@ -68,11 +68,10 @@ void MatrixLibrary:: erase (const string & name)
         cout << "Suppression non effectuée" << endl;
     }
 }
-<<<<<<< HEAD
+
 
 const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 {
     return tab;
 }
-=======
->>>>>>> origin/calcul_matriciel_tarik
+
