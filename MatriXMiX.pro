@@ -13,6 +13,8 @@ OBJECTS_DIR = ./obj/
 MOC_DIR = ./moc
 TARGET = MatriXMiX
 
+INCLUDEPATH += ext/Eigen/
+
 DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input

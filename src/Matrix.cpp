@@ -7,7 +7,7 @@
 #include <ctime>
 #include <stack>
 #include <utility>
-//#include <eigen3/Eigen/Dense>
+#include <Dense>
 #include "Matrix.h"
 
 
@@ -1095,7 +1095,7 @@ void Matrix:: setMatrixRA ()
 }
 
 
-/*Eigen::MatrixXd Matrix:: class2Eigen ()
+Eigen::MatrixXd Matrix:: class2Eigen ()
 {
     unsigned int i,j,r,c;
     r = getNbRows();
@@ -1288,6 +1288,6 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
    diagonal=diagonalise();
    transferB2C=(transferC2B^-1);
 
-}*/
+}
 
 
