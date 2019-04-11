@@ -49,7 +49,7 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     setSpecsWidget->setLayout(setSpecsLayout);
 
     lineEditsLayout = new QGridLayout;
-    lineEditsLayout->setVerticalSpacing(30);
+    lineEditsLayout->setVerticalSpacing(15);
     lineEditsLayout->setAlignment( Qt::AlignCenter | Qt::AlignVCenter);
 
     QLineEdit* temp = nullptr;
@@ -69,7 +69,7 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
 
     QWidget* lineEditsWidget = new QWidget;
     lineEditsWidget->setLayout(lineEditsLayout);
-    lineEditsWidget->setMinimumSize(700, 550);
+    lineEditsWidget->setMinimumSize(700, 350);
 
     QPushButton* ajouter = new QPushButton("Ajouter");
     QVBoxLayout* mainLayout = new QVBoxLayout;

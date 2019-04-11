@@ -51,7 +51,7 @@ void ShowMatrixWidget:: compute_img(const Matrix* mat)
 	painter.end();
 
 	imgSelected->setPixmap(temp);
-	imgSelected->resize(500, 500);
+	imgSelected->resize(350, 350);
 }
 
 
