@@ -27,7 +27,6 @@ private:
     Matrix calculate (const std::string & op, const std::string & a, const std::string & b);
     const std::string saveRights(const std::string & filename, const std::string & matrixname);
     bool priorite_sup_egal (const std::string & opd,const std::string & opg);
-    void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
     Eigen::MatrixXd class2Eigen ();
     Matrix eigen2Class(const Eigen::MatrixXd & m);
     
@@ -90,7 +89,7 @@ public:
     std::vector<std::pair<double,VectorX>> allEigen();
     void allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C);
     bool isDiagonalisable();
-
+    void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
 
 };
 
