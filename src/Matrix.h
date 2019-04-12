@@ -27,7 +27,7 @@ private:
     Matrix calculate (const std::string & op, const std::string & a, const std::string & b);
     const std::string saveRights(const std::string & filename, const std::string & matrixname);
     bool priorite_sup_egal (const std::string & opd,const std::string & opg);
-    void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
+
     
 public:
 
@@ -82,6 +82,7 @@ public:
     void setMatrixRA();
     std::vector<std::complex<double>> eigenValues();
     Matrix diagonalise ();
+    void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
 
 private:
     Eigen::MatrixXd class2Eigen ();

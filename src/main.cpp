@@ -7,6 +7,7 @@
 using namespace std;
 
 
+
 int main (void)
 {
 
@@ -40,32 +41,46 @@ int main (void)
     cout<<reste;
     resultat=reste+quotient*diviseur;
     cout<<resultat;*/
-
     MatrixLibrary lib;
     vector<string> resultat;
-    string expression("((objet-1)+x*tmp/8)/25-12");
+    string expression1("((objet-1)+x*tmp/8)/25-12");
 
     Matrix a (2,2,{1,0,0,1});
     Matrix b (2,2,{0,0,0,1});
     Matrix res;
 
+    /*bool r;
+    r=lib.priorite_sup_egal("-","+");
+    if (r){
+        cout<<"true";
+    }else cout<<"false";*/
 
 
     lib.addMatrix("identite",a);
     lib.addMatrix("matriceb",b);
+    /*const Matrix* resu; r=lib.priorite_sup_egal("-","+");
+    if (r==1){
+        cout<<true;
+    }else cout<<false;
+
+    resu=lib.find("identite");
+    cout<<*resu;
+    lib.print();*/
+
+    //cout << "cout avant appel à polonaise " << endl  ;
 
 
-    //lib.print();
 
-    res=lib.calculate("+","identie","matriceb");
+    //lib.polonaise("variable=((objet-1)+x*tmp/8)/25-1",resultat);
+
+    res=lib.expressionCalcul("identite*matriceb");
+
     cout<<res;
 
-    resultat=lib.decoupe(expression);
     /*for (int i=0; i<resultat.size(); i++)
     {
-        cout<<resultat[i]<<endl;
+        cout<<resultat[i]<<" ";
     }*/
-
 
     return 0;
 
