@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 extern const string APP_PATH = QDir(QApplication::applicationDirPath() + "/../../../").absolutePath().toStdString();
 
 int main (int argc, char* argv[])

@@ -1092,6 +1092,7 @@ void Matrix:: setMatrixRA ()
     cin >> cols;
     
     tab = Matrix(rows, cols, Matrix::R).tab;
+
 }
 
 
