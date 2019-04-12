@@ -180,9 +180,10 @@ const Polynomial Polynomial:: operator *(const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator *(const float & scale)
+const Polynomial Polynomial:: operator *(const double & scale)
 {
     unsigned int i;
+
     for (i=0; i<=degree; i++)
     {
         tab[i]*=scale;
@@ -209,11 +210,11 @@ void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, doubl
 
     double delta=b*b-4*a*c;
 
-    if(delta<0)
+    if(delta < 0)
     {
         nbsolution=0;
     }
-        else if (delta==0)
+        else if (delta == 0.0)
         {
             nbsolution=1;
             x1=-b/(2*a);
@@ -255,7 +256,8 @@ const Polynomial Polynomial:: division (const Polynomial & divisor, Polynomial &
 
     tampon=0;
     k=reste.degree;
-    while (reste.tab[k]==0)
+
+    while (reste.tab[k] == 0.0)
     {
         tampon++;
         k--;

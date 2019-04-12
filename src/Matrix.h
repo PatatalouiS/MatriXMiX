@@ -23,10 +23,7 @@ private:
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     double determinant(unsigned int dim) const;
     bool isOperator (const std::string & chaine);
-    std::vector<std::string> decoupe (const std::string & expression);
-    Matrix calculate (const std::string & op, const std::string & a, const std::string & b);
     const std::string saveRights(const std::string & filename, const std::string & matrixname);
-    bool priorite_sup_egal (const std::string & opd,const std::string & opg);
     Eigen::MatrixXd class2Eigen ();
     Matrix eigen2Class(const Eigen::MatrixXd & m);
     
@@ -76,7 +73,6 @@ public:
     void saveMatrix();
     void readMatrix(const std::string & matrixname);
     void cleanSaves();
-    Matrix expressionCalcul(const std::string & chaine);
     void testRegression();
     void setMatrixKB();
     void setMatrixRA();
@@ -89,7 +85,6 @@ public:
     std::vector<std::pair<double,VectorX>> allEigen();
     void allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C);
     bool isDiagonalisable();
-    void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
 
 };
 

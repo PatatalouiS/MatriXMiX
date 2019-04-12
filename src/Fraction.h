@@ -2,8 +2,8 @@
 // Created by tarik on 09/03/19.
 //
 
-#ifndef _FRACTION_H
-#define _FRACTION_H
+#ifndef FRACTION_H
+#define FRACTION_H
 
 #include <iostream>
 using namespace std;

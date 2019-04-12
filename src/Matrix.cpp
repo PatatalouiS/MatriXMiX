@@ -224,7 +224,7 @@ const Matrix Matrix:: operator / (const Matrix & m) const
         cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
         exit (EXIT_FAILURE);
     }
-    if ( m.determinant()==0 )
+    if (m.determinant() == 0.0)
     {
         cerr << "division impossible, la metrice diviseur n'est pas inversible !" << endl;
         exit(EXIT_FAILURE);
@@ -260,7 +260,7 @@ const Matrix Matrix:: operator ^ (const int & p) const
     Matrix temp (*this);
     Matrix temp2 (*this);
 
-    for ( int i = 1; i < p; ++i )
+    for (int i=1; i<p; ++i )
     {
         temp = temp * temp2;
     }
@@ -270,13 +270,15 @@ const Matrix Matrix:: operator ^ (const int & p) const
 
 bool Matrix:: operator == (const Matrix & m ) const
 {
-    if ((m.cols == cols) && (m.rows == rows))
+    unsigned int i,j ;
+
+    if ( (m.cols == cols) && (m.rows == rows) )
     {
-        for (unsigned int i = 0; i < rows; i++)
+        for (i = 0; i < rows; i++)
         {
-            for (unsigned int j = 0; j < cols; j++)
+            for (j = 0; j < cols; j++)
             {
-                if (tab[i][j] != m.tab[i][j])
+                if (tab[i][j] - m.tab[i][j] != 0.0 )
                 {
                     return false;
                 }
@@ -356,7 +358,7 @@ Matrix Matrix:: transposeMatrix() const
     {
         for (unsigned int j=0; j<copy.cols; j++)
         {
-            copy[i][j]=tab[j][i];
+            copy[i][j] = tab[j][i];
         }
     }
     return copy;
@@ -371,7 +373,7 @@ Matrix Matrix:: inverse() const
         exit (EXIT_FAILURE);
     }
 
-    if (determinant()==0)
+    if (determinant() == 0.0)
     {
         cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
         exit(EXIT_FAILURE);
@@ -423,10 +425,10 @@ Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
 
 double Matrix:: determinant(unsigned int dim) const
 {
+    unsigned int i,j,x,subi=0,subj=0;
+
     Matrix submatrix (dim,dim);
     double det = 0;
-    int subi = 0;
-    int subj = 0;
 
     if ( dim == 1 )
     {
@@ -438,13 +440,13 @@ double Matrix:: determinant(unsigned int dim) const
         return ((tab[0][0] * tab[1][1]) - (tab[1][0] * tab[0][1]));
     }
 
-    for ( unsigned int x = 0; x < dim; x++)
+    for (x=0; x<dim; x++)
     {
         subi = 0;
-        for (unsigned int i = 1; i < dim; i++)
+        for (i=1; i<dim; i++)
         {
             subj = 0;
-            for (unsigned int j = 0; j < dim; j++)
+            for (j=0; j<dim; j++)
             {
                 if (j != x)
                 {
@@ -457,70 +459,6 @@ double Matrix:: determinant(unsigned int dim) const
         det = det + (pow(-1, x) * tab[0][x] * submatrix.determinant(dim - 1));
     }
     return det;
-}
-
-
-bool Matrix:: isOperator (const string & chaine)
-{
-    return ( (chaine == "+")
-             ||  (chaine == "-")
-             ||  (chaine == "/")
-             || (chaine == "^")
-             || (chaine == "*"));
-}
-
-
-vector<string> Matrix:: decoupe (const string & expression)
-{
-    unsigned int i;
-    long int l =expression.length();
-    vector<string> tab;
-    string c, temp;
-    temp="";
-
-    for (i=0; i<l; i++)
-    {
-        c=expression[i];
-
-        if((isOperator(c)) || (c == ")") || (c == "(") || (c == "=") )
-        {
-            if (temp.length()!=0) tab.push_back(temp);
-            tab.push_back(c);
-            temp="";
-        }
-        else if (!c.empty())
-        {
-            temp+=c;
-        }
-
-    }
-    tab.push_back(temp);
-
-    return tab;
-}
-
-
-Matrix Matrix:: calculate (const string & op, const string & a, const string & b)
-{
-    Matrix m_a;
-    Matrix m_b;
-    m_a.readMatrix(a);
-    m_b.readMatrix(b);
-
-    if(op=="+")
-        return m_a+m_b;
-
-    if(op=="-")
-        return m_a-m_b;
-
-    if(op=="*")
-        return m_a*m_b;
-
-    if(op=="/")
-        return m_a/m_b;
-
-    Matrix e(1,1,{0});
-    return e;
 }
 
 
@@ -621,7 +559,7 @@ ostream& operator << ( ostream& flux, const Matrix & m )
     {
         for ( auto j : i )
         {
-            if((int)(j*1000000)==0)
+            if(static_cast<int>(j*1000000) == 0)
             {
                 flux << "0" << "  ";
             }
@@ -872,7 +810,7 @@ void Matrix::testRegression()
         tra = a.traceMatrix();
         cout << "Résultat attendu: tr(A) = -47" << endl;
         cout << "Résultat produit par l'application: tr(A) = " << tra << endl;
-        if(tra == -47)
+        if(tra + 47 == 0.0)
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
     } else {
@@ -886,7 +824,7 @@ void Matrix::testRegression()
         det = f.determinant();
         cout << "Résultat attendu: det(F) = 0" << endl;
         cout << "Résultat produit par l'application: det(F) = " << det << endl;
-        if(det == 0)
+        if(det == 0.0)
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
     } else {
@@ -899,7 +837,7 @@ void Matrix::testRegression()
         det = a.determinant();
         cout << "Résultat attendu: det(A) = 8366164" << endl;
         cout << "Résultat produit par l'application: tr(A) = " << det << endl;
-        if(det == 8366164)
+        if(det == 8366164.0)
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
     } else {
@@ -957,113 +895,6 @@ void Matrix::testRegression()
 }
 
 
-
-
-bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
-{
-    switch (opd[0])
-    {
-        case '*':
-            return ((opg[0] == '*') || (opg[0] == '/'));
-
-        case '/':
-            return ((opg[0] == '*') || (opg[0] == '/'));
-
-        case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-
-        case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-            default: return false;
-    }
-}
-
-
-void Matrix:: polonaise(const std::string & chaine , std::vector<std::string> & notation_polonaise)
-{
-    stack<string> p;
-    vector<string> expression;
-    expression = decoupe(chaine);
-
-    int i;
-
-    for (i = 0; i < expression.size(); i++)
-    {
-        if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
-        {
-            notation_polonaise.push_back(expression[i]);
-        }
-        else if ( (expression[i] == "(") || (expression[i] == "=") )
-        {
-            p.push(expression[i]);
-        }
-        else if (isOperator(expression[i]))
-        {
-            if (!p.empty())
-            {
-                while (priorite_sup_egal(expression[i],p.top()))
-                {
-                    notation_polonaise.push_back(p.top());
-                    p.pop();
-                }
-            }
-
-            p.push(expression[i]);
-
-        }
-        else if (expression[i] == ")")
-        {
-            do
-            {
-                notation_polonaise.push_back(p.top());
-                p.pop();
-
-            }while (p.top() !=  "(");
-            p.pop();
-        }
-    }
-
-    while (!p.empty())
-    {
-        notation_polonaise.push_back(p.top());
-        p.pop();
-    }
-}
-
-
-
-/*Matrix Matrix:: expressionCalcul(const std::string & chaine)
-{
-    vector<string> polish;
-    polonaise(chaine,polish);
-    stack<string> pile;
-    Matrix temp("ppp4");
-    temp.saveMatrix();
-    unsigned int i;
-    unsigned int taille=polish.size();
-
-    for (i = 0; i < taille; i++ )
-    {
-        if (isOperator(polish[i]))
-        {
-            string b = pile.top();
-            pile.pop();
-            string a=pile.top();
-            pile.pop();
-
-            temp=calculate(polish[i],a,b);
-            pile.push(temp.getName());
-            temp.saveMatrix();
-        }
-        else
-        {
-            pile.push(polish[i]);
-        }
-    }
-    temp.readMatrix(pile.top());
-    return temp;
-}*/
-
 void Matrix:: setMatrixKB ()
 {
     cout << "Saisir nblignes : ";
@@ -1116,10 +947,9 @@ Eigen::MatrixXd Matrix:: class2Eigen ()
 
 Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
 {
-    unsigned int i,j;
-    unsigned int r,c;
-    r = (unsigned int) m.rows();
-    c = (unsigned int) m.cols();
+    unsigned int i,j,r,c ;
+    r = static_cast<unsigned int>(m.rows());
+    c = static_cast<unsigned int>(m.cols());
     Matrix a(r,c);
 
     for(i=0 ; i<r ; i++)
@@ -1142,7 +972,7 @@ vector<double> Matrix:: eigenValues()
 
     a = class2Eigen();
     Eigen::EigenSolver<Eigen::MatrixXd> m(a);
-    n = (unsigned int)m.eigenvalues().size();
+    n = static_cast<unsigned int>(m.eigenvalues().size());
 
     for (i=0; i<n; i++)
     {
@@ -1160,7 +990,7 @@ bool Matrix:: isDiagonalisable()
 {
 
     unsigned int i,j;
-    long int s;
+    unsigned long int s;
     vector<pair<double,VectorX>> check;
 
     if (!isSQMatrix())
@@ -1255,15 +1085,15 @@ vector<VectorX> Matrix:: eigenVectors()
 vector<pair<double,VectorX>> Matrix:: allEigen()
 {
     unsigned int i;
-    long int n;
+    unsigned long int n;
     vector<VectorX> e_vector;
     vector<double> e_value;
     pair<double,VectorX> temp;
     vector<pair<double,VectorX>> result;
 
-    e_value=eigenValues();
-    e_vector=eigenVectors();
-    n=e_value.size();
+    e_value = eigenValues();
+    e_vector = eigenVectors();
+    n = e_value.size();
 
     for(i=0; i<n; i++)
     {

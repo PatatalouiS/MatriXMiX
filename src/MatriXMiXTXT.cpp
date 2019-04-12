@@ -38,7 +38,7 @@ void MatriXMiXTXT:: binaryOperation (const char op) const
 	cin >> name1;
 	const Matrix* op1 = lib.find(name1);
 	
-	if (op1 == NULL)
+    if (op1 == nullptr)
 	{
 		cerr << "Erreur, Il n'existe pas de matrice nommée " << name1 << "!" << endl;
 		wait();
@@ -49,7 +49,7 @@ void MatriXMiXTXT:: binaryOperation (const char op) const
 	cin >> name2;
 	const Matrix* op2 = lib.find(name2);
 	
-	if (op2 == NULL)
+    if (op2 == nullptr)
 	{
 		cerr << "Erreur, Il n'existe pas de matrice nommée " << name2 << "!" << endl;
 		wait();
@@ -80,7 +80,7 @@ void MatriXMiXTXT:: binaryOperationPow() const
 
 	const Matrix* op = lib.find(name);
 
-	if (op == NULL)
+    if (op == nullptr)
 	{
 		cerr << "Erreur, Il n'existe pas de matrice nommée " << name << "!" << endl;
 		wait();
@@ -105,7 +105,7 @@ void MatriXMiXTXT:: unaryOperation(const char op) const
 
 	const Matrix* op1 = lib.find(name);
 
-	if (op1 == NULL)
+    if (op1 == nullptr)
 	{
 		cerr << "Erreur, Il n'existe pas de matrice nommée " << name << "!" << endl;
 		wait();
@@ -205,7 +205,7 @@ void MatriXMiXTXT:: addMatrixMenu ()
 		cout << "Rentrez le nom de la matrice : ";
 		cin >> name;
 		
-		if (lib.find(name) != NULL)
+        if (lib.find(name) != nullptr)
 		{
 			cout << "Attention, il y a déja une matrice avec le nom " << name << " !" << endl;
 			wait();
