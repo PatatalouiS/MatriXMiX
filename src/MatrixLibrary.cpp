@@ -83,9 +83,9 @@ bool MatrixLibrary:: isAuthorisedName(const string & chaine)
 
     while (i<s)
     {
-        if ( ((chaine[i]>'A') && (chaine[i]<'Z'))
-            || ((chaine[i]>'a') && (chaine[i]<'z'))
-            || ((chaine[i]>'0') && (chaine[i]<'9')) )
+        if ( ((chaine[i]>='A') && (chaine[i]<='Z'))
+            || ((chaine[i]>='a') && (chaine[i]<='z'))
+            || ((chaine[i]>='0') && (chaine[i]<='9')) )
             i++;
         else return false;
     }
@@ -101,8 +101,8 @@ bool MatrixLibrary:: isName(const string & chaine)
 
     while (i<s)
     {
-        if ( ((chaine[i]>'A') && (chaine[i]<'Z'))
-             || ((chaine[i]>'a') && (chaine[i]<'z')) )
+        if ( ((chaine[i]>='A') && (chaine[i]<='Z'))
+             || ((chaine[i]>='a') && (chaine[i]<='z')) )
             i++;
         else return false;
     }
