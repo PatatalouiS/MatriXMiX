@@ -28,7 +28,7 @@ int main (int argc, char* argv[])
     lib.addMatrix("matriceb",b);
 
 
-    res = lib.expressionCalcul("identite*matriceb");
+    res = lib.expressionCalcul("identite-matriceb");
 
     cout << res;
 

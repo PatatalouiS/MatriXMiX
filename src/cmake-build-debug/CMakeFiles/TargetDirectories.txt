@@ -1,3 +1,0 @@
-/home/tarik/Bureau/MatriXMiX/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/tarik/Bureau/MatriXMiX/src/cmake-build-debug/CMakeFiles/src.dir
-/home/tarik/Bureau/MatriXMiX/src/cmake-build-debug/CMakeFiles/edit_cache.dir

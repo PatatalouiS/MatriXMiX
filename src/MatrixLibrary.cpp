@@ -48,8 +48,8 @@ void MatrixLibrary:: print () const
 
 void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& resultat)
 {
-    unsigned long int i, length = resultat.size();
-
+    unsigned int i;
+    long int length = resultat.size();
     for (i=0; i<length; i++)
     {
         expression.push_back(resultat[i]);
@@ -92,7 +92,8 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 
 bool MatrixLibrary:: isAuthorisedName(const string & chaine)
 {
-    unsigned long int i=0, s=chaine.length();
+    unsigned int i=0;
+    long int s=chaine.length();
 
     while (i<s)
     {
@@ -109,7 +110,8 @@ bool MatrixLibrary:: isAuthorisedName(const string & chaine)
 
 bool MatrixLibrary:: isName(const string & chaine)
 {
-    unsigned long int i=0, s=chaine.length();
+    unsigned int i=0;
+    long int s=chaine.length();
 
     while (i<s)
     {
@@ -125,8 +127,8 @@ bool MatrixLibrary:: isName(const string & chaine)
 
 bool MatrixLibrary:: isFloat(const string & chaine)
 {
-    unsigned long int i=0, s=chaine.length();
-    unsigned int nbcoma=0;
+    long int i=0, nbcoma=0;
+    long int s=chaine.length();
 
     while (i<s)
     {
@@ -235,9 +237,9 @@ void MatrixLibrary:: polonaise(const std::string & chaine , std::vector<std::str
     vector<string> expression;
     copy_vector(expression,decoupe(chaine));
 
-    unsigned long int i, s=expression.size();
+    int i;
 
-    for (i = 0; i < s; i++)
+    for (i = 0; i < expression.size(); i++)
     {
         if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
         {
@@ -291,19 +293,18 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
     int nom=0;
     addMatrix("temp",temp);
     unsigned int i;
+    long int taille=polish.size();
 
-    unsigned long int s = polish.size();
-
-    for (i = 0; i < s; i++ )
+    for (i = 0; i < taille; i++ )
     {
         if (isOperator(polish[i]))
         {
             string b = pile.top();
             pile.pop();
-            string a = pile.top();
+            string a=pile.top();
             pile.pop();
-            identify = static_cast<char>('0'+ nom);
-            temp = calculate(polish[i],a,b);
+            identify='0'+ nom;
+            temp=calculate(polish[i],a,b);
             pile.push("temp" + identify);
             addMatrix("temp" + identify,temp);
             nom++;
@@ -315,7 +316,7 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
     }
 
     const Matrix* res;
-    res = find(pile.top());
+    res=find(pile.top());
     return *res;
 }
 
