@@ -16,14 +16,14 @@ Fraction::Fraction()
 }
 
 
-Fraction::Fraction(const int & n)
+Fraction::Fraction(const long int & n)
 {
     numerateur=n;
     denominateur=1;
 }
 
 
-Fraction::Fraction(const int & n, const int & m)
+Fraction::Fraction(const long int & n, const long int & m)
 {
     numerateur=n;
     denominateur=m;
@@ -43,13 +43,14 @@ ostream& operator<<(ostream& flux, Fraction const& fraction)
 }
 
 
-int Fraction::pgcd(int a, int b)
+long int Fraction::pgcd(long int a, long int b)
 {
+    long int t;
     while (b!=0)
     {
-        int t=b;
-        b=a%b;
-        a=t;
+        t = b;
+        b = a%b;
+        a = t;
     }
 
     return a;
@@ -59,7 +60,7 @@ int Fraction::pgcd(int a, int b)
 
 void Fraction::simplifie()
 {
-    int diviseur = pgcd(numerateur,denominateur);
+    long int diviseur = pgcd(numerateur,denominateur);
     numerateur=numerateur/diviseur;
     denominateur=denominateur/diviseur;
 }
@@ -72,7 +73,7 @@ bool Fraction::estEgal(const Fraction & f) const
 
     double resultat = f1/f2;
 
-    if (resultat==1)
+    if (resultat == 1.0)
         return true;
     return false;
 }
@@ -118,14 +119,13 @@ Fraction operator+(const Fraction & f1, const Fraction & f2)
 
 Fraction Fraction::double2Fraction(const double & f)
 {
-    unsigned int i=1;
-    long int num=1, den=1;
+    long int i=1, num=1, den=1;
     double f2=f*10;
     while(i<10)
     {
-        if (num!=f2*pow(10,i))
+        if (num != static_cast<long int>(f2*pow(10,i)) )
         {
-            num=f2*pow(10,i-1);
+            num=static_cast<long int>(f2*pow(10,i-1));
             den*=10;
         }
         i++;

@@ -580,7 +580,6 @@ bool Matrix:: isSQMatrix() const
 }
 
 
-
 /*void Matrix:: saveMatrix ()
 {
 
