@@ -116,6 +116,9 @@ Matrix:: ~Matrix ()
 
 
 
+
+
+
 // ******** FONCTIONS STATIQUES *********
 
 
@@ -129,8 +132,117 @@ Matrix Matrix:: ID (const unsigned int size)
 
 
 
-
 // ******* FONCTIONS DE CALCUL ALGEBRIQUE ET OPERATEURS DE CALCUL ********
+
+
+unsigned int Matrix:: getNbRows() const
+{
+    return rows;
+}
+
+
+unsigned int Matrix:: getNbCols() const
+{
+    return cols;
+}
+
+
+double& Matrix:: getVal ( const unsigned int indice )
+{
+    if ( indice >= (rows * cols))
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+
+    return tab[indice/rows][indice%rows];
+}
+
+
+double Matrix:: getVal ( const unsigned int indice ) const
+{
+    if ( indice >= (rows * cols))
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+
+    return tab[indice/rows][indice%rows];
+}
+
+
+vector<double>&  Matrix:: operator [] ( const unsigned int indice )
+{
+    if ( indice >= rows)
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+    return tab[indice];
+}
+
+
+const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
+{
+    if ( indice >= rows)
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+    return tab[indice];
+}
+
+
+ostream& operator << ( ostream& flux, const Matrix & m )
+{
+    for ( auto i : m.tab )
+    {
+        for ( auto j : i )
+        {
+            if(static_cast<int>(j*1000000) == 0)
+            {
+                flux << "0" << "  ";
+            }
+            else
+            {
+                flux << j << "  ";
+            }
+        }
+        flux << endl;
+    }
+    return flux;
+}
+
+
+void Matrix:: setMatrixKB ()
+{
+    cout << "Saisir nblignes : ";
+    cin >> rows;
+    cout << "Saisir nbColonnes : ";
+    cin >> cols;
+
+    tab.resize(rows, vector<double>(cols));
+
+    for(unsigned int i = 1; i <= rows; ++i)
+    {
+        for(unsigned int j = 1; j <= cols; ++j)
+        {
+            cout << endl << "Saisir coeff " << "(" << i << " , " << j << ")" << ": ";
+            cin >> tab[i-1][j-1];
+        }
+    }
+}
+
+
+void Matrix:: setMatrixRA ()
+{
+    cout << "Saisir nblignes : ";
+    cin >> rows;
+    cout << "Saisir nbColonnes : ";
+    cin >> cols;
+
+    tab = Matrix(rows, cols, Matrix::R).tab;
+}
 
 
 const Matrix Matrix:: operator+ (const Matrix & m) const
@@ -297,6 +409,12 @@ bool Matrix::operator != (const Matrix & m) const
 }
 
 
+bool Matrix:: isSQMatrix() const
+{
+    return rows==cols;
+}
+
+
 double Matrix:: traceMatrix() const
 {
     if ( !isSQMatrix() )
@@ -322,6 +440,23 @@ double Matrix:: determinant() const
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
     }
+
+    unsigned int i,j,r,c;
+    r = getNbRows();
+    c = getNbCols();
+
+    for (i=0; i<r; i++)
+    {
+        for (j=0; j<c; j++)
+        {
+            if ( (i!=j) && tab[i]==tab[j])
+            {
+                return 0.0;
+            }
+        }
+    }
+
+
     return determinant(rows);
 }
 
@@ -385,7 +520,6 @@ Matrix Matrix:: inverse() const
     inverse=temp*(1/determinant());
     return inverse;
 }
-
 
 
 
@@ -462,94 +596,205 @@ double Matrix:: determinant(unsigned int dim) const
 }
 
 
-
-
-
-// *********   FONCTIONS DIVERSES ET ACCESSEURS    *********
-
-
-unsigned int Matrix:: getNbRows() const
+Eigen::MatrixXd Matrix:: class2Eigen ()
 {
-    return rows;
-}
+    unsigned int i,j,r,c;
+    r = getNbRows();
+    c = getNbCols();
+    Eigen:: MatrixXd m(r,c);
 
-
-unsigned int Matrix:: getNbCols() const
-{
-    return cols;
-}
-
-
-double& Matrix:: getVal ( const unsigned int indice )
-{
-    if ( indice >= (rows * cols))
+    for(i=0 ; i<r ; i++)
     {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-
-    return tab[indice/rows][indice%rows]; 
-}
-
-
-double Matrix:: getVal ( const unsigned int indice ) const
-{
-    if ( indice >= (rows * cols))
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-
-    return tab[indice/rows][indice%rows];
-}
-
-
-vector<double>&  Matrix:: operator [] ( const unsigned int indice )
-{
-    if ( indice >= rows)
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-    return tab[indice];
-}
-
-
-const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
-{
-    if ( indice >= rows)
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-    return tab[indice];
-}
-
-
-ostream& operator << ( ostream& flux, const Matrix & m )
-{
-    for ( auto i : m.tab )
-    {
-        for ( auto j : i )
+        for(j=0 ; j<c ; j++)
         {
-            if(static_cast<int>(j*1000000) == 0)
-            {
-                flux << "0" << "  ";
-            }
-            else
-            {
-                flux << j << "  ";
-            }
+            m(i,j) = tab[i][j] ;
         }
-        flux << endl;
     }
-    return flux;
+
+    return m;
 }
 
 
-bool Matrix:: isSQMatrix() const
+Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
 {
-    return rows==cols;
+    unsigned int i,j,r,c ;
+    r = static_cast<unsigned int>(m.rows());
+    c = static_cast<unsigned int>(m.cols());
+    Matrix a(r,c);
+
+    for(i=0 ; i<r ; i++)
+    {
+        for(j=0 ; j<c ; j++)
+        {
+            a.tab[i][j] = m(i,j) ;
+        }
+    }
+
+    return a;
+}
+
+
+
+
+
+
+// *********   FONCTIONS D'ETUDE DE MATRICES    *********
+
+
+vector<double> Matrix:: eigenValues()
+{
+    unsigned int i,n;
+    vector<double> result;
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+    n = static_cast<unsigned int>(m.eigenvalues().size());
+
+    for (i=0; i<n; i++)
+    {
+        if(abs(m.eigenvalues()(i).real()) < EPSILON)
+            result.push_back(0);
+        else
+            result.push_back(m.eigenvalues()(i).real());
+    }
+
+    return result;
+}
+
+
+vector<VectorX> Matrix:: eigenVectors()
+{
+    unsigned int i, j, n=getNbRows();
+    vector<VectorX> tab;
+    VectorX temp;
+
+    Matrix a(n,n);
+    a=transferMatrix();
+
+    for(i=0; i<n; i++)
+    {
+        temp.clear();
+
+        for(j=0; j<n; j++)
+        {
+            temp.push_back(a[j][i]);
+        }
+
+        tab.push_back(temp);
+    }
+
+    return tab;
+
+}
+
+
+vector<pair<double,VectorX>> Matrix:: allEigen()
+{
+    unsigned int i;
+    unsigned long int n;
+    vector<VectorX> e_vector;
+    vector<double> e_value;
+    pair<double,VectorX> temp;
+    vector<pair<double,VectorX>> result;
+
+    e_value = eigenValues();
+    e_vector = eigenVectors();
+    n = e_value.size();
+
+    for(i=0; i<n; i++)
+    {
+        temp = make_pair(e_value[i],e_vector[i]);
+        result.push_back(temp) ;
+    }
+
+    return result;
+
+}
+
+
+bool Matrix:: isDiagonalisable()
+{
+
+    unsigned int i,j;
+    unsigned long int s;
+    vector<pair<double,VectorX>> check;
+
+    if (!isSQMatrix())
+        return false;
+
+    check = allEigen();
+    s = check.size();
+
+    for(i=0; i<s; i++)
+    {
+        for(j=0; j<s; j++)
+        {
+            if( (i!=j) && (check[i].second==check[j].second) )
+                return false;
+
+        }
+
+    }
+
+    return true;
+}
+
+
+Matrix Matrix:: diagonalise()
+{
+
+    Matrix m;
+    Eigen:: MatrixXd a,b;
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
+    b = res.pseudoEigenvalueMatrix();
+    m = eigen2Class(b);
+
+    return m;
+
+}
+
+
+Matrix Matrix::transferMatrix()
+{
+    unsigned int i, j, n=getNbRows();
+    Matrix result(n,n);
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+
+    result=eigen2Class(m.pseudoEigenvectors());
+
+    for(i=0; i<n; i++)
+    {
+
+        for(j=0; j<n; j++)
+        {
+            if (abs(result[i][j]) < EPSILON)
+                result[i][j]=0;
+        }
+
+    }
+
+    return result;
+
+}
+
+
+void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C)
+{
+   if (!isDiagonalisable())
+   {
+       cout << "La matrice n'est pas diagonalisable dans R" << endl;
+       return ;
+   }
+
+   transferC2B=transferMatrix();
+   diagonal=diagonalise();
+   transferB2C=(transferC2B^-1);
+
 }
 
 
@@ -738,231 +983,5 @@ void Matrix::testRegression()
     }
 
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
-
-}
-
-
-void Matrix:: setMatrixKB ()
-{
-    cout << "Saisir nblignes : ";
-    cin >> rows;
-    cout << "Saisir nbColonnes : ";
-    cin >> cols;
-    
-    tab.resize(rows, vector<double>(cols));
-    
-    for(unsigned int i = 1; i <= rows; ++i)
-    {
-        for(unsigned int j = 1; j <= cols; ++j)
-        {
-            cout << endl << "Saisir coeff " << "(" << i << " , " << j << ")" << ": ";
-            cin >> tab[i-1][j-1];
-        }
-    }
-}
-
-
-void Matrix:: setMatrixRA ()
-{
-    cout << "Saisir nblignes : ";
-    cin >> rows;
-    cout << "Saisir nbColonnes : ";
-    cin >> cols;
-    
-    tab = Matrix(rows, cols, Matrix::R).tab;
-}
-
-
-Eigen::MatrixXd Matrix:: class2Eigen ()
-{
-    unsigned int i,j,r,c;
-    r = getNbRows();
-    c = getNbCols();
-    Eigen:: MatrixXd m(r,c);
-
-    for(i=0 ; i<r ; i++)
-    {
-        for(j=0 ; j<c ; j++)
-        {
-            m(i,j) = tab[i][j] ;
-        }
-    }
-
-    return m;
-}
-
-
-Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
-{
-    unsigned int i,j,r,c ;
-    r = static_cast<unsigned int>(m.rows());
-    c = static_cast<unsigned int>(m.cols());
-    Matrix a(r,c);
-
-    for(i=0 ; i<r ; i++)
-    {
-        for(j=0 ; j<c ; j++)
-        {
-            a.tab[i][j] = m(i,j) ;
-        }
-    }
-
-    return a;
-}
-
-
-vector<double> Matrix:: eigenValues()
-{
-    unsigned int i,n;
-    vector<double> result;
-    Eigen::MatrixXd a;
-
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
-    n = static_cast<unsigned int>(m.eigenvalues().size());
-
-    for (i=0; i<n; i++)
-    {
-        if(abs(m.eigenvalues()(i).real()) < EPSILON)
-            result.push_back(0);
-        else
-            result.push_back(m.eigenvalues()(i).real());
-    }
-
-    return result;
-}
-
-
-bool Matrix:: isDiagonalisable()
-{
-
-    unsigned int i,j;
-    unsigned long int s;
-    vector<pair<double,VectorX>> check;
-
-    if (!isSQMatrix())
-        return false;
-
-    check = allEigen();
-    s = check.size();
-
-    for(i=0; i<s; i++)
-    {
-        for(j=0; j<s; j++)
-        {
-            if( (i!=j) && (check[i].second==check[j].second) )
-                return false;
-
-        }
-
-    }
-
-    return true;
-}
-
-
-Matrix Matrix:: diagonalise()
-{
-
-    Matrix m;
-    Eigen:: MatrixXd a,b;
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
-    b = res.pseudoEigenvalueMatrix();
-    m = eigen2Class(b);
-
-    return m;
-
-}
-
-
-Matrix Matrix::transferMatrix()
-{
-    unsigned int i, j, n=getNbRows();
-    Matrix result(n,n);
-    Eigen::MatrixXd a;
-
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
-
-    result=eigen2Class(m.pseudoEigenvectors());
-
-    for(i=0; i<n; i++)
-    {
-
-        for(j=0; j<n; j++)
-        {
-            if (abs(result[i][j]) < EPSILON)
-                result[i][j]=0;
-        }
-
-    }
-
-    return result;
-
-}
-
-
-vector<VectorX> Matrix:: eigenVectors()
-{
-    unsigned int i, j, n=getNbRows();
-    vector<VectorX> tab;
-    VectorX temp;
-
-    Matrix a(n,n);
-    a=transferMatrix();
-
-    for(i=0; i<n; i++)
-    {
-        temp.clear();
-
-        for(j=0; j<n; j++)
-        {
-            temp.push_back(a[j][i]);
-        }
-
-        tab.push_back(temp);
-    }
-
-    return tab;
-
-}
-
-
-vector<pair<double,VectorX>> Matrix:: allEigen()
-{
-    unsigned int i;
-    unsigned long int n;
-    vector<VectorX> e_vector;
-    vector<double> e_value;
-    pair<double,VectorX> temp;
-    vector<pair<double,VectorX>> result;
-
-    e_value = eigenValues();
-    e_vector = eigenVectors();
-    n = e_value.size();
-
-    for(i=0; i<n; i++)
-    {
-        temp = make_pair(e_value[i],e_vector[i]);
-        result.push_back(temp) ;
-    }
-
-    return result;
-
-}
-
-
-void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C)
-{
-   if (!isDiagonalisable())
-   {
-       cout << "La matrice n'est pas diagonalisable dans R" << endl;
-       return ;
-   }
-
-   transferC2B=transferMatrix();
-   diagonal=diagonalise();
-   transferB2C=(transferC2B^-1);
 
 }

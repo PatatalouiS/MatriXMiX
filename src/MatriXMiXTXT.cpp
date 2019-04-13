@@ -107,7 +107,7 @@ void MatriXMiXTXT:: unaryOperation(const char op) const
 
     if (op1 == nullptr)
 	{
-		cerr << "Erreur, Il n'existe pas de matrice nommée " << name << "!" << endl;
+        cerr << "Erreur, Il n'existe pas de matrice nommée " << name << " !" << endl;
 		wait();
 		return;
 	}

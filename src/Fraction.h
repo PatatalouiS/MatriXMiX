@@ -12,11 +12,9 @@ class Fraction
 {
 
 private:
-
     long int numerateur, denominateur;
 
 public:
-
     Fraction();
     Fraction(const long int & n);
     Fraction(const long int & n, const long int & m);
