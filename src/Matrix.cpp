@@ -262,7 +262,7 @@ const Matrix Matrix:: operator ^ (const int & p) const
 
     for (int i=1; i<p; ++i )
     {
-        temp = temp * temp2;
+        temp = (temp * temp2);
     }
     return temp;
 }
@@ -462,33 +462,6 @@ double Matrix:: determinant(unsigned int dim) const
 }
 
 
-const string Matrix:: saveRights(const string & filename, const string & matrixname)
-{
-    ifstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    string first_string, stringpos;
-
-    file >> first_string;
-
-    while(!file.eof())
-    {
-        file >> stringpos;
-        if(stringpos==matrixname)
-            return string("used");
-    }
-
-    return first_string;
-
-}
-
-
-
 
 
 
@@ -578,132 +551,6 @@ bool Matrix:: isSQMatrix() const
 {
     return rows==cols;
 }
-
-
-
-/*void Matrix:: saveMatrix ()
-{
-
-    string matrixname(this->name);
-
-    string filename (PATH);
-    ofstream file (filename.c_str(), ios::app);
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    string testRights;
-    testRights=saveRights(filename,matrixname);
-
-    if (testRights.empty())
-    {
-        file << "Matrix" << endl;
-
-    }
-    else if (testRights=="used")
-    {
-        cout << "Une matrice du même nom a déjà été sauvegardée"
-                "\nVeuillez sélectionner un autre nom" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else if(testRights!="Matrix")
-    {
-        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
-        // MAXIME GESTION ERREUR
-        exit(EXIT_FAILURE);
-    }
-
-    file << endl << matrixname << endl;
-    file << getNbRows() << " " << getNbCols() << endl;
-
-    for (unsigned int i = 0; i < getNbRows(); i++)
-    {
-        for (unsigned int j = 0; j < getNbCols(); j++)
-        {
-
-            file << tab[i][j] << " ";
-        }
-        file << endl;
-    }
-
-    cout << "La sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
-
-    file.close();
-
-}*/
-
-
-
-void Matrix:: readMatrix(const string & matrixname)
-{
-    string filename(PATH);
-    ifstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    string testfile;
-    file >> testfile ;
-
-    if( testfile == "Matrix")
-    {
-        while(!file.eof() && testfile!=matrixname)
-        {
-            file >> testfile;
-        }
-        if (file.eof())
-        {
-            cout << "Problème avec " << matrixname << endl;
-            cout << "Cette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
-            exit(EXIT_FAILURE);
-        }
-
-        file >> rows >> cols;
-
-        tab = vector<vector<double>> (rows, vector<double> (cols, 0));
-
-        for (unsigned int i = 0; i < getNbRows(); i++)
-        {
-            for (unsigned int j = 0; j < getNbCols(); j++)
-            {
-                file >> tab[i][j];
-            }
-
-        }
-
-        file.close();
-        cout << "ouverture réussie" << endl << endl;
-    }
-    else
-    {
-        cout << "Erreur" << endl ;
-        // exception QT Maxime
-    }
-}
-
-
-void Matrix:: cleanSaves()
-{
-    string filename(PATH);
-    ofstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    file.close();
-    cout << "!!!!!! Fichier de sauvegarde nettoyé" << endl << endl;
-
-}
-
 
 
 void Matrix::testRegression()
@@ -1119,5 +966,3 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
    transferB2C=(transferC2B^-1);
 
 }
-
-

@@ -26,11 +26,17 @@ int main (int argc, char* argv[])
 
     lib.addMatrix("identite",a);
     lib.addMatrix("matriceb",b);
-
+    lib.saveMatrix("identite");
+    lib.saveMatrix("matriceb");
 
     res = lib.expressionCalcul("identite-matriceb");
+    lib.addMatrix("I+B",res);
+    lib.saveMatrix("I+B");
 
-    cout << res;
+    cout << lib.readMatrix("I+B") << endl << endl;
+
+
+    lib.cleanSaves();
 
 
     return 0;

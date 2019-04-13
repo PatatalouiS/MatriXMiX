@@ -23,7 +23,6 @@ private:
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     double determinant(unsigned int dim) const;
     bool isOperator (const std::string & chaine);
-    const std::string saveRights(const std::string & filename, const std::string & matrixname);
     Eigen::MatrixXd class2Eigen ();
     Matrix eigen2Class(const Eigen::MatrixXd & m);
     
@@ -70,9 +69,6 @@ public:
     const std::vector<double>& operator [] ( const unsigned int indice ) const;
     friend std::ostream& operator << ( std::ostream& flux, const Matrix & m );
     bool isSQMatrix() const;
-    void saveMatrix();
-    void readMatrix(const std::string & matrixname);
-    void cleanSaves();
     void testRegression();
     void setMatrixKB();
     void setMatrixRA();

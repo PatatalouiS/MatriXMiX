@@ -1,11 +1,12 @@
 
 #include "MatrixLibrary.h"
+#include "Matrix.h"
 #include <stack>
 #include <iostream>
-
-
+#include <fstream>
 using namespace std;
 
+const string PATH = "sauvegarde.txt";
 
 MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
 {
@@ -319,3 +320,153 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
 }
 
 
+const string MatrixLibrary:: saveRights(const string & matrixname)
+{
+    ifstream file (PATH);
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string first_string, stringpos;
+
+    file >> first_string;
+
+    while(!file.eof())
+    {
+        file >> stringpos;
+        if(stringpos==matrixname)
+            return string("used");
+    }
+
+    return first_string;
+
+}
+
+
+void MatrixLibrary:: saveMatrix (const string & matrixname)
+{
+    Matrix m(*find(matrixname));
+    cout << m;
+
+    string filename (PATH);
+    ofstream file (filename.c_str(), ios::app);
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du fichier "
+                "\nVeuillez vérifier le chemin du fichier" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string testRights = saveRights(matrixname);
+
+    if (testRights.empty())
+    {
+        file << "Matrix" << endl;
+
+    }
+    else if (testRights=="used")
+    {
+        cout << "Une matrice du même nom a déjà été sauvegardée"
+                "\nVeuillez sélectionner un autre nom" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else if(testRights!="Matrix")
+    {
+        cout << endl << "Erreur !"
+                        "\nModification du fichier 'sauvegarde.txt' " << endl;
+        // MAXIME GESTION ERREUR
+        exit(EXIT_FAILURE);
+    }
+
+    file << endl << matrixname << endl;
+    file << m.getNbRows() << " " << m.getNbCols() << endl;
+
+    for (unsigned int i = 0; i < m.getNbRows(); i++)
+    {
+        for (unsigned int j = 0; j < m.getNbCols(); j++)
+        {
+
+            file << m[i][j] << " ";
+        }
+        file << endl;
+    }
+
+    cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
+
+    file.close();
+
+}
+
+
+void MatrixLibrary:: cleanSaves()
+{
+    string filename(PATH);
+    ofstream file (filename.c_str());
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    file.close();
+    cout << "Fichier de sauvegarde nettoyé" << endl << endl;
+
+}
+
+
+Matrix MatrixLibrary:: readMatrix(const string & matrixname)
+{
+    string filename(PATH);
+    ifstream file (filename.c_str());
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string testfile;
+    file >> testfile ;
+
+    if( testfile == "Matrix")
+    {
+        while(!file.eof() && testfile!=matrixname)
+        {
+            file >> testfile;
+        }
+        if (file.eof())
+        {
+            cout << "Erreur avec " << matrixname <<
+                    "\nCette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        unsigned int r,c;
+        file >> r >> c;
+
+        Matrix m(r,c);
+
+        for (unsigned int i = 0; i < r; i++)
+        {
+            for (unsigned int j = 0; j < c; j++)
+            {
+                file >> m[i][j];
+            }
+
+        }
+
+        file.close();
+        cout << "fermeture réussie" << endl << endl;
+        return m;
+    }
+    else
+    {
+        cout << "Erreur" << endl ;
+        // exception QT Maxime
+    }
+}
