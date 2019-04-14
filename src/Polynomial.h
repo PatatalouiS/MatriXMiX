@@ -2,8 +2,8 @@
 // Created by tarik on 09/03/19.
 //
 
-#ifndef _POLYNOMIAL_H
-#define _POLYNOMIAL_H
+#ifndef POLYNOMIAL_H
+#define POLYNOMIAL_H
 
 #include <iostream>
 #include <vector>

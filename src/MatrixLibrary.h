@@ -1,6 +1,6 @@
 
-#ifndef _MATRIX_LIBRARY_
-#define _MATRIX_LIBRARY_
+#ifndef MATRIX_LIBRARY
+#define MATRIX_LIBRARY
 
 #include "Matrix.h"
 #include <map>

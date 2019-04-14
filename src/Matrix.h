@@ -1,6 +1,6 @@
 
-#ifndef _MATRIX_H
-#define _MATRIX_H
+#ifndef MATRIX_H
+#define MATRIX_H
 
 
 #include <vector>
@@ -22,7 +22,7 @@ private:
 private:
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     double determinant(unsigned int dim) const;
-    Eigen::MatrixXd class2Eigen ();
+    Eigen::MatrixXd class2Eigen();
     Matrix eigen2Class(const Eigen::MatrixXd & m);
     
 public:
@@ -46,13 +46,13 @@ public:
     //Accesseurs / Opérateurs de calcul / Fonctions de calcul algébrique
     unsigned int getNbRows() const;
     unsigned int getNbCols() const;
-    double& getVal ( const unsigned int indice );
-    double getVal ( const unsigned int indice ) const;
-    std::vector<double>& operator [] ( const unsigned int indice );
-    const std::vector<double>& operator [] ( const unsigned int indice ) const;
-    friend std::ostream& operator << ( std::ostream& flux, const Matrix & m );
-    void setMatrixKB ();
-    void setMatrixRA ();
+    double& getVal(const unsigned int indice);
+    double getVal(const unsigned int indice) const;
+    std::vector<double>& operator [] (const unsigned int indice);
+    const std::vector<double>& operator [] (const unsigned int indice) const;
+    friend std::ostream& operator << (std::ostream& flux, const Matrix & m);
+    void setMatrixKB();
+    void setMatrixRA();
     const Matrix operator + (const Matrix & m) const;
     const Matrix operator - (const Matrix & m) const;
     const Matrix operator * (const Matrix & m) const;
@@ -73,10 +73,15 @@ public:
     std::vector<VectorX> eigenVectors();
     std::vector<std::pair<double,VectorX>> allEigen();
     bool isDiagonalisable();
-    Matrix diagonalise ();
+    Matrix diagonalise();
     Matrix transferMatrix();
-    void allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C);
+    void allMatrix(Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C);
     void testRegression();
+
+    Matrix gaussReduction();
+
+
+
 
 };
 

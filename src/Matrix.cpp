@@ -9,6 +9,7 @@
 #include <utility>
 #include <Dense>
 #include "Matrix.h"
+#include "Gauss.h"
 
 
 using namespace std;
@@ -193,11 +194,11 @@ const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) co
 }
 
 
-ostream& operator << ( ostream& flux, const Matrix & m )
+ostream& operator << (ostream& flux, const Matrix & m)
 {
-    for ( auto i : m.tab )
+    for (auto i : m.tab)
     {
-        for ( auto j : i )
+        for (auto j : i)
         {
             if(static_cast<int>(j*1000000) == 0)
             {
@@ -985,3 +986,117 @@ void Matrix::testRegression()
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 
 }
+
+
+/*Matrix Matrix:: gauss()
+{
+    //  < >
+
+    unsigned int i,j,k,r,c;
+    r = getNbRows();
+    c = getNbCols();
+    Matrix result(*this);
+
+    double pivot;
+    vector<double> temp;
+    unsigned int nbswip=0;
+    for(k=0; k<c; k++)
+    {
+        for (i=k+1; i<r; i++)
+        {
+            if (result[k][k]!=0.0)
+            {
+                pivot = result[i][k]/result[k][k] ;
+                for (j=k; j<c; j++)
+                {
+                    result[i][j] -= (pivot*result[k][j]) ;
+                }
+            }
+            else
+            {
+                if(nbswip<r)
+
+                temp = result[i];
+                result[i] = result[i+1];
+                result[i+1] = temp;
+                nbswip++;
+            }
+
+        }
+    }
+
+    return result;
+}*/
+
+
+
+
+
+
+
+
+
+Matrix Matrix:: gaussReduction()
+{
+    Gauss g;
+    Matrix res(*this);
+
+    int col;
+    int r = static_cast<int>(res.getNbRows()) ;
+    int c = static_cast<int>(res.getNbCols()) ;
+
+
+    int nonzero_row_id, next_row_id = 0;
+    vector<Gauss> pivot_gauss;
+
+    for (col = 0; col < c; col++)
+    {
+        nonzero_row_id = g.is_nonzero_column(res, col, r, next_row_id);
+        if (nonzero_row_id >= 0)
+        {
+            if (nonzero_row_id != next_row_id)
+            {
+                g.row_exchange(res.tab.begin() + next_row_id, res.tab.begin() + nonzero_row_id);
+                nonzero_row_id = next_row_id;
+            }
+            pivot_gauss.push_back(Gauss(nonzero_row_id, col));
+            for (int row = next_row_id; row < r; row++)
+            {
+                if (res[row][col] == 0.0)
+                    continue;
+                if (row == nonzero_row_id)
+                    continue;
+                g.row_replace(res.tab.begin() + row,
+                            res.tab.begin() + nonzero_row_id,
+                            -res.tab[row][col] / res.tab[nonzero_row_id][col]);
+            }
+            next_row_id++;
+        }
+        else
+        {
+            continue;
+        }
+    }
+
+    for (vector<Gauss>::iterator pos = pivot_gauss.end() - 1;
+         pos >= pivot_gauss.begin(); pos--)
+    {
+
+        if (pos->getVal(res) != 1.0)
+        {
+            g.row_scale(res.tab.begin() + pos->row, 1 / res.tab[pos->row][pos->col]);
+        }
+
+        for (int row = 0; row < r; row++)
+        {
+            if (res.tab[row][pos->col] != 0.0 && row != pos->row)
+            {
+                g.row_replace(res.tab.begin() + row, res.tab.begin() + pos->row,
+                            -res.tab[row][pos->col] / res.tab[pos->row][pos->col]);
+            }
+        }
+    }
+
+    return res;
+}
+

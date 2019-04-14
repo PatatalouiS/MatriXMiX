@@ -1,6 +1,6 @@
 
-#ifndef _MATRIXMIX_TXT_H_
-#define _MATRIXMIX_TXT_H_
+#ifndef MATRIXMIX_TXT_H
+#define MATRIXMIX_TXT_H
 
 #include "MatrixLibrary.h"
 

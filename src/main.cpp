@@ -1,21 +1,34 @@
 
-#include <QApplication>
+//#include <QApplication>
 #include <iostream>
-#include <QDir>
-#include <QDebug>
-#include "MainWindow.h"
-#include "LibraryWindow.h"
-#include <Dense>
+//#include <QDir>
+//#include <QDebug>
+//#include "MainWindow.h"
+//#include "LibraryWindow.h"
+#include "Matrix.h"
 
 
 using namespace std;
 
 
-extern const string APP_PATH = QDir(QApplication::applicationDirPath() + "/../../../").absolutePath().toStdString();
+//extern const string APP_PATH = QDir(QApplication::applicationDirPath() + "/../../../").absolutePath().toStdString();
 
 int main (int argc, char* argv[])
 {
-    MatrixLibrary lib;
+
+    Matrix a(3,3,{1,2,3,4,5,6,7,8,9});
+
+    cout << a << endl ;
+
+    a=a.gaussReduction();
+
+    cout << a << endl ;
+
+
+
+
+
+    /*MatrixLibrary lib;
     vector<string> resultat;
 
     string expression1("((objet-1)+x*tmp/8)/25-12");
@@ -36,7 +49,7 @@ int main (int argc, char* argv[])
     cout << lib.readMatrix("I+B") << endl << endl;
 
 
-    lib.cleanSaves();
+    lib.cleanSaves();*/
 
 
     return 0;
