@@ -70,7 +70,7 @@ public:
  
     //Fonctions d'étude poussée des matrices et utilisation de la librairie externe eigen3
     std::vector<double> eigenValues();
-    Polynomial polynomeCaracteristique();
+    Polynomial characteristicPolynomial();
     std::vector<VectorX> eigenVectors();
     std::vector<std::pair<double,VectorX>> allEigen();
     bool isDiagonalisable();

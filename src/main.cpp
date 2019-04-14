@@ -20,9 +20,8 @@ int main (int argc, char* argv[])
 
     cout << a << endl ;
 
-    a=a.gaussReduction();
+    a.polynomeCaracteristique();
 
-    cout << a << endl ;
 
 
 
