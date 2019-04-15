@@ -15,8 +15,6 @@ class MainWindow : public QMainWindow
         MainWindow ();
         ~MainWindow ();
     
-    
-    
     signals:
     
     public slots:
@@ -27,5 +25,7 @@ class MainWindow : public QMainWindow
     private:
     
         QList<QPushButton*> operations;
-        LibraryWindow* lib;
+        MatrixLibrary lib;
+        std::function<void(void)> createWindow [10];
+
 };

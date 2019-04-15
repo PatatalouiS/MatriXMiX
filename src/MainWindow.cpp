@@ -11,7 +11,6 @@
 
 MainWindow:: MainWindow() : QMainWindow()
 {
-    lib = new LibraryWindow(this);
     QWidget* mainWidget = new QWidget(this);
     QWidget* headerWidget = new QWidget;
     QVBoxLayout* mainLayout = new QVBoxLayout;
@@ -20,8 +19,6 @@ MainWindow:: MainWindow() : QMainWindow()
     QFont font ("Arial");
     font.setPointSize(16);
 	
-    qDebug() << QDir::currentPath() << endl;
-    qDebug() << QCoreApplication::applicationFilePath() << endl;
 	QPixmap im (QDir::currentPath() + "/data/Logo_maths.jpg");
     im = im.scaled(200, 100);
     QLabel* logo = new QLabel;
@@ -85,12 +82,13 @@ MainWindow:: MainWindow() : QMainWindow()
 
 void MainWindow:: compute_choice (const unsigned int choice)
 {
-    close();
+    createWindow[choice]();
 }
 
 void MainWindow:: show_library()
 {
-    lib->show();
+    LibraryWindow* libWindow = new LibraryWindow(this, &lib);
+    libWindow->show();
     hide();
 }
 
