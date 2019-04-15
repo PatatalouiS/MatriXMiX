@@ -190,7 +190,7 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator *(const Polynomial & p)
+const Polynomial Polynomial:: operator * (const Polynomial & p)
 {
     unsigned int i,j,k,d=degree+p.degree;
     Polynomial result(d);
@@ -216,7 +216,7 @@ const Polynomial Polynomial:: operator *(const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator *(const double & scale)
+const Polynomial Polynomial:: operator * (const double & scale)
 {
     unsigned int i;
 
@@ -229,7 +229,7 @@ const Polynomial Polynomial:: operator *(const double & scale)
 }
 
 
-const Polynomial Polynomial:: division (const Polynomial & divisor, Polynomial & reste)
+const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & reste)
 {
     Polynomial quotient(degree - divisor.degree);
     Polynomial copy(*this);
@@ -310,3 +310,5 @@ void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, doubl
             }
 
 }
+
+

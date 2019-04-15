@@ -73,6 +73,7 @@ public:
     std::pair<unsigned int, unsigned int> dimensionsStudy();
     std::vector<double> eigenValues();
     Polynomial characteristicPolynomial();
+    std::vector<Polynomial> splitCharacteristicPolynomial();
     std::vector<VectorX> eigenVectors();
     std::vector<std::pair<double,VectorX>> allEigen();
     bool isDiagonalisable();
@@ -81,7 +82,7 @@ public:
     void allMatrix(Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C);
     Matrix gaussReduction();
     void testRegression();
-
+    Matrix solve();
 
 
 

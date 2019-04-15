@@ -731,6 +731,28 @@ Polynomial Matrix:: characteristicPolynomial()
 }
 
 
+vector<Polynomial> Matrix:: splitCharacteristicPolynomial()
+{
+    vector<Polynomial> result;
+    Polynomial temp(1);
+    unsigned int i,r,c;
+    r = getNbRows();
+    c = getNbCols();
+
+    vector<double> eigen_values;
+    eigen_values = eigenValues();
+
+    for(i = 0; i < r; i++)
+    {
+        temp.tab[0] = eigen_values[i];
+        temp.tab[1] = -1;
+        result.push_back(temp);
+    }
+
+    return result;
+}
+
+
 vector<VectorX> Matrix:: eigenVectors()
 {
     unsigned int i, j, n=getNbRows();
@@ -1118,3 +1140,28 @@ void Matrix::testRegression()
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 
 }
+
+
+Matrix Matrix:: solve()
+{
+    Matrix result(*this);
+    result = result.gaussReduction();
+
+
+}
+
+
+/*
+ début
+pour i= 1 :n
+L(i,i) = 1
+    pour j=max(1,i−b) :i−1
+        L(i,j) =A(i,j)
+        pourk=max(1,i−b,j−b) :j−1
+            L(i,j) =L(i,j)−L(i,k)∗D(k,k)∗L(j,k)
+        L(i,j) =L(i,j)/D(j,j)
+    D(i,i) =A(i,i)
+    pourj=max(1,i−b) :i−1
+        D(i,i) =D(i,i)−L(i,j)2∗D(j,j)
+fin
+*/
