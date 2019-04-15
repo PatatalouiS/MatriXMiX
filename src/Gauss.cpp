@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include "VectorX.h"
@@ -9,6 +10,7 @@ using namespace std;
 
 
 Gauss:: Gauss(){}
+
 
 Gauss:: Gauss(const int & row, const int & col)
 {

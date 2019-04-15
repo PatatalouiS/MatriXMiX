@@ -18,9 +18,9 @@ int main (int argc, char* argv[])
 
     Matrix a(3,3,{1,2,3,4,5,6,7,8,9});
 
-    cout << a << endl ;
+    cout << "A : " << endl << a << endl ;
 
-    a.polynomeCaracteristique();
+
 
 
 

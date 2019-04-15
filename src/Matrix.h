@@ -67,10 +67,12 @@ public:
     Matrix coMatrix() const;
     Matrix transposeMatrix() const;
     Matrix inverse() const;
+    unsigned int rank();
  
     //Fonctions d'étude poussée des matrices et utilisation de la librairie externe eigen3
+    std::pair<unsigned int, unsigned int> dimensionsStudy();
     std::vector<double> eigenValues();
-    Polynomial polynomeCaracteristique();
+    Polynomial characteristicPolynomial();
     std::vector<VectorX> eigenVectors();
     std::vector<std::pair<double,VectorX>> allEigen();
     bool isDiagonalisable();

@@ -523,6 +523,34 @@ Matrix Matrix:: inverse() const
 }
 
 
+unsigned int Matrix:: rank()
+{
+    unsigned int i, j, r, c, rg = 0;
+    bool non_zero = false;
+    r = getNbRows();
+    c = getNbCols();
+    Matrix copy(*this);
+    copy = copy.gaussReduction();
+
+    for (i = 0; i < r; i++)
+    {
+        non_zero = false;
+        for (j = 0; j < c; j++)
+        {
+            if (copy[i][j]!=0.0)
+            {
+                non_zero = true;
+            }
+        }
+        if (non_zero)
+        {
+            rg++;
+        }
+    }
+
+    return rg;
+}
+
 
 
 
@@ -640,6 +668,16 @@ Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
 
 
 // *********   FONCTIONS D'ETUDE DE MATRICES    *********
+
+
+pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()
+{
+    unsigned int dim_E = getNbRows();
+    unsigned int dim_im = rank();
+    unsigned int dim_ker = dim_E - dim_im;
+
+    return make_pair(dim_im,dim_ker);
+}
 
 
 vector<double> Matrix:: eigenValues()
@@ -1080,4 +1118,3 @@ void Matrix::testRegression()
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 
 }
-

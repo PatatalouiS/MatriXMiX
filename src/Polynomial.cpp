@@ -1,5 +1,4 @@
 
-
 #include <iostream>
 #include <vector>
 #include <math.h>
@@ -69,10 +68,47 @@ void Polynomial:: check()
 ostream& operator << (ostream& flux, const Polynomial & p)
 {
     unsigned int i;
+    bool notfirst=false;
 
     for (i=0; i<=p.degree; i++)
     {
-        flux << p.tab[i] << " ";
+        if(p.tab[i]>0 && notfirst)
+            flux << " + " ;
+        else if(p.tab[i]<0 && notfirst)
+            flux << " " ;
+
+        if (p.tab[i]!=0.0)
+        {
+            notfirst = true;
+            if (p.tab[i]==1.0)
+            {
+                if (i==0)
+                    flux << 1 ;
+                else if (i==1)
+                    flux << "X";
+                    else
+                        flux << "X^" << i ;
+            }
+            else if (-p.tab[i]==1.0)
+            {
+                if (i==0)
+                    flux << -1 ;
+                else if (i==1)
+                    flux << "- X" ;
+                    else
+                        flux << "- X^" << i ;
+            }
+                else
+                {
+                    if (i==0)
+                        flux << p.tab[i] ;
+                    else if (i==1)
+                        flux << p.tab[i] << "X" ;
+                        else
+                            flux << p.tab[i] << "X^" << i ;
+                }
+
+        }
     }
     cout << endl;
     return flux;
