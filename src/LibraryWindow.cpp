@@ -2,17 +2,19 @@
 #include <QCloseEvent>
 #include <QDirModel>
 #include <QHeaderView>
+#include <QDebug>
 #include "LibraryWindow.h"
 
 
 using namespace std;
 
 
-LibraryWindow:: LibraryWindow (QWidget* main) : QWidget(main)
+LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(main)
 {
+    lib = library;
     matrixView = new QTableView;
     matrixModel = new QStandardItemModel(0,3);
-    addMatrixWidget = new AddMatrixWidget(&lib, this);
+    addMatrixWidget = new AddMatrixWidget(lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
 
     matrixModel->setHorizontalHeaderLabels({"Nom", "NbL", "NbC"});
@@ -63,7 +65,7 @@ void LibraryWindow:: compute_selection()
 {
 	int currentRow = matrixView->currentIndex().row();
 	QString currentName = matrixModel->item(currentRow, 0)->data(2).toString();
-	const Matrix* currentMatrix = lib.find(currentName.toStdString());
+	const Matrix* currentMatrix = lib->find(currentName.toStdString());
 	showMatrixWidget->compute_img(currentMatrix);
 }
 

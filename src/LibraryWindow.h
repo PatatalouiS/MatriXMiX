@@ -2,17 +2,16 @@
 #ifndef LIBRARY_WINDOW_H
 #define LIBRARY_WINDOW_H
 
-#include <QWidget>
+#include <QDialog>
 #include <QTableView>
 #include <QStandardItemModel>
 #include <QPushButton>
 #include "AddMatrixWidget.h"
-#include "MatrixLibrary.h"
 #include "ShowMatrixWidget.h"
 
 
 
-class LibraryWindow : public QWidget
+class LibraryWindow : public QDialog
 {
     Q_OBJECT
 
@@ -22,21 +21,20 @@ private:
 
     QTableView* matrixView;
     QStandardItemModel* matrixModel;
-    MatrixLibrary lib;
+    MatrixLibrary* lib;
     AddMatrixWidget* addMatrixWidget;
-    AddMatrixWidget* updateMatrixWidget;
     ShowMatrixWidget* showMatrixWidget;
     QPushButton* edit;
     QPushButton* remove;
 
-    //fonctions@&
+    //fonctions
 
     void closeEvent (QCloseEvent* event);
 
 
 public: //fonctions
     
-    LibraryWindow (QWidget* main);
+    LibraryWindow (QWidget* main, MatrixLibrary* lib);
     ~LibraryWindow ();
 
 private slots:
@@ -46,9 +44,7 @@ private slots:
 public slots:
 
      void updateView (QList<QStandardItem*> newLine);
-     //void editMatrix ();
         
-    
 signals:
 
      void close();
