@@ -53,12 +53,22 @@ void MatrixLibrary:: addMatrix (const string& name, const Matrix& m)
 
 const Matrix* MatrixLibrary:: find (const string& name) const
 {
-    if (tab.count(name) == 0)
+    if(tab.count(name) == 0)
     {
-        return NULL;
+        return nullptr;
     }
     return &tab.at(name);
 }
+
+Matrix* MatrixLibrary:: find (const string& name)
+{
+    if(tab.count(name) == 0)
+    {
+        return nullptr;
+    }
+    return &tab.at(name);
+}
+
 
 
 void MatrixLibrary:: erase (const string & name)

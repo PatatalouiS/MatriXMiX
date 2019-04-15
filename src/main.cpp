@@ -16,6 +16,7 @@ extern const string APP_PATH = QDir(QApplication::applicationDirPath() + "/../..
 int main (int argc, char* argv[])
 {
     QApplication app(argc, argv);
+    app.setQuitOnLastWindowClosed(false);
 
 //    QDir(QApplication::applicationDirPath() + "/../../../").absolutePath().toStdString();
     MainWindow* win = new MainWindow;
