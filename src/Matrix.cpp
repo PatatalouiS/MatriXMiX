@@ -14,7 +14,7 @@
 
 using namespace std;
 
-const double EPSILON = 0.000001;
+const double EPSILON = 0.0001;
 const string PATH = "../../data/sauvegarde.txt";
 
 
@@ -342,7 +342,8 @@ const Matrix Matrix:: operator / (const Matrix & m) const
         cerr << "division impossible, la metrice diviseur n'est pas inversible !" << endl;
         exit(EXIT_FAILURE);
     }
-    return (*this) * m.inverse();
+    Matrix result( (*this) * m.inverse());
+    return result.checkCast();
 }
 
 
@@ -377,7 +378,7 @@ const Matrix Matrix:: operator ^ (const int & p) const
     {
         temp = (temp * temp2);
     }
-    return temp;
+    return temp.checkCast();
 }
 
 
@@ -407,6 +408,34 @@ bool Matrix:: operator == (const Matrix & m ) const
 bool Matrix::operator != (const Matrix & m) const
 {
     return !((*this) == m);
+}
+
+
+Matrix Matrix:: checkCast() const
+{
+    Matrix result(*this);
+    unsigned int i, j, r, c;
+    r = getNbRows();
+    c = getNbCols();
+    int l;
+
+    for (i =0; i < r; i++)
+    {
+        for (j = 0; j < c; j++)
+        {
+            for (l = -150 ; l < 150; l++)
+            {
+                if ( abs(tab[i][j]-l) < EPSILON )
+                {
+                    result[i][j] = l;
+                    continue ;
+                }
+                else
+                    result[i][j] = tab[i][j];
+            }
+        }
+    }
+    return result;
 }
 
 
@@ -482,7 +511,7 @@ Matrix Matrix::coMatrix() const
             com[i][j]=pow(-1,i+j)*sub.determinant();
         }
     }
-    return com;
+    return com.checkCast();
 }
 
 
@@ -497,7 +526,7 @@ Matrix Matrix:: transposeMatrix() const
             copy[i][j] = tab[j][i];
         }
     }
-    return copy;
+    return copy.checkCast();
 }
 
 
@@ -519,11 +548,12 @@ Matrix Matrix:: inverse() const
     temp=(*this).coMatrix();
     temp=temp.transposeMatrix();
     inverse=temp*(1/determinant());
-    return inverse;
+
+    return inverse.checkCast();
 }
 
 
-unsigned int Matrix:: rank()
+unsigned int Matrix:: rank()const
 {
     unsigned int i, j, r, c, rg = 0;
     bool non_zero = false;
@@ -625,7 +655,7 @@ double Matrix:: determinant(unsigned int dim) const
 }
 
 
-Eigen::MatrixXd Matrix:: class2Eigen ()
+Eigen::MatrixXd Matrix:: class2Eigen () const
 {
     unsigned int i,j,r,c;
     r = getNbRows();
@@ -644,7 +674,7 @@ Eigen::MatrixXd Matrix:: class2Eigen ()
 }
 
 
-Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
+const Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m) const
 {
     unsigned int i,j,r,c ;
     r = static_cast<unsigned int>(m.rows());
@@ -670,225 +700,7 @@ Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
 // *********   FONCTIONS D'ETUDE DE MATRICES    *********
 
 
-pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()
-{
-    unsigned int dim_E = getNbRows();
-    unsigned int dim_im = rank();
-    unsigned int dim_ker = dim_E - dim_im;
-
-    return make_pair(dim_im,dim_ker);
-}
-
-
-vector<double> Matrix:: eigenValues()
-{
-    unsigned int i,n;
-    vector<double> result;
-    Eigen::MatrixXd a;
-
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
-    n = static_cast<unsigned int>(m.eigenvalues().size());
-
-    for (i=0; i<n; i++)
-    {
-        if(abs(m.eigenvalues()(i).real()) < EPSILON)
-            result.push_back(0);
-        else
-            result.push_back(m.eigenvalues()(i).real());
-    }
-
-    return result;
-}
-
-
-Polynomial Matrix:: characteristicPolynomial()
-{
-    unsigned int i,r,c;
-    r = getNbRows();
-    c = getNbCols();
-    Polynomial result(r);
-    Polynomial temp(1);
-
-    vector<double> eigen_values;
-    eigen_values = eigenValues();
-
-    result.tab[0] = eigen_values[0];
-    result.tab[1] = -1;
-    for(i = 2; i < r+1; i++)
-    {
-        result.tab[i] = 0;
-    }
-
-    for(i = 1; i < r; i++)
-    {
-        temp.tab[0] = eigen_values[i];
-        temp.tab[1] = -1;
-        result = result*temp;
-    }
-
-    return result;
-}
-
-
-vector<Polynomial> Matrix:: splitCharacteristicPolynomial()
-{
-    vector<Polynomial> result;
-    Polynomial temp(1);
-    unsigned int i,r,c;
-    r = getNbRows();
-    c = getNbCols();
-
-    vector<double> eigen_values;
-    eigen_values = eigenValues();
-
-    for(i = 0; i < r; i++)
-    {
-        temp.tab[0] = eigen_values[i];
-        temp.tab[1] = -1;
-        result.push_back(temp);
-    }
-
-    return result;
-}
-
-
-vector<VectorX> Matrix:: eigenVectors()
-{
-    unsigned int i, j, n=getNbRows();
-    vector<VectorX> tab;
-    VectorX temp;
-
-    Matrix a(n,n);
-    a=transferMatrix();
-
-    for(i=0; i<n; i++)
-    {
-        temp.clear();
-
-        for(j=0; j<n; j++)
-        {
-            temp.push_back(a[j][i]);
-        }
-
-        tab.push_back(temp);
-    }
-
-    return tab;
-
-}
-
-
-vector<pair<double,VectorX>> Matrix:: allEigen()
-{
-    unsigned int i;
-    unsigned long int n;
-    vector<VectorX> e_vector;
-    vector<double> e_value;
-    pair<double,VectorX> temp;
-    vector<pair<double,VectorX>> result;
-
-    e_value = eigenValues();
-    e_vector = eigenVectors();
-    n = e_value.size();
-
-    for(i=0; i<n; i++)
-    {
-        temp = make_pair(e_value[i],e_vector[i]);
-        result.push_back(temp) ;
-    }
-
-    return result;
-
-}
-
-
-bool Matrix:: isDiagonalisable()
-{
-
-    unsigned int i,j;
-    unsigned long int s;
-    vector<pair<double,VectorX>> check;
-
-    if (!isSQMatrix())
-        return false;
-
-    check = allEigen();
-    s = check.size();
-
-    for(i=0; i<s; i++)
-    {
-        for(j=0; j<s; j++)
-        {
-            if( (i!=j) && (check[i].second==check[j].second) )
-                return false;
-
-        }
-
-    }
-
-    return true;
-}
-
-
-Matrix Matrix:: diagonalise()
-{
-
-    Matrix m;
-    Eigen:: MatrixXd a,b;
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
-    b = res.pseudoEigenvalueMatrix();
-    m = eigen2Class(b);
-
-    return m;
-
-}
-
-
-Matrix Matrix::transferMatrix()
-{
-    unsigned int i, j, n=getNbRows();
-    Matrix result(n,n);
-    Eigen::MatrixXd a;
-
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
-
-    result=eigen2Class(m.pseudoEigenvectors());
-
-    for(i=0; i<n; i++)
-    {
-
-        for(j=0; j<n; j++)
-        {
-            if (abs(result[i][j]) < EPSILON)
-                result[i][j]=0;
-        }
-
-    }
-
-    return result;
-
-}
-
-
-void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C)
-{
-   if (!isDiagonalisable())
-   {
-       cout << "La matrice n'est pas diagonalisable dans R" << endl;
-       return ;
-   }
-
-   transferC2B=transferMatrix();
-   diagonal=diagonalise();
-   transferB2C=(transferC2B^-1);
-
-}
-
-
-Matrix Matrix:: gaussReduction()
+const Matrix Matrix:: gaussReduction()const
 {
     Gauss g;
     Matrix res(*this);
@@ -953,7 +765,213 @@ Matrix Matrix:: gaussReduction()
 }
 
 
-void Matrix::testRegression()
+pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
+{
+    unsigned int dim_E = getNbRows();
+    unsigned int dim_im = rank();
+    unsigned int dim_ker = dim_E - dim_im;
+
+    return make_pair(dim_im,dim_ker);
+}
+
+
+vector<double> Matrix:: eigenValues() const
+{
+    unsigned int i,n;
+    vector<double> result;
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+    n = static_cast<unsigned int>(m.eigenvalues().size());
+
+    for (i=0; i<n; i++)
+    {
+        if(abs(m.eigenvalues()(i).real()) < EPSILON)
+            result.push_back(0);
+        else
+            result.push_back(m.eigenvalues()(i).real());
+    }
+
+    return result;
+}
+
+
+const Polynomial Matrix:: characteristicPolynomial()const
+{
+    unsigned int i,r;
+    r = getNbRows();
+    Polynomial result(r);
+    Polynomial temp(1);
+
+    vector<double> eigen_values;
+    eigen_values = eigenValues();
+
+    result.tab[0] = eigen_values[0];
+    result.tab[1] = -1;
+    for(i = 2; i < r+1; i++)
+    {
+        result.tab[i] = 0;
+    }
+
+    for(i = 1; i < r; i++)
+    {
+        temp.tab[0] = eigen_values[i];
+        temp.tab[1] = -1;
+        result = result*temp;
+    }
+
+    return result;
+}
+
+
+vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
+{
+    vector<Polynomial> result;
+    Polynomial temp(1);
+    unsigned int i,r,c;
+    r = getNbRows();
+    c = getNbCols();
+
+    vector<double> eigen_values;
+    eigen_values = eigenValues();
+
+    for(i = 0; i < r; i++)
+    {
+        temp.tab[0] = eigen_values[i];
+        temp.tab[1] = -1;
+        result.push_back(temp);
+    }
+
+    return result;
+}
+
+
+const vector<VectorX> Matrix:: eigenVectors()const
+{
+    unsigned int i, j, n=getNbRows();
+    vector<VectorX> tab;
+    VectorX temp;
+
+    Matrix a(n,n);
+    a=transferMatrix();
+
+    for(i=0; i<n; i++)
+    {
+        temp.clear();
+
+        for(j=0; j<n; j++)
+        {
+            temp.push_back(a[i][j]);
+        }
+
+    tab.push_back(temp);
+
+    }
+
+    return tab;
+
+}
+
+
+vector<pair<double,VectorX>> Matrix:: allEigen()const
+{
+    unsigned int i;
+    unsigned long int n;
+    vector<VectorX> e_vector;
+    vector<double> e_value;
+    pair<double,VectorX> temp_pair;
+    vector<pair<double,VectorX>> result;
+
+    e_value = eigenValues();
+    e_vector = eigenVectors();
+
+    n = e_value.size();
+
+    for(i=0; i<n; i++)
+    {
+        temp_pair = make_pair(e_value[i],e_vector[i]);
+        result.push_back(temp_pair) ;
+
+    }
+    return result;
+}
+
+
+bool Matrix:: isDiagonalisable()const
+{
+    if (!isSQMatrix())
+        return false;
+
+    Matrix copy(*this);
+    Matrix P1(*this);
+    Matrix P2(*this);
+
+    allMatrix(P1,copy,P2);
+
+    if (P1==P2)
+    {
+        return false;
+    }
+    else
+        return true;
+}
+
+
+const Matrix Matrix:: diagonalise()const
+{
+
+    Matrix m;
+    Eigen:: MatrixXd a,b;
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
+    b = res.pseudoEigenvalueMatrix();
+    m = eigen2Class(b);
+
+    return m.checkCast();
+
+}
+
+
+const Matrix Matrix::transferMatrix()const
+{
+    unsigned int i, j, n=getNbRows();
+    Matrix result(n,n);
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+
+    result = eigen2Class(m.pseudoEigenvectors());
+
+    for(i=0; i<n; i++)
+    {
+
+        for(j=0; j<n; j++)
+        {
+            if (abs(result[i][j]) < EPSILON)
+                result[i][j]=0;
+        }
+
+    }
+
+    return result.checkCast();
+
+}
+
+
+void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const
+{
+   transferC2B = transferMatrix();
+   diagonal = diagonalise();
+   if (transferC2B.determinant()==0.0)
+       transferB2C = (transferC2B);
+   else
+       transferB2C = (transferC2B^-1);
+}
+
+
+void Matrix::testRegression() const
 {
     cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
 
@@ -1142,13 +1160,6 @@ void Matrix::testRegression()
 }
 
 
-Matrix Matrix:: solve()
-{
-    Matrix result(*this);
-    result = result.gaussReduction();
-
-
-}
 
 
 /*

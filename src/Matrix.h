@@ -22,8 +22,8 @@ private:
 private:
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     double determinant(unsigned int dim) const;
-    Eigen::MatrixXd class2Eigen();
-    Matrix eigen2Class(const Eigen::MatrixXd & m);
+    Eigen::MatrixXd class2Eigen() const;
+    const Matrix eigen2Class(const Eigen::MatrixXd & m) const;
     
 public:
 
@@ -61,29 +61,28 @@ public:
     const Matrix operator ^ (const int & p) const;
     bool operator == (const Matrix & m) const;
     bool operator != (const Matrix & m) const;
+    Matrix checkCast () const;
     bool isSQMatrix() const;
     double traceMatrix() const;
     double determinant() const;
     Matrix coMatrix() const;
     Matrix transposeMatrix() const;
     Matrix inverse() const;
-    unsigned int rank();
+    unsigned int rank() const;
  
     //Fonctions d'étude poussée des matrices et utilisation de la librairie externe eigen3
-    std::pair<unsigned int, unsigned int> dimensionsStudy();
-    std::vector<double> eigenValues();
-    Polynomial characteristicPolynomial();
-    std::vector<Polynomial> splitCharacteristicPolynomial();
-    std::vector<VectorX> eigenVectors();
-    std::vector<std::pair<double,VectorX>> allEigen();
-    bool isDiagonalisable();
-    Matrix diagonalise();
-    Matrix transferMatrix();
-    void allMatrix(Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C);
-    Matrix gaussReduction();
-    void testRegression();
-    Matrix solve();
-
+    const Matrix gaussReduction() const;
+    std::pair<unsigned int, unsigned int> dimensionsStudy() const;
+    std::vector<double> eigenValues() const;
+    const Polynomial characteristicPolynomial() const;
+    std::vector<Polynomial> splitCharacteristicPolynomial() const;
+    const std::vector<VectorX> eigenVectors() const;
+    std::vector<std::pair<double,VectorX>> allEigen() const;
+    bool isDiagonalisable() const;
+    const Matrix diagonalise() const;
+    const Matrix transferMatrix() const;
+    void allMatrix(Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const;
+    void testRegression() const;
 
 
 };

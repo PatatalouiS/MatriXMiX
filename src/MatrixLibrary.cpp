@@ -69,7 +69,7 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 {
     if (tab.count(name) == 0)
     {
-        cout<<"la matrice n'existe pas dans la libraire";
+        cout << "la matrice n'existe pas dans la libraire" << endl;
         return nullptr;
     }
     return &tab.at(name);

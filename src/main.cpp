@@ -6,7 +6,8 @@
 //#include "MainWindow.h"
 //#include "LibraryWindow.h"
 #include "Matrix.h"
-
+#include "MatriXMiXTXT.h"
+#include "MatrixLibrary.h"
 
 using namespace std;
 
@@ -16,16 +17,13 @@ using namespace std;
 int main (int argc, char* argv[])
 {
 
-    Matrix a(3,3,{1,2,3,4,5,6,7,8,9});
-    Polynomial p;
+    //Matrix a(3,3,{1,2,3,4,5,6,7,8,9});
+    //cout << a.dimensionsStudy().first << endl << endl << endl;
+    //a.testEigen();
 
-    cout << "A : " << endl << a << endl << endl ;
 
-    cout << "A échelonnée" << endl << a.gaussReduction() << endl << endl ;
-
-    cout << "Le polynôme caractéristique de A est : P(X) = " << a.characteristicPolynomial() << endl;
-
-    cout << "dim(Im) = " << a.dimensionsStudy().first << "  et  dim(Ker) = " << a.dimensionsStudy().second << endl;
+    MatriXMiXTXT m;
+    m.mainMenu();
 
 
 

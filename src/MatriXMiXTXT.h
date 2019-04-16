@@ -14,7 +14,7 @@ class MatriXMiXTXT
 	
 	void binaryOperation (const char op) const;
 	void binaryOperationPow() const;
-	void unaryOperation(const char op) const;
+    void unaryOperation(const short int & op) const;
     void MsgEmptyLib () const;
 	
 	
@@ -28,6 +28,17 @@ class MatriXMiXTXT
 	void trace() const;
 	void determinant() const;
 	void inverse() const;
+    void gaussReduction() const;
+    void dimensionsStudy() const;
+    void displayDimensionsStudy(const Matrix * m) const;
+    void characteristicPolynomial() const;
+    void displayCharacteristicPolynomial(const Matrix * m)const;
+    void eigenValVect() const;
+    void displayEigenValVect(const Matrix * m) const;
+    void studyDiagonalise() const;
+    void displayStudyDiagonalise(const Matrix * m) const;
+    void studyMatrix() const;
+    void displayStudyMatrix(const Matrix * m) const;
     
     
 
