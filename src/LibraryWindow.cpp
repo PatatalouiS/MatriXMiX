@@ -20,7 +20,7 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     matrixModel->setHorizontalHeaderLabels({"Nom", "NbL", "NbC"});
     matrixView->setModel(matrixModel);
     matrixView->setSortingEnabled(true);
-    matrixView->setColumnWidth(0, 98);
+    matrixView->setColumnWidth(0, 90);
     matrixView->setColumnWidth(1, 50);
     matrixView->setColumnWidth(2, 50);
     matrixView->setEditTriggers(QAbstractItemView::NoEditTriggers);

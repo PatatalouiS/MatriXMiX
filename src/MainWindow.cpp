@@ -18,18 +18,24 @@ MainWindow:: MainWindow() : QMainWindow()
     QGridLayout* operationLayout = new QGridLayout;
     QFont font ("Arial");
     font.setPointSize(16);
+
+    QFont fontTitle ("Arial");
+    fontTitle.setPointSize(20);
 	
 	QPixmap im (QDir::currentPath() + "/data/Logo_maths.jpg");
     im = im.scaled(200, 100);
     QLabel* logo = new QLabel;
     logo->setPixmap(im);
     QLabel* instruction = new QLabel ("Choisissez l'opération à effectuer : ");
+    instruction -> setFont(fontTitle);
+    instruction -> setStyleSheet("QLabel {color:white}");
     
     headerLayout->setAlignment(Qt::AlignHCenter);
     headerLayout->addWidget(logo);
     headerLayout->addWidget(instruction);
     headerWidget->setLayout(headerLayout);
     headerWidget->setMaximumHeight(300);
+    headerWidget->setStyleSheet("QWidget {background-color: QColor(0,0,0,0)}");
 
     const QString tab [9] =
     {
@@ -44,6 +50,8 @@ MainWindow:: MainWindow() : QMainWindow()
         "Trace",
     };
     
+    //Suppression du bouton temporaire
+
     QPushButton* tempWidget;
     operationLayout->setContentsMargins(40, 40, 40, 40);
     operationLayout->QLayout::setSpacing(20);
@@ -55,6 +63,8 @@ MainWindow:: MainWindow() : QMainWindow()
         tempWidget->setMaximumSize(400 ,175);
         tempWidget->setCursor(Qt::PointingHandCursor);
         tempWidget->setFont(font);
+        //Ajout du style pour les boutons
+        tempWidget->setStyleSheet("QPushButton{ background-color: lightGrey } QPushButton:hover{ background-color: lightBlue }");
         connect(tempWidget, &QPushButton::clicked,
                 [i, this] () -> void
                 {
@@ -64,21 +74,61 @@ MainWindow:: MainWindow() : QMainWindow()
         operationLayout->addWidget(tempWidget, i/3, i%3);
     }
     
-    //bouton temporaire :
-    QPushButton* openLibrary = new QPushButton("Ouvrir la librairie");
-    operationLayout->addWidget(openLibrary, 3, 2);
-    operations.append(openLibrary);
-    connect(openLibrary, &QPushButton::clicked, this, &MainWindow::show_library);
-    // fin bouton temporaire
-    
     mainLayout->setContentsMargins(0, 25, 0, 0);
     mainLayout->addWidget(headerWidget);
     mainLayout->addLayout(operationLayout);
     mainWidget->setLayout(mainLayout);
+    mainWidget->setStyleSheet("QWidget {background-color : qlineargradient(x1 : 0 , y1 : 0  , x2: 0 , y2:1 , "
+                              "stop : 0 #000033 , stop : 1 #0099FF)}");
+
+    //Ajout du menu et des actions pour ouvrir la librarie
+
+    QString  menuStyle(
+              "QMenuBar{"
+              "background-color: lightBlue;"
+              "}"
+           );
+
+    this->setStyleSheet(menuStyle);
+
+    QMenu *menuFile = menuBar() -> addMenu("Fichier");
+    menuBar() -> setFont(font);
+    menuFile -> setFont(font);
+
+    QAction *actionSave = new QAction("Sauvegarder" , this);
+    menuFile -> addAction(actionSave);
+
+    menuFile -> addSeparator();
+
+    QAction *actionLoad = new QAction("Créer", this);
+    menuFile -> addAction(actionLoad);
+
+    QMenu *menuMatrix = menuBar() -> addMenu("Matrice");
+    menuMatrix -> setFont(font);
+
+    menuMatrix = menuMatrix -> addMenu(tr("Librarie"));
+
+    QAction *createMatrix = new QAction("Ajouter" , this);
+    menuMatrix -> addAction(createMatrix);
+    menuMatrix ->setFont(font);
+
+    menuMatrix -> addSeparator();
+
+    connect(createMatrix, &QAction::triggered, this, &MainWindow::show_library);
+
+    QAction *showMatrix = new QAction("Visualiser" , this);
+    menuMatrix -> addAction(showMatrix);
+    menuMatrix ->setFont(font);
+    connect(showMatrix, &QAction::triggered, this, &MainWindow::show_library);
+
+    QMenu *menuHelp = menuBar() -> addMenu("Aide");
+    menuHelp -> setFont(font);
+
+    QMenu *menuQuit = menuBar() -> addMenu("Quitter");
+    menuQuit -> setFont(font);
 
     setCentralWidget(mainWidget);
 }
-
 
 void MainWindow:: compute_choice (const unsigned int choice)
 {

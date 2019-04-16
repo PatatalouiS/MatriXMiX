@@ -1,9 +1,9 @@
 
-
-
 #include <QMainWindow>
 #include <QPushButton>
 #include <QList>
+#include <QMenuBar>
+#include <QLinearGradient>
 #include "LibraryWindow.h"
 
 class MainWindow : public QMainWindow
