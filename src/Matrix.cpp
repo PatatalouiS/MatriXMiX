@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <complex>
 #include <fstream>
 #include <cstring>
 #include <cassert>
@@ -16,6 +17,10 @@ using namespace std;
 
 const double EPSILON = 0.0001;
 const string PATH = "../../data/sauvegarde.txt";
+
+const vector<double> Matrix:: vector_noEigen = vector<double>();
+const vector<pair<double,VectorX>> Matrix:: vector_pair_noEigen = vector<pair<double,VectorX>>();
+const Matrix Matrix:: matrix_noEigen = Matrix();
 
 
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
@@ -765,7 +770,7 @@ const Matrix Matrix:: gaussReduction()const
 }
 
 
-pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
+const pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
 {
     unsigned int dim_E = getNbRows();
     unsigned int dim_im = rank();
@@ -775,7 +780,7 @@ pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
 }
 
 
-vector<double> Matrix:: eigenValues() const
+const vector<double> Matrix:: eigenValues() const
 {
     unsigned int i,n;
     vector<double> result;
@@ -787,6 +792,11 @@ vector<double> Matrix:: eigenValues() const
 
     for (i=0; i<n; i++)
     {
+        if (m.eigenvalues()(i).imag() != 0.0)
+        {
+            return Matrix::vector_noEigen;
+        }
+
         if(abs(m.eigenvalues()(i).real()) < EPSILON)
             result.push_back(0);
         else
@@ -804,8 +814,12 @@ const Polynomial Matrix:: characteristicPolynomial()const
     Polynomial result(r);
     Polynomial temp(1);
 
+
+
     vector<double> eigen_values;
     eigen_values = eigenValues();
+    if (eigen_values == vector_noEigen)
+        return Polynomial:: polynomial_noEigen;
 
     result.tab[0] = eigen_values[0];
     result.tab[1] = -1;
@@ -825,7 +839,7 @@ const Polynomial Matrix:: characteristicPolynomial()const
 }
 
 
-vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
+const vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
 {
     vector<Polynomial> result;
     Polynomial temp(1);
@@ -874,17 +888,20 @@ const vector<VectorX> Matrix:: eigenVectors()const
 }
 
 
-vector<pair<double,VectorX>> Matrix:: allEigen()const
+const vector<pair<double,VectorX>> Matrix:: allEigen()const
 {
     unsigned int i;
     unsigned long int n;
     vector<VectorX> e_vector;
     vector<double> e_value;
+    vector<double> null_vect = vector<double>();
     pair<double,VectorX> temp_pair;
     vector<pair<double,VectorX>> result;
 
     e_value = eigenValues();
     e_vector = eigenVectors();
+    if (e_value == vector_noEigen)
+        return vector_pair_noEigen;
 
     n = e_value.size();
 
@@ -978,7 +995,7 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
    transferC2B = transferMatrix();
    diagonal = diagonalise();
    if (transferC2B.determinant()==0.0)
-       transferB2C = (transferC2B);
+       transferB2C = matrix_noEigen;
    else
        transferB2C = (transferC2B^-1);
 }

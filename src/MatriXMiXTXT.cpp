@@ -125,17 +125,11 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
     case 9 : cout << op1->determinant() << endl; break;
     case 10 : cout << op1->inverse() << endl; break;
     case 11 : cout << op1->gaussReduction() << endl; break;
-    case 12 : cout << "La dimension de l'image est dim(Im(" << name << ")) = " <<
-                      op1->dimensionsStudy().first <<
-                      "\nLa dimension du noyau est dim(Ker(" << name << ")) = " <<
-                      op1->dimensionsStudy().second << endl; break;
-    //case 13 : displayDimensionsStudy(op1); break;
-    case 13 : cout << "Le polynôme caractéristique de " << name <<
-                      " est: \nP(X) = " ; displayCharacteristicPolynomial(op1);
-        break;
+    case 12 : displayDimensionsStudy(op1,name); break;
+    case 13 : displayCharacteristicPolynomial(op1,name); break;
     case 14 : displayEigenValVect(op1); break;
     case 15 : displayStudyDiagonalise(op1); break;
-    case 16 : displayStudyMatrix(op1); break;
+    case 16 : displayStudyMatrix(op1,name); break;
     default: break;
 	}
 	wait();
@@ -463,6 +457,15 @@ void MatriXMiXTXT:: dimensionsStudy() const
 }
 
 
+void MatriXMiXTXT:: displayDimensionsStudy(const Matrix * m, const string & name) const
+{
+   cout << "La dimension de l'image est dim(Im("
+        << name << ")) = " << m->dimensionsStudy().first
+        << "\nLa dimension du noyau est dim(Ker(" << name
+        << ")) = " << m->dimensionsStudy().second << endl << endl << endl;
+}
+
+
 void MatriXMiXTXT:: characteristicPolynomial() const
 {
     cl();
@@ -481,9 +484,15 @@ void MatriXMiXTXT:: characteristicPolynomial() const
 }
 
 
-void MatriXMiXTXT:: displayCharacteristicPolynomial(const Matrix * m)const
+void MatriXMiXTXT:: displayCharacteristicPolynomial(const Matrix * m, const string & name)const
 {
-    cout << m->characteristicPolynomial();
+    Polynomial p(m->characteristicPolynomial());
+    if (p == Polynomial:: polynomial_noEigen)
+        cout << "Valeur propre complexe détectée..."
+                "\nPas d'étude possible dans R" << endl << endl;
+    else
+        cout << "Le polynôme caractéristique de " << name << " est"
+                                                             "\nP(X) = " << p << endl << endl;
 }
 
 
@@ -509,22 +518,30 @@ void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
 {
     vector<pair<double,VectorX>> tab;
     tab = m->allEigen();
-    unsigned long int i, j, l, s = tab.size();
-    VectorX vect;
-    cout << "Valeur propre et vecteur propre associé " << endl << endl;
 
-    for (i = 0; i < s; i++)
+    if (tab == Matrix:: vector_pair_noEigen)
+        cout << "Valeur propre complexe détectée..."
+                "\nPas d'étude possible dans R" << endl << endl;
+    else
     {
-        cout << "Valeur propre : " << tab[i].first << endl ;
-        l = tab[i].second.size();
-        cout << "Vecteur propre: (" ;
-        for(j = 0; j < l-1 ; j++)
+        unsigned long int i, j, l, s = tab.size();
+        VectorX vect;
+        cout << "Valeur propre et vecteur propre associé " << endl << endl;
+
+        for (i = 0; i < s; i++)
         {
-            cout << tab[i].second[j] << " , " ;
+            cout << "Valeur propre : " << tab[i].first << endl ;
+            l = tab[i].second.size();
+            cout << "Vecteur propre: (" ;
+            for(j = 0; j < l-1 ; j++)
+            {
+                cout << tab[i].second[j] << " , " ;
+            }
+            cout << tab[i].second[l-1] << ") " << endl << endl;
         }
-        cout << tab[i].second[l-1] << ") " << endl << endl;
+         cout << endl ;
     }
-     cout << endl ;
+
 }
 
 
@@ -588,15 +605,13 @@ void MatriXMiXTXT:: studyMatrix() const
 }
 
 
-void MatriXMiXTXT:: displayStudyMatrix(const Matrix *m) const
+void MatriXMiXTXT:: displayStudyMatrix(const Matrix *m, const string & name) const
 {
-    cout << "La dimension du noyau dim(Ker) = " << m->dimensionsStudy().first <<
-            "\nLa dimension de l'image est dim(Im) = " << m->dimensionsStudy().second << endl << endl << endl << endl;
+    cout << "La dimension du noyau dim(Im) = " << m->dimensionsStudy().first <<
+            "\nLa dimension de l'image est dim(Ker) = " << m->dimensionsStudy().second << endl << endl << endl << endl;
 
-    cout << "Le polynôme caractéristique de la matrice est : "
-            "\nP(X) = " ;
-    displayCharacteristicPolynomial(m);
-    cout << endl << endl << endl;
+    displayCharacteristicPolynomial(m,name);
+    cout << endl << endl;
 
     displayEigenValVect(m);
     cout << endl;

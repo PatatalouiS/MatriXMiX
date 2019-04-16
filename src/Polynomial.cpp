@@ -9,6 +9,8 @@ using namespace std;
 
 
 const double EPSILON=0.00001;
+const Polynomial Polynomial:: polynomial_noEigen = Polynomial();
+
 
 
 Polynomial :: Polynomial() : tab (vector<double>(1,0))
@@ -129,11 +131,22 @@ Polynomial& Polynomial:: operator = (const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator + (const Polynomial & p)
+bool Polynomial:: operator == (const Polynomial & p) const
 {
-
+    if(degree!=p.degree)
+        return false;
     unsigned int i;
+    for(i = 0; i < degree; i++)
+        if (tab[i] - p.tab[i] != 0.0)
+            return false;
 
+    return true;
+}
+
+
+const Polynomial Polynomial:: operator + (const Polynomial & p)const
+{
+    unsigned int i;
     if (degree>p.degree)
     {
         Polynomial resultat(*this);
@@ -161,7 +174,7 @@ const Polynomial Polynomial:: operator + (const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator - (const Polynomial & p)
+const Polynomial Polynomial:: operator - (const Polynomial & p)const
 {
     unsigned int i, mindegree;
 
@@ -190,7 +203,7 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator * (const Polynomial & p)
+const Polynomial Polynomial:: operator * (const Polynomial & p)const
 {
     unsigned int i,j,k,d=degree+p.degree;
     Polynomial result(d);
@@ -216,16 +229,16 @@ const Polynomial Polynomial:: operator * (const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator * (const double & scale)
+const Polynomial Polynomial:: operator * (const double & scale)const
 {
     unsigned int i;
-
+    Polynomial p(*this);
     for (i=0; i<=degree; i++)
     {
-        tab[i]*=scale;
+        p.tab[i]*=scale;
     }
-    check();
-    return (*this);
+    p.check();
+    return p;
 }
 
 

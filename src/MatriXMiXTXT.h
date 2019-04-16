@@ -30,15 +30,15 @@ class MatriXMiXTXT
 	void inverse() const;
     void gaussReduction() const;
     void dimensionsStudy() const;
-    void displayDimensionsStudy(const Matrix * m) const;
+    void displayDimensionsStudy(const Matrix * m, const std::string & name) const;
     void characteristicPolynomial() const;
-    void displayCharacteristicPolynomial(const Matrix * m)const;
+    void displayCharacteristicPolynomial(const Matrix * m, const std::string & name)const;
     void eigenValVect() const;
     void displayEigenValVect(const Matrix * m) const;
     void studyDiagonalise() const;
     void displayStudyDiagonalise(const Matrix * m) const;
     void studyMatrix() const;
-    void displayStudyMatrix(const Matrix * m) const;
+    void displayStudyMatrix(const Matrix * m, const std::string & name) const;
     
     
 

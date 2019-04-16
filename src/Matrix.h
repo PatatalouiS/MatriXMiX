@@ -16,7 +16,11 @@ private:
     unsigned int rows;
     unsigned int cols;
     std::vector<std::vector<double>> tab;
-    
+
+public:
+    static const std::vector<double> vector_noEigen;
+    static const std::vector<std::pair<double,VectorX>> vector_pair_noEigen;
+    static const Matrix matrix_noEigen;
     
     
 private:
@@ -72,12 +76,12 @@ public:
  
     //Fonctions d'étude poussée des matrices et utilisation de la librairie externe eigen3
     const Matrix gaussReduction() const;
-    std::pair<unsigned int, unsigned int> dimensionsStudy() const;
-    std::vector<double> eigenValues() const;
+    const std::pair<unsigned int, unsigned int> dimensionsStudy() const;
+    const std::vector<double> eigenValues() const;
     const Polynomial characteristicPolynomial() const;
-    std::vector<Polynomial> splitCharacteristicPolynomial() const;
+    const std::vector<Polynomial> splitCharacteristicPolynomial() const;
     const std::vector<VectorX> eigenVectors() const;
-    std::vector<std::pair<double,VectorX>> allEigen() const;
+    const std::vector<std::pair<double,VectorX>> allEigen() const;
     bool isDiagonalisable() const;
     const Matrix diagonalise() const;
     const Matrix transferMatrix() const;
