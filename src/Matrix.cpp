@@ -913,8 +913,21 @@ bool Matrix:: isDiagonalisable()const
     {
         return false;
     }
-    else
-        return true;
+
+    unsigned int i, j, r, c;
+    r = copy.getNbRows();
+    c = copy.getNbCols();
+
+    for(i = 0; i < r; i++)
+    {
+        for(j = 0; j < c; j++)
+        {
+            if (i!=j && copy[i][j]!=0.0)
+                return false;
+        }
+    }
+
+    return true;
 }
 
 
