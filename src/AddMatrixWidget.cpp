@@ -83,10 +83,53 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
             this, &AddMatrixWidget::update_EditSize);
     connect(nbColsSelector, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &AddMatrixWidget::update_EditSize);
-    connect(this, &AddMatrixWidget::error, this, &AddMatrixWidget::showError);
+
+
     connect(ajouter, &QPushButton::pressed, this, &AddMatrixWidget::compute_add);
+
     connect(this, &AddMatrixWidget::matrixAdded,
             qobject_cast<LibraryWindow*>(parent), &LibraryWindow::updateView);
+
+    connect(this, &AddMatrixWidget::error, this, &AddMatrixWidget::showError);
+
+
+
+    // Aide pour le Debug
+
+    Matrix a (3,3, Matrix::I);
+    Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
+    Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
+    Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
+
+    library->addMatrix("A", a);
+    library->addMatrix("B", b);
+    library->addMatrix("C", c);
+    library->addMatrix("D", d);
+
+
+    QList<QStandardItem*> a1;
+    a1.append(new QStandardItem("A"));
+    a1.append(new QStandardItem(QString::number(3)));
+    a1.append(new QStandardItem(QString::number(3)));
+    emit matrixAdded(a1);
+
+    QList<QStandardItem*> a2;
+    a2.append(new QStandardItem("B"));
+    a2.append(new QStandardItem(QString::number(3)));
+    a2.append(new QStandardItem(QString::number(3)));
+    emit matrixAdded(a2);
+
+    QList<QStandardItem*> a3;
+    a3.append(new QStandardItem("C"));
+    a3.append(new QStandardItem(QString::number(3)));
+    a3.append(new QStandardItem(QString::number(4)));
+    emit matrixAdded(a3);
+
+    QList<QStandardItem*> a4;
+    a4.append(new QStandardItem("D"));
+    a4.append(new QStandardItem(QString::number(3)));
+    a4.append(new QStandardItem(QString::number(4)));
+    emit matrixAdded(a4);
 }
 
 

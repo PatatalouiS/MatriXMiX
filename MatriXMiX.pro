@@ -28,7 +28,9 @@ HEADERS += src/Matrix.h \
 	src/MainWindow.h \
     src/LibraryWindow.h \
     src/AddMatrixWidget.h \
-    src/ShowMatrixWidget.h
+    src/ShowMatrixWidget.h \
+    src/BinaryOpWindow.h \
+    src/MatrixViewWidget.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -40,6 +42,8 @@ SOURCES += src/main.cpp \
 	src/MainWindow.cpp \
     src/LibraryWindow.cpp \
     src/AddMatrixWidget.cpp \
-    src/ShowMatrixWidget.cpp
+    src/ShowMatrixWidget.cpp \
+    src/BinaryOpWindow.cpp \
+    src/MatrixViewWidget.cpp
 
 

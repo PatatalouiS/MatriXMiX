@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QApplication>
 #include <QFileInfo>
+#include "BinaryOpWindow.h"
 
 
 MainWindow:: MainWindow() : QMainWindow()
@@ -127,17 +128,37 @@ MainWindow:: MainWindow() : QMainWindow()
     QMenu *menuQuit = menuBar() -> addMenu("Quitter");
     menuQuit -> setFont(font);
 
+
+    setFunctorTab();
     setCentralWidget(mainWidget);
+}
+
+
+void MainWindow::setFunctorTab()
+{
+    createWindow[0] =
+    [this] () -> QWidget*
+    {
+         auto validator = [] (const Matrix* a, const Matrix* b) -> bool
+         {
+            return((a->getNbCols() == b->getNbCols()) && (a->getNbRows() == b->getNbRows()));
+         };
+
+         return new BinaryOpWindow(&lib, "Addition", "+", validator, this);
+    };
 }
 
 void MainWindow:: compute_choice (const unsigned int choice)
 {
-    createWindow[choice]();
+    QWidget* newWindow = createWindow[choice]();
+    newWindow->setAttribute(Qt::WA_DeleteOnClose);
+    newWindow->show();
 }
 
 void MainWindow:: show_library()
 {
     LibraryWindow* libWindow = new LibraryWindow(this, &lib);
+    libWindow->setAttribute(Qt::WA_DeleteOnClose);
     libWindow->show();
     hide();
 }

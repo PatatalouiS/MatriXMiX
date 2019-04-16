@@ -57,7 +57,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     connect(this, &LibraryWindow::close, main, &QWidget::show);
     connect(matrixView->selectionModel(), &QItemSelectionModel::selectionChanged,
             this, &LibraryWindow::compute_selection);
-    //connect(edit, &QPushButton::clicked, this, &LibraryWindow::editMatrix);
 }
 
 
@@ -81,16 +80,6 @@ void LibraryWindow:: updateView (QList<QStandardItem*> newLine)
     matrixModel->appendRow(newLine);
     matrixView->sortByColumn(0, Qt::AscendingOrder);
 }
-
-//void LibraryWindow:: editMatrix ()
-//{
-//    int currentRow = matrixView->currentIndex().row();
-//	QString currentName = matrixModel->item(currentRow, 0)->data(2).toString();
-
-//	const Matrix*;
-
-//	addMatrixWidget->fillWithMatrix(lib.find(currentName));
-//}
 
 
 LibraryWindow:: ~LibraryWindow()

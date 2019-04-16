@@ -54,4 +54,3 @@ void ShowMatrixWidget:: compute_img(const Matrix* mat)
 	imgSelected->resize(350, 350);
 }
 
-

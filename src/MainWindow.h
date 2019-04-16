@@ -24,8 +24,8 @@ class MainWindow : public QMainWindow
     
     private:
     
+        void setFunctorTab ();
         QList<QPushButton*> operations;
         MatrixLibrary lib;
-        std::function<void(void)> createWindow [10];
-
+        std::function<QWidget*(void)> createWindow [10];
 };
