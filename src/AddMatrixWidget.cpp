@@ -45,6 +45,7 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     setSpecsLayout->addRow(tr("Nom Matrice : "), nameMatrix);
     setSpecsLayout->addRow(tr("Nombre de Lignes : "), nbRowsSelector);
     setSpecsLayout->addRow(tr("Nombre de Collones :"), nbColsSelector);
+    setSpecsLayout->setFormAlignment(Qt::AlignCenter);
     QWidget* setSpecsWidget = new QWidget;
     setSpecsWidget->setLayout(setSpecsLayout);
 
