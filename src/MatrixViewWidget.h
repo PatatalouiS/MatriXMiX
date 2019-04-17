@@ -24,7 +24,8 @@ private:
 
 public slots:
 
-    void update();
+    void update(const std::function<bool(Matrix*)> filter =
+    [](const Matrix*) -> bool {return true;});
 };
 
 #endif

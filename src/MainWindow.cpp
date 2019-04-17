@@ -5,9 +5,13 @@
 #include <QVBoxLayout>
 #include <QDir>
 #include <QDebug>
-#include <QApplication>
-#include <QFileInfo>
-#include "BinaryOpWindow.h"
+
+
+#include "AdditionWindow.h"
+#include "SoustractionWindow.h"
+#include "MultiplicationWindow.h"
+#include "DivisionWindow.h"
+#include "PowerWindow.h"
 
 
 MainWindow:: MainWindow() : QMainWindow()
@@ -139,12 +143,27 @@ void MainWindow::setFunctorTab()
     createWindow[0] =
     [this] () -> QWidget*
     {
-         auto validator = [] (const Matrix* a, const Matrix* b) -> bool
-         {
-            return((a->getNbCols() == b->getNbCols()) && (a->getNbRows() == b->getNbRows()));
-         };
-
-         return new BinaryOpWindow(&lib, "Addition", "+", validator, this);
+         return new AdditionWindow(&lib, this);
+    };
+    createWindow[1] =
+    [this] () -> QWidget*
+    {
+         return new SoustractionWindow(&lib, this);
+    };
+    createWindow[2] =
+    [this] () -> QWidget*
+    {
+         return new MultiplicationWindow(&lib, this);
+    };
+    createWindow[3] =
+    [this] () -> QWidget*
+    {
+         return new DivisionWindow(&lib, this);
+    };
+    createWindow[4] =
+    [this] () -> QWidget*
+    {
+         return new PowerWindow(&lib, this);
     };
 }
 
