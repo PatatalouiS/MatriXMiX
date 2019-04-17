@@ -30,7 +30,8 @@ HEADERS += src/Matrix.h \
     src/AddMatrixWidget.h \
     src/ShowMatrixWidget.h \
     src/BinaryOpWindow.h \
-    src/MatrixViewWidget.h
+    src/MatrixViewWidget.h \
+    src/MenuBar.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -44,6 +45,7 @@ SOURCES += src/main.cpp \
     src/AddMatrixWidget.cpp \
     src/ShowMatrixWidget.cpp \
     src/BinaryOpWindow.cpp \
-    src/MatrixViewWidget.cpp
+    src/MatrixViewWidget.cpp \
+    src/MenuBar.cpp
 
 
