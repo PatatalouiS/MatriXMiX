@@ -33,7 +33,7 @@ class MatrixLibrary
 
 	bool isOperator (const std::string & chaine);
 	std::vector<std::string> decoupe (const std::string & expression);
-	Matrix calculate (const std::string & op, const std::string & a, const std::string & b);
+	Matrix calculate (const std::string & op, const std::string & a, const std::string & b); 
 	bool priorite_sup_egal (const std::string & opd,const std::string & opg);
 	void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
 	Matrix expressionCalcul(const std::string & chaine);

@@ -110,12 +110,17 @@ bool MatrixLibrary:: isAuthorisedName(const string & chaine)
 
 bool MatrixLibrary:: isName(const string & chaine)
 {
-    unsigned long int i=0, s=chaine.length();
+    unsigned long int i = 1, s = chaine.length();
+
+    if ( !( ((chaine[0] >= 'A') && (chaine[0] <= 'Z'))
+         || ((chaine[0] >= 'a') && (chaine[0] <= 'z')) ) )
+        return false;
 
     while (i<s)
     {
-        if ( ((chaine[i]>='A') && (chaine[i]<='Z'))
-             || ((chaine[i]>='a') && (chaine[i]<='z')) )
+        if ( ((chaine[i] >= 'A') && (chaine[i] <= 'Z'))
+             || ((chaine[i] >= 'a') && (chaine[i] <= 'z'))
+             || ((chaine[i] >= '0') && (chaine[i] <= '9')))
             i++;
         else return false;
     }
@@ -126,8 +131,8 @@ bool MatrixLibrary:: isName(const string & chaine)
 
 bool MatrixLibrary:: isFloat(const string & chaine)
 {
-    unsigned long int i=0, s = chaine.length();
-    unsigned short int nbcoma=0;
+    unsigned long int i = 0, s = chaine.length();
+    unsigned short int nbcoma = 0;
 
     while (i<s)
     {
@@ -212,6 +217,11 @@ Matrix MatrixLibrary:: calculate (const string & op, const string & a, const str
 
 bool MatrixLibrary:: priorite_sup_egal (const string & opd,const string & opg)
 {
+    if (opd=="")
+        cout << "OPD EST VIDE" << endl;
+    if (opg=="")
+        cout << "OPG EST VIDE" << endl;
+
     switch (opd[0])
     {
         case '*':
@@ -236,15 +246,18 @@ void MatrixLibrary:: polonaise(const std::string & chaine , std::vector<std::str
     vector<string> expression;
     copy_vector(expression,decoupe(chaine));
 
-    unsigned long int i, s=expression.size();
+    unsigned long int i, s = expression.size();
 
     for (i = 0; i < s; i++)
     {
+        if (expression[i]=="")
+            cout << expression[i] << " contient du vide" << endl;
+
         if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
         {
             notation_polonaise.push_back(expression[i]);
         }
-        else if ( (expression[i] == "(") || (expression[i] == "=") )
+        else if ( (expression[i] == "("))              //|| (expression[i] == "=") )
         {
             p.push(expression[i]);
         }
@@ -252,7 +265,7 @@ void MatrixLibrary:: polonaise(const std::string & chaine , std::vector<std::str
         {
             if (!p.empty())
             {
-                while (priorite_sup_egal(expression[i],p.top()))
+                while ((!p.empty()) && priorite_sup_egal(expression[i],p.top()))
                 {
                     notation_polonaise.push_back(p.top());
                     p.pop();
@@ -269,10 +282,12 @@ void MatrixLibrary:: polonaise(const std::string & chaine , std::vector<std::str
                 notation_polonaise.push_back(p.top());
                 p.pop();
 
-            }while (p.top() !=  "(");
+            }while ((p.top() !=  "(") && (!p.empty()));
             p.pop();
         }
     }
+    if(notation_polonaise[notation_polonaise.size()-1]=="")
+        notation_polonaise.pop_back();
 
     while (!p.empty())
     {
@@ -302,8 +317,26 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
             pile.pop();
             string a=pile.top();
             pile.pop();
+
+            if ( isName(b) && isName(a) )
+            {
+                temp = calculate(polish[i],a,b);
+            }
+            else if ( isFloat(a) && isName(b))
+            {
+                temp = *(find(b)) * atof(a.c_str());
+            }
+                else if ( isFloat(b) && isName(a) )
+                {
+                    temp = *(find(a)) * atof(b.c_str());
+                }
+                    else
+                    {
+                        cout << "Caractère spécial détecté..."
+                                "\nVeuillez rééssayer (gestion erreur... +1 point :)" << endl;
+                    }
+
             identify = static_cast<char>('0'+ nom);
-            temp=calculate(polish[i],a,b);
             pile.push("temp" + identify);
             addMatrix("temp" + identify,temp);
             nom++;

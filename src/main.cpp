@@ -17,14 +17,9 @@ using namespace std;
 int main (int argc, char* argv[])
 {
 
-    MatriXMiXTXT m;
-    m.mainMenu();
-
-
-
-    /*MatrixLibrary lib;
+    MatrixLibrary lib;
     vector<string> resultat;
-
+    lib.cleanSaves();
     string expression1("((objet-1)+x*tmp/8)/25-12");
 
     Matrix a (2,2,{1,0,0,1});
@@ -32,18 +27,33 @@ int main (int argc, char* argv[])
     Matrix res;
 
     lib.addMatrix("identite",a);
-    lib.addMatrix("matriceb",b);
+    lib.addMatrix("matrice",b);
     lib.saveMatrix("identite");
-    lib.saveMatrix("matriceb");
-
-    res = lib.expressionCalcul("identite-matriceb");
-    lib.addMatrix("I+B",res);
-    lib.saveMatrix("I+B");
-
-    cout << lib.readMatrix("I+B") << endl << endl;
+    lib.saveMatrix("matrice");
 
 
-    lib.cleanSaves();*/
+
+/*
+    resultat = lib.decoupe("matrice+identite-2*matrice-3*identite");
+    lib.polonaise("matrice+identite-2*matrice-3*identite",resultat);
+
+    for(unsigned int i = 0 ; i < resultat.size() ; i++)
+    {
+        cout << resultat[i] ;
+    }
+*/
+
+    res = lib.expressionCalcul("(matrice+identite-2*matrice-3*identite)/matrice");
+    cout << res << endl;
+
+
+
+    //lib.addMatrix("I+B",res);
+    //lib.saveMatrix("I+B");
+
+    //cout << lib.readMatrix("I+B") << endl << endl;
+
+
 
 
     return 0;
