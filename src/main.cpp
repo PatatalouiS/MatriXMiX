@@ -33,17 +33,17 @@ int main (int argc, char* argv[])
 
 
 
-/*
-    resultat = lib.decoupe("matrice+identite-2*matrice-3*identite");
-    lib.polonaise("matrice+identite-2*matrice-3*identite",resultat);
+
+   /*resultat = lib.decoupe("matrice^4+matrice*2");
+    lib.polonaise("matrice^4+matrice*2",resultat);
 
     for(unsigned int i = 0 ; i < resultat.size() ; i++)
     {
-        cout << resultat[i] ;
-    }
-*/
+        cout << resultat[i]<<endl;
+    }*/
 
-    res = lib.expressionCalcul("(matrice+identite-2*matrice-3*identite)/matrice");
+
+    res = lib.expressionCalcul("identite^5+matrice*2");
     cout << res << endl;
 
 

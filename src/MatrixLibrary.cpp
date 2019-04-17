@@ -217,24 +217,21 @@ Matrix MatrixLibrary:: calculate (const string & op, const string & a, const str
 
 bool MatrixLibrary:: priorite_sup_egal (const string & opd,const string & opg)
 {
-    if (opd=="")
-        cout << "OPD EST VIDE" << endl;
-    if (opg=="")
-        cout << "OPG EST VIDE" << endl;
-
     switch (opd[0])
     {
         case '*':
-            return ((opg[0] == '*') || (opg[0] == '/'));
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
 
         case '/':
-            return ((opg[0] == '*') || (opg[0] == '/'));
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
 
         case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
 
         case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+        case '^':
+            return (opg[0] == '^');
         default: return false;
     }
 }
@@ -257,7 +254,7 @@ void MatrixLibrary:: polonaise(const std::string & chaine , std::vector<std::str
         {
             notation_polonaise.push_back(expression[i]);
         }
-        else if ( (expression[i] == "("))              //|| (expression[i] == "=") )
+        else if ( (expression[i] == "("))
         {
             p.push(expression[i]);
         }
@@ -328,7 +325,15 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
             }
                 else if ( isFloat(b) && isName(a) )
                 {
-                    temp = *(find(a)) * atof(b.c_str());
+                    if(polish[i] == "*")
+                    {
+                        temp = *(find(a)) * atof(b.c_str());
+                    }
+                    else
+                    {
+                        temp= *(find(a)) ^ (atoi(b.c_str()));
+                    }
+
                 }
                     else
                     {
