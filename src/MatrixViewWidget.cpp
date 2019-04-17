@@ -18,7 +18,6 @@ MatrixViewWidget::MatrixViewWidget (MatrixLibrary* lib, QWidget* parent) : QTabl
     setColumnWidth(1, 50);
     setColumnWidth(2, 50);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    setFixedSize(200, 200);
     verticalHeader()->hide();
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setShowGrid(false);

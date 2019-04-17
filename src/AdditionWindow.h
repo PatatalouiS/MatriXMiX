@@ -39,8 +39,6 @@ class AdditionWindow : public QDialog
         QLabel* formula;
         ShowMatrixWidget* resultImg;
         QVBoxLayout* mainLayout;
-
-        void setOperationSpecs(unsigned int type);
 };
 
 

@@ -1,5 +1,4 @@
 
-
 #ifndef DivisionWindow_H
 #define DivisionWindow_H
 
@@ -40,13 +39,7 @@ class DivisionWindow : public QDialog
         QLabel* formula;
         ShowMatrixWidget* resultImg;
         QVBoxLayout* mainLayout;
-
-        void showError(QString title, QString body) const;
-        void setOperationSpecs(unsigned int type);
 };
-
-
-
 
 
 #endif

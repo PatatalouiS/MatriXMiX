@@ -1,7 +1,7 @@
 
 
-#ifndef MultiplicationWindow_H
-#define MultiplicationWindow_H
+#ifndef MULTIPLICATIONWINDOW_H
+#define MULTIPLICATIONWINDOW_H
 
 
 #include <QDialog>
@@ -40,9 +40,6 @@ class MultiplicationWindow : public QDialog
         QLabel* formula;
         ShowMatrixWidget* resultImg;
         QVBoxLayout* mainLayout;
-
-        void showError(QString title, QString body) const;
-        void setOperationSpecs(unsigned int type);
 };
 
 

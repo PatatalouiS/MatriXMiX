@@ -22,12 +22,14 @@ AdditionWindow::AdditionWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (p
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
     op1View = new MatrixViewWidget(lib, this);
+    op1View->setFixedSize(200, 200);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(op1View);
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
     QLabel* op2Title = new QLabel("Choix de la matrice 2 : ");
     op2View = new MatrixViewWidget(lib, this);
+    op2View->setFixedSize(200, 200);
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(op2View);
 

@@ -1,6 +1,8 @@
 
 #include <QPushButton>
+#include <QDebug>
 #include "MultiplicationWindow.h"
+#include "Error.h"
 
 MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
 {
@@ -56,17 +58,17 @@ MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) 
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
 
-    connect(op1View->selectionModel(), &QItemSelectionModel::selectionChanged,
+    connect(op1View, &MatrixViewWidget::clicked,
             [this] () -> void
             {
                 this->computeSelection(0);
             });
-    connect(op2View->selectionModel(), &QItemSelectionModel::selectionChanged,
+    connect(op2View, &MatrixViewWidget::clicked,
             [this] () -> void
             {
                 this->computeSelection(1);
             });
-    connect(calculer, &QPushButton::pressed, this, &MultiplicationWindow::computeOperation);
+    connect(calculer, &QPushButton::clicked, this, &MultiplicationWindow::computeOperation);
 
     setLayout(mainLayout);
 }
@@ -82,11 +84,19 @@ void MultiplicationWindow:: computeSelection (bool op)
 
     if(!op)
     {
+        op2 = nullptr;
+        op2Name = "_";
+
         selectedRow = op1View->currentIndex().row();
         selectedName = op1View->model()->item(selectedRow)->data(2).toString();
         op1Name = selectedName;
-        op1 = lib->find(selectedName.toStdString());
-        formula->setText(selectedName + " * " + op2Name);
+        op1 = lib->find(op1Name.toStdString());
+        formula->setText(op1Name + " * " + op2Name);
+        op2View->update(
+               [this](const Matrix* a)
+               {
+                   return ((op1->getNbCols() == a->getNbRows()));
+               });
     }
     else
     {
@@ -94,13 +104,20 @@ void MultiplicationWindow:: computeSelection (bool op)
         selectedName = op2View->model()->item(selectedRow)->data(2).toString();
         op2Name = selectedName;
         op2 = lib->find(selectedName.toStdString());
-        formula->setText(op1Name + " * " + selectedName);
+        formula->setText(op1Name + " * " + op2Name);
     }
 }
 
 
 void MultiplicationWindow:: computeOperation ()
 {
+    if((op1 == nullptr) || (op2 == nullptr))
+    {
+        showError("Opérande Manquante !", "Veuillez bien sélectionner vos 2 Matrices", this);
+        return;
+    }
+
+
     result = *op1 * *op2;
     resultImg->compute_img(&result);
     resultImg->show();
@@ -110,3 +127,4 @@ void MultiplicationWindow:: computeOperation ()
 MultiplicationWindow:: ~MultiplicationWindow ()
 {
 }
+

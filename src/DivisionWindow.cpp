@@ -1,6 +1,8 @@
 
 #include <QPushButton>
+#include <QDebug>
 #include "DivisionWindow.h"
+#include "Error.h"
 
 DivisionWindow::DivisionWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
 {
@@ -20,12 +22,14 @@ DivisionWindow::DivisionWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (p
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
     op1View = new MatrixViewWidget(lib, this);
+    op1View->setFixedSize(200, 200);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(op1View);
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
     QLabel* op2Title = new QLabel("Choix de la matrice 2 : ");
     op2View = new MatrixViewWidget(lib, this);
+    op2View->setFixedSize(200, 200);
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(op2View);
 
@@ -56,17 +60,17 @@ DivisionWindow::DivisionWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (p
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
 
-    connect(op1View->selectionModel(), &QItemSelectionModel::selectionChanged,
+    connect(op1View, &MatrixViewWidget::clicked,
             [this] () -> void
             {
                 this->computeSelection(0);
             });
-    connect(op2View->selectionModel(), &QItemSelectionModel::selectionChanged,
+    connect(op2View, &MatrixViewWidget::clicked,
             [this] () -> void
             {
                 this->computeSelection(1);
             });
-    connect(calculer, &QPushButton::pressed, this, &DivisionWindow::computeOperation);
+    connect(calculer, &QPushButton::clicked, this, &DivisionWindow::computeOperation);
 
     setLayout(mainLayout);
 }
@@ -82,11 +86,21 @@ void DivisionWindow:: computeSelection (bool op)
 
     if(!op)
     {
+        op2 = nullptr;
+        op2Name = "_";
+
         selectedRow = op1View->currentIndex().row();
         selectedName = op1View->model()->item(selectedRow)->data(2).toString();
         op1Name = selectedName;
-        op1 = lib->find(selectedName.toStdString());
-        formula->setText(selectedName + " / " + op2Name);
+        op1 = lib->find(op1Name.toStdString());
+        formula->setText(op1Name + " / " + op2Name);
+        op2View->update(
+               [this](const Matrix* a)
+               {
+                   return ((op1->getNbCols() == a->getNbCols()) &&
+                    (op1->getNbRows() == a->getNbRows()) &&
+                    (a->isSQMatrix()) && (a->determinant()!= 0.0));
+               });
     }
     else
     {
@@ -94,13 +108,19 @@ void DivisionWindow:: computeSelection (bool op)
         selectedName = op2View->model()->item(selectedRow)->data(2).toString();
         op2Name = selectedName;
         op2 = lib->find(selectedName.toStdString());
-        formula->setText(op1Name + " / " + selectedName);
+        formula->setText(op1Name + " / " + op2Name);
     }
 }
 
 
 void DivisionWindow:: computeOperation ()
 {
+    if((op1 == nullptr) || (op2 == nullptr))
+    {
+        showError("Opérande Manquante !", "Veuillez bien sélectionner vos 2 Matrices", this);
+        return;
+    }
+
     result = *op1 / *op2;
     resultImg->compute_img(&result);
     resultImg->show();
@@ -109,5 +129,5 @@ void DivisionWindow:: computeOperation ()
 
 DivisionWindow:: ~DivisionWindow ()
 {
-
 }
+

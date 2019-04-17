@@ -1,7 +1,6 @@
 
-
-#ifndef SOUSTRACTIONWINDOW_H
-#define SOUSTRACTIONWINDOW_H
+#ifndef SoustractionWindow_H
+#define SoustractionWindow_H
 
 
 #include <QDialog>
@@ -40,13 +39,7 @@ class SoustractionWindow : public QDialog
         QLabel* formula;
         ShowMatrixWidget* resultImg;
         QVBoxLayout* mainLayout;
-
-        void showError(QString title, QString body) const;
-        void setOperationSpecs(unsigned int type);
 };
-
-
-
 
 
 #endif
