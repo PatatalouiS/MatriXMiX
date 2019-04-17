@@ -69,7 +69,7 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 {
     if (tab.count(name) == 0)
     {
-        cout << "la matrice n'existe pas dans la libraire" << endl;
+        cout << "la matrice "<<name<<" n'existe pas dans la libraire" << endl;
         return nullptr;
     }
     return &tab.at(name);
@@ -247,9 +247,6 @@ void MatrixLibrary:: polonaise(const std::string & chaine , std::vector<std::str
 
     for (i = 0; i < s; i++)
     {
-        if (expression[i]=="")
-            cout << expression[i] << " contient du vide" << endl;
-
         if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
         {
             notation_polonaise.push_back(expression[i]);
@@ -302,18 +299,32 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
     Matrix temp;
     string identify;
     int nom=0;
-    addMatrix("temp",temp);
-    unsigned int i;
-    unsigned long int s = polish.size();
 
-    for (i = 0; i < s; i++ )
+    unsigned long int i;
+    //unsigned long int s = polish.size();
+
+    for (i = 0; i < polish.size(); i++ )
     {
-        if (isOperator(polish[i]))
+        if ((polish[i] == "^") && (polish[i+1] == "1") && (polish[i+2] == "-"))
+        {
+            string a = pile.top();
+            pile.pop();
+
+            temp= *(find(a))^-1;
+            i=i+2;
+
+            identify = static_cast<char>('0'+ nom);
+            pile.push("temp" + identify);
+            addMatrix("temp" + identify,temp);
+            nom++;
+        }
+        else if (isOperator(polish[i]))
         {
             string b = pile.top();
             pile.pop();
             string a=pile.top();
             pile.pop();
+
 
             if ( isName(b) && isName(a) )
             {
@@ -345,15 +356,17 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
             pile.push("temp" + identify);
             addMatrix("temp" + identify,temp);
             nom++;
+
         }
-        else
-        {
-            pile.push(polish[i]);
-        }
+            else
+            {
+                 pile.push(polish[i]);
+            }
     }
 
     const Matrix* res;
     res=find(pile.top());
+
     return *res;
 }
 
