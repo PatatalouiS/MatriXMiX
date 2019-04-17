@@ -4,6 +4,7 @@
 #include <QList>
 #include <QMenuBar>
 #include <QLinearGradient>
+#include "MenuBar.h"
 #include "LibraryWindow.h"
 
 class MainWindow : public QMainWindow
@@ -20,7 +21,6 @@ class MainWindow : public QMainWindow
     public slots:
     
         void compute_choice (const unsigned int choice);
-        void show_library ();
     
     private:
     
@@ -28,4 +28,5 @@ class MainWindow : public QMainWindow
         QList<QPushButton*> operations;
         MatrixLibrary lib;
         std::function<QWidget*(void)> createWindow [10];
+        MenuBar* menu;
 };

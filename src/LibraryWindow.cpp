@@ -21,21 +21,24 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     matrixView->setModel(matrixModel);
     matrixView->setSortingEnabled(true);
     matrixView->setColumnWidth(0, 90);
-    matrixView->setColumnWidth(1, 50);
-    matrixView->setColumnWidth(2, 50);
+    matrixView->setColumnWidth(1, 45);
+    matrixView->setColumnWidth(2, 45);
     matrixView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    matrixView->setFixedWidth(200);
+    matrixView->setFixedWidth(207);
     matrixView->verticalHeader()->hide();
     matrixView->setSelectionBehavior(QAbstractItemView::SelectRows);
     matrixView->setShowGrid(false);
     matrixView->setAlternatingRowColors(true);
-	matrixView->setStyleSheet("* {alternate-background-color: #d6d1d0;background-color: white;}"
-							  "QHeaderView::section { background-color: #bdcef0; border: 0px;}");
+    matrixView->setStyleSheet("* {alternate-background-color: lightBlue;background-color: white;}"
+                              "QHeaderView { background:"
+                              "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue); color:white }");
 
     edit = new QPushButton("Editer");
     remove = new QPushButton("Supprimer");
     edit->setMinimumSize(100,50);
     remove->setMinimumSize(100,50);
+    edit->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
+    remove->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
     QHBoxLayout* viewFooterLayout = new QHBoxLayout;
     viewFooterLayout->addWidget(edit);
     viewFooterLayout->addWidget(remove);
@@ -47,6 +50,13 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     QTabWidget* choice = new QTabWidget;
     choice->addTab(showMatrixWidget, "Visualiser");
     choice->addTab(addMatrixWidget, "Ajouter");
+    choice->setStyleSheet(
+        "QTabBar::tab { background:"
+        "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 darkGrey);"
+        "color: black; padding: 10px; border-radius: 6px; border:1px solid darkGrey ;} "
+        "QTabBar::tab:selected { background: "
+        "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue); color:white } "
+        "QTabWidget::tab-bar { alignment : center} ");
 
     QHBoxLayout* mainLayout = new QHBoxLayout;
     mainLayout->addLayout(matrixViewLayout);
@@ -58,7 +68,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     connect(matrixView->selectionModel(), &QItemSelectionModel::selectionChanged,
             this, &LibraryWindow::compute_selection);
 }
-
 
 void LibraryWindow:: compute_selection()
 {

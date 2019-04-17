@@ -17,8 +17,13 @@ MainWindow:: MainWindow() : QMainWindow()
     QVBoxLayout* mainLayout = new QVBoxLayout;
     QVBoxLayout* headerLayout = new QVBoxLayout;
     QGridLayout* operationLayout = new QGridLayout;
+
     QFont font ("Arial");
     font.setPointSize(16);
+
+    menu = new MenuBar(this);
+    setMenuBar(menu);
+    menu -> setFont(font);
 
     QFont fontTitle ("Arial");
     fontTitle.setPointSize(20);
@@ -50,8 +55,6 @@ MainWindow:: MainWindow() : QMainWindow()
         "Inverse",
         "Trace",
     };
-    
-    //Suppression du bouton temporaire
 
     QPushButton* tempWidget;
     operationLayout->setContentsMargins(40, 40, 40, 40);
@@ -81,54 +84,6 @@ MainWindow:: MainWindow() : QMainWindow()
     mainWidget->setLayout(mainLayout);
     mainWidget->setStyleSheet("QWidget {background-color : qlineargradient(x1 : 0 , y1 : 0  , x2: 0 , y2:1 , "
                               "stop : 0 #000033 , stop : 1 #0099FF)}");
-
-    //Ajout du menu et des actions pour ouvrir la librarie
-
-    QString  menuStyle(
-              "QMenuBar{"
-              "background-color: lightBlue;"
-              "}"
-           );
-
-    this->setStyleSheet(menuStyle);
-
-    QMenu *menuFile = menuBar() -> addMenu("Fichier");
-    menuBar() -> setFont(font);
-    menuFile -> setFont(font);
-
-    QAction *actionSave = new QAction("Sauvegarder" , this);
-    menuFile -> addAction(actionSave);
-
-    menuFile -> addSeparator();
-
-    QAction *actionLoad = new QAction("Créer", this);
-    menuFile -> addAction(actionLoad);
-
-    QMenu *menuMatrix = menuBar() -> addMenu("Matrice");
-    menuMatrix -> setFont(font);
-
-    menuMatrix = menuMatrix -> addMenu(tr("Librarie"));
-
-    QAction *createMatrix = new QAction("Ajouter" , this);
-    menuMatrix -> addAction(createMatrix);
-    menuMatrix ->setFont(font);
-
-    menuMatrix -> addSeparator();
-
-    connect(createMatrix, &QAction::triggered, this, &MainWindow::show_library);
-
-    QAction *showMatrix = new QAction("Visualiser" , this);
-    menuMatrix -> addAction(showMatrix);
-    menuMatrix ->setFont(font);
-    connect(showMatrix, &QAction::triggered, this, &MainWindow::show_library);
-
-    QMenu *menuHelp = menuBar() -> addMenu("Aide");
-    menuHelp -> setFont(font);
-
-    QMenu *menuQuit = menuBar() -> addMenu("Quitter");
-    menuQuit -> setFont(font);
-
-
     setFunctorTab();
     setCentralWidget(mainWidget);
 }
@@ -154,15 +109,6 @@ void MainWindow:: compute_choice (const unsigned int choice)
     newWindow->setAttribute(Qt::WA_DeleteOnClose);
     newWindow->show();
 }
-
-void MainWindow:: show_library()
-{
-    LibraryWindow* libWindow = new LibraryWindow(this, &lib);
-    libWindow->setAttribute(Qt::WA_DeleteOnClose);
-    libWindow->show();
-    hide();
-}
-
 
 MainWindow:: ~MainWindow()
 {
