@@ -4,6 +4,7 @@
 #include <QList>
 #include <QMenuBar>
 #include <QLinearGradient>
+#include <QGroupBox>
 #include "MenuBar.h"
 #include "LibraryWindow.h"
 
@@ -23,7 +24,10 @@ class MainWindow : public QMainWindow
         void compute_choice (const unsigned int choice);
     
     private:
-    
+
+        QGroupBox *initBinaryOp();
+        QGroupBox *UnaryOp();
+        QGroupBox *DiagonalisationOp();
         void setFunctorTab ();
         QList<QPushButton*> operations;
         MatrixLibrary lib;
