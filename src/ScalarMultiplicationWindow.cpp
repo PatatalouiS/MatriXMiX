@@ -1,35 +1,41 @@
 
 #include <QPushButton>
 #include <QDebug>
-#include "MultiplicationWindow.h"
+#include "ScalarMultiplicationWindow.h"
 #include "Error.h"
 
-MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+
+ScalarMultiplicationWindow::ScalarMultiplicationWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
 {
     this->lib = lib;
     op1Name = "_";
-    op2Name = "_";
     op1 = nullptr;
-    op2 = nullptr;
+    op2 = 1;
 
     resultImg = new ShowMatrixWidget(this);
     resultImg->hide();
 
-    QLabel* title = new QLabel("Multiplication");
+    QLabel* title = new QLabel("Multiplication Scalaire");
     title->setStyleSheet("font-size: 30px;");
     title->setAlignment(Qt::AlignCenter);
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
     op1View = new MatrixViewWidget(lib, this);
+    op1View->setFixedSize(200, 200);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(op1View);
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
-    QLabel* op2Title = new QLabel("Choix de la matrice 2 : ");
-    op2View = new MatrixViewWidget(lib, this);
+    QLabel* op2Title = new QLabel("Choix du Scalaire :");
+    op2Edit = new QLineEdit;
+    op2Edit->setMinimumWidth(30);
+    op2Edit->setMaximumWidth(50);
+    op2Edit->setMaxLength(5);
+    op2Edit->setValidator(new QDoubleValidator(op2Edit));
+
     op2ChoiceLayout->addWidget(op2Title);
-    op2ChoiceLayout->addWidget(op2View);
+    op2ChoiceLayout->addWidget(op2Edit);
 
     QHBoxLayout* formLayout = new QHBoxLayout;
     formLayout->addLayout(op1ChoiceLayout);
@@ -63,68 +69,59 @@ MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) 
             {
                 this->computeSelection(0);
             });
-    connect(op2View, &MatrixViewWidget::clicked,
+
+    connect(calculer, &QPushButton::clicked, this, &ScalarMultiplicationWindow::computeOperation);
+
+    connect(op2Edit, &QLineEdit::textChanged,
             [this] () -> void
             {
                 this->computeSelection(1);
             });
-    connect(calculer, &QPushButton::clicked, this, &MultiplicationWindow::computeOperation);
 
     setLayout(mainLayout);
 }
 
 
-void MultiplicationWindow:: computeSelection (bool op)
+void ScalarMultiplicationWindow:: computeSelection (bool op)
 {
-    int selectedRow;
-    QString selectedName;
-    resultImg->hide();
-    mainLayout->setSizeConstraint(QLayout::SetFixedSize);
-    updateGeometry();
-
     if(!op)
     {
-        op2 = nullptr;
-        op2Name = "_";
+        int selectedRow;
+        QString selectedName;
+        resultImg->hide();
+        mainLayout->setSizeConstraint(QLayout::SetFixedSize);
+        updateGeometry();
 
         selectedRow = op1View->currentIndex().row();
         selectedName = op1View->model()->item(selectedRow)->data(2).toString();
         op1Name = selectedName;
-        op1 = lib->find(op1Name.toStdString());
-        formula->setText(op1Name + " * " + op2Name);
-        op2View->refresh(
-               [this](const Matrix* a)
-               {
-                   return ((op1->getNbCols() == a->getNbRows()));
-               });
+        op1 = lib->find(selectedName.toStdString());
     }
     else
     {
-        selectedRow = op2View->currentIndex().row();
-        selectedName = op2View->model()->item(selectedRow)->data(2).toString();
-        op2Name = selectedName;
-        op2 = lib->find(selectedName.toStdString());
-        formula->setText(op1Name + " * " + op2Name);
+        op2 = op2Edit->text().replace(QLatin1Char(','), QLatin1Char('.')).toDouble();
     }
+
+    formula->setText(op1Name + " * " + QString::number(op2));
 }
 
 
-void MultiplicationWindow:: computeOperation ()
+void ScalarMultiplicationWindow:: computeOperation ()
 {
-    if((op1 == nullptr) || (op2 == nullptr))
+    if(op1 == nullptr)
     {
-        showError("Opérande Manquante !", "Veuillez bien sélectionner vos 2 Matrices", this);
+        showError("Opérande Manquante !", "Veuillez bien sélectionner"
+                " vos 2 Opérandes !", this);
         return;
     }
 
-
-    result = *op1 * *op2;
+    result = *op1 * op2;
     resultImg->computeImgMatrix(&result, palette().color(backgroundRole()));
     resultImg->show();
 }
 
 
-MultiplicationWindow:: ~MultiplicationWindow ()
+ScalarMultiplicationWindow:: ~ScalarMultiplicationWindow ()
 {
 }
 

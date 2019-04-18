@@ -5,6 +5,6 @@
 #include <QString>
 #include <QWidget>
 
-void showError (const QString& title, const QString& body, QWidget* parent);
+void showError (const QString& title, const QString& body, QWidget* parent = nullptr);
 
 #endif

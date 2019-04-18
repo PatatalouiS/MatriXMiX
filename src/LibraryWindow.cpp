@@ -4,6 +4,7 @@
 #include <QHeaderView>
 #include <QDebug>
 #include "LibraryWindow.h"
+#include "MainWindow.h"
 
 
 using namespace std;
@@ -12,25 +13,9 @@ using namespace std;
 LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(main)
 {
     lib = library;
-    matrixView = new QTableView;
-    matrixModel = new QStandardItemModel(0,3);
+    matrixView = new MatrixViewWidget(lib, this);
     addMatrixWidget = new AddMatrixWidget(lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
-
-    matrixModel->setHorizontalHeaderLabels({"Nom", "NbL", "NbC"});
-    matrixView->setModel(matrixModel);
-    matrixView->setSortingEnabled(true);
-    matrixView->setColumnWidth(0, 90);
-    matrixView->setColumnWidth(1, 50);
-    matrixView->setColumnWidth(2, 50);
-    matrixView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    matrixView->setFixedWidth(200);
-    matrixView->verticalHeader()->hide();
-    matrixView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    matrixView->setShowGrid(false);
-    matrixView->setAlternatingRowColors(true);
-	matrixView->setStyleSheet("* {alternate-background-color: #d6d1d0;background-color: white;}"
-							  "QHeaderView::section { background-color: #bdcef0; border: 0px;}");
 
     edit = new QPushButton("Editer");
     remove = new QPushButton("Supprimer");
@@ -55,17 +40,22 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     setLayout(mainLayout);
 
     connect(this, &LibraryWindow::close, main, &QWidget::show);
-    connect(matrixView->selectionModel(), &QItemSelectionModel::selectionChanged,
+    connect(matrixView, &MatrixViewWidget::clicked,
             this, &LibraryWindow::compute_selection);
+    connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
+            matrixView, &MatrixViewWidget::addNewRow);
+    connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
+            qobject_cast<MainWindow*>(main), &MainWindow::addNewMatrix);
 }
 
 
 void LibraryWindow:: compute_selection()
 {
 	int currentRow = matrixView->currentIndex().row();
-	QString currentName = matrixModel->item(currentRow, 0)->data(2).toString();
+	QString currentName = matrixView->model()
+            ->item(currentRow, 0)->data(2).toString();
 	const Matrix* currentMatrix = lib->find(currentName.toStdString());
-	showMatrixWidget->compute_img(currentMatrix);
+	showMatrixWidget->computeImgMatrix(currentMatrix, QColor(226, 226, 226));
 }
 
 
@@ -73,12 +63,6 @@ void LibraryWindow:: closeEvent (QCloseEvent* event)
 {
     emit close();
     event->accept();
-}
-
-void LibraryWindow:: updateView (QList<QStandardItem*> newLine)
-{
-    matrixModel->appendRow(newLine);
-    matrixView->sortByColumn(0, Qt::AscendingOrder);
 }
 
 

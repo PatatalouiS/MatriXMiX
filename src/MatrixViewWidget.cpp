@@ -17,6 +17,7 @@ MatrixViewWidget::MatrixViewWidget (MatrixLibrary* lib, QWidget* parent) : QTabl
     setColumnWidth(0, 98);
     setColumnWidth(1, 50);
     setColumnWidth(2, 50);
+    setFixedWidth(200);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     verticalHeader()->hide();
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -24,7 +25,7 @@ MatrixViewWidget::MatrixViewWidget (MatrixLibrary* lib, QWidget* parent) : QTabl
     setAlternatingRowColors(true);
 	setStyleSheet("* {alternate-background-color: #d6d1d0;background-color: white;}"
 							  "QHeaderView::section { background-color: #bdcef0; border: 0px;}");
-	update();
+	refresh();
 }
 
 
@@ -34,7 +35,7 @@ QStandardItemModel* MatrixViewWidget:: model () const
 }
 
 
-void MatrixViewWidget::update(std::function<bool(Matrix*)> filter)
+void MatrixViewWidget::refresh(std::function<bool(Matrix*)> filter)
 {
     matrixModel->removeRows(0, matrixModel->rowCount());
 
@@ -54,10 +55,22 @@ void MatrixViewWidget::update(std::function<bool(Matrix*)> filter)
             line.append(new QStandardItem(QString::number(matrix->getNbRows())));
             line.append(new QStandardItem(QString::number(matrix->getNbCols())));
             matrixModel->appendRow(line);
-            sortByColumn(0, Qt::AscendingOrder);
         }
     }
+    sortByColumn(0, Qt::AscendingOrder);
 }
+
+
+void MatrixViewWidget:: addNewRow (const QString name, const Matrix matrix)
+{
+    QList<QStandardItem*> line;
+    line.append(new QStandardItem(name));
+    line.append(new QStandardItem(QString::number(matrix.getNbRows())));
+    line.append(new QStandardItem(QString::number(matrix.getNbRows())));
+    matrixModel->appendRow(line);
+    sortByColumn(0, Qt::AscendingOrder);
+}
+
 
 
 MatrixViewWidget:: ~MatrixViewWidget ()

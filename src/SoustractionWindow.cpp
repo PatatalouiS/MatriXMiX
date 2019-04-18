@@ -94,7 +94,7 @@ void SoustractionWindow:: computeSelection (bool op)
         op1Name = selectedName;
         op1 = lib->find(op1Name.toStdString());
         formula->setText(op1Name + " - " + op2Name);
-        op2View->update(
+        op2View->refresh(
                [this](const Matrix* a)
                {
                    return ((op1->getNbCols() == a->getNbCols()) &&
@@ -121,7 +121,7 @@ void SoustractionWindow:: computeOperation ()
     }
 
     result = *op1 - *op2;
-    resultImg->compute_img(&result);
+    resultImg->computeImgMatrix(&result, palette().color(backgroundRole()));
     resultImg->show();
 }
 

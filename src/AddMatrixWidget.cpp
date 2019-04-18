@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include "LibraryWindow.h"
 #include "AddMatrixWidget.h"
+#include "Error.h"
 
 
 AddMatrixWidget::AddMatrixWidget(QWidget *parent) : QWidget(parent)
@@ -87,49 +88,6 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
 
     connect(ajouter, &QPushButton::pressed, this, &AddMatrixWidget::compute_add);
 
-    connect(this, &AddMatrixWidget::matrixAdded,
-            qobject_cast<LibraryWindow*>(parent), &LibraryWindow::updateView);
-
-    connect(this, &AddMatrixWidget::error, this, &AddMatrixWidget::showError);
-
-
-
-    // Aide pour le Debug
-
-    Matrix a (3,3, Matrix::I);
-    Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
-    Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
-    Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
-
-    library->addMatrix("A", a);
-    library->addMatrix("B", b);
-    library->addMatrix("C", c);
-    library->addMatrix("D", d);
-
-
-    QList<QStandardItem*> a1;
-    a1.append(new QStandardItem("A"));
-    a1.append(new QStandardItem(QString::number(3)));
-    a1.append(new QStandardItem(QString::number(3)));
-    emit matrixAdded(a1);
-
-    QList<QStandardItem*> a2;
-    a2.append(new QStandardItem("B"));
-    a2.append(new QStandardItem(QString::number(3)));
-    a2.append(new QStandardItem(QString::number(3)));
-    emit matrixAdded(a2);
-
-    QList<QStandardItem*> a3;
-    a3.append(new QStandardItem("C"));
-    a3.append(new QStandardItem(QString::number(3)));
-    a3.append(new QStandardItem(QString::number(4)));
-    emit matrixAdded(a3);
-
-    QList<QStandardItem*> a4;
-    a4.append(new QStandardItem("D"));
-    a4.append(new QStandardItem(QString::number(3)));
-    a4.append(new QStandardItem(QString::number(4)));
-    emit matrixAdded(a4);
 }
 
 
@@ -155,14 +113,8 @@ void AddMatrixWidget:: compute_add ()
     }
 
     Matrix newMatrix (nbL, nbC, values);
-    library->addMatrix(name.toStdString(), newMatrix);
 
-    QList<QStandardItem*> a;
-    a.append(new QStandardItem(name));
-    a.append(new QStandardItem(QString::number(nbL)));
-    a.append(new QStandardItem(QString::number(nbC)));
-
-    emit matrixAdded(a);
+    emit matrixAdded(name, newMatrix);
 }
 
 
@@ -173,14 +125,14 @@ bool AddMatrixWidget:: controlKeyboardInput() const
 
     if(library->find(name.toStdString()))
     {
-        emit error("La Matrice " + name + " existe déjà !",
+        showError("La Matrice " + name + " existe déjà !",
                    "Veuillez changer de nom.");
         return false;
     }
 
     if(!nameMatrix->hasAcceptableInput())
     {
-        emit error("Nom de Matrice " + name + " non valide !",
+        showError("Nom de Matrice " + name + " non valide !",
                    "Veuillez saisir 10 caractère Maximum, sans caractères spéciaux ni espaces ");
         return false;
     }
@@ -189,7 +141,7 @@ bool AddMatrixWidget:: controlKeyboardInput() const
     {
         if (!i->hasAcceptableInput())
         {
-            emit error("Les valeurs de votre Matrice " + name + " sont incorrectes !",
+            showError("Les valeurs de votre Matrice " + name + " sont incorrectes !",
                        "Vérifiez votre saisie. Chaque coefficient doit être un nombre Réel.");
             return false;
         }
@@ -273,20 +225,6 @@ void AddMatrixWidget:: update_EditSize ()
         }
     }
 }
-
-
-
-void AddMatrixWidget:: showError(QString title, QString body) const
-{
-    QMessageBox* error = new QMessageBox;
-    error->setAttribute(Qt::WA_DeleteOnClose, true);
-    error->setFixedSize(650,200);
-    error->setIcon(QMessageBox::Critical);
-    error->setText(title);
-    error->setInformativeText(body);
-    error->show();
-}
-
 
 AddMatrixWidget:: ~AddMatrixWidget ()
 {

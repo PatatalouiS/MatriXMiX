@@ -1,48 +1,41 @@
 
-#ifndef PowerWindow_H
-#define PowerWindow_H
+#ifndef DeterminantWindow_H
+#define DeterminantWindow_H
 
 
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QSpinBox>
 #include "MatrixLibrary.h"
 #include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
 
 
-class PowerWindow : public QDialog
+class DeterminantWindow : public QDialog
 {
 
     Q_OBJECT
 
     public:
 
-        PowerWindow (MatrixLibrary* lib, QWidget* parent = nullptr);
-        ~PowerWindow ();
+        DeterminantWindow (MatrixLibrary* lib, QWidget* parent = nullptr);
+        ~DeterminantWindow ();
 
     private slots:
 
-        void computeSelection(bool op);
+        void computeSelection();
         void computeOperation();
 
     private:
 
         MatrixLibrary* lib;
         MatrixViewWidget* op1View;
-        QSpinBox* op2Edit;
-        QString op1Name;
+        QLabel* op1Name;
         const Matrix* op1;
-        int op2;
-        Matrix result;
-        QLabel* formula;
+        double result;
         ShowMatrixWidget* resultImg;
         QVBoxLayout* mainLayout;
 };
-
-
-
 
 
 #endif

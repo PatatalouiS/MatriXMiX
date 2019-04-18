@@ -1,8 +1,8 @@
 
 #include <QPainter>
 #include <QHBoxLayout>
-#include "jkqtmathtext/jkqtmathtext.h"
 #include "ShowMatrixWidget.h"
+#include "jkqtmathtext/jkqtmathtext.h"
 
 
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
@@ -11,23 +11,14 @@ ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
     showMatrixLayout->setAlignment(Qt::AlignCenter);
 	imgSelected = new QLabel(this);
     showMatrixLayout->addWidget(imgSelected);
-
     setLayout(showMatrixLayout);
 }
 
 
-void ShowMatrixWidget:: compute_img(const Matrix* mat)
+void ShowMatrixWidget:: computeImgMatrix(const Matrix* mat, const QColor& col)
 {
 	unsigned int rows = mat->getNbRows();
 	unsigned int cols = mat->getNbCols();
-
-	QPixmap temp(500,500);
-	temp.fill(QColor("white"));
-	QPainter painter;
-
-	JKQTMathText mathText;
-	mathText.useXITS();
-	mathText.setFontSize(20);
 
 	QString latex = "\\begin{bmatrix}";
 
@@ -45,12 +36,47 @@ void ShowMatrixWidget:: compute_img(const Matrix* mat)
 	}
 	latex += "\\end{bmatrix}";
 
-	mathText.parse(latex);
-	painter.begin(&temp);
-	mathText.draw(painter, Qt::AlignCenter, QRectF(0,0, temp.width(), temp.height()), false);
-	painter.end();
-
-	imgSelected->setPixmap(temp);
-	imgSelected->resize(350, 350);
+   setPixmapToQLabel(col, latex, 20);
 }
+
+
+void ShowMatrixWidget:: computeImgScalar(const double scalar, const unsigned int type,
+const QString& name, const QColor& col)
+{
+    QString latex;
+
+    switch(type)
+    {
+        case 0: latex = "\\mathit{Det}\\(" + name + ") = " + QString::number(scalar); break;
+        default: break;
+    }
+
+    setPixmapToQLabel(col, latex, 40);
+}
+
+
+void ShowMatrixWidget:: setPixmapToQLabel (const QColor &col, const QString& latex, const unsigned int sizeTxt)
+{
+    JKQTMathText mathText;
+	mathText.useXITS();
+	mathText.setFontSize(sizeTxt);
+	mathText.parse(latex);
+	QPainter painter;
+	QSizeF size = mathText.getSize(painter);
+	QPixmap temp(static_cast<int>(size.width()),static_cast<int>(size.height()));
+	temp.fill(col);
+	painter.begin(&temp);
+    mathText.draw(painter, Qt::AlignCenter, QRectF(-5, 0, temp.width(), temp.height()), false);
+	painter.end();
+	imgSelected->setPixmap(temp);
+}
+
+
+
+
+
+
+
+
+
 

@@ -3,10 +3,9 @@
 #define LIBRARY_WINDOW_H
 
 #include <QDialog>
-#include <QTableView>
-#include <QStandardItemModel>
 #include <QPushButton>
 #include "AddMatrixWidget.h"
+#include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
 
 
@@ -19,9 +18,9 @@ private:
 
     //members
 
-    QTableView* matrixView;
-    QStandardItemModel* matrixModel;
+
     MatrixLibrary* lib;
+    MatrixViewWidget* matrixView;
     AddMatrixWidget* addMatrixWidget;
     ShowMatrixWidget* showMatrixWidget;
     QPushButton* edit;
@@ -40,10 +39,6 @@ public: //fonctions
 private slots:
 
 	void compute_selection();
-
-public slots:
-
-     void updateView (QList<QStandardItem*> newLine);
         
 signals:
 

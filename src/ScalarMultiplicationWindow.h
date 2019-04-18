@@ -1,26 +1,26 @@
 
-#ifndef PowerWindow_H
-#define PowerWindow_H
+#ifndef ScalarMultiplicationWindow_H
+#define ScalarMultiplicationWindow_H
 
 
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QSpinBox>
+#include <QLineEdit>
 #include "MatrixLibrary.h"
 #include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
 
 
-class PowerWindow : public QDialog
+class ScalarMultiplicationWindow : public QDialog
 {
 
     Q_OBJECT
 
     public:
 
-        PowerWindow (MatrixLibrary* lib, QWidget* parent = nullptr);
-        ~PowerWindow ();
+        ScalarMultiplicationWindow (MatrixLibrary* lib, QWidget* parent = nullptr);
+        ~ScalarMultiplicationWindow ();
 
     private slots:
 
@@ -31,10 +31,10 @@ class PowerWindow : public QDialog
 
         MatrixLibrary* lib;
         MatrixViewWidget* op1View;
-        QSpinBox* op2Edit;
+        QLineEdit* op2Edit;
         QString op1Name;
         const Matrix* op1;
-        int op2;
+        double op2;
         Matrix result;
         QLabel* formula;
         ShowMatrixWidget* resultImg;

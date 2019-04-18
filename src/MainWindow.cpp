@@ -6,12 +6,14 @@
 #include <QDir>
 #include <QDebug>
 
-
 #include "AdditionWindow.h"
 #include "SoustractionWindow.h"
 #include "MultiplicationWindow.h"
 #include "DivisionWindow.h"
 #include "PowerWindow.h"
+#include "ScalarMultiplicationWindow.h"
+
+#include "DeterminantWindow.h"
 
 
 MainWindow:: MainWindow() : QMainWindow()
@@ -135,41 +137,65 @@ MainWindow:: MainWindow() : QMainWindow()
 
     setFunctorTab();
     setCentralWidget(mainWidget);
+
+
+
+
+    // Aide pour le Debug
+
+    Matrix a (3,3, Matrix::I);
+    Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
+    Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
+    Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
+    addNewMatrix("A", a);
+    addNewMatrix("B", b);
+    addNewMatrix("C", c);
+    addNewMatrix("D", d);
 }
 
 
 void MainWindow::setFunctorTab()
 {
     createWindow[0] =
-    [this] () -> QWidget*
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-         return new AdditionWindow(&lib, this);
+         return new AdditionWindow(lib, parent);
     };
     createWindow[1] =
-    [this] () -> QWidget*
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-         return new SoustractionWindow(&lib, this);
+         return new SoustractionWindow(lib, parent);
     };
     createWindow[2] =
-    [this] () -> QWidget*
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-         return new MultiplicationWindow(&lib, this);
+         return new MultiplicationWindow(lib, parent);
     };
     createWindow[3] =
-    [this] () -> QWidget*
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-         return new DivisionWindow(&lib, this);
+         return new DivisionWindow(lib, parent);
     };
     createWindow[4] =
-    [this] () -> QWidget*
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-         return new PowerWindow(&lib, this);
+         return new PowerWindow(lib, parent);
+    };
+    createWindow[5] =
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    {
+        return new ScalarMultiplicationWindow(lib, parent);
+    };
+    createWindow[6] =
+    [] (MatrixLibrary*lib, QWidget* parent) -> QWidget*
+    {
+        return new DeterminantWindow(lib, parent);
     };
 }
 
 void MainWindow:: compute_choice (const unsigned int choice)
 {
-    QWidget* newWindow = createWindow[choice]();
+    QWidget* newWindow = createWindow[choice](&lib, this);
     newWindow->setAttribute(Qt::WA_DeleteOnClose);
     newWindow->show();
 }
@@ -180,6 +206,12 @@ void MainWindow:: show_library()
     libWindow->setAttribute(Qt::WA_DeleteOnClose);
     libWindow->show();
     hide();
+}
+
+
+void MainWindow:: addNewMatrix(const QString name, const Matrix matrix)
+{
+    lib.addMatrix(name.toStdString(), matrix);
 }
 
 

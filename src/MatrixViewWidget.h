@@ -24,8 +24,9 @@ private:
 
 public slots:
 
-    void update(const std::function<bool(Matrix*)> filter =
+    void refresh(const std::function<bool(Matrix*)> filter =
     [](const Matrix*) -> bool {return true;});
+    void addNewRow(const QString name, const Matrix matrix);
 };
 
 #endif
