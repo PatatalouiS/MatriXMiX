@@ -12,6 +12,7 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     //this->setStyleSheet(menuStyle);
 
     menuFile = addMenu("Fichier");
+    menuFile->setCursor(Qt::PointingHandCursor);
 
     actionSave = new QAction("Sauvegarder" , this);
     menuFile -> addAction(actionSave);
@@ -22,21 +23,17 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     menuFile -> addAction(actionLoad);
 
     menuMatrix = addMenu("Matrice");
+    menuMatrix->setCursor(Qt::PointingHandCursor);
 
     libraryMatrix = new QAction("Librarie" , this);
+    libraryMatrix-> setToolTip("Ici vous pouvez creer et visualiser les matrices");
     menuMatrix -> addAction(libraryMatrix);
-
     connect(libraryMatrix, &QAction::triggered, this, &MenuBar::show_library);
-    libraryMatrix-> setToolTip("lala");
-
-    /*menuMatrix -> addSeparator();
-
-    showMatrix = new QAction("Visualiser" , this);
-    menuMatrix -> addAction(showMatrix);
-    connect(showMatrix, &QAction::triggered, this, &MainWindow::show_library); */
 
     menuHelp = addMenu("Aide");
+    menuHelp->setCursor(Qt::PointingHandCursor);
     menuQuit = addMenu("Quitter");
+    menuQuit->setCursor(Qt::PointingHandCursor);
 }
 
 MenuBar::~MenuBar()
@@ -51,11 +48,3 @@ void MenuBar:: show_library()
     hide();
 }
 
-/*void MenuBar::show_add_matrix()
-{
-    AddMatrixWidget* add = new AddMatrixWidget(&lib,this);
-    LibraryWindow* libWindow = new LibraryWindow(add , &lib);
-    //libWindow->setAttribute(Qt::WA_DeleteOnClose);
-    libWindow->show();
-    hide();
-} */
