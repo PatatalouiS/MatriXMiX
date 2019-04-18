@@ -35,7 +35,9 @@ HEADERS += src/Matrix.h \
     src/MultiplicationWindow.h \
     src/DivisionWindow.h \
     src/PowerWindow.h \
-    src/Error.h
+    src/Error.h \
+    src/ScalarMultiplicationWindow.h \
+    src/DeterminantWindow.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -54,6 +56,8 @@ SOURCES += src/main.cpp \
     src/MultiplicationWindow.cpp \
     src/DivisionWindow.cpp \
     src/PowerWindow.cpp \
-    src/Error.cpp
+    src/Error.cpp \
+    src/ScalarMultiplicationWindow.cpp \
+    src/DeterminantWindow.cpp
 
 
