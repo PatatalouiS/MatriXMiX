@@ -21,6 +21,8 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     remove = new QPushButton("Supprimer");
     edit->setMinimumSize(100,50);
     remove->setMinimumSize(100,50);
+    edit->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
+    remove->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
     QHBoxLayout* viewFooterLayout = new QHBoxLayout;
     viewFooterLayout->addWidget(edit);
     viewFooterLayout->addWidget(remove);
@@ -32,6 +34,13 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     QTabWidget* choice = new QTabWidget;
     choice->addTab(showMatrixWidget, "Visualiser");
     choice->addTab(addMatrixWidget, "Ajouter");
+    choice->setStyleSheet(
+        "QTabBar::tab { background:"
+        "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 darkGrey);"
+        "color: black; padding: 10px; border-radius: 6px; border:1px solid darkGrey ;} "
+        "QTabBar::tab:selected { background: "
+        "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue); color:white } "
+        "QTabWidget::tab-bar { alignment : center} ");
 
     QHBoxLayout* mainLayout = new QHBoxLayout;
     mainLayout->addLayout(matrixViewLayout);
@@ -47,7 +56,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
             qobject_cast<MainWindow*>(main), &MainWindow::addNewMatrix);
 }
-
 
 void LibraryWindow:: compute_selection()
 {

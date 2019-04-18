@@ -4,6 +4,8 @@
 #include <QList>
 #include <QMenuBar>
 #include <QLinearGradient>
+#include <QGroupBox>
+#include "MenuBar.h"
 #include "LibraryWindow.h"
 
 class MainWindow : public QMainWindow
@@ -21,13 +23,20 @@ class MainWindow : public QMainWindow
     
         void addNewMatrix(const QString name, const Matrix matrix);
         void compute_choice (const unsigned int choice);
-        void show_library ();
     
     private:
+
+        // members
     
-        QList<QPushButton*> operations;
+        MenuBar* menuBar;
         MatrixLibrary lib;
         std::function<QWidget*(MatrixLibrary*, QWidget*)> createWindow [10];
 
+        // functions
+
         void setFunctorTab ();
+        void show_library ();
+        QGroupBox *initBinaryOp();
+        QGroupBox *UnaryOp();
+        QGroupBox *DiagonalisationOp();
 };
