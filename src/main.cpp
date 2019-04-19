@@ -20,35 +20,47 @@ int main (int argc, char* argv[])
     MatrixLibrary lib;
     vector<string> resultat;
     lib.cleanSaves();
-    string expression1("((objet-1)+x*tmp/8)/25-12");
+    string expression1("");
 
+
+    cout << lib.isCalculableExpression("a+3+b") << endl;
+
+
+
+
+
+
+
+
+
+    /*
     Matrix a (2,2,{1,0,0,1});
-    Matrix b (2,2,{0,0,0,1});
+    Matrix b (2,2,{5,0,0,1});
     Matrix res;
 
     lib.addMatrix("identite",a);
     lib.addMatrix("matrice",b);
-    /*lib.saveMatrix("identite");
-    lib.saveMatrix("matrice");*/
+    lib.saveMatrix("identite");
+    lib.saveMatrix("matrice");
 
 
     // resultat = lib.decoupe("matrice^-1");
 
-    /*lib.polonaise("matrice*2+(identite^-1)",resultat);
+    lib.polonaise("matrice*2+(identite^-1)",resultat);
 
     for(unsigned int i = 0 ; i < resultat.size() ; i++)
     {
         cout << resultat[i]<<endl;
-    }*/
+    }
 
 
 
 
-   res = lib.expressionCalcul("matrice*2-(identite^-1)+identite*4");
+   res = lib.expressionCalcul("identite*2+matrice^-1");
    // res=a^-1;
    cout << res << endl;
 
-
+*/
 
 
 

@@ -91,24 +91,7 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 }
 
 
-bool MatrixLibrary:: isAuthorisedName(const string & chaine)
-{
-    unsigned long int i=0, s=chaine.length();
-
-    while (i<s)
-    {
-        if ( ((chaine[i]>='A') && (chaine[i]<='Z'))
-            || ((chaine[i]>='a') && (chaine[i]<='z'))
-            || ((chaine[i]>='0') && (chaine[i]<='9')) )
-            i++;
-        else return false;
-    }
-
-    return true;
-}
-
-
-bool MatrixLibrary:: isName(const string & chaine)
+bool MatrixLibrary:: isName(const string & chaine) const
 {
     unsigned long int i = 1, s = chaine.length();
 
@@ -129,7 +112,7 @@ bool MatrixLibrary:: isName(const string & chaine)
 }
 
 
-bool MatrixLibrary:: isFloat(const string & chaine)
+bool MatrixLibrary:: isFloat(const string & chaine) const
 {
     unsigned long int i = 0, s = chaine.length();
     unsigned short int nbcoma = 0;
@@ -151,7 +134,7 @@ bool MatrixLibrary:: isFloat(const string & chaine)
 }
 
 
-bool MatrixLibrary:: isOperator (const string & chaine)
+bool MatrixLibrary:: isOperator (const string & chaine) const
 {
     return ( (chaine == "+")
              ||  (chaine == "-")
@@ -161,7 +144,7 @@ bool MatrixLibrary:: isOperator (const string & chaine)
 }
 
 
-vector<string> MatrixLibrary:: decoupe (const string & expression)
+vector<string> MatrixLibrary:: decoupe (const string & expression) const
 {
     unsigned int i;
     unsigned  long taille =expression.length();
@@ -368,6 +351,104 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
     res=find(pile.top());
 
     return *res;
+}
+
+
+string MatrixLibrary:: isCalculableExpression(const string & expression) const
+{
+    vector<string> result = decoupe(expression);
+    string temp;
+    unsigned long int i, s = result.size();
+
+    string calculable = "";
+    string error1 = "Expression vide" ;
+
+    if (s == 0)
+        return error1;
+    if (s == 1)
+        return calculable;
+
+
+    string error2 = "Parenthèse fermante détectée..."
+                    "\nVeuillez vérifier l'organisation des parenthèse" ;
+    string error3a = "Calcul de " ;
+    string error3b = " impossible" ;
+    string error4 = " doit être un réel" ;
+    string error5 = "\nPour les puissances négatives, veuillez utiliser '~' pour inverser, puis '^' pour l'exposant" ;
+    string error6 = "\nUn réel doit être précédé d'un opérateur de calcul (+,-,*,/,^)" ;
+    string error7 = "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
+    string error8 = "Hormis '~' et '^' les caractères spéciaux ne sont pas admis";
+    short int nbp = 0;
+
+    for(i = 0; i < s; i++)
+    {
+        temp = result[i];          //   <    >
+
+        if (temp == "(")
+        {
+            nbp++;
+        }
+        else if (temp == ")")
+        {
+            nbp--;
+            if (nbp < 0)
+                return error2;
+        }
+
+            else if (isName(temp))
+            {
+                if (i == 1)
+                    return (error3a + result[i-1] + temp + error3b);
+                if (i == s-2)
+                    return (error3a + temp + result[i+1] + error3b);
+
+                if ( (i > 1) && (i < s-2) )
+                {
+                    if (!isOperator(result[i-1]))
+                        return (error3a+result[i-1]+error3b);
+                    else if ( (!isName(result[i-2])) && (!isFloat(result[i-2])) )
+                        return (error3a + result[i-2] + result[i-1] + temp + error3b);
+
+                    if (result[i+1] == "^")
+                    {
+                        if (!isFloat(result[i+2]))
+                            return (error3a + temp + result[i+1] + result[i+2] + error3a + "\n" + result[i+2] + error4);
+                        if ( atoi(result[i+2].c_str()) < -1 )
+                            return (error3a + temp + result[i+1] + result[i+2] + error3a + error5);
+                        // ATTENTION AUX REELS/ENTIERS !!!!
+                    }
+
+                }
+
+            }
+
+
+                else if (isFloat(temp))
+                        {
+
+                            if (i == 1)
+                                return (error3a + result[i-1] + temp + error3b);
+                            if (i == s-2)
+                                return (error3a + temp + result[i+1] + error3b);
+                            if (i == s-1)
+                                if (result[i-1] != "^" && result[i-1] != "*")
+                                    return (error3a + result[i-1] + temp + error3b);
+
+                            if (!isOperator(result[i-1]))
+                                if (result[i-1] != "^")
+                                    return (error3a + result[i-1] +temp + error3b + error6);
+
+
+                            if ( !isOperator(result[i+1]) && result[i+1] != "^" )
+                                return (error3a + temp + result[i+1] + error3b);
+                        }
+
+   }
+
+    if (nbp != 0)
+        return error7;
+
+    return calculable;
 }
 
 
