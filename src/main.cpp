@@ -28,13 +28,12 @@ int main (int argc, char* argv[])
 
     lib.addMatrix("identite",a);
     lib.addMatrix("matrice",b);
-    /*lib.saveMatrix("identite");
-    lib.saveMatrix("matrice");*/
+    lib.saveMatrix("identite");
+    lib.saveMatrix("matrice");
 
 
-    // resultat = lib.decoupe("matrice^-1");
 
-    /*lib.polonaise("matrice*2+(identite^-1)",resultat);
+   /* lib.polonaise("1+5*indentite",resultat);
 
     for(unsigned int i = 0 ; i < resultat.size() ; i++)
     {
@@ -44,21 +43,9 @@ int main (int argc, char* argv[])
 
 
 
-   res = lib.expressionCalcul("matrice*2-(identite^-1)+identite*4");
+   res = lib.expressionCalcul("identite+3+matrice");
    // res=a^-1;
    cout << res << endl;
-
-
-
-
-
-    //lib.addMatrix("I+B",res);
-    //lib.saveMatrix("I+B");
-
-    //cout << lib.readMatrix("I+B") << endl << endl;
-
-
-
 
     return 0;
 

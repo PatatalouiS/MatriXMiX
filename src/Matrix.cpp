@@ -153,6 +153,20 @@ unsigned int Matrix:: getNbCols() const
 }
 
 
+void Matrix:: setNbRows(unsigned int row)
+{
+    this->rows=row;
+    tab=(vector<vector<double>>(rows,vector<double> (cols,0)));
+}
+
+
+void Matrix:: setNbCols(unsigned int col)
+{
+     this->cols=col;
+    tab=(vector<vector<double>>(rows,vector<double> (cols,0)));
+}
+
+
 double& Matrix:: getVal ( const unsigned int indice )
 {
     if ( indice >= (rows * cols))
@@ -216,6 +230,29 @@ ostream& operator << (ostream& flux, const Matrix & m)
         }
         flux << endl;
     }
+    return flux;
+}
+
+
+istream& operator >> (istream& flux, Matrix & m)
+{
+    unsigned int i,j,rows,cols;
+    cout<<"Entrez le nombre de lignes puis de colonnes"<<endl;
+    flux>>rows>>cols;
+    double value;
+    m.setNbRows(rows);
+    m.setNbCols(cols);
+
+    cout<<"Entrez les valeurs de la matrice"<<endl;
+    for ( i = 0; i < rows; ++i )
+    {
+        for ( j = 0; j < cols; ++j )
+        {
+            flux >> value;
+            m.tab[i][j]=value;
+        }
+    }
+
     return flux;
 }
 
@@ -332,6 +369,12 @@ const Matrix Matrix:: operator * (const double & lambda) const
         }
     }
     return copy;
+}
+
+
+const Matrix operator * (const double & lambda, const Matrix & m)
+{
+    return m*lambda;
 }
 
 

@@ -27,16 +27,19 @@ class MatrixLibrary
 	void erase (const std:: string & name);
 	const std::map<std::string, Matrix>& data () const;
     
-    bool isAuthorisedName(const std::string & name);
     bool isName(const std::string & chaine);
     bool isFloat(const std::string & chaine);
 
 	bool isOperator (const std::string & chaine);
 	std::vector<std::string> decoupe (const std::string & expression);
-	Matrix calculate (const std::string & op, const std::string & a, const std::string & b); 
+    Matrix calculate (const std::string & op, const std::string & a, const std::string & b);
+    double calculateFloat (const std::string & op, const std::string & a, const std::string & b);
+    Matrix calculateMatrixFloat (const std::string & op, const std::string & a, const float & b);
+    Matrix calculateFloatMatrix (const std::string & op, const std::string & a, const float & b);
 	bool priorite_sup_egal (const std::string & opd,const std::string & opg);
 	void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
 	Matrix expressionCalcul(const std::string & chaine);
+
     const std::string saveRights(const std::string & matrixname);
     void saveMatrix (const std::string & matrixname);
     void cleanSaves();

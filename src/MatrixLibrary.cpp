@@ -61,7 +61,9 @@ void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::
 
 void MatrixLibrary:: addMatrix (const string& name, const Matrix& m)
 {
-    tab.insert({name, m});
+    if (isName(name))
+        tab.insert({name, m});
+    else cout<<"Nom de matrice non autorisé, veuillez choisir un autre..."<<endl;
 }
 
 
@@ -88,23 +90,6 @@ void MatrixLibrary:: erase (const string & name)
 const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 {
     return tab;
-}
-
-
-bool MatrixLibrary:: isAuthorisedName(const string & chaine)
-{
-    unsigned long int i=0, s=chaine.length();
-
-    while (i<s)
-    {
-        if ( ((chaine[i]>='A') && (chaine[i]<='Z'))
-            || ((chaine[i]>='a') && (chaine[i]<='z'))
-            || ((chaine[i]>='0') && (chaine[i]<='9')) )
-            i++;
-        else return false;
-    }
-
-    return true;
 }
 
 
@@ -157,6 +142,7 @@ bool MatrixLibrary:: isOperator (const string & chaine)
              ||  (chaine == "-")
              ||  (chaine == "/")
              || (chaine == "^")
+             || (chaine == "~")
              || (chaine == "*"));
 }
 
@@ -196,20 +182,85 @@ Matrix MatrixLibrary:: calculate (const string & op, const string & a, const str
     const Matrix* m_a;
     const Matrix* m_b;
 
-    m_a=find(a);
-    m_b=find(b);
+    m_a = find(a);
+    m_b = find(b);
 
-    if(op=="+")
-        return *m_a+*m_b;
+    if(op == "+")
+        return *m_a + *m_b;
 
-    if(op=="-")
-        return *m_a-*m_b;
+    if(op == "-")
+        return *m_a - *m_b;
 
-    if(op=="*")
+    if(op == "*")
         return *m_a * *m_b;
 
-    if(op=="/")
+    if(op == "/")
         return *m_a / *m_b;
+
+    else return *m_a;
+}
+
+
+double MatrixLibrary:: calculateFloat (const std::string & op, const std::string & a, const std::string & b)
+{
+    if(op == "+")
+        return atof(a.c_str()) + atof(b.c_str());
+
+    if(op == "-")
+        return atof(a.c_str()) - atof(b.c_str());
+
+    if(op == "*")
+        return atof(a.c_str()) * atof(b.c_str());
+
+    if((op == "/") && (atof(b.c_str())!=0.0))
+        return atof(a.c_str()) / atof(b.c_str());
+
+    else return 0.0;
+}
+
+
+Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::string & a, const float & b)
+{
+    const Matrix* m_a;
+    m_a=find(a);
+
+    Matrix identite(m_a->getNbRows(),m_a->getNbCols(),Matrix::I);
+    Matrix bmatrix;
+    bmatrix=static_cast<const double>(b)*identite;
+
+
+
+    if(op == "+")
+        return *m_a + bmatrix ;
+
+    if(op == "-")
+        return *m_a - bmatrix;
+
+    if(op == "/")
+    {
+        double scale;
+        scale = static_cast<double>(1/b);
+        return *m_a * scale;
+    }
+
+    else return *m_a;
+}
+
+
+Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::string &a, const float &b)
+{
+    const Matrix* m_a;
+    m_a = find(a);
+
+    Matrix identite(m_a->getNbRows(),m_a->getNbCols(),Matrix::I);
+    Matrix bmatrix;
+    bmatrix=static_cast<const double>(b)*identite;
+
+    if(op == "+")
+        return *m_a + bmatrix ;
+
+    if(op == "-")
+        return bmatrix - *m_a;
 
     else return *m_a;
 }
@@ -220,18 +271,23 @@ bool MatrixLibrary:: priorite_sup_egal (const string & opd,const string & opg)
     switch (opd[0])
     {
         case '*':
-            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
 
         case '/':
-            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
 
         case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
 
         case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
         case '^':
-            return (opg[0] == '^');
+            return ((opg[0] == '^') || (opg[0] == '~'));
+
+        case '~':
+            return ((opg[0] == '^') || (opg[0] == '~'));
+
         default: return false;
     }
 }
@@ -301,71 +357,90 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
     int nom=0;
 
     unsigned long int i;
-    //unsigned long int s = polish.size();
 
     for (i = 0; i < polish.size(); i++ )
     {
-        if ((polish[i] == "^") && (polish[i+1] == "1") && (polish[i+2] == "-"))
+        if (polish[i] == "~")
         {
             string a = pile.top();
             pile.pop();
 
             temp= *(find(a))^-1;
-            i=i+2;
 
             identify = static_cast<char>('0'+ nom);
             pile.push("temp" + identify);
             addMatrix("temp" + identify,temp);
             nom++;
         }
-        else if (isOperator(polish[i]))
+        else if ((isOperator(polish[i])) && (polish[i] != "~"))
         {
             string b = pile.top();
             pile.pop();
-            string a=pile.top();
+            string a = pile.top();
             pile.pop();
 
-
-            if ( isName(b) && isName(a) )
+            if ((isName(b) && isName(a)) || (isFloat(a) && isName(b)) || (isFloat(b) && isName(a)) )
             {
-                temp = calculate(polish[i],a,b);
-            }
-            else if ( isFloat(a) && isName(b))
-            {
-                temp = *(find(b)) * atof(a.c_str());
-            }
-                else if ( isFloat(b) && isName(a) )
+                if ((isName(b) && isName(a)))
+                {
+                    temp = calculate(polish[i],a,b);
+                }
+                else if (isFloat(b) && isName(a))
                 {
                     if(polish[i] == "*")
                     {
                         temp = *(find(a)) * atof(b.c_str());
                     }
-                    else
+                    else if (polish[i] == "^")
                     {
                         temp= *(find(a)) ^ (atoi(b.c_str()));
                     }
-
-                }
                     else
                     {
-                        cout << "Caractère spécial détecté..."
-                                "\nVeuillez rééssayer (gestion erreur... +1 point :)" << endl;
+                        float scale;
+                        scale = static_cast<float>(atof(b.c_str()));
+                        temp = calculateMatrixFloat(polish[i],a,scale);
                     }
+                }
+                else if (isFloat(a) && isName(b))
+                {
+                    if(polish[i] == "*")
+                    {
+                        temp = *(find(b)) * atof(a.c_str());
+                    }
+                    else
+                    {
+                        float scale;
+                        scale = static_cast<float>(atof(a.c_str()));
+                        temp = calculateFloatMatrix(polish[i],b,scale);
+                    }
+                }
 
-            identify = static_cast<char>('0'+ nom);
-            pile.push("temp" + identify);
-            addMatrix("temp" + identify,temp);
-            nom++;
-
-        }
+                identify = static_cast<char>('0'+ nom);
+                pile.push ("temp" + identify);
+                addMatrix ("temp" + identify, temp);
+                nom++;
+            }
+            else if (  isFloat(a) && isFloat(b) )
+            {
+                ostringstream ss;
+                ss << calculateFloat (polish[i],a,b);
+                string res = ss.str();
+                pile.push(res);
+            }
             else
             {
-                 pile.push(polish[i]);
+                cout << "Caractère spécial détecté..."
+                        "\nVeuillez rééssayer (gestion erreur... +1 point :)" << endl;
             }
+        }
+        else
+        {
+            pile.push(polish[i]);
+        }
     }
-
     const Matrix* res;
-    res=find(pile.top());
+    res = find(pile.top());
 
     return *res;
 }
