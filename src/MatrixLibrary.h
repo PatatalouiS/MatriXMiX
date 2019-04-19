@@ -1,6 +1,6 @@
 
-#ifndef _MATRIX_LIBRARY_
-#define _MATRIX_LIBRARY_
+#ifndef MATRIX_LIBRARY
+#define MATRIX_LIBRARY
 
 #include "Matrix.h"
 #include <map>
@@ -21,11 +21,28 @@ class MatrixLibrary
     bool isEmpty () const;
 	bool exist (const std::string& name) const;
     void print () const;
+    void copy_vector(std::vector<std::string>& expression,const std::vector<std::string>&resultat);
 	void addMatrix (const std::string& name, const Matrix& m);
 	const Matrix* find (const std::string& name) const;
 	Matrix* find (const std::string& name);
 	void erase (const std:: string & name);
-    const std::map<std::string, Matrix>& data () const;
+	const std::map<std::string, Matrix>& data () const;
+    
+    bool isAuthorisedName(const std::string & name);
+    bool isName(const std::string & chaine);
+    bool isFloat(const std::string & chaine);
+
+	bool isOperator (const std::string & chaine);
+	std::vector<std::string> decoupe (const std::string & expression);
+	Matrix calculate (const std::string & op, const std::string & a, const std::string & b); 
+	bool priorite_sup_egal (const std::string & opd,const std::string & opg);
+	void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
+	Matrix expressionCalcul(const std::string & chaine);
+    const std::string saveRights(const std::string & matrixname);
+    void saveMatrix (const std::string & matrixname);
+    void cleanSaves();
+    Matrix readMatrix(const std::string & matrixname);
+
 };
 
 

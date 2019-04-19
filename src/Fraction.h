@@ -2,8 +2,8 @@
 // Created by tarik on 09/03/19.
 //
 
-#ifndef _FRACTION_H
-#define _FRACTION_H
+#ifndef FRACTION_H
+#define FRACTION_H
 
 #include <iostream>
 using namespace std;
@@ -12,19 +12,17 @@ class Fraction
 {
 
 private:
-
-    int numerateur, denominateur;
+    long int numerateur, denominateur;
 
 public:
-
     Fraction();
-    Fraction(const int & n);
-    Fraction(const int & n, const int & m);
+    Fraction(const long int & n);
+    Fraction(const long int & n, const long int & m);
     void afficher(std::ostream& out) const;
     bool estEgal(const Fraction & f) const;
     bool estPlusPetitQue(const Fraction & f) const;
     Fraction& operator+=(const Fraction & f);
-    int pgcd(int a, int b);
+    long int pgcd(long int a, long int b);
     void simplifie();
     Fraction double2Fraction(const double & f);
 

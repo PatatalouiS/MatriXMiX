@@ -1,13 +1,13 @@
 
-#ifndef _MATRIX_H
-#define _MATRIX_H
+#ifndef MATRIX_H
+#define MATRIX_H
 
 
 #include <vector>
-#include <string>
-#include "VectorX.h"
-#include <string.h>
 #include <Dense>
+#include "VectorX.h"
+#include "Polynomial.h"
+
 
 class Matrix
 {
@@ -16,20 +16,18 @@ private:
     unsigned int rows;
     unsigned int cols;
     std::vector<std::vector<double>> tab;
-    
+
+public:
+    static const std::vector<double> vector_noEigen;
+    static const std::vector<std::pair<double,VectorX>> vector_pair_noEigen;
+    static const Matrix matrix_noEigen;
     
     
 private:
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     double determinant(unsigned int dim) const;
-    bool isOperator (const std::string & chaine);
-    std::vector<std::string> decoupe (const std::string & expression);
-    Matrix calculate (const std::string & op, const std::string & a, const std::string & b);
-    const std::string saveRights(const std::string & filename, const std::string & matrixname);
-    bool priorite_sup_egal (const std::string & opd,const std::string & opg);
-    void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
-    Eigen::MatrixXd class2Eigen ();
-    Matrix eigen2Class(const Eigen::MatrixXd & m);
+    Eigen::MatrixXd class2Eigen() const;
+    const Matrix eigen2Class(const Eigen::MatrixXd & m) const;
     
 public:
 
@@ -49,7 +47,16 @@ public:
     ~Matrix ();
     
     
-    //Fonctions de calcul algébrique et opérateur de calculs
+    //Accesseurs / Opérateurs de calcul / Fonctions de calcul algébrique
+    unsigned int getNbRows() const;
+    unsigned int getNbCols() const;
+    double& getVal(const unsigned int indice);
+    double getVal(const unsigned int indice) const;
+    std::vector<double>& operator [] (const unsigned int indice);
+    const std::vector<double>& operator [] (const unsigned int indice) const;
+    friend std::ostream& operator << (std::ostream& flux, const Matrix & m);
+    void setMatrixKB();
+    void setMatrixRA();
     const Matrix operator + (const Matrix & m) const;
     const Matrix operator - (const Matrix & m) const;
     const Matrix operator * (const Matrix & m) const;
@@ -58,38 +65,28 @@ public:
     const Matrix operator ^ (const int & p) const;
     bool operator == (const Matrix & m) const;
     bool operator != (const Matrix & m) const;
+    Matrix checkCast () const;
+    bool isSQMatrix() const;
     double traceMatrix() const;
     double determinant() const;
     Matrix coMatrix() const;
     Matrix transposeMatrix() const;
     Matrix inverse() const;
+    unsigned int rank() const;
  
-    
-    //Fonctions diverses et accesseurs
-    unsigned int getNbRows() const;
-    unsigned int getNbCols() const;
-    double& getVal ( const unsigned int indice );
-    double getVal ( const unsigned int indice ) const;
-    std::vector<double>& operator [] ( const unsigned int indice );
-    const std::vector<double>& operator [] ( const unsigned int indice ) const;
-    friend std::ostream& operator << ( std::ostream& flux, const Matrix & m );
-    bool isSQMatrix() const;
-    void saveMatrix();
-    void readMatrix(const std::string & matrixname);
-    void cleanSaves();
-    Matrix expressionCalcul(const std::string & chaine);
-    void testRegression();
-    void setMatrixKB();
-    void setMatrixRA();
-    
     //Fonctions d'étude poussée des matrices et utilisation de la librairie externe eigen3
-    std::vector<double> eigenValues();
-    Matrix diagonalise ();
-    std::vector<VectorX> eigenVectors();
-    Matrix transferMatrix();
-    std::vector<std::pair<double,VectorX>> allEigen();
-    void allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C);
-    bool isDiagonalisable();
+    const Matrix gaussReduction() const;
+    const std::pair<unsigned int, unsigned int> dimensionsStudy() const;
+    const std::vector<double> eigenValues() const;
+    const Polynomial characteristicPolynomial() const;
+    const std::vector<Polynomial> splitCharacteristicPolynomial() const;
+    const std::vector<VectorX> eigenVectors() const;
+    const std::vector<std::pair<double,VectorX>> allEigen() const;
+    bool isDiagonalisable() const;
+    const Matrix diagonalise() const;
+    const Matrix transferMatrix() const;
+    void allMatrix(Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const;
+    void testRegression() const;
 
 
 };

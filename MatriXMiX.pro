@@ -38,7 +38,8 @@ HEADERS += src/Matrix.h \
     src/ScalarMultiplicationWindow.h \
     src/DeterminantWindow.h \
     src/MatrixViewWidget.h \
-    src/MenuBar.h
+    src/MenuBar.h \
+    src/Gauss.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -60,6 +61,7 @@ SOURCES += src/main.cpp \
     src/Error.cpp \
     src/ScalarMultiplicationWindow.cpp \
     src/DeterminantWindow.cpp \
-    src/MenuBar.cpp
+    src/MenuBar.cpp \
+    src/Gauss.cpp
 
 

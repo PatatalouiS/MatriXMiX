@@ -1,5 +1,4 @@
 
-
 #include <iostream>
 #include <vector>
 #include <math.h>
@@ -10,6 +9,8 @@ using namespace std;
 
 
 const double EPSILON=0.00001;
+const Polynomial Polynomial:: polynomial_noEigen = Polynomial();
+
 
 
 Polynomial :: Polynomial() : tab (vector<double>(1,0))
@@ -69,10 +70,47 @@ void Polynomial:: check()
 ostream& operator << (ostream& flux, const Polynomial & p)
 {
     unsigned int i;
+    bool notfirst=false;
 
     for (i=0; i<=p.degree; i++)
     {
-        flux << p.tab[i] << " ";
+        if(p.tab[i]>0 && notfirst)
+            flux << " + " ;
+        else if(p.tab[i]<0 && notfirst)
+            flux << " " ;
+
+        if (p.tab[i]!=0.0)
+        {
+            notfirst = true;
+            if (p.tab[i]==1.0)
+            {
+                if (i==0)
+                    flux << 1 ;
+                else if (i==1)
+                    flux << "X";
+                    else
+                        flux << "X^" << i ;
+            }
+            else if (-p.tab[i]==1.0)
+            {
+                if (i==0)
+                    flux << -1 ;
+                else if (i==1)
+                    flux << "- X" ;
+                    else
+                        flux << "- X^" << i ;
+            }
+                else
+                {
+                    if (i==0)
+                        flux << p.tab[i] ;
+                    else if (i==1)
+                        flux << p.tab[i] << "X" ;
+                        else
+                            flux << p.tab[i] << "X^" << i ;
+                }
+
+        }
     }
     cout << endl;
     return flux;
@@ -93,11 +131,22 @@ Polynomial& Polynomial:: operator = (const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator + (const Polynomial & p)
+bool Polynomial:: operator == (const Polynomial & p) const
 {
-
+    if(degree!=p.degree)
+        return false;
     unsigned int i;
+    for(i = 0; i < degree; i++)
+        if (tab[i] - p.tab[i] != 0.0)
+            return false;
 
+    return true;
+}
+
+
+const Polynomial Polynomial:: operator + (const Polynomial & p)const
+{
+    unsigned int i;
     if (degree>p.degree)
     {
         Polynomial resultat(*this);
@@ -125,7 +174,7 @@ const Polynomial Polynomial:: operator + (const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator - (const Polynomial & p)
+const Polynomial Polynomial:: operator - (const Polynomial & p)const
 {
     unsigned int i, mindegree;
 
@@ -154,7 +203,7 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator *(const Polynomial & p)
+const Polynomial Polynomial:: operator * (const Polynomial & p)const
 {
     unsigned int i,j,k,d=degree+p.degree;
     Polynomial result(d);
@@ -180,56 +229,20 @@ const Polynomial Polynomial:: operator *(const Polynomial & p)
 }
 
 
-const Polynomial Polynomial:: operator *(const float & scale)
+const Polynomial Polynomial:: operator * (const double & scale)const
 {
     unsigned int i;
+    Polynomial p(*this);
     for (i=0; i<=degree; i++)
     {
-        tab[i]*=scale;
+        p.tab[i]*=scale;
     }
-    check();
-    return (*this);
+    p.check();
+    return p;
 }
 
 
-void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, double & x2)
-{
-    if (degree!=2)
-    {
-        cout << "C'est pas du second degré ça :/" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    double a,b,c;
-    Polynomial copie(*this);
-    copie.check();
-    a=copie.tab[2];
-    b=copie.tab[1];
-    c=copie.tab[0];
-
-    double delta=b*b-4*a*c;
-
-    if(delta<0)
-    {
-        nbsolution=0;
-    }
-        else if (delta==0)
-        {
-            nbsolution=1;
-            x1=-b/(2*a);
-        }
-        else
-            {
-                nbsolution=2;
-                double r=sqrt(delta);
-                x1=(-b-r)/(2*a);
-                x2=(-b+r)/(2*a);
-            }
-
-}
-
-
-const Polynomial Polynomial:: division (const Polynomial & divisor, Polynomial & reste)
+const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & reste)
 {
     Polynomial quotient(degree - divisor.degree);
     Polynomial copy(*this);
@@ -255,7 +268,8 @@ const Polynomial Polynomial:: division (const Polynomial & divisor, Polynomial &
 
     tampon=0;
     k=reste.degree;
-    while (reste.tab[k]==0)
+
+    while (reste.tab[k] == 0.0)
     {
         tampon++;
         k--;
@@ -272,3 +286,42 @@ const Polynomial Polynomial:: division (const Polynomial & divisor, Polynomial &
 
     return quotient;
 }
+
+
+void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, double & x2)
+{
+    if (degree!=2)
+    {
+        cout << "C'est pas du second degré ça :/" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    double a,b,c;
+    Polynomial copie(*this);
+    copie.check();
+    a=copie.tab[2];
+    b=copie.tab[1];
+    c=copie.tab[0];
+
+    double delta=b*b-4*a*c;
+
+    if(delta < 0)
+    {
+        nbsolution=0;
+    }
+        else if (delta == 0.0)
+        {
+            nbsolution=1;
+            x1=-b/(2*a);
+        }
+        else
+            {
+                nbsolution=2;
+                double r=sqrt(delta);
+                x1=(-b-r)/(2*a);
+                x2=(-b+r)/(2*a);
+            }
+
+}
+
+

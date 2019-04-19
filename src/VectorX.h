@@ -1,6 +1,6 @@
 
-#ifndef _VECTOR_X_
-#define _VECTOR_X_
+#ifndef VECTOR_X
+#define VECTOR_X
 
 #include <vector>
 

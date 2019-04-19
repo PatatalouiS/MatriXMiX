@@ -1,10 +1,9 @@
 
 #include <QApplication>
-#include <iostream>
-#include <QDir>
-#include <QDebug>
 #include "MainWindow.h"
-#include "LibraryWindow.h"
+
+
+
 
 using namespace std;
 

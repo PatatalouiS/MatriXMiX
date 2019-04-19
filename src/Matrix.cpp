@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <complex>
 #include <fstream>
 #include <cstring>
 #include <cassert>
@@ -9,12 +10,17 @@
 #include <utility>
 #include <Dense>
 #include "Matrix.h"
+#include "Gauss.h"
 
 
 using namespace std;
 
-const double EPSILON = 0.000001;
+const double EPSILON = 0.0001;
 const string PATH = "../../data/sauvegarde.txt";
+
+const vector<double> Matrix:: vector_noEigen = vector<double>();
+const vector<pair<double,VectorX>> Matrix:: vector_pair_noEigen = vector<pair<double,VectorX>>();
+const Matrix Matrix:: matrix_noEigen = Matrix();
 
 
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
@@ -116,6 +122,9 @@ Matrix:: ~Matrix ()
 
 
 
+
+
+
 // ******** FONCTIONS STATIQUES *********
 
 
@@ -129,8 +138,117 @@ Matrix Matrix:: ID (const unsigned int size)
 
 
 
-
 // ******* FONCTIONS DE CALCUL ALGEBRIQUE ET OPERATEURS DE CALCUL ********
+
+
+unsigned int Matrix:: getNbRows() const
+{
+    return rows;
+}
+
+
+unsigned int Matrix:: getNbCols() const
+{
+    return cols;
+}
+
+
+double& Matrix:: getVal ( const unsigned int indice )
+{
+    if ( indice >= (rows * cols))
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+
+    return tab[indice/rows][indice%rows];
+}
+
+
+double Matrix:: getVal ( const unsigned int indice ) const
+{
+    if ( indice >= (rows * cols))
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+
+    return tab[indice/rows][indice%rows];
+}
+
+
+vector<double>&  Matrix:: operator [] ( const unsigned int indice )
+{
+    if ( indice >= rows)
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+    return tab[indice];
+}
+
+
+const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
+{
+    if ( indice >= rows)
+    {
+        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        exit ( EXIT_FAILURE );
+    }
+    return tab[indice];
+}
+
+
+ostream& operator << (ostream& flux, const Matrix & m)
+{
+    for (auto i : m.tab)
+    {
+        for (auto j : i)
+        {
+            if(static_cast<int>(j*1000000) == 0)
+            {
+                flux << "0" << "  ";
+            }
+            else
+            {
+                flux << j << "  ";
+            }
+        }
+        flux << endl;
+    }
+    return flux;
+}
+
+
+void Matrix:: setMatrixKB ()
+{
+    cout << "Saisir nblignes : ";
+    cin >> rows;
+    cout << "Saisir nbColonnes : ";
+    cin >> cols;
+
+    tab.resize(rows, vector<double>(cols));
+
+    for(unsigned int i = 1; i <= rows; ++i)
+    {
+        for(unsigned int j = 1; j <= cols; ++j)
+        {
+            cout << endl << "Saisir coeff " << "(" << i << " , " << j << ")" << ": ";
+            cin >> tab[i-1][j-1];
+        }
+    }
+}
+
+
+void Matrix:: setMatrixRA ()
+{
+    cout << "Saisir nblignes : ";
+    cin >> rows;
+    cout << "Saisir nbColonnes : ";
+    cin >> cols;
+
+    tab = Matrix(rows, cols, Matrix::R).tab;
+}
 
 
 const Matrix Matrix:: operator+ (const Matrix & m) const
@@ -224,12 +342,13 @@ const Matrix Matrix:: operator / (const Matrix & m) const
         cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
         exit (EXIT_FAILURE);
     }
-    if ( m.determinant()==0 )
+    if (m.determinant() == 0.0)
     {
         cerr << "division impossible, la metrice diviseur n'est pas inversible !" << endl;
         exit(EXIT_FAILURE);
     }
-    return (*this) * m.inverse();
+    Matrix result( (*this) * m.inverse());
+    return result.checkCast();
 }
 
 
@@ -260,23 +379,25 @@ const Matrix Matrix:: operator ^ (const int & p) const
     Matrix temp (*this);
     Matrix temp2 (*this);
 
-    for ( int i = 1; i < p; ++i )
+    for (int i=1; i<p; ++i )
     {
-        temp = temp * temp2;
+        temp = (temp * temp2);
     }
-    return temp;
+    return temp.checkCast();
 }
 
 
 bool Matrix:: operator == (const Matrix & m ) const
 {
-    if ((m.cols == cols) && (m.rows == rows))
+    unsigned int i,j ;
+
+    if ( (m.cols == cols) && (m.rows == rows) )
     {
-        for (unsigned int i = 0; i < rows; i++)
+        for (i = 0; i < rows; i++)
         {
-            for (unsigned int j = 0; j < cols; j++)
+            for (j = 0; j < cols; j++)
             {
-                if (tab[i][j] != m.tab[i][j])
+                if (tab[i][j] - m.tab[i][j] != 0.0 )
                 {
                     return false;
                 }
@@ -292,6 +413,40 @@ bool Matrix:: operator == (const Matrix & m ) const
 bool Matrix::operator != (const Matrix & m) const
 {
     return !((*this) == m);
+}
+
+
+Matrix Matrix:: checkCast() const
+{
+    Matrix result(*this);
+    unsigned int i, j, r, c;
+    r = getNbRows();
+    c = getNbCols();
+    int l;
+
+    for (i =0; i < r; i++)
+    {
+        for (j = 0; j < c; j++)
+        {
+            for (l = -150 ; l < 150; l++)
+            {
+                if ( abs(tab[i][j]-l) < EPSILON )
+                {
+                    result[i][j] = l;
+                    continue ;
+                }
+                else
+                    result[i][j] = tab[i][j];
+            }
+        }
+    }
+    return result;
+}
+
+
+bool Matrix:: isSQMatrix() const
+{
+    return rows==cols;
 }
 
 
@@ -320,6 +475,23 @@ double Matrix:: determinant() const
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
     }
+
+    unsigned int i,j,r,c;
+    r = getNbRows();
+    c = getNbCols();
+
+    for (i=0; i<r; i++)
+    {
+        for (j=0; j<c; j++)
+        {
+            if ( (i!=j) && tab[i]==tab[j])
+            {
+                return 0.0;
+            }
+        }
+    }
+
+
     return determinant(rows);
 }
 
@@ -344,7 +516,7 @@ Matrix Matrix::coMatrix() const
             com[i][j]=pow(-1,i+j)*sub.determinant();
         }
     }
-    return com;
+    return com.checkCast();
 }
 
 
@@ -356,10 +528,10 @@ Matrix Matrix:: transposeMatrix() const
     {
         for (unsigned int j=0; j<copy.cols; j++)
         {
-            copy[i][j]=tab[j][i];
+            copy[i][j] = tab[j][i];
         }
     }
-    return copy;
+    return copy.checkCast();
 }
 
 
@@ -371,7 +543,7 @@ Matrix Matrix:: inverse() const
         exit (EXIT_FAILURE);
     }
 
-    if (determinant()==0)
+    if (determinant() == 0.0)
     {
         cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
         exit(EXIT_FAILURE);
@@ -381,10 +553,38 @@ Matrix Matrix:: inverse() const
     temp=(*this).coMatrix();
     temp=temp.transposeMatrix();
     inverse=temp*(1/determinant());
-    return inverse;
+
+    return inverse.checkCast();
 }
 
 
+unsigned int Matrix:: rank()const
+{
+    unsigned int i, j, r, c, rg = 0;
+    bool non_zero = false;
+    r = getNbRows();
+    c = getNbCols();
+    Matrix copy(*this);
+    copy = copy.gaussReduction();
+
+    for (i = 0; i < r; i++)
+    {
+        non_zero = false;
+        for (j = 0; j < c; j++)
+        {
+            if (copy[i][j]!=0.0)
+            {
+                non_zero = true;
+            }
+        }
+        if (non_zero)
+        {
+            rg++;
+        }
+    }
+
+    return rg;
+}
 
 
 
@@ -423,10 +623,10 @@ Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
 
 double Matrix:: determinant(unsigned int dim) const
 {
+    unsigned int i,j,x,subi=0,subj=0;
+
     Matrix submatrix (dim,dim);
     double det = 0;
-    int subi = 0;
-    int subj = 0;
 
     if ( dim == 1 )
     {
@@ -438,13 +638,13 @@ double Matrix:: determinant(unsigned int dim) const
         return ((tab[0][0] * tab[1][1]) - (tab[1][0] * tab[0][1]));
     }
 
-    for ( unsigned int x = 0; x < dim; x++)
+    for (x=0; x<dim; x++)
     {
         subi = 0;
-        for (unsigned int i = 1; i < dim; i++)
+        for (i=1; i<dim; i++)
         {
             subj = 0;
-            for (unsigned int j = 0; j < dim; j++)
+            for (j=0; j<dim; j++)
             {
                 if (j != x)
                 {
@@ -460,315 +660,348 @@ double Matrix:: determinant(unsigned int dim) const
 }
 
 
-bool Matrix:: isOperator (const string & chaine)
+Eigen::MatrixXd Matrix:: class2Eigen () const
 {
-    return ( (chaine == "+")
-             ||  (chaine == "-")
-             ||  (chaine == "/")
-             || (chaine == "^")
-             || (chaine == "*"));
+    unsigned int i,j,r,c;
+    r = getNbRows();
+    c = getNbCols();
+    Eigen:: MatrixXd m(r,c);
+
+    for(i=0 ; i<r ; i++)
+    {
+        for(j=0 ; j<c ; j++)
+        {
+            m(i,j) = tab[i][j] ;
+        }
+    }
+
+    return m;
 }
 
 
-vector<string> Matrix:: decoupe (const string & expression)
+const Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m) const
 {
-    unsigned int i;
-    long int l =expression.length();
-    vector<string> tab;
-    string c, temp;
-    temp="";
+    unsigned int i,j,r,c ;
+    r = static_cast<unsigned int>(m.rows());
+    c = static_cast<unsigned int>(m.cols());
+    Matrix a(r,c);
 
-    for (i=0; i<l; i++)
+    for(i=0 ; i<r ; i++)
     {
-        c=expression[i];
-
-        if((isOperator(c)) || (c == ")") || (c == "(") || (c == "=") )
+        for(j=0 ; j<c ; j++)
         {
-            if (temp.length()!=0) tab.push_back(temp);
-            tab.push_back(c);
-            temp="";
+            a.tab[i][j] = m(i,j) ;
         }
-        else if (!c.empty())
-        {
-            temp+=c;
-        }
-
     }
+
+    return a;
+}
+
+
+
+
+
+
+// *********   FONCTIONS D'ETUDE DE MATRICES    *********
+
+
+const Matrix Matrix:: gaussReduction()const
+{
+    Gauss g;
+    Matrix res(*this);
+
+    int col;
+    int r = static_cast<int>(res.getNbRows()) ;
+    int c = static_cast<int>(res.getNbCols()) ;
+
+
+    int nonzero_row_id, next_row_id = 0;
+    vector<Gauss> pivot_gauss;
+
+    for (col = 0; col < c; col++)
+    {
+        nonzero_row_id = g.is_nonzero_column(res, col, r, next_row_id);
+        if (nonzero_row_id >= 0)
+        {
+            if (nonzero_row_id != next_row_id)
+            {
+                g.row_exchange(res.tab.begin() + next_row_id, res.tab.begin() + nonzero_row_id);
+                nonzero_row_id = next_row_id;
+            }
+            pivot_gauss.push_back(Gauss(nonzero_row_id, col));
+            for (int row = next_row_id; row < r; row++)
+            {
+                if (res[row][col] == 0.0)
+                    continue;
+                if (row == nonzero_row_id)
+                    continue;
+                g.row_replace(res.tab.begin() + row,
+                            res.tab.begin() + nonzero_row_id,
+                            -res.tab[row][col] / res.tab[nonzero_row_id][col]);
+            }
+            next_row_id++;
+        }
+        else
+        {
+            continue;
+        }
+    }
+
+    for (vector<Gauss>::iterator pos = pivot_gauss.end() - 1;
+         pos >= pivot_gauss.begin(); pos--)
+    {
+
+        if (pos->getVal(res) != 1.0)
+        {
+            g.row_scale(res.tab.begin() + pos->row, 1 / res.tab[pos->row][pos->col]);
+        }
+
+        for (int row = 0; row < r; row++)
+        {
+            if (res.tab[row][pos->col] != 0.0 && row != pos->row)
+            {
+                g.row_replace(res.tab.begin() + row, res.tab.begin() + pos->row,
+                            -res.tab[row][pos->col] / res.tab[pos->row][pos->col]);
+            }
+        }
+    }
+
+    return res;
+}
+
+
+const pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
+{
+    unsigned int dim_E = getNbRows();
+    unsigned int dim_im = rank();
+    unsigned int dim_ker = dim_E - dim_im;
+
+    return make_pair(dim_im,dim_ker);
+}
+
+
+const vector<double> Matrix:: eigenValues() const
+{
+    unsigned int i,n;
+    vector<double> result;
+    Eigen::MatrixXd a;
+
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
+    n = static_cast<unsigned int>(m.eigenvalues().size());
+
+    for (i=0; i<n; i++)
+    {
+        if (m.eigenvalues()(i).imag() != 0.0)
+        {
+            return Matrix::vector_noEigen;
+        }
+
+        if(abs(m.eigenvalues()(i).real()) < EPSILON)
+            result.push_back(0);
+        else
+            result.push_back(m.eigenvalues()(i).real());
+    }
+
+    return result;
+}
+
+
+const Polynomial Matrix:: characteristicPolynomial()const
+{
+    unsigned int i,r;
+    r = getNbRows();
+    Polynomial result(r);
+    Polynomial temp(1);
+
+
+
+    vector<double> eigen_values;
+    eigen_values = eigenValues();
+    if (eigen_values == vector_noEigen)
+        return Polynomial:: polynomial_noEigen;
+
+    result.tab[0] = eigen_values[0];
+    result.tab[1] = -1;
+    for(i = 2; i < r+1; i++)
+    {
+        result.tab[i] = 0;
+    }
+
+    for(i = 1; i < r; i++)
+    {
+        temp.tab[0] = eigen_values[i];
+        temp.tab[1] = -1;
+        result = result*temp;
+    }
+
+    return result;
+}
+
+
+const vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
+{
+    vector<Polynomial> result;
+    Polynomial temp(1);
+    unsigned int i,r,c;
+    r = getNbRows();
+    c = getNbCols();
+
+    vector<double> eigen_values;
+    eigen_values = eigenValues();
+
+    for(i = 0; i < r; i++)
+    {
+        temp.tab[0] = eigen_values[i];
+        temp.tab[1] = -1;
+        result.push_back(temp);
+    }
+
+    return result;
+}
+
+
+const vector<VectorX> Matrix:: eigenVectors()const
+{
+    unsigned int i, j, n=getNbRows();
+    vector<VectorX> tab;
+    VectorX temp;
+
+    Matrix a(n,n);
+    a=transferMatrix();
+
+    for(i=0; i<n; i++)
+    {
+        temp.clear();
+
+        for(j=0; j<n; j++)
+        {
+            temp.push_back(a[i][j]);
+        }
+
     tab.push_back(temp);
 
+    }
+
     return tab;
+
 }
 
 
-Matrix Matrix:: calculate (const string & op, const string & a, const string & b)
+const vector<pair<double,VectorX>> Matrix:: allEigen()const
 {
-    Matrix m_a;
-    Matrix m_b;
-    m_a.readMatrix(a);
-    m_b.readMatrix(b);
+    unsigned int i;
+    unsigned long int n;
+    vector<VectorX> e_vector;
+    vector<double> e_value;
+    vector<double> null_vect = vector<double>();
+    pair<double,VectorX> temp_pair;
+    vector<pair<double,VectorX>> result;
 
-    if(op=="+")
-        return m_a+m_b;
+    e_value = eigenValues();
+    e_vector = eigenVectors();
+    if (e_value == vector_noEigen)
+        return vector_pair_noEigen;
 
-    if(op=="-")
-        return m_a-m_b;
+    n = e_value.size();
 
-    if(op=="*")
-        return m_a*m_b;
-
-    if(op=="/")
-        return m_a/m_b;
-
-    Matrix e(1,1,{0});
-    return e;
-}
-
-
-const string Matrix:: saveRights(const string & filename, const string & matrixname)
-{
-    ifstream file (filename.c_str());
-
-    if(!file.is_open())
+    for(i=0; i<n; i++)
     {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
+        temp_pair = make_pair(e_value[i],e_vector[i]);
+        result.push_back(temp_pair) ;
+
+    }
+    return result;
+}
+
+
+bool Matrix:: isDiagonalisable()const
+{
+    if (!isSQMatrix())
+        return false;
+
+    Matrix copy(*this);
+    Matrix P1(*this);
+    Matrix P2(*this);
+
+    allMatrix(P1,copy,P2);
+
+    if (P1==P2)
+    {
+        return false;
     }
 
-    string first_string, stringpos;
+    unsigned int i, j, r, c;
+    r = copy.getNbRows();
+    c = copy.getNbCols();
 
-    file >> first_string;
-
-    while(!file.eof())
+    for(i = 0; i < r; i++)
     {
-        file >> stringpos;
-        if(stringpos==matrixname)
-            return string("used");
-    }
-
-    return first_string;
-
-}
-
-
-
-
-
-
-// *********   FONCTIONS DIVERSES ET ACCESSEURS    *********
-
-
-unsigned int Matrix:: getNbRows() const
-{
-    return rows;
-}
-
-
-unsigned int Matrix:: getNbCols() const
-{
-    return cols;
-}
-
-
-double& Matrix:: getVal ( const unsigned int indice )
-{
-    if ( indice >= (rows * cols))
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-
-    return tab[indice/rows][indice%rows]; 
-}
-
-
-double Matrix:: getVal ( const unsigned int indice ) const
-{
-    if ( indice >= (rows * cols))
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-
-    return tab[indice/rows][indice%rows];
-}
-
-
-vector<double>&  Matrix:: operator [] ( const unsigned int indice )
-{
-    if ( indice >= rows)
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-    return tab[indice];
-}
-
-
-const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
-{
-    if ( indice >= rows)
-    {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
-    }
-    return tab[indice];
-}
-
-
-ostream& operator << ( ostream& flux, const Matrix & m )
-{
-    for ( auto i : m.tab )
-    {
-        for ( auto j : i )
+        for(j = 0; j < c; j++)
         {
-            if((int)(j*1000000)==0)
-            {
-                flux << "0" << "  ";
-            }
-            else
-            {
-                flux << j << "  ";
-            }
+            if (i!=j && copy[i][j]!=0.0)
+                return false;
         }
-        flux << endl;
     }
-    return flux;
+
+    return true;
 }
 
 
-bool Matrix:: isSQMatrix() const
+const Matrix Matrix:: diagonalise()const
 {
-    return rows==cols;
+
+    Matrix m;
+    Eigen:: MatrixXd a,b;
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
+    b = res.pseudoEigenvalueMatrix();
+    m = eigen2Class(b);
+
+    return m.checkCast();
+
 }
 
 
-
-/*void Matrix:: saveMatrix ()
+const Matrix Matrix::transferMatrix()const
 {
+    unsigned int i, j, n=getNbRows();
+    Matrix result(n,n);
+    Eigen::MatrixXd a;
 
-    string matrixname(this->name);
+    a = class2Eigen();
+    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
 
-    string filename (PATH);
-    ofstream file (filename.c_str(), ios::app);
+    result = eigen2Class(m.pseudoEigenvectors());
 
-    if(!file.is_open())
+    for(i=0; i<n; i++)
     {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
 
-    string testRights;
-    testRights=saveRights(filename,matrixname);
-
-    if (testRights.empty())
-    {
-        file << "Matrix" << endl;
-
-    }
-    else if (testRights=="used")
-    {
-        cout << "Une matrice du même nom a déjà été sauvegardée"
-                "\nVeuillez sélectionner un autre nom" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else if(testRights!="Matrix")
-    {
-        cout << endl << "Erreur! Modification du fichier 'sauvegarde.txt' " << endl;
-        // MAXIME GESTION ERREUR
-        exit(EXIT_FAILURE);
-    }
-
-    file << endl << matrixname << endl;
-    file << getNbRows() << " " << getNbCols() << endl;
-
-    for (unsigned int i = 0; i < getNbRows(); i++)
-    {
-        for (unsigned int j = 0; j < getNbCols(); j++)
+        for(j=0; j<n; j++)
         {
-
-            file << tab[i][j] << " ";
-        }
-        file << endl;
-    }
-
-    cout << "La sauvegarde de la matrice " << filename << " est réussie" << endl << endl;
-
-    file.close();
-
-}*/
-
-
-
-void Matrix:: readMatrix(const string & matrixname)
-{
-    string filename(PATH);
-    ifstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    string testfile;
-    file >> testfile ;
-
-    if( testfile == "Matrix")
-    {
-        while(!file.eof() && testfile!=matrixname)
-        {
-            file >> testfile;
-        }
-        if (file.eof())
-        {
-            cout << "Problème avec " << matrixname << endl;
-            cout << "Cette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
-            exit(EXIT_FAILURE);
+            if (abs(result[i][j]) < EPSILON)
+                result[i][j]=0;
         }
 
-        file >> rows >> cols;
-
-        tab = vector<vector<double>> (rows, vector<double> (cols, 0));
-
-        for (unsigned int i = 0; i < getNbRows(); i++)
-        {
-            for (unsigned int j = 0; j < getNbCols(); j++)
-            {
-                file >> tab[i][j];
-            }
-
-        }
-
-        file.close();
-        cout << "ouverture réussie" << endl << endl;
     }
-    else
-    {
-        cout << "Erreur" << endl ;
-        // exception QT Maxime
-    }
+
+    return result.checkCast();
+
 }
 
 
-void Matrix:: cleanSaves()
+void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const
 {
-    string filename(PATH);
-    ofstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    file.close();
-    cout << "!!!!!! Fichier de sauvegarde nettoyé" << endl << endl;
-
+   transferC2B = transferMatrix();
+   diagonal = diagonalise();
+   if (transferC2B.determinant()==0.0)
+       transferB2C = matrix_noEigen;
+   else
+       transferB2C = (transferC2B^-1);
 }
 
 
-
-void Matrix::testRegression()
+void Matrix::testRegression() const
 {
     cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
 
@@ -872,7 +1105,7 @@ void Matrix::testRegression()
         tra = a.traceMatrix();
         cout << "Résultat attendu: tr(A) = -47" << endl;
         cout << "Résultat produit par l'application: tr(A) = " << tra << endl;
-        if(tra == -47)
+        if(tra + 47 == 0.0)
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
     } else {
@@ -886,7 +1119,7 @@ void Matrix::testRegression()
         det = f.determinant();
         cout << "Résultat attendu: det(F) = 0" << endl;
         cout << "Résultat produit par l'application: det(F) = " << det << endl;
-        if(det == 0)
+        if(det == 0.0)
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
     } else {
@@ -899,7 +1132,7 @@ void Matrix::testRegression()
         det = a.determinant();
         cout << "Résultat attendu: det(A) = 8366164" << endl;
         cout << "Résultat produit par l'application: tr(A) = " << det << endl;
-        if(det == 8366164)
+        if(det == 8366164.0)
             cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
     } else {
@@ -959,335 +1192,17 @@ void Matrix::testRegression()
 
 
 
-bool Matrix:: priorite_sup_egal (const string & opd,const string & opg)
-{
-    switch (opd[0])
-    {
-        case '*':
-            return ((opg[0] == '*') || (opg[0] == '/'));
-
-        case '/':
-            return ((opg[0] == '*') || (opg[0] == '/'));
-
-        case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-
-        case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/'));
-            default: return false;
-    }
-}
-
-
-void Matrix:: polonaise(const std::string & chaine , std::vector<std::string> & notation_polonaise)
-{
-    stack<string> p;
-    vector<string> expression;
-    expression = decoupe(chaine);
-
-    int i;
-
-    for (i = 0; i < expression.size(); i++)
-    {
-        if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
-        {
-            notation_polonaise.push_back(expression[i]);
-        }
-        else if ( (expression[i] == "(") || (expression[i] == "=") )
-        {
-            p.push(expression[i]);
-        }
-        else if (isOperator(expression[i]))
-        {
-            if (!p.empty())
-            {
-                while (priorite_sup_egal(expression[i],p.top()))
-                {
-                    notation_polonaise.push_back(p.top());
-                    p.pop();
-                }
-            }
-
-            p.push(expression[i]);
-
-        }
-        else if (expression[i] == ")")
-        {
-            do
-            {
-                notation_polonaise.push_back(p.top());
-                p.pop();
-
-            }while (p.top() !=  "(");
-            p.pop();
-        }
-    }
-
-    while (!p.empty())
-    {
-        notation_polonaise.push_back(p.top());
-        p.pop();
-    }
-}
-
-
-
-/*Matrix Matrix:: expressionCalcul(const std::string & chaine)
-{
-    vector<string> polish;
-    polonaise(chaine,polish);
-    stack<string> pile;
-    Matrix temp("ppp4");
-    temp.saveMatrix();
-    unsigned int i;
-    unsigned int taille=polish.size();
-
-    for (i = 0; i < taille; i++ )
-    {
-        if (isOperator(polish[i]))
-        {
-            string b = pile.top();
-            pile.pop();
-            string a=pile.top();
-            pile.pop();
-
-            temp=calculate(polish[i],a,b);
-            pile.push(temp.getName());
-            temp.saveMatrix();
-        }
-        else
-        {
-            pile.push(polish[i]);
-        }
-    }
-    temp.readMatrix(pile.top());
-    return temp;
-}*/
-
-void Matrix:: setMatrixKB ()
-{
-    cout << "Saisir nblignes : ";
-    cin >> rows;
-    cout << "Saisir nbColonnes : ";
-    cin >> cols;
-    
-    tab.resize(rows, vector<double>(cols));
-    
-    for(unsigned int i = 1; i <= rows; ++i)
-    {
-        for(unsigned int j = 1; j <= cols; ++j)
-        {
-            cout << endl << "Saisir coeff " << "(" << i << " , " << j << ")" << ": ";
-            cin >> tab[i-1][j-1];
-        }
-    }
-}
-
-
-void Matrix:: setMatrixRA ()
-{
-    cout << "Saisir nblignes : ";
-    cin >> rows;
-    cout << "Saisir nbColonnes : ";
-    cin >> cols;
-    
-    tab = Matrix(rows, cols, Matrix::R).tab;
-}
-
-
-Eigen::MatrixXd Matrix:: class2Eigen ()
-{
-    unsigned int i,j,r,c;
-    r = getNbRows();
-    c = getNbCols();
-    Eigen:: MatrixXd m(r,c);
-
-    for(i=0 ; i<r ; i++)
-    {
-        for(j=0 ; j<c ; j++)
-        {
-            m(i,j) = tab[i][j] ;
-        }
-    }
-
-    return m;
-}
-
-
-Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m)
-{
-    unsigned int i,j;
-    unsigned int r,c;
-    r = (unsigned int) m.rows();
-    c = (unsigned int) m.cols();
-    Matrix a(r,c);
-
-    for(i=0 ; i<r ; i++)
-    {
-        for(j=0 ; j<c ; j++)
-        {
-            a.tab[i][j] = m(i,j) ;
-        }
-    }
-
-    return a;
-}
-
-
-vector<double> Matrix:: eigenValues()
-{
-    unsigned int i,n;
-    vector<double> result;
-    Eigen::MatrixXd a;
-
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
-    n = (unsigned int)m.eigenvalues().size();
-
-    for (i=0; i<n; i++)
-    {
-        if(abs(m.eigenvalues()(i).real()) < EPSILON)
-            result.push_back(0);
-        else
-            result.push_back(m.eigenvalues()(i).real());
-    }
-
-    return result;
-}
-
-
-bool Matrix:: isDiagonalisable()
-{
-
-    unsigned int i,j;
-    long int s;
-    vector<pair<double,VectorX>> check;
-
-    if (!isSQMatrix())
-        return false;
-
-    check = allEigen();
-    s = check.size();
-
-    for(i=0; i<s; i++)
-    {
-        for(j=0; j<s; j++)
-        {
-            if( (i!=j) && (check[i].second==check[j].second) )
-                return false;
-
-        }
-
-    }
-
-    return true;
-}
-
-
-Matrix Matrix:: diagonalise()
-{
-
-    Matrix m;
-    Eigen:: MatrixXd a,b;
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> res(a);
-    b = res.pseudoEigenvalueMatrix();
-    m = eigen2Class(b);
-
-    return m;
-
-}
-
-
-Matrix Matrix::transferMatrix()
-{
-    unsigned int i, j, n=getNbRows();
-    Matrix result(n,n);
-    Eigen::MatrixXd a;
-
-    a = class2Eigen();
-    Eigen::EigenSolver<Eigen::MatrixXd> m(a);
-
-    result=eigen2Class(m.pseudoEigenvectors());
-
-    for(i=0; i<n; i++)
-    {
-
-        for(j=0; j<n; j++)
-        {
-            if (abs(result[i][j]) < EPSILON)
-                result[i][j]=0;
-        }
-
-    }
-
-    return result;
-
-}
-
-
-vector<VectorX> Matrix:: eigenVectors()
-{
-    unsigned int i, j, n=getNbRows();
-    vector<VectorX> tab;
-    VectorX temp;
-
-    Matrix a(n,n);
-    a=transferMatrix();
-
-    for(i=0; i<n; i++)
-    {
-        temp.clear();
-
-        for(j=0; j<n; j++)
-        {
-            temp.push_back(a[j][i]);
-        }
-
-        tab.push_back(temp);
-    }
-
-    return tab;
-
-}
-
-
-vector<pair<double,VectorX>> Matrix:: allEigen()
-{
-    unsigned int i;
-    long int n;
-    vector<VectorX> e_vector;
-    vector<double> e_value;
-    pair<double,VectorX> temp;
-    vector<pair<double,VectorX>> result;
-
-    e_value=eigenValues();
-    e_vector=eigenVectors();
-    n=e_value.size();
-
-    for(i=0; i<n; i++)
-    {
-        temp = make_pair(e_value[i],e_vector[i]);
-        result.push_back(temp) ;
-    }
-
-    return result;
-
-}
-
-
-void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C)
-{
-   if (!isDiagonalisable())
-   {
-       cout << "La matrice n'est pas diagonalisable dans R" << endl;
-       return ;
-   }
-
-   transferC2B=transferMatrix();
-   diagonal=diagonalise();
-   transferB2C=(transferC2B^-1);
-
-}
-
-
+/*
+ début
+pour i= 1 :n
+L(i,i) = 1
+    pour j=max(1,i−b) :i−1
+        L(i,j) =A(i,j)
+        pourk=max(1,i−b,j−b) :j−1
+            L(i,j) =L(i,j)−L(i,k)∗D(k,k)∗L(j,k)
+        L(i,j) =L(i,j)/D(j,j)
+    D(i,i) =A(i,i)
+    pourj=max(1,i−b) :i−1
+        D(i,i) =D(i,i)−L(i,j)2∗D(j,j)
+fin
+*/

@@ -1,10 +1,12 @@
 
 #include "MatrixLibrary.h"
+#include "Matrix.h"
+#include <stack>
 #include <iostream>
-
-
+#include <fstream>
 using namespace std;
 
+const string PATH = "sauvegarde.txt";
 
 MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
 {
@@ -45,6 +47,18 @@ void MatrixLibrary:: print () const
 }
 
 
+void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& resultat)
+{
+    unsigned long int i, length = resultat.size();
+
+    for (i=0; i<length; i++)
+    {
+        expression.push_back(resultat[i]);
+    }
+
+}
+
+
 void MatrixLibrary:: addMatrix (const string& name, const Matrix& m)
 {
     tab.insert({name, m});
@@ -55,6 +69,7 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 {
     if(tab.count(name) == 0)
     {
+        cout << "la matrice "<<name<<" n'existe pas dans la libraire" << endl;
         return nullptr;
     }
     return &tab.at(name);
@@ -84,4 +99,438 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 {
     return tab;
 }
+
+
+bool MatrixLibrary:: isAuthorisedName(const string & chaine)
+{
+    unsigned long int i=0, s=chaine.length();
+
+    while (i<s)
+    {
+        if ( ((chaine[i]>='A') && (chaine[i]<='Z'))
+            || ((chaine[i]>='a') && (chaine[i]<='z'))
+            || ((chaine[i]>='0') && (chaine[i]<='9')) )
+            i++;
+        else return false;
+    }
+
+    return true;
+}
+
+
+bool MatrixLibrary:: isName(const string & chaine)
+{
+    unsigned long int i = 1, s = chaine.length();
+
+    if ( !( ((chaine[0] >= 'A') && (chaine[0] <= 'Z'))
+         || ((chaine[0] >= 'a') && (chaine[0] <= 'z')) ) )
+        return false;
+
+    while (i<s)
+    {
+        if ( ((chaine[i] >= 'A') && (chaine[i] <= 'Z'))
+             || ((chaine[i] >= 'a') && (chaine[i] <= 'z'))
+             || ((chaine[i] >= '0') && (chaine[i] <= '9')))
+            i++;
+        else return false;
+    }
+
+    return true;
+}
+
+
+bool MatrixLibrary:: isFloat(const string & chaine)
+{
+    unsigned long int i = 0, s = chaine.length();
+    unsigned short int nbcoma = 0;
+
+    while (i<s)
+    {
+        if (chaine[i]=='.')
+            nbcoma++;
+        else if (! ((chaine[i]>='0') && (chaine[i]<='9')) )
+            return false ;
+
+        if (nbcoma > 1)
+            return false;
+
+        i++;
+    }
+
+    return true;
+}
+
+
+bool MatrixLibrary:: isOperator (const string & chaine)
+{
+    return ( (chaine == "+")
+             ||  (chaine == "-")
+             ||  (chaine == "/")
+             || (chaine == "^")
+             || (chaine == "*"));
+}
+
+
+vector<string> MatrixLibrary:: decoupe (const string & expression)
+{
+    unsigned int i;
+    unsigned  long taille =expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
+
+    for (i=0; i<taille; i++)
+    {
+        c=expression[i];
+
+        if((isOperator(c)) || (c == ")") || (c == "(") || (c == "=") )
+        {
+            if (temp.length()!=0) tab.push_back(temp);
+            tab.push_back(c);
+            temp="";
+        }
+        else if (!c.empty())
+        {
+            temp+=c;
+        }
+
+    }
+    tab.push_back(temp);
+
+    return tab;
+}
+
+
+Matrix MatrixLibrary:: calculate (const string & op, const string & a, const string & b)
+{
+    const Matrix* m_a;
+    const Matrix* m_b;
+
+    m_a=find(a);
+    m_b=find(b);
+
+    if(op=="+")
+        return *m_a+*m_b;
+
+    if(op=="-")
+        return *m_a-*m_b;
+
+    if(op=="*")
+        return *m_a * *m_b;
+
+    if(op=="/")
+        return *m_a / *m_b;
+
+    else return *m_a;
+}
+
+
+bool MatrixLibrary:: priorite_sup_egal (const string & opd,const string & opg)
+{
+    switch (opd[0])
+    {
+        case '*':
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+
+        case '/':
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+
+        case '+':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+
+        case '-':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^'));
+        case '^':
+            return (opg[0] == '^');
+        default: return false;
+    }
+}
+
+
+void MatrixLibrary:: polonaise(const std::string & chaine , std::vector<std::string> & notation_polonaise)
+{
+    stack<string> p;
+    vector<string> expression;
+    copy_vector(expression,decoupe(chaine));
+
+    unsigned long int i, s = expression.size();
+
+    for (i = 0; i < s; i++)
+    {
+        if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
+        {
+            notation_polonaise.push_back(expression[i]);
+        }
+        else if ( (expression[i] == "("))
+        {
+            p.push(expression[i]);
+        }
+        else if (isOperator(expression[i]))
+        {
+            if (!p.empty())
+            {
+                while ((!p.empty()) && priorite_sup_egal(expression[i],p.top()))
+                {
+                    notation_polonaise.push_back(p.top());
+                    p.pop();
+                }
+            }
+
+            p.push(expression[i]);
+
+        }
+        else if (expression[i] == ")")
+        {
+            do
+            {
+                notation_polonaise.push_back(p.top());
+                p.pop();
+
+            }while ((p.top() !=  "(") && (!p.empty()));
+            p.pop();
+        }
+    }
+    if(notation_polonaise[notation_polonaise.size()-1]=="")
+        notation_polonaise.pop_back();
+
+    while (!p.empty())
+    {
+        notation_polonaise.push_back(p.top());
+        p.pop();
+    }
+}
+
+
+Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
+{
+    vector<string> polish;
+    polonaise(chaine,polish);
+    stack<string> pile;
+    Matrix temp;
+    string identify;
+    int nom=0;
+
+    unsigned long int i;
+    //unsigned long int s = polish.size();
+
+    for (i = 0; i < polish.size(); i++ )
+    {
+        if ((polish[i] == "^") && (polish[i+1] == "1") && (polish[i+2] == "-"))
+        {
+            string a = pile.top();
+            pile.pop();
+
+            temp= *(find(a))^-1;
+            i=i+2;
+
+            identify = static_cast<char>('0'+ nom);
+            pile.push("temp" + identify);
+            addMatrix("temp" + identify,temp);
+            nom++;
+        }
+        else if (isOperator(polish[i]))
+        {
+            string b = pile.top();
+            pile.pop();
+            string a=pile.top();
+            pile.pop();
+
+
+            if ( isName(b) && isName(a) )
+            {
+                temp = calculate(polish[i],a,b);
+            }
+            else if ( isFloat(a) && isName(b))
+            {
+                temp = *(find(b)) * atof(a.c_str());
+            }
+                else if ( isFloat(b) && isName(a) )
+                {
+                    if(polish[i] == "*")
+                    {
+                        temp = *(find(a)) * atof(b.c_str());
+                    }
+                    else
+                    {
+                        temp= *(find(a)) ^ (atoi(b.c_str()));
+                    }
+
+                }
+                    else
+                    {
+                        cout << "Caractère spécial détecté..."
+                                "\nVeuillez rééssayer (gestion erreur... +1 point :)" << endl;
+                    }
+
+            identify = static_cast<char>('0'+ nom);
+            pile.push("temp" + identify);
+            addMatrix("temp" + identify,temp);
+            nom++;
+
+        }
+            else
+            {
+                 pile.push(polish[i]);
+            }
+    }
+
+    const Matrix* res;
+    res=find(pile.top());
+
+    return *res;
+}
+
+
+const string MatrixLibrary:: saveRights(const string & matrixname)
+{
+    ifstream file (PATH);
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string first_string, stringpos;
+
+    file >> first_string;
+
+    while(!file.eof())
+    {
+        file >> stringpos;
+        if(stringpos==matrixname)
+            return string("used");
+    }
+
+    return first_string;
+
+}
+
+
+void MatrixLibrary:: saveMatrix (const string & matrixname)
+{
+    Matrix m(*find(matrixname));
+    cout << m;
+
+    string filename (PATH);
+    ofstream file (filename.c_str(), ios::app);
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du fichier "
+                "\nVeuillez vérifier le chemin du fichier" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string testRights = saveRights(matrixname);
+
+    if (testRights.empty())
+    {
+        file << "Matrix" << endl;
+
+    }
+    else if (testRights=="used")
+    {
+        cout << "Une matrice du même nom a déjà été sauvegardée"
+                "\nVeuillez sélectionner un autre nom" << endl;
+        exit(EXIT_FAILURE);
+    }
+    else if(testRights!="Matrix")
+    {
+        cout << endl << "Erreur !"
+                        "\nModification du fichier 'sauvegarde.txt' " << endl;
+        // MAXIME GESTION ERREUR
+        exit(EXIT_FAILURE);
+    }
+
+    file << endl << matrixname << endl;
+    file << m.getNbRows() << " " << m.getNbCols() << endl;
+
+    for (unsigned int i = 0; i < m.getNbRows(); i++)
+    {
+        for (unsigned int j = 0; j < m.getNbCols(); j++)
+        {
+
+            file << m[i][j] << " ";
+        }
+        file << endl;
+    }
+
+    cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
+
+    file.close();
+
+}
+
+
+void MatrixLibrary:: cleanSaves()
+{
+    string filename(PATH);
+    ofstream file (filename.c_str());
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    file.close();
+    cout << "Fichier de sauvegarde nettoyé" << endl << endl;
+
+}
+
+
+Matrix MatrixLibrary:: readMatrix(const string & matrixname)
+{
+    string filename(PATH);
+    ifstream file (filename.c_str());
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    string testfile;
+    file >> testfile ;
+
+    if( testfile == "Matrix")
+    {
+        while(!file.eof() && testfile!=matrixname)
+        {
+            file >> testfile;
+        }
+        if (file.eof())
+        {
+            cout << "Erreur avec " << matrixname <<
+                    "\nCette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        unsigned int r,c;
+        file >> r >> c;
+
+        Matrix m(r,c);
+
+        for (unsigned int i = 0; i < r; i++)
+        {
+            for (unsigned int j = 0; j < c; j++)
+            {
+                file >> m[i][j];
+            }
+
+        }
+
+        file.close();
+        cout << "fermeture réussie" << endl << endl;
+        return m;
+    }
+    else
+    {
+        cout << "Erreur" << endl ;
+        // exception QT Maxime
+    }
+}
+
+
 
