@@ -234,6 +234,62 @@ ostream& operator << (ostream& flux, const Matrix & m)
 }
 
 
+vector<string> Matrix:: decoupe (const string & expression)
+{
+    unsigned int i;
+    unsigned  long taille =expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
+
+    for (i=0; i<taille; i++)
+    {
+        c=expression[i];
+
+        if(c == ",")
+        {
+            if (temp.length()!=0) tab.push_back(temp);
+            temp="";
+        }
+        else if (!c.empty())
+        {
+            temp+=c;
+        }
+
+    }
+    if(temp != "")
+    tab.push_back(temp);
+
+    return tab;
+}
+
+
+Matrix Matrix:: operator << (const string& values)
+{
+    string c;
+    vector<string> table;
+    table=decoupe(values);
+    unsigned int i,j;
+
+    if (table.size() != rows*cols)
+    {
+        cout<<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice"<<endl;
+    }
+
+    else
+    {  for ( i = 0; i < this->rows; i++ )
+        {
+            for ( j = 0; j < this->cols; j++ )
+            {
+                c=table[i*cols+j];
+                tab[i][j]=atof(c.c_str());
+            }
+        }
+     }
+    return *this;
+}
+
+
 istream& operator >> (istream& flux, Matrix & m)
 {
     unsigned int i,j,rows,cols;

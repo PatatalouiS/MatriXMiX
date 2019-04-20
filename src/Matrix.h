@@ -28,6 +28,7 @@ private:
     double determinant(unsigned int dim) const;
     Eigen::MatrixXd class2Eigen() const;
     const Matrix eigen2Class(const Eigen::MatrixXd & m) const;
+
     
 public:
 
@@ -57,6 +58,8 @@ public:
     std::vector<double>& operator [] (const unsigned int indice);
     const std::vector<double>& operator [] (const unsigned int indice) const;
     friend std::ostream& operator << (std::ostream& flux, const Matrix & m);
+    std::vector<std::string> decoupe (const std::string & expression);
+    Matrix operator << (const std::string& values);
     friend std::istream& operator >> (std::istream& flux, Matrix & m);
     void setMatrixKB();
     void setMatrixRA();

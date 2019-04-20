@@ -171,6 +171,7 @@ vector<string> MatrixLibrary:: decoupe (const string & expression)
         }
 
     }
+    if(temp != "")
     tab.push_back(temp);
 
     return tab;
