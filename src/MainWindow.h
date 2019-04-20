@@ -30,7 +30,7 @@ class MainWindow : public QMainWindow
     
         MenuBar* menuBar;
         MatrixLibrary lib;
-        std::function<QWidget*(MatrixLibrary*, QWidget*)> createWindow [10];
+        std::function<QWidget*(MatrixLibrary*, QWidget*)> createWindow [15];
 
         // functions
 

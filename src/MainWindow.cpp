@@ -14,6 +14,12 @@
 #include "ScalarMultiplicationWindow.h"
 
 #include "DeterminantWindow.h"
+#include "TraceWindow.h"
+#include "RowReducedWindow.h"
+#include "InverseWindow.h"
+#include "KerImgDimWindow.h"
+#include "PolynomialWindow.h"
+#include "EigenWindow.h"`
 
 MainWindow:: MainWindow() : QMainWindow()
 {
@@ -112,15 +118,46 @@ void MainWindow::setFunctorTab()
         return new ScalarMultiplicationWindow(lib, parent);
     };
     createWindow[6] =
-    [] (MatrixLibrary*lib, QWidget* parent) -> QWidget*
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
         return new DeterminantWindow(lib, parent);
     };
+    createWindow[7] =
+    [] (MatrixLibrary*lib, QWidget* parent) -> QWidget*
+    {
+        return new TraceWindow(lib, parent);
+    };
+    createWindow[8] =
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    {
+        return new RowReducedWindow(lib, parent);
+    };
+    createWindow[9] =
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    {
+        return new InverseWindow(lib, parent);
+    };
+    createWindow[10] =
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    {
+        return new KerImgDimWindow(lib, parent);
+    };
+    createWindow[11] =
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    {
+        return new PolynomialWindow(lib, parent);
+    };
+    createWindow[12] =
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    {
+        return new EigenWindow(lib, parent);
+    };
 }
+
 
 void MainWindow:: compute_choice (const unsigned int choice)
 {
-    QWidget* newWindow = createWindow[choice](&lib, this);
+    QWidget* newWindow = createWindow[choice](&lib, nullptr);
     newWindow->setAttribute(Qt::WA_DeleteOnClose);
     newWindow->show();
 }
@@ -277,9 +314,9 @@ QGroupBox* MainWindow::DiagonalisationOp()
 
     QPushButton* DiaOpButtons;
 
-    for(unsigned int i = 0; i < 4; ++i)
+    for(unsigned int i = 10; i < 13; ++i)
     {
-        DiaOpButtons = new QPushButton(tabDiaOp[i]);
+        DiaOpButtons = new QPushButton(tabDiaOp[i-10]);
         DiaOpButtons->setCursor(Qt::PointingHandCursor);
         //Ajout du style pour les boutons
         DiaOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
@@ -288,6 +325,11 @@ QGroupBox* MainWindow::DiagonalisationOp()
         DiaOpButtons->setMaximumSize(600,80);
 
         DiaOpVBox -> addWidget(DiaOpButtons);
+          connect(DiaOpButtons, &QPushButton::clicked,
+                [i, this] () -> void
+                {
+                    this->compute_choice(i);
+                });
 
     }
     DiaOpBox->setLayout(DiaOpVBox);

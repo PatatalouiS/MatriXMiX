@@ -6,7 +6,7 @@ TEMPLATE = app
 CONFIG += link_prl qt debug_and_release
 QT += widgets
 
-include(ext/lib/jkqtmathtext.pri);
+include(ext/latex/jkqtmathtext.pri);
 
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
@@ -39,7 +39,13 @@ HEADERS += src/Matrix.h \
     src/DeterminantWindow.h \
     src/MatrixViewWidget.h \
     src/MenuBar.h \
-    src/Gauss.h
+    src/Gauss.h \
+    src/TraceWindow.h \
+    src/RowReducedWindow.h \
+    src/InverseWindow.h \
+    src/KerImgDimWindow.h \
+    src/PolynomialWindow.h \
+    src/EigenWindow.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -62,6 +68,12 @@ SOURCES += src/main.cpp \
     src/ScalarMultiplicationWindow.cpp \
     src/DeterminantWindow.cpp \
     src/MenuBar.cpp \
-    src/Gauss.cpp
+    src/Gauss.cpp \
+    src/TraceWindow.cpp \
+    src/RowReducedWindow.cpp \
+    src/InverseWindow.cpp \
+    src/KerImgDimWindow.cpp \
+    src/PolynomialWindow.cpp \
+    src/EigenWindow.cpp
 
 
