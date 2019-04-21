@@ -28,6 +28,7 @@ private:
     double determinant(unsigned int dim) const;
     Eigen::MatrixXd class2Eigen() const;
     const Matrix eigen2Class(const Eigen::MatrixXd & m) const;
+
     
 public:
 
@@ -50,17 +51,23 @@ public:
     //Accesseurs / Opérateurs de calcul / Fonctions de calcul algébrique
     unsigned int getNbRows() const;
     unsigned int getNbCols() const;
+    void setNbRows(unsigned int row);
+    void setNbCols(unsigned int col);
     double& getVal(const unsigned int indice);
     double getVal(const unsigned int indice) const;
     std::vector<double>& operator [] (const unsigned int indice);
     const std::vector<double>& operator [] (const unsigned int indice) const;
     friend std::ostream& operator << (std::ostream& flux, const Matrix & m);
+    std::vector<std::string> decoupe (const std::string & expression);
+    Matrix operator << (const std::string& values);
+    friend std::istream& operator >> (std::istream& flux, Matrix & m);
     void setMatrixKB();
     void setMatrixRA();
     const Matrix operator + (const Matrix & m) const;
     const Matrix operator - (const Matrix & m) const;
     const Matrix operator * (const Matrix & m) const;
     const Matrix operator * (const double & lambda) const;
+    friend const Matrix operator * (const double & lambda, const Matrix & m);
     const Matrix operator / (const Matrix & m) const;
     const Matrix operator ^ (const int & p) const;
     bool operator == (const Matrix & m) const;

@@ -153,6 +153,20 @@ unsigned int Matrix:: getNbCols() const
 }
 
 
+void Matrix:: setNbRows(unsigned int row)
+{
+    this->rows=row;
+    tab=(vector<vector<double>>(rows,vector<double> (cols,0)));
+}
+
+
+void Matrix:: setNbCols(unsigned int col)
+{
+     this->cols=col;
+    tab=(vector<vector<double>>(rows,vector<double> (cols,0)));
+}
+
+
 double& Matrix:: getVal ( const unsigned int indice )
 {
     if ( indice >= (rows * cols))
@@ -216,6 +230,85 @@ ostream& operator << (ostream& flux, const Matrix & m)
         }
         flux << endl;
     }
+    return flux;
+}
+
+
+vector<string> Matrix:: decoupe (const string & expression)
+{
+    unsigned int i;
+    unsigned  long taille =expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
+
+    for (i=0; i<taille; i++)
+    {
+        c=expression[i];
+
+        if(c == ",")
+        {
+            if (temp.length()!=0) tab.push_back(temp);
+            temp="";
+        }
+        else if (!c.empty())
+        {
+            temp+=c;
+        }
+
+    }
+    if(temp != "")
+    tab.push_back(temp);
+
+    return tab;
+}
+
+
+Matrix Matrix:: operator << (const string& values)
+{
+    string c;
+    vector<string> table;
+    table=decoupe(values);
+    unsigned int i,j;
+
+    if (table.size() != rows*cols)
+    {
+        cout<<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice"<<endl;
+    }
+
+    else
+    {  for ( i = 0; i < this->rows; i++ )
+        {
+            for ( j = 0; j < this->cols; j++ )
+            {
+                c=table[i*cols+j];
+                tab[i][j]=atof(c.c_str());
+            }
+        }
+     }
+    return *this;
+}
+
+
+istream& operator >> (istream& flux, Matrix & m)
+{
+    unsigned int i,j,rows,cols;
+    cout<<"Entrez le nombre de lignes puis de colonnes"<<endl;
+    flux>>rows>>cols;
+    double value;
+    m.setNbRows(rows);
+    m.setNbCols(cols);
+
+    cout<<"Entrez les valeurs de la matrice"<<endl;
+    for ( i = 0; i < rows; ++i )
+    {
+        for ( j = 0; j < cols; ++j )
+        {
+            flux >> value;
+            m.tab[i][j]=value;
+        }
+    }
+
     return flux;
 }
 
@@ -332,6 +425,12 @@ const Matrix Matrix:: operator * (const double & lambda) const
         }
     }
     return copy;
+}
+
+
+const Matrix operator * (const double & lambda, const Matrix & m)
+{
+    return m*lambda;
 }
 
 
