@@ -16,9 +16,9 @@ AdditionWindow::AdditionWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (p
     resultImg->hide();
 
     QLabel* title = new QLabel("Addition");
-    title->setStyleSheet("font-size: 30px;");
+    title->setStyleSheet("font-size: 30px; font:bold;");
     title->setAlignment(Qt::AlignCenter);
-    title->setContentsMargins(0,0,0,40);
+    title->setContentsMargins(0,0,0,10);
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
@@ -43,7 +43,7 @@ AdditionWindow::AdditionWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (p
 
     QWidget* formWidget = new QWidget;
     formWidget->setLayout(formLayout);
-    formWidget->setMaximumWidth(1200);
+    formWidget->setMaximumWidth(1330);
     formWidget->setMaximumHeight(350);
 
     formula = new QLabel("_  +  _");
