@@ -22,6 +22,7 @@ class MenuBar : public QMenuBar
         QAction *showMatrix;
         QMenu *menuHelp;
         QMenu *menuQuit;
+        QAction *actionQuit;
 
 
     public:

@@ -23,9 +23,11 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     menuHelp = addMenu("Aide");
     menuHelp->setCursor(Qt::PointingHandCursor);
     menuQuit = addMenu("Quitter");
+
     menuQuit->setCursor(Qt::PointingHandCursor);
 
     connect(libraryMatrix, &QAction::triggered, [this]() -> void { emit openLibrary();});
+
 }
 
 
