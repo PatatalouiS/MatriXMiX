@@ -38,7 +38,7 @@ class AdditionWindow : public QWidget
         Matrix result;
         QLabel* formula;
         ShowMatrixWidget* resultImg;
-        QHBoxLayout* mainLayout;
+        QVBoxLayout* mainLayout;
 };
 
 
