@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include "LibraryWindow.h"
 #include "AddMatrixWidget.h"
+#include "Error.h"
 
 
 AddMatrixWidget::AddMatrixWidget(QWidget *parent) : QWidget(parent)
@@ -24,9 +25,13 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
 
     nbRowsSelector = new QSpinBox;
     nbColsSelector = new QSpinBox;
-    QString styleButton = "QSpinBox{border: 1px solid grey; border-radius: 3px; value: 5; font-size: 15px;}"
-                          "QSpinBox::down-button{width: 20px;}"
-                          "QSpinBox::up-button{width: 20px;}";
+    QString styleButton = "QSpinBox{border: 1px solid grey; border-radius: 3px; font-size: 15px;}"
+                          "QSpinBox::down-button{width: 20px; background:"
+                          "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue);}"
+                          "QSpinBox::down-arrow{ background: white; height:2px ; width: 10px;}"
+                          "QSpinBox::up-button{width: 20px; background:"
+                          "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue)}"
+                          "QSpinBox::up-arrow{ background: white; height:10px ; width: 2px;}";
 
     nbRowsSelector->setRange(2,10);
     nbColsSelector->setRange(2,10);
@@ -45,6 +50,7 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     setSpecsLayout->addRow(tr("Nom Matrice : "), nameMatrix);
     setSpecsLayout->addRow(tr("Nombre de Lignes : "), nbRowsSelector);
     setSpecsLayout->addRow(tr("Nombre de Collones :"), nbColsSelector);
+    setSpecsLayout->setFormAlignment(Qt::AlignCenter);
     QWidget* setSpecsWidget = new QWidget;
     setSpecsWidget->setLayout(setSpecsLayout);
 
@@ -73,6 +79,7 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
 
     QPushButton* ajouter = new QPushButton("Ajouter");
     QVBoxLayout* mainLayout = new QVBoxLayout;
+    ajouter->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
     mainLayout->addWidget(setSpecsWidget);
     mainLayout->addWidget(lineEditsWidget);
     mainLayout->addWidget(ajouter);
@@ -82,10 +89,10 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
             this, &AddMatrixWidget::update_EditSize);
     connect(nbColsSelector, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &AddMatrixWidget::update_EditSize);
-    connect(this, &AddMatrixWidget::error, this, &AddMatrixWidget::showError);
+
+
     connect(ajouter, &QPushButton::pressed, this, &AddMatrixWidget::compute_add);
-    connect(this, &AddMatrixWidget::matrixAdded,
-            qobject_cast<LibraryWindow*>(parent), &LibraryWindow::updateView);
+
 }
 
 
@@ -111,14 +118,8 @@ void AddMatrixWidget:: compute_add ()
     }
 
     Matrix newMatrix (nbL, nbC, values);
-    library->addMatrix(name.toStdString(), newMatrix);
 
-    QList<QStandardItem*> a;
-    a.append(new QStandardItem(name));
-    a.append(new QStandardItem(QString::number(nbL)));
-    a.append(new QStandardItem(QString::number(nbC)));
-
-    emit matrixAdded(a);
+    emit matrixAdded(name, newMatrix);
 }
 
 
@@ -129,14 +130,14 @@ bool AddMatrixWidget:: controlKeyboardInput() const
 
     if(library->find(name.toStdString()))
     {
-        emit error("La Matrice " + name + " existe déjà !",
+        showError("La Matrice " + name + " existe déjà !",
                    "Veuillez changer de nom.");
         return false;
     }
 
     if(!nameMatrix->hasAcceptableInput())
     {
-        emit error("Nom de Matrice " + name + " non valide !",
+        showError("Nom de Matrice " + name + " non valide !",
                    "Veuillez saisir 10 caractère Maximum, sans caractères spéciaux ni espaces ");
         return false;
     }
@@ -145,7 +146,7 @@ bool AddMatrixWidget:: controlKeyboardInput() const
     {
         if (!i->hasAcceptableInput())
         {
-            emit error("Les valeurs de votre Matrice " + name + " sont incorrectes !",
+            showError("Les valeurs de votre Matrice " + name + " sont incorrectes !",
                        "Vérifiez votre saisie. Chaque coefficient doit être un nombre Réel.");
             return false;
         }
@@ -229,20 +230,6 @@ void AddMatrixWidget:: update_EditSize ()
         }
     }
 }
-
-
-
-void AddMatrixWidget:: showError(QString title, QString body) const
-{
-    QMessageBox* error = new QMessageBox;
-    error->setAttribute(Qt::WA_DeleteOnClose, true);
-    error->setFixedSize(650,200);
-    error->setIcon(QMessageBox::Critical);
-    error->setText(title);
-    error->setInformativeText(body);
-    error->show();
-}
-
 
 AddMatrixWidget:: ~AddMatrixWidget ()
 {

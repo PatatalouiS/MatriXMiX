@@ -11,7 +11,7 @@ using namespace std;
 class Fraction
 {
 
-private:
+public:
     long int numerateur, denominateur;
 
 public:

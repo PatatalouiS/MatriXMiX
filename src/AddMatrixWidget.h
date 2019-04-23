@@ -37,14 +37,12 @@ class AddMatrixWidget : public QWidget
 
     signals:
 
-    void error(QString title, QString body) const;
-    void matrixAdded(QList<QStandardItem*> a);
+    void matrixAdded(const QString name, const Matrix m);
 
     public slots:
 
     private slots:
 
-    void showError(QString title, QString body) const;
     void compute_add();
     void update_EditSize();
 };

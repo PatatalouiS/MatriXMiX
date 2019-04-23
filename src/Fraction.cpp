@@ -61,6 +61,14 @@ void Fraction::simplifie()
     long int diviseur = pgcd(numerateur,denominateur);
     numerateur = numerateur/diviseur;
     denominateur = denominateur/diviseur;
+
+    if(denominateur<0)
+    {
+        denominateur *= -1;
+        numerateur *= -1;
+    }
+
+
 }
 
 
@@ -121,6 +129,7 @@ bool Fraction:: isFraction(const double & d)
     double r = d - integer;
     if (r == 0.0)
         return false;
+
     return true;
 }
 
@@ -128,10 +137,10 @@ bool Fraction:: isFraction(const double & d)
 Fraction Fraction::double2Fraction(const double & d)
 {
 
-    short int i,j;
+    int i,j;
     double r = d - floor(d);
     cout << r << endl;
-    for (i = -1000 ; i < 1001; i++)
+    for (i = -100000 ; i < 100001; i++)
     {
         for (j = -1000; j < 1001; j++ )
         {

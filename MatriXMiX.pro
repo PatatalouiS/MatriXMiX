@@ -6,7 +6,7 @@ TEMPLATE = app
 CONFIG += link_prl qt debug_and_release
 QT += widgets
 
-include(ext/lib/jkqtmathtext.pri);
+include(ext/latex/jkqtmathtext.pri);
 
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
@@ -29,7 +29,23 @@ HEADERS += src/Matrix.h \
     src/LibraryWindow.h \
     src/AddMatrixWidget.h \
     src/ShowMatrixWidget.h \
-    src/Gauss.h
+    src/AdditionWindow.h \
+    src/SoustractionWindow.h \
+    src/MultiplicationWindow.h \
+    src/DivisionWindow.h \
+    src/PowerWindow.h \
+    src/Error.h \
+    src/ScalarMultiplicationWindow.h \
+    src/DeterminantWindow.h \
+    src/MatrixViewWidget.h \
+    src/MenuBar.h \
+    src/Gauss.h \
+    src/TraceWindow.h \
+    src/RowReducedWindow.h \
+    src/InverseWindow.h \
+    src/KerImgDimWindow.h \
+    src/PolynomialWindow.h \
+    src/EigenWindow.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -42,6 +58,22 @@ SOURCES += src/main.cpp \
     src/LibraryWindow.cpp \
     src/AddMatrixWidget.cpp \
     src/ShowMatrixWidget.cpp \
-    src/Gauss.cpp
+    src/MatrixViewWidget.cpp \
+    src/AdditionWindow.cpp \
+    src/SoustractionWindow.cpp \
+    src/MultiplicationWindow.cpp \
+    src/DivisionWindow.cpp \
+    src/PowerWindow.cpp \
+    src/Error.cpp \
+    src/ScalarMultiplicationWindow.cpp \
+    src/DeterminantWindow.cpp \
+    src/MenuBar.cpp \
+    src/Gauss.cpp \
+    src/TraceWindow.cpp \
+    src/RowReducedWindow.cpp \
+    src/InverseWindow.cpp \
+    src/KerImgDimWindow.cpp \
+    src/PolynomialWindow.cpp \
+    src/EigenWindow.cpp
 
 

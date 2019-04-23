@@ -1,30 +1,38 @@
 
-//#include <QApplication>
+#include <QApplication>
+#include "ShowMatrixWidget.h"
 #include <iostream>
-//#include <QDir>
-//#include <QDebug>
-//#include "MainWindow.h"
-//#include "LibraryWindow.h"
+#include <QDir>
+#include <QDebug>
+#include "MainWindow.h"
+#include "LibraryWindow.h"
 #include "Matrix.h"
 #include "MatriXMiXTXT.h"
 #include "MatrixLibrary.h"
 #include "Fraction.h"
 
-using namespace std;
-
-
-//extern const string APP_PATH = QDir(QApplication::applicationDirPath() + "/../../../").absolutePath().toStdString();
 
 int main (int argc, char* argv[])
 {
+    Matrix i(10,10,{-2.9104602,9,99999999,-0.55555,0,888,0.524,-0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654,
+             0.9104602,9,99999999,0.55555,0,888,0.524,0.33333,0.39715,0.461654});
+    QColor c(0,0,0,0);
+    QApplication app(argc, argv);
 
-    Fraction f;
-    double d1 = 5.5;
-    double d2 = 0.66666;
+    app.setQuitOnLastWindowClosed(false);
+    ShowMatrixWidget * fenetre = new ShowMatrixWidget;
+    fenetre->computeImgMatrix(&i,c);
+    fenetre->show();
 
-    f = f.double2Fraction(d2);
-    cout << f << endl;
-
+    return app.exec();
 
 
 
@@ -40,14 +48,6 @@ int main (int argc, char* argv[])
 
 
     //cout << lib.isCalculableExpression(expression) << endl;
-
-
-
-
-
-
-
-
 
     /*
     Matrix a (2,2,{1,0,0,1});
@@ -85,10 +85,6 @@ int main (int argc, char* argv[])
 
     //cout << lib.readMatrix("I+B") << endl << endl;
 
-
-
-
-    return 0;
 
 }
 
