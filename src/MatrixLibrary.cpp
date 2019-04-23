@@ -564,7 +564,7 @@ Matrix MatrixLibrary:: readMatrix(const string & matrixname)
     if(!file.is_open())
     {
         cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
+        return Matrix::matrix_noEigen;
     }
 
     string testfile;
@@ -580,7 +580,8 @@ Matrix MatrixLibrary:: readMatrix(const string & matrixname)
         {
             cout << "Erreur avec " << matrixname <<
                     "\nCette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
-            exit(EXIT_FAILURE);
+             return Matrix::matrix_noEigen;
+             //Exception Qt
         }
 
         unsigned int r,c;
@@ -604,9 +605,12 @@ Matrix MatrixLibrary:: readMatrix(const string & matrixname)
     else
     {
         cout << "Erreur" << endl ;
+        return Matrix::matrix_noEigen;
         // exception QT Maxime
     }
 }
+
+
 
 
 

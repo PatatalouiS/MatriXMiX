@@ -45,6 +45,7 @@ class MatrixLibrary
     void saveMatrix (const std::string & matrixname);
     void cleanSaves();
     Matrix readMatrix(const std::string & matrixname);
+    void testRegression();
 
 };
 
