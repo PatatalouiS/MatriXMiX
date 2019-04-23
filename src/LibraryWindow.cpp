@@ -37,7 +37,7 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     choice->setStyleSheet(
         "QTabBar::tab { background:"
         "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 darkGrey);"
-        "color: black; padding: 10px; border-radius: 6px; border:1px solid darkGrey ;} "
+        "padding: 10px; border-radius: 6px; border:1px solid darkGrey ;} "
         "QTabBar::tab:selected { background: "
         "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue); color:white } "
         "QTabWidget::tab-bar { alignment : center} ");
