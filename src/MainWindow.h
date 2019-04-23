@@ -37,6 +37,6 @@ class MainWindow : public QMainWindow
         void setFunctorTab ();
         void show_library ();
         QGroupBox *initBinaryOp();
-        QGroupBox *UnaryOp();
-        QGroupBox *DiagonalisationOp();
+        QGroupBox *initUnaryOp();
+        QGroupBox *initDiagonalisationOp();
 };

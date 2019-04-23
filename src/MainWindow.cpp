@@ -28,12 +28,15 @@ MainWindow:: MainWindow() : QMainWindow()
     addNewMatrix("D", d);
   // Nouvelles matrices
 
-
+    setFunctorTab();
     QWidget* mainWidget = new QWidget(this);
     QWidget* headerWidget = new QWidget;
     QVBoxLayout* mainLayout = new QVBoxLayout;
     QVBoxLayout* headerLayout = new QVBoxLayout;
-    QGridLayout* operationLayout = new QGridLayout;
+    QVBoxLayout* opChoiceLayout = new QVBoxLayout;
+    QVBoxLayout* opShowLayout = new QVBoxLayout;
+    QGroupBox* opBox = new QGroupBox(tr("Choisissez l'opération à effectuer : "));
+    QGroupBox* opShowBox = new QGroupBox(tr("Vous avez choisi:"));
 
     QFont font ("Arial");
     font.setPointSize(16);
@@ -49,32 +52,62 @@ MainWindow:: MainWindow() : QMainWindow()
     im = im.scaled(200, 100);
     QLabel* logo = new QLabel;
     logo->setPixmap(im);
-    QLabel* instruction = new QLabel ("Choisissez l'opération à effectuer : ");
-    instruction -> setFont(fontTitle);
     headerLayout->setAlignment(Qt::AlignHCenter);
     headerLayout->addWidget(logo);
-    headerLayout->addWidget(instruction);
     headerWidget->setLayout(headerLayout);
     headerWidget->setMaximumHeight(300);
     headerWidget->setStyleSheet("QWidget {background-color: QColor(0,0,0,0)}");
 
-    operationLayout->setContentsMargins(40, 40, 40, 40);
-    operationLayout->QLayout::setSpacing(20);
+    opChoiceLayout->setContentsMargins(40, 40, 40, 40);
+    opChoiceLayout->QLayout::setSpacing(20);
+    opChoiceLayout->addWidget(initBinaryOp());
+    opChoiceLayout->addWidget(initUnaryOp());
+    opChoiceLayout->addWidget(initDiagonalisationOp());
+    opBox -> setStyleSheet(
+                "QGroupBox { border: 3px solid silver;"
+                "background-color:white;"
+                "margin-top: 32px;"
+                "margin-left:30px; margin-right:30px;"
+                "border-radius:6px;}"
+                "QGroupBox::title { subcontrol-origin:margin;"
+                "subcontrol-position:top center;"
+                "font: bold ; color:white; }");
+    opBox->setContentsMargins(20,20,20,20);
+    opBox->setFont(fontTitle);
+    opBox->setLayout(opChoiceLayout);
 
-    operationLayout->addWidget(initBinaryOp() , 0 , 0);
-    operationLayout->addWidget(UnaryOp() , 0 ,1);
-    operationLayout->addWidget(DiagonalisationOp() , 0 ,2);
+    QWidget* choixWidget= createWindow[1](&lib, this);
+
+    choixWidget->setStyleSheet("background-color:white;");
+    opShowLayout->addWidget(choixWidget);
+    opShowBox -> setStyleSheet(
+                "QGroupBox { border: 3px solid silver;"
+                "background-color:white;"
+                "margin-top: 32px;"
+                "margin-right:30px;"
+                "border-radius:6px;}"
+                "QGroupBox::title { subcontrol-origin:margin;"
+                "subcontrol-position:top center;"
+                "font: bold ;color:white; }");
+    opShowBox->setContentsMargins(20,20,20,20);
+    opShowBox->setFont(fontTitle);
+    opShowBox->setLayout(opShowLayout);
+
+    opShowLayout->setAlignment(Qt::AlignTop);
+
+    QHBoxLayout* subLayot = new QHBoxLayout;
+    subLayot->addWidget(opBox);
+    subLayot->addWidget(opShowBox);
 
     mainLayout->setContentsMargins(0, 25, 0, 0);
     mainLayout->addWidget(headerWidget);
-    mainLayout->addLayout(operationLayout);
+    mainLayout->addLayout(subLayot);
     mainWidget->setLayout(mainLayout);
     mainWidget->setStyleSheet("QWidget {background-color : qlineargradient(x1 : 0 , y1 : 0  "
                               ", x2: 0 , y2:1 , "
-                              "stop : 0 #fcf9f2 , stop : 1 #f7fcf2)}");
+                              "stop : 0 #283676 , stop : 1 #000066)}");
     connect(menuBar, &MenuBar::openLibrary, this, &MainWindow::show_library);
 
-    setFunctorTab();
     setCentralWidget(mainWidget);
 }
 
@@ -94,22 +127,22 @@ void MainWindow::setFunctorTab()
     createWindow[2] =
     [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-         return new MultiplicationWindow(lib, parent);
+         return new PowerWindow(lib, parent);
     };
     createWindow[3] =
     [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-         return new DivisionWindow(lib, parent);
+         return new MultiplicationWindow(lib, parent);
     };
     createWindow[4] =
     [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-         return new PowerWindow(lib, parent);
+         return new ScalarMultiplicationWindow(lib, parent);
     };
     createWindow[5] =
     [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
-        return new ScalarMultiplicationWindow(lib, parent);
+        return new DivisionWindow(lib, parent);
     };
     createWindow[6] =
     [] (MatrixLibrary*lib, QWidget* parent) -> QWidget*
@@ -132,21 +165,19 @@ QGroupBox* MainWindow::initBinaryOp()
     font.setPointSize(16);
 
     QGroupBox *BinaryOpBox = new QGroupBox(tr("Opérations binaires (AxB)"));
-    QVBoxLayout *BinaryOpVBox = new QVBoxLayout;
+    QVBoxLayout *BinaryOpLayout = new QVBoxLayout;
 
     BinaryOpBox->setStyleSheet("background-color:white");
     BinaryOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
-                "background-color:#eaf1ff;"
-                "border-bottom-left-radius: 6px;"
-                "border-bottom-right-radius: 6px;"
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
+                "border-radius: 6px;"
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ;"
-                "border-top-left-radius:6px;"
-                "border-top-right-radius:6px;}");
-    BinaryOpBox->setMinimumSize(300,350);
+                "font: bold ; }");
+    BinaryOpBox->setMinimumSize(325,250);
+    BinaryOpBox->setMaximumSize(425,250);
 
     BinaryOpBox->setFont(font);
 
@@ -169,7 +200,7 @@ QGroupBox* MainWindow::initBinaryOp()
         //Ajout du style pour les boutons
         BinaryOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
                                        "QPushButton:hover{ background-color: lightBlue }");
-        BinaryOpButtons->setMinimumSize(200,40);
+        BinaryOpButtons->setMinimumSize(100,20);
         BinaryOpButtons->setMaximumSize(600,80);
 
         connect(BinaryOpButtons, &QPushButton::clicked,
@@ -178,16 +209,16 @@ QGroupBox* MainWindow::initBinaryOp()
                     this->compute_choice(i);
                 });
 
-        BinaryOpVBox -> addWidget(BinaryOpButtons);
+        BinaryOpLayout -> addWidget(BinaryOpButtons);
 
     }
 
-    BinaryOpBox->setLayout(BinaryOpVBox);
+    BinaryOpBox->setLayout(BinaryOpLayout);
 
     return BinaryOpBox;
 }
 
-QGroupBox* MainWindow::UnaryOp()
+QGroupBox* MainWindow::initUnaryOp()
 {
     QGroupBox *UnaryOpBox = new QGroupBox(tr("Opérations unaires (A)"));
     QVBoxLayout *UnaryOpVBox = new QVBoxLayout;
@@ -196,16 +227,14 @@ QGroupBox* MainWindow::UnaryOp()
 
     UnaryOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
-                "background-color:#eaf1ff;"
-                "border-bottom-left-radius: 6px;"
-                "border-bottom-right-radius: 6px;"
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
+                "border-radius: 6px;"
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ;"
-                "border-top-left-radius:6px;"
-                "border-top-right-radius:6px;}");
-    UnaryOpBox->setMinimumSize(300,350);
+                "font: bold ; }");
+    UnaryOpBox->setMinimumSize(325,250);
+    UnaryOpBox->setMaximumSize(425,250);
 
     UnaryOpBox->setFont(font);
 
@@ -227,7 +256,7 @@ QGroupBox* MainWindow::UnaryOp()
         //Ajout du style pour les boutons
         UnaryOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
                                       "QPushButton:hover{ background-color: lightBlue }");
-        UnaryOpButtons->setMinimumSize(200,40);
+        UnaryOpButtons->setMinimumSize(100,20);
         UnaryOpButtons->setMaximumSize(600,80);
 
         UnaryOpVBox -> addWidget(UnaryOpButtons);
@@ -244,7 +273,7 @@ QGroupBox* MainWindow::UnaryOp()
     return UnaryOpBox;
 }
 
-QGroupBox* MainWindow::DiagonalisationOp()
+QGroupBox* MainWindow::initDiagonalisationOp()
 {
     QGroupBox *DiaOpBox = new QGroupBox(tr("Opérations pour la diagonalisation"));
     QVBoxLayout *DiaOpVBox = new QVBoxLayout;
@@ -254,17 +283,15 @@ QGroupBox* MainWindow::DiagonalisationOp()
 
     DiaOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
-                "background-color:#eaf1ff;"
-                "border-bottom-left-radius: 6px;"
-                "border-bottom-right-radius: 6px;"
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
+                "border-radius: 6px;"
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
                 "font: bold ;"
-                "border-top-left-radius:6px;"
-                "border-top-right-radius:6px;"
                 "}");
-    DiaOpBox->setMinimumSize(300,350);
+    DiaOpBox->setMinimumSize(325,250);
+    DiaOpBox->setMaximumSize(425,250);
     DiaOpBox->setFont(font);
 
     const QString tabDiaOp [4] =
@@ -284,7 +311,7 @@ QGroupBox* MainWindow::DiagonalisationOp()
         //Ajout du style pour les boutons
         DiaOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
                                     "QPushButton:hover{ background-color: lightBlue }");
-        DiaOpButtons->setMinimumSize(200,40);
+        DiaOpButtons->setMinimumSize(100,20);
         DiaOpButtons->setMaximumSize(600,80);
 
         DiaOpVBox -> addWidget(DiaOpButtons);
