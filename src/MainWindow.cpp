@@ -19,7 +19,7 @@
 #include "InverseWindow.h"
 #include "KerImgDimWindow.h"
 #include "PolynomialWindow.h"
-#include "EigenWindow.h"`
+#include "EigenWindow.h"
 
 MainWindow:: MainWindow() : QMainWindow()
 {
@@ -28,10 +28,21 @@ MainWindow:: MainWindow() : QMainWindow()
     Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
     Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
     Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
+    Matrix e (10,10, {1,1,1,1,1,0,0,0,0,0,
+                      0,0,0,0,0,1,1,1,1,1,
+                      1,1,1,1,1,0,0,0,0,0,
+                      0,0,0,0,0,1,1,1,1,1,
+                      1,1,1,1,1,0,0,0,0,0,
+                      0,0,0,0,0,1,1,1,1,1,
+                      1,1,1,1,1,0,0,0,0,0,
+                      0,0,0,0,0,1,1,1,1,1,
+                      1,1,1,1,1,0,0,0,0,0,
+                      0,0,0,0,0,1,1,1,1,1,});
     addNewMatrix("A", a);
     addNewMatrix("B", b);
     addNewMatrix("C", c);
     addNewMatrix("D", d);
+    addNewMatrix("E", e);
   // Nouvelles matrices
 
     setFunctorTab();
@@ -82,7 +93,7 @@ MainWindow:: MainWindow() : QMainWindow()
     opBox->setFont(fontTitle);
     opBox->setLayout(opChoiceLayout);
 
-    QWidget* choixWidget= createWindow[1](&lib, this);
+    QWidget* choixWidget= createWindow[0](&lib, this);
 
     choixWidget->setStyleSheet("background-color:white;");
     opShowLayout->addWidget(choixWidget);
@@ -99,7 +110,7 @@ MainWindow:: MainWindow() : QMainWindow()
     opShowBox->setFont(fontTitle);
     opShowBox->setLayout(opShowLayout);
 
-    opShowLayout->setAlignment(Qt::AlignTop);
+    opShowLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     QHBoxLayout* subLayot = new QHBoxLayout;
     subLayot->addWidget(opBox);
@@ -286,11 +297,10 @@ QGroupBox* MainWindow::initUnaryOp()
 
     QPushButton* UnaryOpButtons;
 
-    for(unsigned int i = 6; i < 10; ++i)
+    for(unsigned int i = 6; i < 11; ++i)
     {
         UnaryOpButtons = new QPushButton(tabUnaryOp[i-6]);
         UnaryOpButtons->setCursor(Qt::PointingHandCursor);
-        //Ajout du style pour les boutons
         UnaryOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
                                       "QPushButton:hover{ background-color: lightBlue }");
         UnaryOpButtons->setMinimumSize(100,20);
@@ -331,21 +341,19 @@ QGroupBox* MainWindow::initDiagonalisationOp()
     DiaOpBox->setMaximumSize(425,250);
     DiaOpBox->setFont(font);
 
-    const QString tabDiaOp [4] =
+    const QString tabDiaOp [3] =
     {
         "Polynôme caractéristique",
-        "Valeurs propres",
-        "Vecteurs propres",
+        "Valeurs/Vecteurs propres",
         "Diagonalisation"
     };
 
     QPushButton* DiaOpButtons;
 
-    for(unsigned int i = 10; i < 13; ++i)
+    for(unsigned int i = 11; i < 14; ++i)
     {
-        DiaOpButtons = new QPushButton(tabDiaOp[i-10]);
+        DiaOpButtons = new QPushButton(tabDiaOp[i-11]);
         DiaOpButtons->setCursor(Qt::PointingHandCursor);
-        //Ajout du style pour les boutons
         DiaOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
                                     "QPushButton:hover{ background-color: lightBlue }");
         DiaOpButtons->setMinimumSize(100,20);

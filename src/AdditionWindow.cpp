@@ -13,7 +13,6 @@ AdditionWindow::AdditionWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (p
     op2 = nullptr;
 
     resultImg = new ShowMatrixWidget(this);
-    resultImg -> setContentsMargins(0,0,0,30);
     resultImg->hide();
 
     QLabel* title = new QLabel("Addition");
@@ -25,60 +24,57 @@ AdditionWindow::AdditionWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (p
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
     op1Title -> setAlignment(Qt::AlignCenter);
     op1View = new MatrixViewWidget(lib, this);
-    op1View->setMinimumSize(200, 200);
-    //op1View->setMaximumHeight(300);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(op1View);
+    op1ChoiceLayout->setContentsMargins(0,0,20,0);
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
     QLabel* op2Title = new QLabel("Choix de la matrice 2 : ");
     op2Title->setAlignment(Qt::AlignCenter);
     op2View = new MatrixViewWidget(lib, this);
-    op2View->setMinimumSize(200, 200);
-    //op2View->setMaximumHeight(300);
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(op2View);
+    op2ChoiceLayout->setContentsMargins(20,0,0,0);
 
     QHBoxLayout* formLayout = new QHBoxLayout;
     formLayout->addLayout(op1ChoiceLayout);
     formLayout->addLayout(op2ChoiceLayout);
+    formLayout->setAlignment(Qt::AlignCenter);
+
+    QWidget* formWidget = new QWidget;
+    formWidget->setLayout(formLayout);
+    formWidget->setMaximumWidth(1200);
+    formWidget->setMaximumHeight(350);
 
     formula = new QLabel("_  +  _");
     formula->setStyleSheet("font-size: 40px");
-    formula->setAlignment(Qt::AlignCenter | Qt::AlignTop);
-    formula->setContentsMargins(0,25,0, 25);
+    formula->setAlignment(Qt::AlignCenter);
 
     QPushButton* calculer = new QPushButton("Calculer");
     calculer->setCursor(Qt::PointingHandCursor);
     calculer->setStyleSheet("QPushButton{ background-color: lightGrey } "
                             "QPushButton:hover{ background-color: lightBlue }");
-    resultImg->setContentsMargins(50,50,50,50);
+    calculer->setFixedSize(300,30);
+
+    QVBoxLayout* buttonLayout = new QVBoxLayout;
+    buttonLayout->addWidget(calculer);
+    buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignTop);
 
     QVBoxLayout* subLayout1 = new QVBoxLayout;
     subLayout1->addWidget(title);
-    subLayout1->addLayout(formLayout);
-    subLayout1->addWidget(resultImg);
-    subLayout1->addWidget(calculer);
+    subLayout1->addWidget(formWidget);
+    subLayout1->addWidget(formula);
 
     QWidget* subWidget1 = new QWidget(this);
     subWidget1->setLayout(subLayout1);
-    subWidget1->setFixedHeight(600);
+    subWidget1->setMaximumHeight(400);
 
-    QVBoxLayout* subLayout2 = new QVBoxLayout;
-    subLayout2->addWidget(formula);
-
-    QWidget* subWidget2 = new QWidget(this);
-    subWidget2 ->setLayout(subLayout2);
-    subWidget2 ->setMinimumHeight(100);
-    subWidget2 ->setMaximumHeight(400);
-    subLayout2 ->setAlignment(Qt::AlignCenter);
-
-    mainLayout = new QHBoxLayout;
+    mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
-    mainLayout->addWidget(subWidget2);
+    mainLayout->addWidget(resultImg);
+    mainLayout->addLayout(buttonLayout);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
-
 
     connect(op1View, &MatrixViewWidget::clicked,
             [this] () -> void
