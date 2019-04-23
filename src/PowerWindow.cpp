@@ -32,9 +32,9 @@ PowerWindow::PowerWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
     op2Edit->setRange(-1,100);
     op2Edit->setFixedSize(75,35);
     op2Edit->setStyleSheet("QSpinBox{border: 1px solid grey; border-radius: 3px;"
-                           "value: 5; font-size: 15px;}"
-                          "QSpinBox::down-button{width: 20px;}"
-                          "QSpinBox::up-button{width: 20px;}");
+                           "font-size: 15px;}"
+                           "QSpinBox::down-button{width: 20px;}"
+                           "QSpinBox::up-button{width: 20px;}");
     op2Edit->setButtonSymbols(QAbstractSpinBox::PlusMinus);
     op2Edit->setValue(1);
     op2ChoiceLayout->addWidget(op2Title);

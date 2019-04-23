@@ -14,17 +14,20 @@ MatrixViewWidget::MatrixViewWidget (MatrixLibrary* lib, QWidget* parent) : QTabl
 
     setModel(matrixModel);
     setSortingEnabled(true);
-    setColumnWidth(0, 98);
-    setColumnWidth(1, 50);
-    setColumnWidth(2, 50);
-    setFixedWidth(200);
+    setColumnWidth(0, 90);
+    setColumnWidth(1, 45);
+    setColumnWidth(2, 45);
+    setFixedWidth(207);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     verticalHeader()->hide();
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setShowGrid(false);
     setAlternatingRowColors(true);
-	setStyleSheet("* {alternate-background-color: #d6d1d0;background-color: white;}"
-							  "QHeaderView::section { background-color: #bdcef0; border: 0px;}");
+    setStyleSheet("* {alternate-background-color: lightBlue;background-color: white;"
+                  "border: 1px solid silver; border-radius:6px;}"
+                  "QHeaderView::section { background:"
+                  "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 "
+                  "lightBlue, stop: 1 blue); color:white; border: 0px; }");
 	refresh();
 }
 
