@@ -8,6 +8,7 @@
 #include "Matrix.h"
 #include "MatriXMiXTXT.h"
 #include "MatrixLibrary.h"
+#include "Fraction.h"
 
 using namespace std;
 
@@ -17,13 +18,31 @@ using namespace std;
 int main (int argc, char* argv[])
 {
 
-    MatrixLibrary lib;
+    Fraction f;
+    double d1 = 5.5;
+    double d2 = -9.66666666666;
+
+    cout << 1 - d2 - floor(d2) << endl;
+    f = f.double2Fraction(d1);
+    cout << f << endl;
+    f = f.double2Fraction(d2);
+    cout << f << endl;
+
+
+
+
+
+
+
+
+   /* MatrixLibrary lib;
     vector<string> resultat;
     lib.cleanSaves();
-    string expression1("");
+    string expression("A+2+B");
+    resultat = lib.decoupe(expression);*/
 
 
-    cout << lib.isCalculableExpression("a+3+b") << endl;
+    //cout << lib.isCalculableExpression(expression) << endl;
 
 
 
