@@ -11,8 +11,8 @@
 
 class Matrix
 {
+
 private:
-    
     unsigned int rows;
     unsigned int cols;
     std::vector<std::vector<double>> tab;
@@ -24,6 +24,7 @@ public:
     
     
 private:
+
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     double determinant(unsigned int dim) const;
     Eigen::MatrixXd class2Eigen() const;

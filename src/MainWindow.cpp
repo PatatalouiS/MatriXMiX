@@ -19,7 +19,7 @@
 #include "InverseWindow.h"
 #include "KerImgDimWindow.h"
 #include "PolynomialWindow.h"
-#include "EigenWindow.h"`
+#include "EigenWindow.h"
 
 MainWindow:: MainWindow() : QMainWindow()
 {
