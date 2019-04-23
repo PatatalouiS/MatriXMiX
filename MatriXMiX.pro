@@ -80,4 +80,7 @@ SOURCES += src/main.cpp \
     src/DiagonalisationWindow.cpp \
     src/ExprEvalWindow.cpp
 
+RESOURCES += \
+    data/data.qrc
+
 
