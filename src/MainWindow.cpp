@@ -19,7 +19,9 @@
 #include "InverseWindow.h"
 #include "KerImgDimWindow.h"
 #include "PolynomialWindow.h"
-#include "EigenWindow.h"`
+#include "EigenWindow.h"
+#include "DiagonalisationWindow.h"
+#include "ExprEvalWindow.h"
 
 MainWindow:: MainWindow() : QMainWindow()
 {
@@ -185,6 +187,16 @@ void MainWindow::setFunctorTab()
     {
         return new EigenWindow(lib, parent);
     };
+    createWindow[12] =
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    {
+        return new DiagonalisationWindow(lib, parent);
+    };
+    createWindow[12] =
+    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    {
+        return new ExprEvalWindow(lib, parent);
+    };
 }
 
 
@@ -196,7 +208,7 @@ void MainWindow:: compute_choice (const unsigned int choice)
 }
 
 
-QGroupBox* MainWindow::initBinaryOp()
+QGroupBox* MainWindow::initBinaryOp ()
 {
     QFont font ("Arial");
     font.setPointSize(16);
@@ -255,7 +267,7 @@ QGroupBox* MainWindow::initBinaryOp()
     return BinaryOpBox;
 }
 
-QGroupBox* MainWindow::initUnaryOp()
+QGroupBox* MainWindow::initUnaryOp ()
 {
     QGroupBox *UnaryOpBox = new QGroupBox(tr("Opérations unaires (A)"));
     QVBoxLayout *UnaryOpVBox = new QVBoxLayout;

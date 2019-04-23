@@ -45,7 +45,9 @@ HEADERS += src/Matrix.h \
     src/InverseWindow.h \
     src/KerImgDimWindow.h \
     src/PolynomialWindow.h \
-    src/EigenWindow.h
+    src/EigenWindow.h \
+    src/DiagonalisationWindow.h \
+    src/ExprEvalWindow.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -74,6 +76,8 @@ SOURCES += src/main.cpp \
     src/InverseWindow.cpp \
     src/KerImgDimWindow.cpp \
     src/PolynomialWindow.cpp \
-    src/EigenWindow.cpp
+    src/EigenWindow.cpp \
+    src/DiagonalisationWindow.cpp \
+    src/ExprEvalWindow.cpp
 
 
