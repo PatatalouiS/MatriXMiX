@@ -26,7 +26,7 @@ ExprEvalWindow::ExprEvalWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (p
     QHBoxLayout* formLayout = new QHBoxLayout;
     formLayout->addLayout(op1ChoiceLayout);
 
-    expression = new QLineEdit("Votre Expression");
+    expression = new QLineEdit();
     expression->setMinimumSize(200, 30);
 
     QPushButton* calculer = new QPushButton("Calculer");
@@ -46,34 +46,17 @@ ExprEvalWindow::ExprEvalWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (p
     mainLayout->addWidget(calculer);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
-
-    connect(op1View, &MatrixViewWidget::clicked,
-            [this] () -> void
-            {
-                this->computeSelection();
-            });
     connect(calculer, &QPushButton::clicked, this, &ExprEvalWindow::computeOperation);
-
-    op1View->refresh(
-                [](const Matrix* a) -> bool
-                {
-                    return ((a->isSQMatrix()) && (a->determinant() != 0.0));
-                });
 
     setLayout(mainLayout);
 }
 
 
-void ExprEvalWindow:: computeSelection ()
-{
-
-}
-
 
 void ExprEvalWindow:: computeOperation ()
 {
 
-
+    result = lib->expressionCalcul(expression->text().toStdString());
     resultImg->computeImgMatrix(&result, palette().color(backgroundRole()));
     resultImg->show();
 }

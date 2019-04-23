@@ -23,7 +23,6 @@ class ExprEvalWindow : public QDialog
 
     private slots:
 
-        void computeSelection();
         void computeOperation();
 
     private:
