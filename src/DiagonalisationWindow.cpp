@@ -64,11 +64,6 @@ DiagonalisationWindow::DiagonalisationWindow(MatrixLibrary* lib, QWidget* parent
     mainLayout->addWidget(calculer);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
-    op1View->refresh(
-    [](const Matrix* a) -> bool
-    {
-         return a->isDiagonalisable();
-    });
 
     connect(op1View, &MatrixViewWidget::clicked,
             [this] () -> void
@@ -95,6 +90,12 @@ DiagonalisationWindow::DiagonalisationWindow(MatrixLibrary* lib, QWidget* parent
             });
 
     connect(calculer, &QPushButton::clicked, this, &DiagonalisationWindow::computeOperation);
+
+    op1View->refresh(
+    [](const Matrix* a) -> bool
+    {
+         return (a->isSQMatrix() && a->isDiagonalisable());
+    });
 
     setLayout(mainLayout);
 }

@@ -10,14 +10,13 @@ MatrixViewWidget::MatrixViewWidget (MatrixLibrary* lib, QWidget* parent) : QTabl
     this->lib = lib;
     matrixModel = new QStandardItemModel(0,3, this);
 
+
     matrixModel->setHorizontalHeaderLabels({"Nom", "NbL", "NbC"});
 
     setModel(matrixModel);
     setSortingEnabled(true);
-    setColumnWidth(0, 90);
-    setColumnWidth(1, 45);
-    setColumnWidth(2, 45);
-    setFixedWidth(207);
+    setColumnWidth(0, 100);
+    setFixedWidth(200);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     verticalHeader()->hide();
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -28,6 +27,7 @@ MatrixViewWidget::MatrixViewWidget (MatrixLibrary* lib, QWidget* parent) : QTabl
                   "QHeaderView::section { background:"
                   "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 "
                   "lightBlue, stop: 1 blue); color:white; border: 0px; }");
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	refresh();
 }
 
