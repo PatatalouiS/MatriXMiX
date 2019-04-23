@@ -55,7 +55,6 @@ MainWindow:: MainWindow() : QMainWindow()
     menuBar = new MenuBar(this);
     setMenuBar(menuBar);
     menuBar -> setFont(font);
-
     QFont fontTitle ("Arial");
     fontTitle.setPointSize(20);
     QPixmap im(":/img/Logo_maths.jpg");
@@ -68,8 +67,6 @@ MainWindow:: MainWindow() : QMainWindow()
     headerWidget->setMaximumHeight(300);
     headerWidget->setStyleSheet("QWidget {background-color: QColor(0,0,0,0)}");
 
-    opChoiceLayout->setContentsMargins(40, 40, 40, 40);
-    opChoiceLayout->QLayout::setSpacing(20);
     opChoiceLayout->addWidget(initBinaryOp());
     opChoiceLayout->addWidget(initUnaryOp());
     opChoiceLayout->addWidget(initDiagonalisationOp());
@@ -82,8 +79,8 @@ MainWindow:: MainWindow() : QMainWindow()
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
                 "font: bold ; color:white; }");
-    opBox->setContentsMargins(20,20,20,20);
-    opBox->setFont(fontTitle);
+    opBox->setContentsMargins(10,10,10,10);
+    opBox->setFont(font);
     opBox->setLayout(opChoiceLayout);
 
     currentOpWidget = new AdditionWindow(&lib, this);
@@ -102,14 +99,13 @@ MainWindow:: MainWindow() : QMainWindow()
     opShowBox->setFont(fontTitle);
     opShowBox->setLayout(currentOpLayout);
     currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
-
     currentOpLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     QHBoxLayout* subLayot = new QHBoxLayout;
     subLayot->addWidget(opBox);
     subLayot->addWidget(opShowBox);
 
-    mainLayout->setContentsMargins(0,0,20,0);
+    mainLayout->setContentsMargins(0, 10, 0, 15);
     mainLayout->addWidget(headerWidget);
     mainLayout->addLayout(subLayot);
     mainWidget->setLayout(mainLayout);
@@ -215,7 +211,7 @@ void MainWindow:: compute_choice (const unsigned int choice)
 QGroupBox* MainWindow::initBinaryOp ()
 {
     QFont font ("Arial");
-    font.setPointSize(16);
+    font.setPointSize(13);
 
     QGroupBox *BinaryOpBox = new QGroupBox(tr("Opérations binaires (AxB)"));
     QVBoxLayout *BinaryOpLayout = new QVBoxLayout;
@@ -228,9 +224,8 @@ QGroupBox* MainWindow::initBinaryOp ()
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ; }");
-    BinaryOpBox->setMinimumSize(325,250);
-    BinaryOpBox->setMaximumSize(425,250);
+                "font: bold ; color:black;}");
+    BinaryOpBox->setMinimumSize(300,200);
 
     BinaryOpBox->setFont(font);
 
@@ -276,7 +271,7 @@ QGroupBox* MainWindow::initUnaryOp ()
     QGroupBox *UnaryOpBox = new QGroupBox(tr("Opérations unaires (A)"));
     QVBoxLayout *UnaryOpVBox = new QVBoxLayout;
     QFont font ("Arial");
-    font.setPointSize(16);
+    font.setPointSize(13);
 
     UnaryOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
@@ -285,9 +280,9 @@ QGroupBox* MainWindow::initUnaryOp ()
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ; }");
-    UnaryOpBox->setMinimumSize(325,250);
-    UnaryOpBox->setMaximumSize(425,250);
+                "font: bold ; color:back;}");
+    UnaryOpBox->setMinimumSize(300,180);
+    //UnaryOpBox->setMaximumSize(425,250);
 
     UnaryOpBox->setFont(font);
 
@@ -331,7 +326,7 @@ QGroupBox* MainWindow::initDiagonalisationOp()
     QVBoxLayout *DiaOpVBox = new QVBoxLayout;
 
     QFont font ("Arial");
-    font.setPointSize(16);
+    font.setPointSize(13);
 
     DiaOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
@@ -340,10 +335,10 @@ QGroupBox* MainWindow::initDiagonalisationOp()
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ;"
+                "font: bold ; color:black;"
                 "}");
-    DiaOpBox->setMinimumSize(325,250);
-    DiaOpBox->setMaximumSize(425,250);
+    DiaOpBox->setMinimumSize(300,130);
+    //DiaOpBox->setMaximumSize(425,250);
     DiaOpBox->setFont(font);
 
     const QString tabDiaOp [3] =
