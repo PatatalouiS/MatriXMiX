@@ -25,13 +25,12 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
 
     nbRowsSelector = new QSpinBox;
     nbColsSelector = new QSpinBox;
-    QString styleButton = "QSpinBox{border: 1px solid grey; border-radius: 3px; value: 5; font-size: 15px;}"
+    QString styleButton = "QSpinBox{border: 1px solid grey; border-radius: 3px; font-size: 15px;}"
                           "QSpinBox::down-button{width: 20px; background:"
                           "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue);}"
                           "QSpinBox::down-arrow{ background: white; height:2px ; width: 10px;}"
                           "QSpinBox::up-button{width: 20px; background:"
                           "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue)}"
-                          "QSpinBox::up-arrow{ background: white; height:2px ; width: 10px;}"
                           "QSpinBox::up-arrow{ background: white; height:10px ; width: 2px;}";
 
     nbRowsSelector->setRange(2,10);
