@@ -115,21 +115,37 @@ Fraction operator+(const Fraction & f1, const Fraction & f2)
 }
 
 
+bool Fraction:: isFraction(const double & d)
+{
+    long int integer = static_cast<long int>(d);
+    double r = d - integer;
+    if (r == 0.0)
+        return false;
+    return true;
+}
+
+
 Fraction Fraction::double2Fraction(const double & d)
 {
 
-
-    unsigned int i = 0;
+    short int i,j;
     double r = d - floor(d);
-    for(i = 1; i < 500; i++)
+    cout << r << endl;
+    for (i = -1000 ; i < 1001; i++)
     {
-        if ( abs(1 - i * r) < EPSILON)
+        for (j = -1000; j < 1001; j++ )
         {
-            double num = floor(i * r + 2 * EPSILON) + i * floor(d);
-            Fraction f (static_cast<long int>(num),i);
-            f.simplifie();
-            return f;
+            if ( abs(j - i * r) < EPSILON && i!= 0)
+            {
+                double num = floor(i * r + 2 * EPSILON) + i * floor(d);
+                Fraction f (static_cast<long int>(num),i);
+                f.simplifie();
+                return f;
+            }
+
         }
+
+
 
     }
 
@@ -152,12 +168,5 @@ Fraction Fraction::double2Fraction(const double & d)
 }
 
 
-bool Fraction:: isFraction(const double & d)
-{
-    long int integer = static_cast<long int>(d);
-    double r = d - integer;
-    if (r == 0.0)
-        return true;
-    return false;
-}
+
 
