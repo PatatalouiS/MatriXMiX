@@ -3,7 +3,7 @@
 #define KerImgDimWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "MatrixLibrary.h"
@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class KerImgDimWindow : public QDialog
+class KerImgDimWindow : public QWidget
 {
 
     Q_OBJECT

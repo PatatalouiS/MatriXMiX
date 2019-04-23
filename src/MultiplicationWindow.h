@@ -4,7 +4,7 @@
 #define MULTIPLICATIONWINDOW_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "MatrixLibrary.h"
@@ -12,7 +12,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class MultiplicationWindow : public QDialog
+class MultiplicationWindow : public QWidget
 {
 
     Q_OBJECT

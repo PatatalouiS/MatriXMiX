@@ -3,7 +3,7 @@
 #define ExprEvalWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include "MatrixLibrary.h"
@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class ExprEvalWindow : public QDialog
+class ExprEvalWindow : public QWidget
 {
 
     Q_OBJECT

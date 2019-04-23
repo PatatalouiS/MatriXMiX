@@ -3,7 +3,7 @@
 #define RowReducedWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "MatrixLibrary.h"
@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class RowReducedWindow : public QDialog
+class RowReducedWindow : public QWidget
 {
 
     Q_OBJECT

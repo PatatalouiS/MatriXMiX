@@ -3,7 +3,7 @@
 #define PolynomialWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "MatrixLibrary.h"
@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class PolynomialWindow : public QDialog
+class PolynomialWindow : public QWidget
 {
 
     Q_OBJECT

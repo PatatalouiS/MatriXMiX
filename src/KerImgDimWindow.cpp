@@ -4,7 +4,7 @@
 #include "KerImgDimWindow.h"
 #include "Error.h"
 
-KerImgDimWindow::KerImgDimWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+KerImgDimWindow::KerImgDimWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1 = nullptr;

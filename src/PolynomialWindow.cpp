@@ -4,7 +4,7 @@
 #include "PolynomialWindow.h"
 #include "Error.h"
 
-PolynomialWindow::PolynomialWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+PolynomialWindow::PolynomialWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1 = nullptr;

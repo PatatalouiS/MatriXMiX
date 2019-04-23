@@ -3,7 +3,7 @@
 #define PowerWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QSpinBox>
@@ -12,7 +12,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class PowerWindow : public QDialog
+class PowerWindow : public QWidget
 {
 
     Q_OBJECT

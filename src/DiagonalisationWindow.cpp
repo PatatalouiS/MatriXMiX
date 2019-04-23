@@ -6,7 +6,7 @@
 #include "Error.h"
 #include "Matrix.h"
 
-DiagonalisationWindow::DiagonalisationWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+DiagonalisationWindow::DiagonalisationWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1 = nullptr;

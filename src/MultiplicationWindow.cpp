@@ -4,7 +4,7 @@
 #include "MultiplicationWindow.h"
 #include "Error.h"
 
-MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1Name = "_";

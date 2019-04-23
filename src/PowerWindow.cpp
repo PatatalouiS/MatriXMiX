@@ -5,7 +5,7 @@
 #include "Error.h"
 
 
-PowerWindow::PowerWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+PowerWindow::PowerWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1Name = "_";

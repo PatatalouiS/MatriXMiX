@@ -4,7 +4,7 @@
 #include "DivisionWindow.h"
 #include "Error.h"
 
-DivisionWindow::DivisionWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+DivisionWindow::DivisionWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1Name = "_";

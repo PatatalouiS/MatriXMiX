@@ -4,7 +4,7 @@
 #include "DeterminantWindow.h"
 #include "Error.h"
 
-DeterminantWindow::DeterminantWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+DeterminantWindow::DeterminantWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1 = nullptr;

@@ -3,7 +3,7 @@
 #define EigenWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "MatrixLibrary.h"
@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class EigenWindow : public QDialog
+class EigenWindow : public QWidget
 {
 
     Q_OBJECT

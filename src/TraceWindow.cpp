@@ -4,7 +4,7 @@
 #include "TraceWindow.h"
 #include "Error.h"
 
-TraceWindow::TraceWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+TraceWindow::TraceWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1 = nullptr;

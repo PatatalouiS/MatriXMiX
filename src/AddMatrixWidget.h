@@ -14,7 +14,6 @@ class AddMatrixWidget : public QWidget
 {
     Q_OBJECT
 
-
     private:
 
     MatrixLibrary* library;
@@ -28,7 +27,6 @@ class AddMatrixWidget : public QWidget
 
     bool controlKeyboardInput () const;
 
-
     public:
 
     explicit AddMatrixWidget(QWidget *parent = nullptr);
@@ -38,8 +36,6 @@ class AddMatrixWidget : public QWidget
     signals:
 
     void matrixAdded(const QString name, const Matrix m);
-
-    public slots:
 
     private slots:
 

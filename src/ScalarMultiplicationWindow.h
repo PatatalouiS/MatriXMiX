@@ -3,7 +3,7 @@
 #define ScalarMultiplicationWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QLineEdit>
@@ -12,7 +12,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class ScalarMultiplicationWindow : public QDialog
+class ScalarMultiplicationWindow : public QWidget
 {
 
     Q_OBJECT

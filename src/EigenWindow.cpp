@@ -4,7 +4,7 @@
 #include "EigenWindow.h"
 #include "Error.h"
 
-EigenWindow::EigenWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+EigenWindow::EigenWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1 = nullptr;

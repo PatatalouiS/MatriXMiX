@@ -3,7 +3,7 @@
 #define TraceWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "MatrixLibrary.h"
@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class TraceWindow : public QDialog
+class TraceWindow : public QWidget
 {
 
     Q_OBJECT

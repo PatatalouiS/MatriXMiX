@@ -3,7 +3,7 @@
 #define DeterminantWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "MatrixLibrary.h"
@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class DeterminantWindow : public QDialog
+class DeterminantWindow : public QWidget
 {
 
     Q_OBJECT

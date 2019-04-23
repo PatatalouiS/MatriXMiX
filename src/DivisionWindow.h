@@ -3,7 +3,7 @@
 #define DivisionWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include "MatrixLibrary.h"
@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class DivisionWindow : public QDialog
+class DivisionWindow : public QWidget
 {
 
     Q_OBJECT

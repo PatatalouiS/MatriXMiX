@@ -3,7 +3,7 @@
 #define DiagonalisationWindow_H
 
 
-#include <QDialog>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <array>
@@ -12,7 +12,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class DiagonalisationWindow : public QDialog
+class DiagonalisationWindow : public QWidget
 {
 
     Q_OBJECT

@@ -5,7 +5,7 @@
 #include "Error.h"
 
 
-ExprEvalWindow::ExprEvalWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+ExprEvalWindow::ExprEvalWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
 
@@ -47,7 +47,6 @@ ExprEvalWindow::ExprEvalWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (p
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     connect(calculer, &QPushButton::clicked, this, &ExprEvalWindow::computeOperation);
-
     setLayout(mainLayout);
 }
 
@@ -55,7 +54,6 @@ ExprEvalWindow::ExprEvalWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (p
 
 void ExprEvalWindow:: computeOperation ()
 {
-
     result = lib->expressionCalcul(expression->text().toStdString());
     resultImg->computeImgMatrix(&result, palette().color(backgroundRole()));
     resultImg->show();

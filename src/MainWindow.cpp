@@ -1,10 +1,10 @@
 
-#include "MainWindow.h"
+
 #include <QLabel>
 #include <QGridLayout>
 #include <QVBoxLayout>
-#include <QDir>
 #include <QDebug>
+#include "MainWindow.h"
 
 #include "AdditionWindow.h"
 #include "SoustractionWindow.h"
@@ -20,11 +20,9 @@
 #include "KerImgDimWindow.h"
 #include "PolynomialWindow.h"
 #include "EigenWindow.h"
-<<<<<<< HEAD
 #include "DiagonalisationWindow.h"
 #include "ExprEvalWindow.h"
-=======
->>>>>>> origin/version_graph_ana
+
 
 MainWindow:: MainWindow() : QMainWindow()
 {
@@ -51,12 +49,13 @@ MainWindow:: MainWindow() : QMainWindow()
   // Nouvelles matrices
 
     setFunctorTab();
+    currentOpLayout = new QVBoxLayout;
+
     QWidget* mainWidget = new QWidget(this);
     QWidget* headerWidget = new QWidget;
     QVBoxLayout* mainLayout = new QVBoxLayout;
     QVBoxLayout* headerLayout = new QVBoxLayout;
     QVBoxLayout* opChoiceLayout = new QVBoxLayout;
-    QVBoxLayout* opShowLayout = new QVBoxLayout;
     QGroupBox* opBox = new QGroupBox(tr("Choisissez l'opération à effectuer : "));
     QGroupBox* opShowBox = new QGroupBox(tr("Vous avez choisi:"));
 
@@ -69,8 +68,7 @@ MainWindow:: MainWindow() : QMainWindow()
 
     QFont fontTitle ("Arial");
     fontTitle.setPointSize(20);
-	
-    QPixmap im (QDir::currentPath() + "/data/Logo_maths.jpg");
+    QPixmap im(":/img/Logo_maths.jpg");
     im = im.scaled(200, 100);
     QLabel* logo = new QLabel;
     logo->setPixmap(im);
@@ -98,10 +96,9 @@ MainWindow:: MainWindow() : QMainWindow()
     opBox->setFont(fontTitle);
     opBox->setLayout(opChoiceLayout);
 
-    QWidget* choixWidget= createWindow[0](&lib, this);
-
-    choixWidget->setStyleSheet("background-color:white;");
-    opShowLayout->addWidget(choixWidget);
+    currentOpWidget = new AdditionWindow(&lib, this);
+    currentOpWidget->setStyleSheet("background-color:white;");
+    currentOpLayout->addWidget(currentOpWidget);
     opShowBox -> setStyleSheet(
                 "QGroupBox { border: 3px solid silver;"
                 "background-color:white;"
@@ -113,15 +110,16 @@ MainWindow:: MainWindow() : QMainWindow()
                 "font: bold ;color:white; }");
     opShowBox->setContentsMargins(20,20,20,20);
     opShowBox->setFont(fontTitle);
-    opShowBox->setLayout(opShowLayout);
+    opShowBox->setLayout(currentOpLayout);
+    currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
-    opShowLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
+    currentOpLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     QHBoxLayout* subLayot = new QHBoxLayout;
     subLayot->addWidget(opBox);
     subLayot->addWidget(opShowBox);
 
-    mainLayout->setContentsMargins(0, 25, 0, 0);
+    mainLayout->setContentsMargins(0,0,20,0);
     mainLayout->addWidget(headerWidget);
     mainLayout->addLayout(subLayot);
     mainWidget->setLayout(mainLayout);
@@ -129,7 +127,6 @@ MainWindow:: MainWindow() : QMainWindow()
                               ", x2: 0 , y2:1 , "
                               "stop : 0 #283676 , stop : 1 #000066)}");
     connect(menuBar, &MenuBar::openLibrary, this, &MainWindow::show_library);
-
     setCentralWidget(mainWidget);
 }
 
@@ -201,12 +198,12 @@ void MainWindow::setFunctorTab()
     {
         return new EigenWindow(lib, parent);
     };
-    createWindow[12] =
+    createWindow[13] =
     [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
         return new DiagonalisationWindow(lib, parent);
     };
-    createWindow[12] =
+    createWindow[14] =
     [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
     {
         return new ExprEvalWindow(lib, parent);
@@ -216,9 +213,12 @@ void MainWindow::setFunctorTab()
 
 void MainWindow:: compute_choice (const unsigned int choice)
 {
-    QWidget* newWindow = createWindow[choice](&lib, nullptr);
-    newWindow->setAttribute(Qt::WA_DeleteOnClose);
-    newWindow->show();
+    currentOpLayout->removeWidget(currentOpWidget);
+    currentOpWidget->deleteLater();
+    currentOpWidget = createWindow[choice](&lib, this);
+    currentOpWidget->setStyleSheet("background-color:white;");
+    currentOpLayout->addWidget(currentOpWidget);
+    currentOpWidget->show();
 }
 
 
