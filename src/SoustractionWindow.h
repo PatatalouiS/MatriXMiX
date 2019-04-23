@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class SoustractionWindow : public QDialog
+class SoustractionWindow : public QWidget
 {
 
     Q_OBJECT

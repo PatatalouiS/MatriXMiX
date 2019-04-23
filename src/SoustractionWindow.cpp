@@ -4,7 +4,7 @@
 #include "SoustractionWindow.h"
 #include "Error.h"
 
-SoustractionWindow::SoustractionWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+SoustractionWindow::SoustractionWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1Name = "_";
@@ -18,18 +18,21 @@ SoustractionWindow::SoustractionWindow(MatrixLibrary* lib, QWidget* parent) : QD
     QLabel* title = new QLabel("Soustration");
     title->setStyleSheet("font-size: 30px;");
     title->setAlignment(Qt::AlignCenter);
+    title->setContentsMargins(0,0,0,40);
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
+    op1Title->setAlignment(Qt::AlignTop| Qt::AlignCenter);
     op1View = new MatrixViewWidget(lib, this);
-    op1View->setFixedSize(200, 200);
+    op1View->setMinimumSize(207, 210);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(op1View);
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
     QLabel* op2Title = new QLabel("Choix de la matrice 2 : ");
+    op2Title->setAlignment(Qt::AlignTop| Qt::AlignCenter);
     op2View = new MatrixViewWidget(lib, this);
-    op2View->setFixedSize(200, 200);
+    op2View->setMinimumSize(207, 210);
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(op2View);
 
@@ -43,6 +46,9 @@ SoustractionWindow::SoustractionWindow(MatrixLibrary* lib, QWidget* parent) : QD
     formula->setContentsMargins(0,25,0, 25);
 
     QPushButton* calculer = new QPushButton("Calculer");
+    calculer->setCursor(Qt::PointingHandCursor);
+    calculer->setStyleSheet("QPushButton{ background-color: lightGrey } "
+                            "QPushButton:hover{ background-color: lightBlue }");
 
     QVBoxLayout* subLayout1 = new QVBoxLayout;
     subLayout1->addWidget(title);
@@ -50,7 +56,7 @@ SoustractionWindow::SoustractionWindow(MatrixLibrary* lib, QWidget* parent) : QD
     subLayout1->addWidget(formula);
     QWidget* subWidget1 = new QWidget(this);
     subWidget1->setLayout(subLayout1);
-    subWidget1->setFixedHeight(400);
+    subWidget1->setFixedHeight(600);
 
     mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
