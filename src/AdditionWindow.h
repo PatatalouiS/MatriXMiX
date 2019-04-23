@@ -11,7 +11,7 @@
 #include "ShowMatrixWidget.h"
 
 
-class AdditionWindow : public QDialog
+class AdditionWindow : public QWidget
 {
 
     Q_OBJECT
@@ -38,7 +38,7 @@ class AdditionWindow : public QDialog
         Matrix result;
         QLabel* formula;
         ShowMatrixWidget* resultImg;
-        QVBoxLayout* mainLayout;
+        QHBoxLayout* mainLayout;
 };
 
 
