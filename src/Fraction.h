@@ -26,6 +26,7 @@ public:
     void simplifie();
     Fraction double2Fraction(const double & f);
     bool isFraction(const double & d);
+    Fraction attal(const double & d);
 
 };
 

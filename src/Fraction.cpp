@@ -178,4 +178,28 @@ Fraction Fraction::double2Fraction(const double & d)
 
 
 
+Fraction Fraction:: attal(const double & d)
+{
+    double inverse1;
+    double reste1, reste2;
+    double integer1, integer2;
+    integer1 = floor(d);
+    reste1 = d- integer1;
+    inverse1 = 1/reste1;
+    integer2 = floor(inverse1);
+    reste2 = inverse1 - integer2;
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
 

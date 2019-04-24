@@ -6,8 +6,6 @@
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "Fraction.h"
 
-using namespace std;
-
 
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
 {
@@ -36,7 +34,6 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix* mat, const QColor& col)
                     + QString ("}{")
                     + QString::number(f.denominateur)
                     + QString ("}");
-            //cout << "DEBUT" << latex.toStdString() << "FIN" << endl;
         }
         else
         {
