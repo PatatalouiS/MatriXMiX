@@ -569,27 +569,26 @@ double Matrix:: traceMatrix() const
 
 double Matrix:: determinant() const
 {
-    if ( !isSQMatrix() )
+    if (!isSQMatrix())
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
     }
 
-    unsigned int i,j,r,c;
-    r = getNbRows();
-    c = getNbCols();
-
-    for (i=0; i<r; i++)
+    if (isDiagonalisable())
     {
-        for (j=0; j<c; j++)
+        Matrix diag;
+        diag = diagonalise();
+        double det = 0.0;
+        unsigned int i, r;
+        r = getNbRows();
+        for (i=0; i<r; i++)
         {
-            if ( (i!=j) && tab[i]==tab[j])
-            {
-                return 0.0;
-            }
+            det *= tab[i][i];
         }
-    }
 
+        return det;
+    }
 
     return determinant(rows);
 }
@@ -636,7 +635,7 @@ Matrix Matrix:: transposeMatrix() const
 
 Matrix Matrix:: inverse() const
 {
-    if ( !isSQMatrix() )
+    if (!isSQMatrix())
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
@@ -648,12 +647,26 @@ Matrix Matrix:: inverse() const
         exit(EXIT_FAILURE);
     }
 
-    Matrix temp(rows,cols), inverse(rows,cols);
-    temp=(*this).coMatrix();
-    temp=temp.transposeMatrix();
-    inverse=temp*(1/determinant());
+    if (isDiagonalisable())
+    {
+        Matrix transferC2B, diagonal, transferB2C;
+        allMatrix(transferC2B,diagonal,transferB2C);
+        unsigned int i, r;
+        r = getNbRows();
+        for (i=0; i<r; i++)
+        {
+            diagonal[i][i] = (1/diagonal[i][i]);
+        }
 
-    return inverse.checkCast();
+        return transferC2B*diagonal*transferB2C;
+    }
+
+    Matrix temp(rows,cols), inverse(rows,cols);
+    temp = (*this).coMatrix();
+    temp = temp.transposeMatrix();
+    inverse = temp*(1/determinant());
+
+    return inverse;
 }
 
 

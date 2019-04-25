@@ -21,7 +21,7 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix* mat, const QColor& col)
 {
     unsigned int rows = mat->getNbRows();
     unsigned int cols = mat->getNbCols();
-
+    clock_t t1 = clock();
     QString latex = "\\begin{bmatrix}";
     Fraction ftemp;
     for(unsigned int i = 0; i < rows; ++i)
@@ -62,6 +62,8 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix* mat, const QColor& col)
     }
     latex += "\\end{bmatrix}";
 
+    clock_t t2 = clock();
+    cout << "Temps d'exécution : " << t2-t1 << endl;
    setPixmapToQLabel(col, latex, 20);
 }
 

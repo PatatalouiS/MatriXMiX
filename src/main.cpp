@@ -34,13 +34,15 @@ int main (int argc, char* argv[])
 
     return app.exec();
 
+/*
+    Fraction f;
+    cout << f.attal(0.857163) << endl;
 
 
 
 
 
-
-   /* MatrixLibrary lib;
+    MatrixLibrary lib;
     vector<string> resultat;
     lib.cleanSaves();
     string expression("A+2+B");
