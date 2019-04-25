@@ -38,7 +38,7 @@ class MatrixLibrary
 
     std::vector<std::string> decoupe (const std::string & expression);
     bool priorite_sup_egal (const std::string & opd,const std::string & opg) const;
-    void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
+
 
     Matrix calculate (const std::string & op, const std::string & a, const std::string & b) const;
     double calculateFloat (const std::string & op, const std::string & a, const std::string & b);
@@ -46,7 +46,7 @@ class MatrixLibrary
     Matrix calculateFloatMatrix (const std::string & op, const std::string & a, const float & b);
 
     public:
-
+    void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
     std::string isCalculableExpression(const std::string & expression) ;
     Matrix expressionCalcul(const std::string & chaine) ;
 

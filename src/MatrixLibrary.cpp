@@ -4,6 +4,7 @@
 #include <stack>
 #include <iostream>
 #include <fstream>
+#include <cassert>
 using namespace std;
 
 const string PATH = "sauvegarde.txt";
@@ -81,7 +82,8 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 
 void MatrixLibrary:: erase (const string & name)
 {
-    if(tab.erase(name)!=1)
+    tab.erase(name);
+    if(exist(name))
     {
         cout << "Suppression non effectuée" << endl;
     }
@@ -410,6 +412,7 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
                     if(polish[i] == "*")
                     {
                         temp = *(find(b)) * atof(a.c_str());
+
                     }
                     else
                     {
@@ -418,7 +421,6 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
                         temp = calculateFloatMatrix(polish[i],b,scale);
                     }
                 }
-
                 identify = static_cast<char>('0'+ nom);
                 pile.push ("temp" + identify);
                 addMatrix ("temp" + identify, temp);
@@ -442,10 +444,19 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
             pile.push(polish[i]);
         }
     }
+
     const Matrix* res;
     res = find(pile.top());
+    Matrix resultat(*res);
 
-    return *res;
+    for(int i=0; i<=nom-1; i++)
+    {
+        identify = static_cast<char>('0'+ i);
+        erase("temp" + identify);
+    }
+
+
+    return resultat;
 }
 
 
@@ -727,6 +738,87 @@ Matrix MatrixLibrary:: readMatrix(const string & matrixname) const
 }
 
 
+void MatrixLibrary:: testRegression()
+{
+     cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
+
+    MatrixLibrary lib;
+
+    Matrix identite(3,3,{1,0,0,0,1,0,0,0,1});
+    Matrix a(3,3,{1,2,3,4,5,6,7,8,9});
+    Matrix b(3,3,{1,2,3,2,4,5,3,5,1});
+
+
+
+    /* fonction IsName */
+
+    assert(isName("identite"));
+    assert(!isName("5identite"));
+    assert(!isName("545"));
+    assert(isName("Identite12"));
+    assert(!isName("~Identite+"));
+
+    /* fonctions size,isEmpty,exist,addMatrix,find,erase */
+
+    assert(lib.size()==0);
+    assert(lib.isEmpty());
+
+    lib.addMatrix("identite",identite);
+    lib.addMatrix("matrice1",a);
+    lib.addMatrix("matrice2",b);
+
+    assert(!lib.isEmpty());
+    assert(lib.exist("matrice1"));
+
+    lib.erase("matrice2");
+
+    assert(!lib.exist("matrice2"));
+    assert(*lib.find("identite") == identite);
+    assert(*lib.find("matrice1") == a);
+    assert(lib.size()==2);
+
+    /* fonctions isCalculableExpression */
+
+
+    /* fonctions expressionCalcul */
+
+    lib.addMatrix("matrice2",b);
+
+    Matrix res;
+    Matrix resultat1(3,3,{2,0,0,0,2,0,0,0,2});
+    Matrix resultat2(3,3,{7,2,3,4,11,6,7,8,15});
+    Matrix resultat3(3,3,{45360,55728,66096,102708,126198,149688,160056,196668,233280});
+    Matrix resultat4(3,3,{33,-13,2,-13,20,-1,2,-1,12});
+    Matrix resultat5(3,3,{615,-379,55,-379,235,-34,55,-34,6});
+    Matrix resultat6(3,3,0);
+
+
+    res = lib.expressionCalcul("identite+identite~");
+    assert(res == resultat1);
+
+
+    res = lib.expressionCalcul("identite+identite~*5+matrice1");
+    assert(res == resultat2);
+
+
+    res = lib.expressionCalcul("3*2*matrice1^4");
+    assert(res == resultat3);
+
+
+    res = lib.expressionCalcul("matrice2~+6*2");
+    assert(res == resultat4);
+
+
+
+    res = lib.expressionCalcul("1+(matrice2~)^2");
+    assert(res == resultat5);
+
+    res = lib.expressionCalcul("2*matrice2*matrice2*(matrice2*matrice2)~-2");
+    assert(res == resultat6);
+
+
+    cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
+}
 
 
 
