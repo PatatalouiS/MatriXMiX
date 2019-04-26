@@ -3,6 +3,7 @@
 #define SHOWMATRIXWIDGET_H
 
 #include <QLabel>
+#include<QScrollArea>
 #include "Matrix.h"
 
 
@@ -13,6 +14,7 @@ class ShowMatrixWidget : public QWidget
     private:
 
     QLabel* imgSelected;
+    QScrollArea* scrollArea;
 
     void setPixmapToQLabel(const QColor& col, const QString& latex, const unsigned int sizeTxt);
 
