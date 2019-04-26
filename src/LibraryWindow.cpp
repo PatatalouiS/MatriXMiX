@@ -10,7 +10,7 @@
 using namespace std;
 
 
-LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(main)
+LibraryWindow:: LibraryWindow (MainWindow* main, MatrixLibrary* library) : QDialog(main)
 {
     lib = library;
     matrixView = new MatrixViewWidget(lib, this);
@@ -48,13 +48,12 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
 
     setLayout(mainLayout);
 
-    connect(this, &LibraryWindow::close, main, &QWidget::show);
     connect(matrixView, &MatrixViewWidget::clicked,
             this, &LibraryWindow::compute_selection);
     connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
             matrixView, &MatrixViewWidget::addNewRow);
     connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
-            qobject_cast<MainWindow*>(main), &MainWindow::addNewMatrix);
+            main,&MainWindow::addNewMatrix);
 }
 
 void LibraryWindow:: compute_selection()
@@ -63,14 +62,7 @@ void LibraryWindow:: compute_selection()
 	QString currentName = matrixView->model()
             ->item(currentRow, 0)->data(2).toString();
 	const Matrix* currentMatrix = lib->find(currentName.toStdString());
-	showMatrixWidget->computeImgMatrix(currentMatrix, QColor(226, 226, 226));
-}
-
-
-void LibraryWindow:: closeEvent (QCloseEvent* event)
-{
-    emit close();
-    event->accept();
+    showMatrixWidget->computeImgMatrix(*currentMatrix, QColor(226, 226, 226));
 }
 
 

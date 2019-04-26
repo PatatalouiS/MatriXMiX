@@ -13,14 +13,14 @@ class MatrixViewWidget : public QTableView
 
 public:
 
-    MatrixViewWidget(MatrixLibrary* lib, QWidget* parent = nullptr);
+    MatrixViewWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
     ~MatrixViewWidget ();
     QStandardItemModel* model () const;
 
 private:
 
     QStandardItemModel* matrixModel;
-    MatrixLibrary* lib;
+    const MatrixLibrary* lib;
 
 public slots:
 

@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 
 
-MatrixViewWidget::MatrixViewWidget (MatrixLibrary* lib, QWidget* parent) : QTableView (parent)
+MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) : QTableView (parent)
 {
     this->lib = lib;
     matrixModel = new QStandardItemModel(0,3, this);
@@ -39,7 +39,7 @@ QStandardItemModel* MatrixViewWidget:: model () const
 
 
 void MatrixViewWidget::refresh(std::function<bool(Matrix*)> filter)
-{
+{       
     matrixModel->removeRows(0, matrixModel->rowCount());
 
     Matrix* matrix;

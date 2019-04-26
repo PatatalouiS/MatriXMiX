@@ -8,6 +8,7 @@
 #include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
 
+class MainWindow;
 
 
 class LibraryWindow : public QDialog
@@ -26,14 +27,10 @@ private:
     QPushButton* edit;
     QPushButton* remove;
 
-    //fonctions
-
-    void closeEvent (QCloseEvent* event);
-
 
 public: //fonctions
     
-    LibraryWindow (QWidget* main, MatrixLibrary* lib);
+    LibraryWindow (MainWindow* main, MatrixLibrary* lib);
     ~LibraryWindow ();
 
 private slots:

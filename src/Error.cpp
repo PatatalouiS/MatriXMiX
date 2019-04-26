@@ -10,5 +10,5 @@ void showError(const QString& title, const QString& body, QWidget* parent)
     error->setIcon(QMessageBox::Critical);
     error->setText(title);
     error->setInformativeText(body);
-    error->exec();
+    error->show();
 }

@@ -4,6 +4,7 @@
 
 TEMPLATE = app
 CONFIG += link_prl qt debug_and_release
+CONFIG += qt
 QT += widgets
 
 include(ext/latex/jkqtmathtext.pri);
@@ -47,7 +48,10 @@ HEADERS += src/Matrix.h \
     src/PolynomialWindow.h \
     src/EigenWindow.h \
     src/DiagonalisationWindow.h \
-    src/ExprEvalWindow.h
+    src/ExprEvalWindow.h \
+    src/AbstractOperationWidget.h \
+    src/BinaryOpMatrixMatrixWidget.h \
+    src/BinaryOpMatrixNumberWidget.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -78,7 +82,10 @@ SOURCES += src/main.cpp \
     src/PolynomialWindow.cpp \
     src/EigenWindow.cpp \
     src/DiagonalisationWindow.cpp \
-    src/ExprEvalWindow.cpp
+    src/ExprEvalWindow.cpp \
+    src/AbstractOperationWidget.cpp \
+    src/BinaryOpMatrixMatrixWidget.cpp \
+    src/BinaryOpMatrixNumberWidget.cpp
 
 RESOURCES += \
     data/data.qrc

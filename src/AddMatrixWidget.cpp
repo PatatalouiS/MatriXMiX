@@ -231,6 +231,7 @@ void AddMatrixWidget:: update_EditSize ()
     }
 }
 
+
 AddMatrixWidget:: ~AddMatrixWidget ()
 {
 }

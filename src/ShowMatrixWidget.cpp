@@ -4,6 +4,7 @@
 #include "ShowMatrixWidget.h"
 #include "jkqtmathtext/jkqtmathtext.h"
 
+#include "iostream"
 
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
 {
@@ -12,25 +13,26 @@ ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
 	imgSelected = new QLabel(this);
     showMatrixLayout->addWidget(imgSelected);
     setLayout(showMatrixLayout);
+    hide();
 }
 
 
-void ShowMatrixWidget:: computeImgMatrix(const Matrix* mat, const QColor& col)
+void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const QColor& col)
 {
-	unsigned int rows = mat->getNbRows();
-	unsigned int cols = mat->getNbCols();
+    unsigned int rows = mat.getNbRows();
+    unsigned int cols = mat.getNbCols();
 
 	QString latex = "\\begin{bmatrix}";
 
 	for(unsigned int i = 0; i < rows; ++i)
 	{
-		latex += "\t" +  QString::number((*mat)[i][0]);
+        latex += "\t" +  QString::number(mat[i][0]);
 
 		for(unsigned int j = 1; j < cols; ++j)
 		{
 			if(j != cols) latex += " & ";
 			else latex += " &";
-			latex += QString::number((*mat)[i][j]);
+            latex += QString::number(mat[i][j]);
 			if((j == cols-1) && (i != rows-1)) latex += "\\\\";
 		}
 	}

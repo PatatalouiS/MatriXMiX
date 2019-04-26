@@ -22,7 +22,7 @@ class ShowMatrixWidget : public QWidget
 
     public slots:
 
-    void computeImgMatrix(const Matrix* mat, const QColor& col);
+    void computeImgMatrix(const Matrix& mat, const QColor& col = QColor(0,0,0,0));
     void computeImgScalar(const double scalar, const unsigned int type,
                           const QString& name, const QColor& col);
     void computeImgDimMatrix(const std::pair<unsigned int, unsigned int>& res,
