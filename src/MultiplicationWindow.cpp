@@ -16,12 +16,13 @@ MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) 
     resultImg->hide();
 
     QLabel* title = new QLabel("Multiplication");
-    title->setStyleSheet("font-size: 30px;");
+    title->setStyleSheet("font-size: 30px; font:bold;");
     title->setAlignment(Qt::AlignCenter);
-    title->setContentsMargins(0,0,0,40);
+    title->setContentsMargins(0,0,0,10);
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
+    op1Title -> setAlignment(Qt::AlignCenter);
     op1View = new MatrixViewWidget(lib, this);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(op1View);
@@ -29,6 +30,7 @@ MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) 
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
     QLabel* op2Title = new QLabel("Choix de la matrice 2 : ");
+    op2Title -> setAlignment(Qt::AlignCenter);
     op2View = new MatrixViewWidget(lib, this);
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(op2View);
@@ -41,7 +43,7 @@ MultiplicationWindow::MultiplicationWindow(MatrixLibrary* lib, QWidget* parent) 
 
     QWidget* formWidget = new QWidget;
     formWidget->setLayout(formLayout);
-    formWidget->setMaximumWidth(1200);
+    formWidget->setMaximumWidth(1330);
     formWidget->setMaximumHeight(350);
 
     formula = new QLabel("_  *  _");
