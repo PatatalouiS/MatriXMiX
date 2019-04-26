@@ -1,16 +1,12 @@
 
 #include <QApplication>
-#include<QDesktopWidget>
 #include "MainWindow.h"
-
 
 int main (int argc, char* argv[])
 {
     QApplication app(argc, argv);
-    app.setQuitOnLastWindowClosed(false);
-    MainWindow* win = new MainWindow;
-    win->showMaximized();
+    MainWindow win;
+    win.show();
     return app.exec();
 }
-
 

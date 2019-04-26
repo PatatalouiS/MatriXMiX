@@ -30,28 +30,16 @@ HEADERS += src/Matrix.h \
     src/LibraryWindow.h \
     src/AddMatrixWidget.h \
     src/ShowMatrixWidget.h \
-    src/AdditionWindow.h \
-    src/SoustractionWindow.h \
-    src/MultiplicationWindow.h \
-    src/DivisionWindow.h \
-    src/PowerWindow.h \
     src/Error.h \
-    src/ScalarMultiplicationWindow.h \
-    src/DeterminantWindow.h \
     src/MatrixViewWidget.h \
     src/MenuBar.h \
     src/Gauss.h \
-    src/TraceWindow.h \
-    src/RowReducedWindow.h \
-    src/InverseWindow.h \
-    src/KerImgDimWindow.h \
-    src/PolynomialWindow.h \
-    src/EigenWindow.h \
-    src/DiagonalisationWindow.h \
-    src/ExprEvalWindow.h \
     src/AbstractOperationWidget.h \
     src/BinaryOpMatrixMatrixWidget.h \
-    src/BinaryOpMatrixNumberWidget.h
+    src/BinaryOpMatrixNumberWidget.h \
+    src/UnaryOpWidget.h \
+    src/DiagonalisationWidget.h \
+    src/ExprEvalWidget.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -65,27 +53,15 @@ SOURCES += src/main.cpp \
     src/AddMatrixWidget.cpp \
     src/ShowMatrixWidget.cpp \
     src/MatrixViewWidget.cpp \
-    src/AdditionWindow.cpp \
-    src/SoustractionWindow.cpp \
-    src/MultiplicationWindow.cpp \
-    src/DivisionWindow.cpp \
-    src/PowerWindow.cpp \
     src/Error.cpp \
-    src/ScalarMultiplicationWindow.cpp \
-    src/DeterminantWindow.cpp \
     src/MenuBar.cpp \
     src/Gauss.cpp \
-    src/TraceWindow.cpp \
-    src/RowReducedWindow.cpp \
-    src/InverseWindow.cpp \
-    src/KerImgDimWindow.cpp \
-    src/PolynomialWindow.cpp \
-    src/EigenWindow.cpp \
-    src/DiagonalisationWindow.cpp \
-    src/ExprEvalWindow.cpp \
     src/AbstractOperationWidget.cpp \
     src/BinaryOpMatrixMatrixWidget.cpp \
-    src/BinaryOpMatrixNumberWidget.cpp
+    src/BinaryOpMatrixNumberWidget.cpp \
+    src/UnaryOpWidget.cpp \
+    src/DiagonalisationWidget.cpp \
+    src/ExprEvalWidget.cpp
 
 RESOURCES += \
     data/data.qrc

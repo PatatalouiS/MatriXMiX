@@ -4,7 +4,7 @@
 #include "ShowMatrixWidget.h"
 #include "jkqtmathtext/jkqtmathtext.h"
 
-#include "iostream"
+
 
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
 {
@@ -42,18 +42,16 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const QColor& col)
 }
 
 
-void ShowMatrixWidget:: computeImgScalar(const double scalar, const unsigned int type,
-const QString& name, const QColor& col)
+void ShowMatrixWidget:: computeImgDet(const double scalar, const QString& name, const QColor& col)
 {
-    QString latex;
+    QString latex = "\\mathit{Det}\\(" + name + ") = " + QString::number(scalar);
+    setPixmapToQLabel(col, latex, 40);
+}
 
-    switch(type)
-    {
-        case 0: latex = "\\mathit{Det}\\(" + name + ") = " + QString::number(scalar); break;
-        case 1: latex = "\\mathit{Tr}\\(" + name + ") = " + QString::number(scalar); break;
-        default: break;
-    }
 
+void ShowMatrixWidget:: computeImgTrace(const double scalar, const QString& name, const QColor& col)
+{
+    QString latex = "\\mathit{Tr}\\(" + name + ") = " + QString::number(scalar);
     setPixmapToQLabel(col, latex, 40);
 }
 

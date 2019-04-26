@@ -25,7 +25,6 @@ AbstractOperationWidget:: AbstractOperationWidget(const MatrixLibrary* lib, QWid
     calculer->setFixedSize(300,30);
 
     setStyleSheet("background-color:white;");
-    result.setValue(Matrix());
 
     connect(calculer, &QPushButton::clicked, this, &AbstractOperationWidget::computeOperation);
 }

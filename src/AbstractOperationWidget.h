@@ -9,7 +9,16 @@
 #include "MatrixLibrary.h"
 
 
+using EigenResult = QPair<QString, std::vector<std::pair<double, VectorX>>>;
+using DoubleResult = QPair<QString, double>;
+using PolynomialResult = std::tuple<QString, Polynomial, std::vector<Polynomial>>;
+using KerImgDimResult = QPair<QString, std::pair<unsigned int, unsigned int>>;
 Q_DECLARE_METATYPE(Matrix);
+Q_DECLARE_METATYPE(DoubleResult);
+Q_DECLARE_METATYPE(EigenResult);
+Q_DECLARE_METATYPE(PolynomialResult);
+Q_DECLARE_METATYPE(KerImgDimResult);
+
 
 
 class AbstractOperationWidget : public QWidget
@@ -22,6 +31,7 @@ class AbstractOperationWidget : public QWidget
 
     public :
 
+        using MatrixPair = QPair<QString, const Matrix*>;
         AbstractOperationWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
 
     public slots:
@@ -40,7 +50,6 @@ class AbstractOperationWidget : public QWidget
         QLabel* description;
         QLabel* title;
         QPushButton* calculer;
-        QVariant result;
 
         void setLib(const MatrixLibrary* lib);
         void setTitle(const QString& str);

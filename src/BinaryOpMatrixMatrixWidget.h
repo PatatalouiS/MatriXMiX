@@ -38,7 +38,7 @@ class BinaryOpMatrixMatrixWidget : public AbstractOperationWidget
 
     private slots:
 
-        virtual void computeSelection(bool view) override;
+        virtual void computeSelection(bool view = 0) override;
         virtual void computeOperation() override;
 
     private:
@@ -52,6 +52,7 @@ class BinaryOpMatrixMatrixWidget : public AbstractOperationWidget
        QString logo;
        BinaryOpMatrixMatrix operation;
        SortViewFunction sortViewFunction;
+       Matrix result;
 };
 
 

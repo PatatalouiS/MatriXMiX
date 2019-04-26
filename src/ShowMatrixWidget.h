@@ -5,7 +5,6 @@
 #include <QLabel>
 #include "Matrix.h"
 
-
 class ShowMatrixWidget : public QWidget
 {
     Q_OBJECT
@@ -23,14 +22,14 @@ class ShowMatrixWidget : public QWidget
     public slots:
 
     void computeImgMatrix(const Matrix& mat, const QColor& col = QColor(0,0,0,0));
-    void computeImgScalar(const double scalar, const unsigned int type,
-                          const QString& name, const QColor& col);
     void computeImgDimMatrix(const std::pair<unsigned int, unsigned int>& res,
-                           const QString& name, const QColor& col);
+                           const QString& name, const QColor& col = QColor(0,0,0,0));
     void computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2,
-                              const QString& name, const QColor& col);
+                              const QString& name, const QColor& col = QColor(0,0,0,0));
     void computeImgEigen(const std::vector<std::pair<double, VectorX>>& res,
-                         const QString& name, const QColor& col);
+                         const QString& name, const QColor& col = QColor(0,0,0,0));
+    void computeImgDet(const double scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
+    void computeImgTrace(const double scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
 
 };
 

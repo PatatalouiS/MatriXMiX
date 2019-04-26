@@ -9,6 +9,7 @@
 BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const MatrixLibrary* lib, QWidget* parent) : AbstractOperationWidget(lib,parent)
 {    
     constructType(t);
+    result = Matrix();
 
     op1.first = "_";
     op2.first = "_";
@@ -99,9 +100,11 @@ void BinaryOpMatrixMatrixWidget:: computeOperation()
         return;
     }
 
-    result.setValue(operation(op1.second, op2.second));
+    result = operation(op1.second, op2.second);
+    QVariant genericResult;
+    genericResult.setValue(result);
 
-    emit newResult(result);
+    emit newResult(genericResult);
 }
 
 

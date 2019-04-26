@@ -15,11 +15,11 @@ class BinaryOpMatrixNumberWidget : public AbstractOperationWidget
 
     public:
 
-    enum type
-    {
-        SCALAR_MULTIPLICATION,
-        POWER
-    };
+        enum type
+        {
+            SCALAR_MULTIPLICATION,
+            POWER
+        };
 
         BinaryOpMatrixNumberWidget(const type& t, const MatrixLibrary* lib, QWidget* parent = nullptr);
 
@@ -31,7 +31,7 @@ class BinaryOpMatrixNumberWidget : public AbstractOperationWidget
 
     private slots:
 
-        virtual void computeSelection(bool view) override;
+        virtual void computeSelection(bool view = 0) override;
         virtual void computeOperation() override;
 
     private:
@@ -44,6 +44,7 @@ class BinaryOpMatrixNumberWidget : public AbstractOperationWidget
        double op2;
        QString logo;
        BinaryOpMatrixNumber operation;
+       Matrix result;
 };
 
 #endif

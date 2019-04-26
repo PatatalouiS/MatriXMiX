@@ -6,22 +6,11 @@
 #include <QDebug>
 #include "MainWindow.h"
 
-#include "AdditionWindow.h"
-#include "SoustractionWindow.h"
-#include "MultiplicationWindow.h"
-#include "DivisionWindow.h"
-#include "PowerWindow.h"
-#include "ScalarMultiplicationWindow.h"
-
-#include "DeterminantWindow.h"
-#include "TraceWindow.h"
-#include "RowReducedWindow.h"
-#include "InverseWindow.h"
-#include "KerImgDimWindow.h"
-#include "PolynomialWindow.h"
-#include "EigenWindow.h"
-#include "DiagonalisationWindow.h"
-#include "ExprEvalWindow.h"
+#include "BinaryOpMatrixMatrixWidget.h"
+#include "BinaryOpMatrixNumberWidget.h"
+#include "UnaryOpWidget.h"
+#include "DiagonalisationWidget.h"
+#include "ExprEvalWidget.h"
 
 
 MainWindow:: MainWindow() : QMainWindow()
@@ -82,10 +71,6 @@ MainWindow:: MainWindow() : QMainWindow()
     opBox->setContentsMargins(10,10,10,10);
     opBox->setFont(font);
     opBox->setLayout(opChoiceLayout);
-
-    currentOpWidget = new AdditionWindow(&lib, this);
-    currentOpWidget->setStyleSheet("background-color:white;");
-    currentOpLayout->addWidget(currentOpWidget);
     opShowBox -> setStyleSheet(
                 "QGroupBox { border: 3px solid silver;"
                 "background-color:white;"
@@ -101,110 +86,166 @@ MainWindow:: MainWindow() : QMainWindow()
     currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
     currentOpLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
-    QHBoxLayout* subLayot = new QHBoxLayout;
-    subLayot->addWidget(opBox);
-    subLayot->addWidget(opShowBox);
+    imgResult = new ShowMatrixWidget;
+    imgResult->setStyleSheet("background-color: white;");
+
+    QGridLayout* subLayout = new QGridLayout;
+    subLayout->addWidget(opBox, 0, 0, 2, 1);
+    subLayout->addWidget(opShowBox, 0, 1);
+    subLayout->addWidget(imgResult, 1, 1);
 
     mainLayout->setContentsMargins(0, 10, 0, 15);
     mainLayout->addWidget(headerWidget);
-    mainLayout->addLayout(subLayot);
+    mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
     mainWidget->setStyleSheet("QWidget {background-color : qlineargradient(x1 : 0 , y1 : 0  "
                               ", x2: 0 , y2:1 , "
                               "stop : 0 #283676 , stop : 1 #000066)}");
     connect(menuBar, &MenuBar::openLibrary, this, &MainWindow::show_library);
+    compute_choice(0);
     setCentralWidget(mainWidget);
 }
-
 
 void MainWindow::setFunctorTab()
 {
     createWindow[0] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-         return new AdditionWindow(lib, parent);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::ADDITION, &lib);
     };
     createWindow[1] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-         return new SoustractionWindow(lib, parent);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::SOUSTRACTION, &lib);
     };
     createWindow[2] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-         return new PowerWindow(lib, parent);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::MULTIPLICATION, &lib);
     };
     createWindow[3] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-         return new MultiplicationWindow(lib, parent);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::DIVISION, &lib);
     };
     createWindow[4] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-         return new ScalarMultiplicationWindow(lib, parent);
+         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::SCALAR_MULTIPLICATION, &lib);
     };
     createWindow[5] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new DivisionWindow(lib, parent);
+         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::POWER, &lib);
     };
     createWindow[6] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new DeterminantWindow(lib, parent);
+         return new UnaryOpWidget(UnaryOpWidget::DETERMINANT, &lib);
     };
     createWindow[7] =
-    [] (MatrixLibrary*lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new TraceWindow(lib, parent);
+         return new UnaryOpWidget(UnaryOpWidget::TRACE, &lib);
     };
     createWindow[8] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new RowReducedWindow(lib, parent);
+         return new UnaryOpWidget(UnaryOpWidget::INVERSE, &lib);
     };
     createWindow[9] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new InverseWindow(lib, parent);
+         return new UnaryOpWidget(UnaryOpWidget::ROW_REDUCED_FORM, &lib);
     };
     createWindow[10] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new KerImgDimWindow(lib, parent);
+         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, &lib);
     };
     createWindow[11] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new PolynomialWindow(lib, parent);
+         return new UnaryOpWidget(UnaryOpWidget::CARACTERISTIC_POLYNOMIAL, &lib);
     };
     createWindow[12] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new EigenWindow(lib, parent);
+         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, &lib);
     };
     createWindow[13] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new DiagonalisationWindow(lib, parent);
+         return new DiagonalisationWidget(&lib);
     };
     createWindow[14] =
-    [] (MatrixLibrary* lib, QWidget* parent) -> QWidget*
+    [this] () -> AbstractOperationWidget*
     {
-        return new ExprEvalWindow(lib, parent);
+         return new ExprEvalWidget(&lib);
     };
 }
 
 
 void MainWindow:: compute_choice (const unsigned int choice)
 {
-    currentOpLayout->removeWidget(currentOpWidget);
-    currentOpWidget->deleteLater();
-    currentOpWidget = createWindow[choice](&lib, this);
-    currentOpWidget->setStyleSheet("background-color:white;");
+    if(currentOpWidget != nullptr)
+    {
+        currentOpLayout->removeWidget(currentOpWidget);
+        currentOpWidget->deleteLater();
+    }
+
+    currentOpWidget = createWindow[choice]();
     currentOpLayout->addWidget(currentOpWidget);
+    connect(currentOpWidget, &AbstractOperationWidget::newResult, this, &MainWindow::transferResult);
     currentOpWidget->show();
+    imgResult->hide();
+    currentChoice = choice;
+}
+
+
+void MainWindow:: transferResult (const QVariant& res)
+{
+    if(currentChoice <= 5 || currentChoice == 8 || currentChoice == 9 || currentChoice == 13)
+    {
+        assert(res.canConvert<Matrix>());
+        imgResult->computeImgMatrix(res.value<Matrix>());
+    }
+    else if(currentChoice == 6)
+    {
+        assert(res.canConvert<DoubleResult>());
+        DoubleResult resD = res.value<DoubleResult>();
+        imgResult->computeImgDet(resD.second, resD.first);
+    }
+    else if(currentChoice == 7)
+    {
+        assert(res.canConvert<DoubleResult>());
+        DoubleResult resD = res.value<DoubleResult>();
+        imgResult->computeImgTrace(resD.second, resD.first);
+    }
+    else if(currentChoice == 10)
+    {
+        assert(res.canConvert<EigenResult>());
+        EigenResult resE = res.value<EigenResult>();
+        imgResult->computeImgEigen(resE.second, resE.first);
+    }
+    else if(currentChoice == 11)
+    {
+        assert(res.canConvert<PolynomialResult>());
+        PolynomialResult resP = res.value<PolynomialResult>();
+        imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP), std::get<0>(resP));
+    }
+    else if(currentChoice == 12)
+    {
+        assert(res.canConvert<KerImgDimResult>());
+        KerImgDimResult resKI = res.value<KerImgDimResult>();
+        imgResult->computeImgDimMatrix(resKI.second, resKI.first);
+    }
+    else
+    {
+        assert(false);
+    }
+
+    imgResult->show();
 }
 
 
@@ -383,7 +424,6 @@ void MainWindow:: show_library()
     LibraryWindow* libWindow = new LibraryWindow(this, &lib);
     libWindow->setAttribute(Qt::WA_DeleteOnClose);
     libWindow->show();
-    hide();
 }
 
 

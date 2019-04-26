@@ -2,7 +2,7 @@
 #include "BinaryOpMatrixNumberWidget.h"
 #include "Error.h"
 #include <QVBoxLayout>
-#include <QLineEdit>
+
 
 
 BinaryOpMatrixNumberWidget::BinaryOpMatrixNumberWidget(const type& t, const MatrixLibrary* lib, QWidget* parent) :
@@ -11,6 +11,7 @@ AbstractOperationWidget(lib, parent)
     op1.first = "_";
     op1.second = nullptr;
     op2 = 0;
+    result = Matrix();
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
@@ -89,9 +90,11 @@ void BinaryOpMatrixNumberWidget:: computeOperation()
         return;
     }
 
-    result.setValue(operation(op1.second, op2));
+    result = operation(op1.second, op2);
+    QVariant genericResult;
+    genericResult.setValue(result);
 
-    emit newResult(result);
+    emit newResult(genericResult);
 }
 
 
