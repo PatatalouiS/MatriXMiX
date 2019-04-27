@@ -25,6 +25,7 @@ public:
     long int pgcd(long int a, long int b);
     void simplifie();
     Fraction double2Fraction(const double & f);
+    bool isFraction(const double & d);
 
 };
 

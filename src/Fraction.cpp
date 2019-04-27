@@ -5,6 +5,8 @@
 using namespace std;
 
 
+const double EPSILON = 0.0001;
+
 
 Fraction::Fraction()
 {
@@ -113,14 +115,30 @@ Fraction operator+(const Fraction & f1, const Fraction & f2)
 }
 
 
-Fraction Fraction::double2Fraction(const double & f)
+Fraction Fraction::double2Fraction(const double & d)
 {
-    unsigned int i=1;
+
+
+    unsigned int i = 0;
+    double r = d - floor(d);
+    for(i = 1; i < 500; i++)
+    {
+        if ( abs(1 - i * r) < EPSILON)
+        {
+            double num = floor(i * r + 2 * EPSILON) + i * floor(d);
+            Fraction f (static_cast<long int>(num),i);
+            f.simplifie();
+            return f;
+        }
+
+    }
+
+    i=1;
     long int num=1, den=1;
-    double f2=f*10;
+    double f2=d*10;
     while(i<10)
     {
-        if ( num != static_cast<long int>(f2*pow(10,i)) )
+        if ( num - static_cast<long int>(f2*pow(10,i)) < EPSILON)
         {
             num = static_cast<long int>(f2*pow(10,i-1)) ;
             den *= 10;
@@ -128,7 +146,18 @@ Fraction Fraction::double2Fraction(const double & f)
         i++;
     }
     Fraction fraction(num,den);
+
     fraction.simplifie();
     return fraction;
+}
+
+
+bool Fraction:: isFraction(const double & d)
+{
+    long int integer = static_cast<long int>(d);
+    double r = d - integer;
+    if (r == 0.0)
+        return true;
+    return false;
 }
 

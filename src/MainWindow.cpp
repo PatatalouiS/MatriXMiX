@@ -12,7 +12,6 @@
 #include "DiagonalisationWidget.h"
 #include "ExprEvalWidget.h"
 
-
 MainWindow:: MainWindow() : QMainWindow()
 {
   // Aide pour le Debug

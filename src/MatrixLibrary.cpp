@@ -8,6 +8,7 @@ using namespace std;
 
 const string PATH = "sauvegarde.txt";
 
+
 MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
 {
 }
@@ -77,16 +78,6 @@ const Matrix* MatrixLibrary:: find (const string& name) const
     return &tab.at(name);
 }
 
-Matrix* MatrixLibrary:: find (const string& name)
-{
-    if(tab.count(name) == 0)
-    {
-        return nullptr;
-    }
-    return &tab.at(name);
-}
-
-
 
 void MatrixLibrary:: erase (const string & name)
 {
@@ -103,7 +94,7 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 }
 
 
-bool MatrixLibrary:: isName(const string & chaine)
+bool MatrixLibrary:: isName(const string & chaine) const
 {
     unsigned long int i = 1, s = chaine.length();
 
@@ -124,7 +115,7 @@ bool MatrixLibrary:: isName(const string & chaine)
 }
 
 
-bool MatrixLibrary:: isFloat(const string & chaine)
+bool MatrixLibrary:: isFloat(const string & chaine) const
 {
     unsigned long int i = 0, s = chaine.length();
     unsigned short int nbcoma = 0;
@@ -146,7 +137,7 @@ bool MatrixLibrary:: isFloat(const string & chaine)
 }
 
 
-bool MatrixLibrary:: isOperator (const string & chaine)
+bool MatrixLibrary:: isOperator (const string & chaine) const
 {
     return ( (chaine == "+")
              ||  (chaine == "-")
@@ -160,7 +151,7 @@ bool MatrixLibrary:: isOperator (const string & chaine)
 vector<string> MatrixLibrary:: decoupe (const string & expression)
 {
     unsigned int i;
-    unsigned  long taille =expression.length();
+    unsigned  long taille = expression.length();
     vector<string> tab;
     string c, temp;
     temp="";
@@ -171,9 +162,10 @@ vector<string> MatrixLibrary:: decoupe (const string & expression)
 
         if((isOperator(c)) || (c == ")") || (c == "(") || (c == "=") )
         {
-            if (temp.length()!=0) tab.push_back(temp);
+            if (temp.length()!=0)
+                tab.push_back(temp);
             tab.push_back(c);
-            temp="";
+            temp.clear();
         }
         else if (!c.empty())
         {
@@ -188,7 +180,7 @@ vector<string> MatrixLibrary:: decoupe (const string & expression)
 }
 
 
-Matrix MatrixLibrary:: calculate (const string & op, const string & a, const string & b)
+Matrix MatrixLibrary:: calculate (const string & op, const string & a, const string & b) const
 {
     const Matrix* m_a;
     const Matrix* m_b;
@@ -277,7 +269,7 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 }
 
 
-bool MatrixLibrary:: priorite_sup_egal (const string & opd,const string & opg)
+bool MatrixLibrary:: priorite_sup_egal (const string & opd,const string & opg) const
 {
     switch (opd[0])
     {
@@ -457,7 +449,131 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
 }
 
 
-const string MatrixLibrary:: saveRights(const string & matrixname)
+string MatrixLibrary:: isCalculableExpression(const string & expression)
+{
+    vector<string> result = decoupe(expression);
+    string temp;
+    unsigned long int i, s = result.size();
+
+    string calculable = "calculable";
+    string error1 = "Expression vide" ;
+
+    if (s == 0)
+        return error1;
+    if (s == 1)
+        return calculable;
+
+
+    string error2 = "Parenthèse fermante détectée..."
+                    "\nVeuillez vérifier l'organisation des parenthèse" ;
+    string error3a = "Calcul de " ;
+    string error3b = " impossible" ;
+    string error4 = " doit être un réel" ;
+    string error5 = "\nPour les puissances négatives, veuillez utiliser '~' pour inverser, puis '^' pour l'exposant" ;
+    string error6 = "\nUn réel doit être précédé d'un opérateur de calcul (+,-,*,/,^)" ;
+    string error7 = "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
+    string error8 = "Hormis '~' et '^' les caractères spéciaux ne sont pas admis" ;
+    string error9 = "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M" ;
+
+    short int nbp = 0;
+
+
+    for(i = 0; i < s; i++)
+    {
+        temp = result[i];          //   <    >
+
+        if (temp == "(")
+        {
+            nbp++;
+        }
+        else if (temp == ")")
+        {
+            nbp--;
+            if (nbp < 0)
+                return error2;
+        }
+            else if (isOperator(temp))
+                {
+                    if (i == s-1)
+                        return ("Impossible de calculer " + result[i-1] + temp);
+                    if (isOperator(result[i-1]) || isOperator(result[i+1]))
+                        return "Deux opérateurs à la suite... \n Impossible à calculer";
+                }
+
+                else if (isName(temp))
+                {
+                    if (i == 1)
+                        return (error3a + result[i-1] + temp + error3b);
+                    if (i == s-2)
+                        return (error3a + temp + result[i+1] + error3b);
+
+                    if ( (i > 1) && (i < s-2) )
+                    {
+                        if (!isOperator(result[i-1]))
+                            return (error3a+result[i-1]+error3b);
+                        else if ( (!isName(result[i-2])) && (!isFloat(result[i-2])) )
+                            return (error3a + result[i-2] + result[i-1] + temp + error3b);
+
+                        if (result[i+1] == "^")
+                        {
+                            if (!isFloat(result[i+2]))
+                                return (error3a + temp + result[i+1] + result[i+2] + error3a + "\n" + result[i+2] + error4);
+                            if ( atoi(result[i+2].c_str()) < -1 )
+                                return (error3a + temp + result[i+1] + result[i+2] + error3a + error5);
+                            // ATTENTION AUX REELS/ENTIERS !!!!
+                        }
+
+                    }
+
+                }
+
+                else if (isFloat(temp))
+                        {
+                            if (i == 1)
+                                return (error3a + result[i-1] + temp + error3b);
+                            if (i == s-2)
+                                return (error3a + temp + result[i+1] + error3b);
+                            if (i == s-1)
+                                if (result[i-1] != "^" && result[i-1] != "*")
+                                    return (error3a + result[i-2] + result[i-1] + temp + error3b);
+
+                            if (!isOperator(result[i-1]))
+                            {
+                                if (result[i-1] != "^")
+                                    return (error3a + result[i-1] + temp + error3b + error6);
+                                else if (atof(temp.c_str()) < 0.0)
+                                    return (error3a + result[i-2] + result[i-1] + temp + error3b + error9);
+
+                                // ATTENTION RÉELS ENTIERS
+                            }
+                            else if (isName(result[i-1]) || isName(result[i+1]))
+                                {
+                                    if (isName(result[i-1]))
+                                        return "L'opération " + result[i-1] + " n'est pas définie" ;
+                                    else
+                                        return "L'opération " + result[i+1] + " n'est pas définie" ;
+                                }
+
+                                else if (result[i-1] == "+" || result[i-1] == "-")
+                                {
+                                    if (i < s-3 && (result[i+1] != "*" || !isName(result[i+2])) )
+                                            return "Opération non définie";
+                                        if ( isName(result[i-2]) && isName(result[i+2]) )
+                                            return "On ne peut pas addition un réel et une matrice";
+                                }
+
+                        }
+
+   }
+
+    if (nbp != 0)
+        return error7;
+
+    return calculable;
+}
+
+
+const string MatrixLibrary:: saveRights(const string & matrixname) const
 {
     ifstream file (PATH);
 
@@ -483,7 +599,7 @@ const string MatrixLibrary:: saveRights(const string & matrixname)
 }
 
 
-void MatrixLibrary:: saveMatrix (const string & matrixname)
+void MatrixLibrary:: saveMatrix (const string & matrixname) const
 {
     Matrix m(*find(matrixname));
     cout << m;
@@ -539,7 +655,7 @@ void MatrixLibrary:: saveMatrix (const string & matrixname)
 }
 
 
-void MatrixLibrary:: cleanSaves()
+void MatrixLibrary:: cleanSaves() const
 {
     string filename(PATH);
     ofstream file (filename.c_str());
@@ -556,7 +672,7 @@ void MatrixLibrary:: cleanSaves()
 }
 
 
-Matrix MatrixLibrary:: readMatrix(const string & matrixname)
+Matrix MatrixLibrary:: readMatrix(const string & matrixname) const
 {
     string filename(PATH);
     ifstream file (filename.c_str());
@@ -564,7 +680,7 @@ Matrix MatrixLibrary:: readMatrix(const string & matrixname)
     if(!file.is_open())
     {
         cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
+        return Matrix::matrix_noEigen;
     }
 
     string testfile;
@@ -580,7 +696,8 @@ Matrix MatrixLibrary:: readMatrix(const string & matrixname)
         {
             cout << "Erreur avec " << matrixname <<
                     "\nCette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
-            exit(EXIT_FAILURE);
+             return Matrix::matrix_noEigen;
+             //Exception Qt
         }
 
         unsigned int r,c;
@@ -604,9 +721,12 @@ Matrix MatrixLibrary:: readMatrix(const string & matrixname)
     else
     {
         cout << "Erreur" << endl ;
+        return Matrix::matrix_noEigen;
         // exception QT Maxime
     }
 }
+
+
 
 
 
