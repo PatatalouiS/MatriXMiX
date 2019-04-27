@@ -14,9 +14,8 @@ AbstractOperationWidget:: AbstractOperationWidget(const MatrixLibrary* lib, QWid
     description->setAlignment(Qt::AlignCenter);
 
     title = new QLabel(this);
-    title->setStyleSheet("font-size: 30px; font:bold;");
+    title->setStyleSheet("font-size: 20px; font:bold;");
     title->setAlignment(Qt::AlignCenter);
-    title->setContentsMargins(0,0,0,10);
 
     calculer = new QPushButton("Calculer", this);
     calculer->setCursor(Qt::PointingHandCursor);

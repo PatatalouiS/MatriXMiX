@@ -76,13 +76,13 @@ MainWindow:: MainWindow() : QMainWindow()
                                 "border-radius: 6px;}");
     headerSubLayout->addWidget(logo);
     headerSubLayout->addWidget(title);
-    headerSubLayout->setAlignment(Qt::AlignCenter);
+    headerSubLayout->setAlignment(Qt::AlignHCenter);
 
     headerWidget->setLayout(headerSubLayout);
-    headerWidget->setMaximumWidth(500);
+    headerWidget->setFixedWidth(500);
 
     headerLayout->addWidget(headerWidget);
-    headerLayout->setAlignment(Qt::AlignCenter);
+    headerLayout->setAlignment(Qt::AlignHCenter);
 
     opChoiceLayout->addWidget(initBinaryOp());
     opChoiceLayout->addWidget(initUnaryOp());
@@ -108,7 +108,6 @@ MainWindow:: MainWindow() : QMainWindow()
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
                 "font: bold ;color:white; }");
-    opShowBox->setContentsMargins(20,20,20,20);
     opShowBox->setFont(fontTitle);
     opShowBox->setLayout(currentOpLayout);
     currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -117,13 +116,24 @@ MainWindow:: MainWindow() : QMainWindow()
     imgResult = new ShowMatrixWidget;
     imgResult->setStyleSheet("background-color: white;");
 
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setFrameShadow(QFrame::Plain);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(imgResult);
+    imgResult->setMaximumSize(1500,300);
+    scrollArea->setStyleSheet("background-color:white ; border-radius:6px solid silver;");
+    scrollArea->setAlignment(Qt::AlignHCenter);
+
+
     QGridLayout* subLayout = new QGridLayout;
     subLayout->addWidget(opBox, 0, 0, 2, 1);
     subLayout->addWidget(opShowBox, 0, 1);
-    subLayout->addWidget(imgResult, 1, 1);
+    subLayout->addWidget(scrollArea, 1, 1);
+    subLayout->setAlignment(Qt::AlignCenter);
+    subLayout->setContentsMargins(0,0,20,0);
 
     mainLayout->setContentsMargins(0, 10, 0, 15);
-    mainLayout->addWidget(headerWidget);
+    mainLayout->addLayout(headerLayout);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
     mainWidget->setStyleSheet("QWidget {background-color : qlineargradient(x1 : 0 , y1 : 0  "
@@ -189,7 +199,7 @@ void MainWindow::setFunctorTab()
     createWindow[10] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, &lib);
     };
     createWindow[11] =
     [this] () -> AbstractOperationWidget*
@@ -199,8 +209,9 @@ void MainWindow::setFunctorTab()
     createWindow[12] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, &lib);
     };
+
     createWindow[13] =
     [this] () -> AbstractOperationWidget*
     {
@@ -211,6 +222,7 @@ void MainWindow::setFunctorTab()
     {
          return new ExprEvalWidget(&lib);
     };
+
 }
 
 
@@ -252,9 +264,9 @@ void MainWindow:: transferResult (const QVariant& res)
     }
     else if(currentChoice == 10)
     {
-        assert(res.canConvert<EigenResult>());
-        EigenResult resE = res.value<EigenResult>();
-        imgResult->computeImgEigen(resE.second, resE.first);
+        assert(res.canConvert<KerImgDimResult>());
+        KerImgDimResult resKI = res.value<KerImgDimResult>();
+        imgResult->computeImgDimMatrix(resKI.second, resKI.first);
     }
     else if(currentChoice == 11)
     {
@@ -264,9 +276,9 @@ void MainWindow:: transferResult (const QVariant& res)
     }
     else if(currentChoice == 12)
     {
-        assert(res.canConvert<KerImgDimResult>());
-        KerImgDimResult resKI = res.value<KerImgDimResult>();
-        imgResult->computeImgDimMatrix(resKI.second, resKI.first);
+        assert(res.canConvert<EigenResult>());
+        EigenResult resE = res.value<EigenResult>();
+        imgResult->computeImgEigen(resE.second, resE.first);
     }
     else
     {
@@ -302,10 +314,10 @@ QGroupBox* MainWindow::initBinaryOp ()
     {
         "Addition (A+B)",
         "Soustraction (A-B)",
-        "Puissance (A^n)",
         "Multiplication (A*B)",
+        "Division (A/B)",
         "Multiplication (A*lambda)",
-        "Division (A/B)"
+        "Puissance (A^n)"
     };
 
     QPushButton* BinaryOpButtons;
@@ -357,8 +369,8 @@ QGroupBox* MainWindow::initUnaryOp ()
     const QString tabUnaryOp [5] =
     {
         "Déterminant",
-        "Inverse",
         "Trace",
+        "Inverse",
         "Echelonnage",
         "Etudes des dimensions",
     };
@@ -413,7 +425,8 @@ QGroupBox* MainWindow::initDiagonalisationOp()
         "Polynôme caractéristique",
         "Valeurs/Vecteurs propres",
         "Diagonalisation",
-        "Evaluation d'expression"
+        "Evaluation d'expression",
+
     };
 
     QPushButton* DiaOpButtons;

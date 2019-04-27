@@ -36,31 +36,34 @@ BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const Mat
     formLayout->addLayout(op1ChoiceLayout);
     formLayout->addLayout(op2ChoiceLayout);
     formLayout->setAlignment(Qt::AlignCenter);
-
-    QWidget* formWidget = new QWidget;
-    formWidget->setLayout(formLayout);
-    formWidget->setMaximumWidth(1330);
-    formWidget->setMaximumHeight(350);
+    formLayout->setContentsMargins(0,0,20,0);
 
     description->setText(op1.first + logo + op2.first);
 
     QVBoxLayout* buttonLayout = new QVBoxLayout;
     buttonLayout->addWidget(calculer);
-    buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+    buttonLayout->setAlignment(Qt::AlignCenter| Qt::AlignTop);
 
     QVBoxLayout* subLayout1 = new QVBoxLayout;
     subLayout1->addWidget(title);
-    subLayout1->addWidget(formWidget);
-    subLayout1->addWidget(description);
+    subLayout1->addLayout(formLayout);
+
+    QVBoxLayout* subLayout2 = new QVBoxLayout;
+    subLayout2->addWidget(description);
+    subLayout2->addLayout(buttonLayout);
+
+    QHBoxLayout* subLayout3 = new QHBoxLayout;
+    subLayout3->addLayout(subLayout1);
+    subLayout3->addLayout(subLayout2);
 
     QWidget* subWidget1 = new QWidget(this);
-    subWidget1->setLayout(subLayout1);
-    subWidget1->setMaximumHeight(400);
+    subWidget1->setLayout(subLayout3);
+    subWidget1->setMaximumHeight(300);
+    subWidget1->setMaximumWidth(800);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
-    mainLayout->addLayout(buttonLayout);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     connect(view1, &MatrixViewWidget::clicked,
@@ -80,15 +83,9 @@ BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const Mat
     setLayout(mainLayout);
 }
 
-
-
-
-
 void BinaryOpMatrixMatrixWidget:: updateViews()
 {
 }
-
-
 
 void BinaryOpMatrixMatrixWidget:: computeOperation()
 {

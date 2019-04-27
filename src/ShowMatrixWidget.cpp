@@ -11,23 +11,21 @@ ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
     QHBoxLayout* showMatrixLayout = new QHBoxLayout;
     showMatrixLayout->setAlignment(Qt::AlignCenter);
     imgSelected = new QLabel(this);
-    scrollArea = new QScrollArea(this);
+//    scrollArea = new QScrollArea(this);
 
-    scrollArea->setBackgroundRole(QPalette::Window);
-    scrollArea->setFrameShadow(QFrame::Plain);
+//    scrollArea->setBackgroundRole(QPalette::Window);
+//    scrollArea->setFrameShadow(QFrame::Plain);
 
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    scrollArea->setWidgetResizable(true);
-    scrollArea->setWidget(imgSelected);
-    imgSelected->setMinimumSize(1500,300);
-    imgSelected->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    scrollArea->setMinimumWidth(100);
-    scrollArea->setMaximumSize(700,110);
+//    scrollArea->setWidgetResizable(true);
+//    scrollArea->setWidget(imgSelected);
+//    imgSelected->setMinimumSize(1500,300);
+//    imgSelected->setAlignment(Qt::AlignLeft| Qt::AlignTop);
+//    scrollArea->setMinimumWidth(100);
+//    scrollArea->setMaximumSize(700,200);
 
-    scrollArea->setAlignment(Qt::AlignHCenter);
+//    scrollArea->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
-    showMatrixLayout->addWidget(scrollArea);
+    showMatrixLayout->addWidget(imgSelected);
     setLayout(showMatrixLayout);
     hide();
 }

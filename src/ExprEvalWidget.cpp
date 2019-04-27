@@ -11,11 +11,11 @@ AbstractOperationWidget (lib, parent)
     setTitle("Evaluation d'expression");
 
     view = new MatrixViewWidget(lib, this);
-    view->setFixedSize(200, 200);
 
     QVBoxLayout* subLayout1 = new QVBoxLayout;
     subLayout1->addWidget(title);
     subLayout1->addWidget(view);
+    subLayout1->setAlignment(Qt::AlignCenter);
 
     QWidget* subWidget1 = new QWidget(this);
     subWidget1->setLayout(subLayout1);
@@ -30,6 +30,7 @@ AbstractOperationWidget (lib, parent)
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
+    mainLayout->addWidget(expression);
     mainLayout->addLayout(buttonLayout);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 

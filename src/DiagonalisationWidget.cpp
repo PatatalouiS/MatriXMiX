@@ -23,7 +23,7 @@ AbstractOperationWidget (lib, parent)
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice : ");
     view = new MatrixViewWidget(lib, this);
-    view->setFixedSize(200, 200);
+    //view->setFixedSize(200, 200);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(view);
 
