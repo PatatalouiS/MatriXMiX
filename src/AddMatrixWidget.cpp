@@ -7,11 +7,6 @@
 #include "Error.h"
 
 
-AddMatrixWidget::AddMatrixWidget(QWidget *parent) : QWidget(parent)
-{
-}
-
-
 AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
 : QWidget(parent)
 {
@@ -89,10 +84,7 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
             this, &AddMatrixWidget::update_EditSize);
     connect(nbColsSelector, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &AddMatrixWidget::update_EditSize);
-
-
     connect(ajouter, &QPushButton::pressed, this, &AddMatrixWidget::compute_add);
-
 }
 
 
@@ -103,7 +95,6 @@ void AddMatrixWidget:: compute_add ()
     {
         return;
     }
-
 
     VectorX values;
     QString currentValue;
@@ -119,7 +110,9 @@ void AddMatrixWidget:: compute_add ()
 
     Matrix newMatrix (nbL, nbC, values);
 
-    emit matrixAdded(name, newMatrix);
+    library->addMatrix(name.toStdString(), newMatrix);
+
+    emit newMatrixAdded(name, newMatrix);
 }
 
 
@@ -130,14 +123,15 @@ bool AddMatrixWidget:: controlKeyboardInput() const
 
     if(library->find(name.toStdString()))
     {
-        showError("La Matrice " + name + " existe déjà !",
+        Error::showError("La Matrice " + name + " existe déjà !",
                    "Veuillez changer de nom.");
         return false;
     }
 
     if(!nameMatrix->hasAcceptableInput())
     {
-        showError("Nom de Matrice " + name + " non valide !",
+        if((name[0] >= '0') || (name[0] <= '9'))
+        Error::showError("Nom de Matrice " + name + " non valide !",
                    "Veuillez saisir 10 caractère Maximum, sans caractères spéciaux ni espaces ");
         return false;
     }
@@ -146,7 +140,7 @@ bool AddMatrixWidget:: controlKeyboardInput() const
     {
         if (!i->hasAcceptableInput())
         {
-            showError("Les valeurs de votre Matrice " + name + " sont incorrectes !",
+            Error::showError("Les valeurs de votre Matrice " + name + " sont incorrectes !",
                        "Vérifiez votre saisie. Chaque coefficient doit être un nombre Réel.");
             return false;
         }
@@ -210,7 +204,7 @@ void AddMatrixWidget:: update_EditSize ()
                 temp = dynamic_cast<QLineEdit*>(lineEditsLayout->itemAtPosition(int(lrows-1), int(i))->widget());
                 lineEditsLayout->removeWidget(temp);
                 lineEditsTab.removeOne(temp);
-                delete temp;
+                temp->deleteLater();
             }
             lrows--;
         }
@@ -224,7 +218,7 @@ void AddMatrixWidget:: update_EditSize ()
                 temp = dynamic_cast<QLineEdit*>(lineEditsLayout->itemAtPosition(int(i), int(lcols-1))->widget());
                 lineEditsLayout->removeWidget(temp);
                 lineEditsTab.removeOne(temp);
-                delete temp;
+                temp->deleteLater();
             }
             lcols--;
         }

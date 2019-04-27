@@ -30,16 +30,17 @@ MainWindow:: MainWindow() : QMainWindow()
               1,1,1,1,1,1,1,1,1,1,
               1,1,1,1,1,1,1,1,1,1,});
 
-    addNewMatrix("A", a);
-    addNewMatrix("B", b);
-    addNewMatrix("C", c);
-    addNewMatrix("D", d);
-    addNewMatrix("E", e);
+    library.addMatrix("A", a);
+    library.addMatrix("B", b);
+    library.addMatrix("C", c);
+    library.addMatrix("D", d);
+    library.addMatrix("E", e);
   // Nouvelles matrices
 
     setFunctorTab();
     currentOpLayout = new QVBoxLayout;
     currentOpWidget = nullptr;
+    libraryWindow = nullptr;
 
     QWidget* mainWidget = new QWidget(this);
     QWidget* headerWidget = new QWidget;
@@ -139,77 +140,77 @@ void MainWindow::setFunctorTab()
     createWindow[0] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::ADDITION, &lib);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::ADDITION, &library);
     };
     createWindow[1] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::SOUSTRACTION, &lib);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::SOUSTRACTION, &library);
     };
     createWindow[2] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::MULTIPLICATION, &lib);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::MULTIPLICATION, &library);
     };
     createWindow[3] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::DIVISION, &lib);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::DIVISION, &library);
     };
     createWindow[4] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::SCALAR_MULTIPLICATION, &lib);
+         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::SCALAR_MULTIPLICATION, &library);
     };
     createWindow[5] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::POWER, &lib);
+         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::POWER, &library);
     };
     createWindow[6] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::DETERMINANT, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::DETERMINANT, &library);
     };
     createWindow[7] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::TRACE, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::TRACE, &library);
     };
     createWindow[8] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::INVERSE, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::INVERSE, &library);
     };
     createWindow[9] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::ROW_REDUCED_FORM, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::ROW_REDUCED_FORM, &library);
     };
     createWindow[10] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, &library);
     };
     createWindow[11] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::CARACTERISTIC_POLYNOMIAL, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::CARACTERISTIC_POLYNOMIAL, &library);
     };
     createWindow[12] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, &lib);
+         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, &library);
     };
     createWindow[13] =
     [this] () -> AbstractOperationWidget*
     {
-         return new DiagonalisationWidget(&lib);
+         return new DiagonalisationWidget(&library);
     };
     createWindow[14] =
     [this] () -> AbstractOperationWidget*
     {
-         return new ExprEvalWidget(&lib);
+         return new ExprEvalWidget(&library);
     };
 }
 
@@ -225,6 +226,13 @@ void MainWindow:: compute_choice (const unsigned int choice)
     currentOpWidget = createWindow[choice]();
     currentOpLayout->addWidget(currentOpWidget);
     connect(currentOpWidget, &AbstractOperationWidget::newResult, this, &MainWindow::transferResult);
+
+    if(libraryWindow != nullptr)
+    {
+        connect(libraryWindow, &LibraryWindow::libraryChanged,
+                currentOpWidget, &AbstractOperationWidget::updateViews);
+    }
+
     currentOpWidget->show();
     imgResult->hide();
     currentChoice = choice;
@@ -233,7 +241,7 @@ void MainWindow:: compute_choice (const unsigned int choice)
 
 void MainWindow:: transferResult (const QVariant& res)
 {
-    if(currentChoice <= 5 || currentChoice == 8 || currentChoice == 9 || currentChoice == 13)
+    if(currentChoice <= 5 || currentChoice == 8 || currentChoice == 9 || (currentChoice >= 13))
     {
         assert(res.canConvert<Matrix>());
         imgResult->computeImgMatrix(res.value<Matrix>());
@@ -440,17 +448,15 @@ QGroupBox* MainWindow::initDiagonalisationOp()
     return DiaOpBox;
 }
 
-void MainWindow:: addNewMatrix(const QString name, const Matrix matrix)
-{
-    lib.addMatrix(name.toStdString(), matrix);
-}
-
 
 void MainWindow:: show_library()
 {
-    LibraryWindow* libWindow = new LibraryWindow(this, &lib);
-    libWindow->setAttribute(Qt::WA_DeleteOnClose);
-    libWindow->show();
+    libraryWindow = new LibraryWindow(this, &library);
+    connect(libraryWindow, &LibraryWindow::libraryChanged,
+            currentOpWidget,&AbstractOperationWidget::updateViews);
+    connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
+    libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
+    libraryWindow->show();
 }
 
 

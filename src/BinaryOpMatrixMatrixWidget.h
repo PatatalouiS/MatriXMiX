@@ -17,29 +17,27 @@ class BinaryOpMatrixMatrixWidget : public AbstractOperationWidget
     using BinaryOpMatrixMatrix = std::function<Matrix(const Matrix*, const Matrix*)>;
     using SortViewFunction = std::function<std::function<bool(const Matrix*)>(const Matrix*)>;
 
-
     public:
 
-    enum type
-    {
-        ADDITION,
-        SOUSTRACTION,
-        MULTIPLICATION,
-        DIVISION
-    };
-
+        enum type
+        {
+            ADDITION,
+            SOUSTRACTION,
+            MULTIPLICATION,
+            DIVISION
+        };
 
         BinaryOpMatrixMatrixWidget(const type& t, const MatrixLibrary* lib, QWidget* parent = nullptr);
         void setLogo(const QString& logo);
 
     public slots:
 
-        virtual void updateViews() override;
+        virtual void updateViews() override final;
 
     private slots:
 
-        virtual void computeSelection(bool view = 0) override;
-        virtual void computeOperation() override;
+        virtual void computeSelection(bool view = 0) override final;
+        virtual void computeOperation() override final;
 
     private:
 

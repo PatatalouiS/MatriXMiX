@@ -31,10 +31,16 @@ MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) :
 	refresh();
 }
 
-
-QStandardItemModel* MatrixViewWidget:: model () const
+const QString MatrixViewWidget:: nameOfSelectedMatrix() const
 {
-    return matrixModel;
+    if(currentIndex().isValid())
+    {
+        return matrixModel->item(currentIndex().row())->text();
+    }
+    else
+    {
+        return "";
+    }
 }
 
 
@@ -75,8 +81,14 @@ void MatrixViewWidget:: addNewRow (const QString name, const Matrix matrix)
 }
 
 
+void MatrixViewWidget:: removeRow (const int id)
+{
+    matrixModel->removeRow(id);
+    sortByColumn(0, Qt::AscendingOrder);
+}
+
+
 
 MatrixViewWidget:: ~MatrixViewWidget ()
 {
-
 }

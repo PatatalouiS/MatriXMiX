@@ -5,6 +5,13 @@
 #include <QString>
 #include <QWidget>
 
-void showError (const QString& title, const QString& body, QWidget* parent = nullptr);
+
+class Error
+{
+    public:
+
+    static void showError (const QString& title, const QString& body, QWidget* parent = nullptr);
+};
+
 
 #endif

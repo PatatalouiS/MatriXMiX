@@ -15,7 +15,8 @@ public:
 
     MatrixViewWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
     ~MatrixViewWidget ();
-    QStandardItemModel* model () const;
+
+    const QString nameOfSelectedMatrix() const;
 
 private:
 
@@ -25,8 +26,10 @@ private:
 public slots:
 
     void refresh(const std::function<bool(Matrix*)> filter =
-    [](const Matrix*) -> bool {return true;});
+        [](const Matrix*) -> bool {return true;});
+
     void addNewRow(const QString name, const Matrix matrix);
+    void removeRow(const int id);
 };
 
 #endif

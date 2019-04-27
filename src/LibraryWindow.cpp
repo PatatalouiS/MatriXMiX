@@ -4,13 +4,14 @@
 #include <QHeaderView>
 #include <QDebug>
 #include "LibraryWindow.h"
-#include "MainWindow.h"
+#include "Error.h"
+
 
 
 using namespace std;
 
 
-LibraryWindow:: LibraryWindow (MainWindow* main, MatrixLibrary* library) : QDialog(main)
+LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(main)
 {
     lib = library;
     matrixView = new MatrixViewWidget(lib, this);
@@ -49,20 +50,37 @@ LibraryWindow:: LibraryWindow (MainWindow* main, MatrixLibrary* library) : QDial
     setLayout(mainLayout);
 
     connect(matrixView, &MatrixViewWidget::clicked,
-            this, &LibraryWindow::compute_selection);
-    connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
+            this, &LibraryWindow::showSelectedMatrix);
+    connect(addMatrixWidget, &AddMatrixWidget::newMatrixAdded,
             matrixView, &MatrixViewWidget::addNewRow);
-    connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
-            main,&MainWindow::addNewMatrix);
+    connect(addMatrixWidget, &AddMatrixWidget::newMatrixAdded,
+            this,&LibraryWindow::libraryChanged);
+    connect(remove, &QPushButton::clicked, this, &LibraryWindow::removeSelectedMatrix);
 }
 
-void LibraryWindow:: compute_selection()
+
+
+void LibraryWindow:: showSelectedMatrix ()
 {
-	int currentRow = matrixView->currentIndex().row();
-	QString currentName = matrixView->model()
-            ->item(currentRow, 0)->data(2).toString();
-	const Matrix* currentMatrix = lib->find(currentName.toStdString());
-    showMatrixWidget->computeImgMatrix(*currentMatrix, QColor(226, 226, 226));
+    QString selectedName = matrixView->nameOfSelectedMatrix();
+    assert(lib->exist(selectedName.toStdString()));
+    const Matrix* selectedMatrix = lib->find(selectedName.toStdString());
+    showMatrixWidget->computeImgMatrix(*selectedMatrix);
+}
+
+
+void LibraryWindow:: removeSelectedMatrix ()
+{
+    QString selectedName = matrixView->nameOfSelectedMatrix();
+
+    if(selectedName != "")
+    {
+        matrixView->removeRow(matrixView->currentIndex().row());
+        assert(lib->exist(selectedName.toStdString()));
+        lib->erase(selectedName.toStdString());
+    }
+
+    emit libraryChanged();
 }
 
 

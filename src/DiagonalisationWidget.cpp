@@ -114,9 +114,8 @@ void DiagonalisationWidget:: computeSelection(bool viewID)
     (void)viewID;
 
     choiceWidget->hide();
-    int selectedRow;
-    selectedRow = view->currentIndex().row();
-    op.first = view->model()->item(selectedRow)->data(2).toString();
+    op.first = view->nameOfSelectedMatrix();
+    assert(lib->exist(op.first.toStdString()));
     op.second = lib->find(op.first.toStdString());
     description->setText(op.first);
 }
@@ -126,7 +125,7 @@ void DiagonalisationWidget:: computeOperation()
 {
     if(op.second == nullptr)
     {
-        showError("opérande Manquante !", "Veuillez bien sélectionner votre Matrice !", this);
+        Error::showError("opérande Manquante !", "Veuillez bien sélectionner votre Matrice !", this);
     }
 
     op.second->allMatrix(result[0], result[1], result[2]);

@@ -27,6 +27,8 @@ AbstractOperationWidget(lib, parent)
     edit->setStyleSheet("QLineEdit{border: 1px solid grey; border-radius: 3px;"
                            "font-size: 15px;}"
                        );
+    constructType(t);
+
     edit->setText("0");
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(edit);
@@ -54,7 +56,6 @@ AbstractOperationWidget(lib, parent)
     mainLayout->addWidget(calculer);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
-
     connect(view, &MatrixViewWidget::clicked,
             [this] () -> void
             {
@@ -67,7 +68,6 @@ AbstractOperationWidget(lib, parent)
                 this->computeSelection(1);
             });
 
-    constructType(t);
     view->refresh(sortFunction);
     setLayout(mainLayout);
 }
@@ -86,7 +86,7 @@ void BinaryOpMatrixNumberWidget:: computeOperation()
 
     if(op1.second == nullptr)
     {
-        showError("Opérande Manquante !", "Veuillez bien sélectionner votre matrice !", this);
+        Error::showError("Opérande Manquante !", "Veuillez bien sélectionner votre matrice !", this);
         return;
     }
 
@@ -98,13 +98,12 @@ void BinaryOpMatrixNumberWidget:: computeOperation()
 }
 
 
-void BinaryOpMatrixNumberWidget:: computeSelection(bool view)
+void BinaryOpMatrixNumberWidget:: computeSelection(bool viewId)
 {
-    if(!view)
+    if(!viewId)
     {
-        int selectedRow;
-        selectedRow = this->view->currentIndex().row();
-        op1.first = this->view->model()->item(selectedRow)->data(2).toString();
+        op1.first = view->nameOfSelectedMatrix();
+        assert(lib->exist(op1.first.toStdString()));
         op1.second = lib->find(op1.first.toStdString());
     }
     else
@@ -113,14 +112,6 @@ void BinaryOpMatrixNumberWidget:: computeSelection(bool view)
     }
     description->setText(op1.first + logo + QString::number(op2));
 }
-
-
-void BinaryOpMatrixNumberWidget:: setLogo (const QString& logo)
-{
-    this->logo = logo;
-    description->setText(op1.first + logo + QString::number(op2));
-}
-
 
 
 void BinaryOpMatrixNumberWidget:: constructType(const type& t)
@@ -136,7 +127,7 @@ void BinaryOpMatrixNumberWidget:: constructType(const type& t)
 
             edit->setValidator(new QDoubleValidator(-99999, 99999, 5, this));
 
-            setLogo(" * ");
+            logo = " * ";
             setTitle("Multiplication");
 
             break;
@@ -155,7 +146,7 @@ void BinaryOpMatrixNumberWidget:: constructType(const type& t)
 
             edit->setValidator(new QIntValidator(-1, 200, this));
 
-            setLogo(" ^ ");
+            logo = " ^ ";
             setTitle("Puissance");
         }
     }

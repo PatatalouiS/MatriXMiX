@@ -8,38 +8,39 @@
 #include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
 
-class MainWindow;
 
+using MatrixViewItem = QPair<const int, const QString>;
 
 class LibraryWindow : public QDialog
 {
     Q_OBJECT
 
-private:
-
-    //members
+    private:
 
 
-    MatrixLibrary* lib;
-    MatrixViewWidget* matrixView;
-    AddMatrixWidget* addMatrixWidget;
-    ShowMatrixWidget* showMatrixWidget;
-    QPushButton* edit;
-    QPushButton* remove;
 
+        //members
 
-public: //fonctions
-    
-    LibraryWindow (MainWindow* main, MatrixLibrary* lib);
-    ~LibraryWindow ();
+        MatrixLibrary* lib;
+        MatrixViewWidget* matrixView;
+        AddMatrixWidget* addMatrixWidget;
+        ShowMatrixWidget* showMatrixWidget;
+        QPushButton* edit;
+        QPushButton* remove;
 
-private slots:
+    public: //fonctions
 
-	void compute_selection();
-        
-signals:
+        LibraryWindow (QWidget* main, MatrixLibrary* lib);
+        ~LibraryWindow ();
 
-     void close();
+    private slots:
+
+        void removeSelectedMatrix();
+        void showSelectedMatrix();
+
+    signals:
+
+        void libraryChanged() const;
 };
 
 

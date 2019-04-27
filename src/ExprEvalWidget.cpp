@@ -1,5 +1,6 @@
 
 #include "ExprEvalWidget.h"
+#include "Error.h"
 #include <QVBoxLayout>
 
 
@@ -30,6 +31,7 @@ AbstractOperationWidget (lib, parent)
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
+    mainLayout->addWidget(expression);
     mainLayout->addLayout(buttonLayout);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
@@ -49,6 +51,14 @@ void ExprEvalWidget:: computeOperation ()
 {
     MatrixLibrary* temp = const_cast <MatrixLibrary*>(lib);
 
+    std::string testExpression = temp->isCalculableExpression(expression->text().toStdString());
+
+    if(testExpression != "calculable")
+    {
+        Error::showError("Calcul d'expression impossible", QString::fromStdString(testExpression), this);
+        return;
+    }
+
     result = temp->expressionCalcul(expression->text().toStdString());
 
     QVariant genericResult;
@@ -60,7 +70,7 @@ void ExprEvalWidget:: computeOperation ()
 
 void ExprEvalWidget:: computeSelection(bool view)
 {
-
+    (void)view;
 }
 
 
