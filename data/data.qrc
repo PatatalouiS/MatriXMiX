@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/img">
         <file>Logo_maths.jpg</file>
+        <file>logo.png</file>
+        <file>plus.png</file>
+        <file>minus.png</file>
+        <file>bg.jpg</file>
     </qresource>
 </RCC>

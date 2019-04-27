@@ -28,10 +28,10 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     QString styleButton = "QSpinBox{border: 1px solid grey; border-radius: 3px; font-size: 15px;}"
                           "QSpinBox::down-button{width: 20px; background:"
                           "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue);}"
-                          "QSpinBox::down-arrow{ background: white; height:2px ; width: 10px;}"
+                          "QSpinBox::down-arrow{ image: url(:/img/minus.png); width: 12px; height: 30px;}"
                           "QSpinBox::up-button{width: 20px; background:"
                           "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue)}"
-                          "QSpinBox::up-arrow{ background: white; height:10px ; width: 2px;}";
+                          "QSpinBox::up-arrow { image: url(:/img/plus.png); width: 35px; height:35px;}";
 
     nbRowsSelector->setRange(2,10);
     nbColsSelector->setRange(2,10);
@@ -47,7 +47,7 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     nbColsSelector->setValue(3);
 
     QFormLayout* setSpecsLayout = new QFormLayout;
-    setSpecsLayout->addRow(tr("Nom Matrice : "), nameMatrix);
+    setSpecsLayout->addRow(tr("Nom Matrice* : "), nameMatrix);
     setSpecsLayout->addRow(tr("Nombre de Lignes : "), nbRowsSelector);
     setSpecsLayout->addRow(tr("Nombre de Collones :"), nbColsSelector);
     setSpecsLayout->setFormAlignment(Qt::AlignCenter);

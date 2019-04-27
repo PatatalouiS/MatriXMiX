@@ -20,19 +20,32 @@ MainWindow:: MainWindow() : QMainWindow()
     Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
     Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
     Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
+    Matrix e (10,10, {15488,1545497,1679885,1654974,1524654,145464,1465464,12464,1264,14464,
+              1,1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,1,});
 
     addNewMatrix("A", a);
     addNewMatrix("B", b);
     addNewMatrix("C", c);
     addNewMatrix("D", d);
+    addNewMatrix("E", e);
   // Nouvelles matrices
 
     setFunctorTab();
     currentOpLayout = new QVBoxLayout;
+    currentOpWidget = nullptr;
 
     QWidget* mainWidget = new QWidget(this);
     QWidget* headerWidget = new QWidget;
     QVBoxLayout* mainLayout = new QVBoxLayout;
+    QHBoxLayout* headerSubLayout = new QHBoxLayout;
     QVBoxLayout* headerLayout = new QVBoxLayout;
     QVBoxLayout* opChoiceLayout = new QVBoxLayout;
     QGroupBox* opBox = new QGroupBox(tr("Choisissez l'opération à effectuer : "));
@@ -46,15 +59,31 @@ MainWindow:: MainWindow() : QMainWindow()
     menuBar -> setFont(font);
     QFont fontTitle ("Arial");
     fontTitle.setPointSize(20);
-    QPixmap im(":/img/Logo_maths.jpg");
-    im = im.scaled(200, 100);
+    QPixmap im(":/img/logo.png");
+    im = im.scaled(100, 56);
     QLabel* logo = new QLabel;
     logo->setPixmap(im);
-    headerLayout->setAlignment(Qt::AlignHCenter);
-    headerLayout->addWidget(logo);
-    headerWidget->setLayout(headerLayout);
-    headerWidget->setMaximumHeight(300);
-    headerWidget->setStyleSheet("QWidget {background-color: QColor(0,0,0,0)}");
+    logo->setMaximumWidth(150);
+    logo->setStyleSheet("background-color: QColor(0,0,0,0); border:0px;");
+    QLabel* title = new QLabel("Bienvenue sur MatriXMiX!");
+    title->setStyleSheet("font-size: 20px; font:bold; background-color: QColor(0,0,0,0);"
+                         "border:0px;");
+    title->setAlignment(Qt::AlignCenter);
+
+    headerWidget->setStyleSheet("QWidget {background-color: qlineargradient(x1 : 0 , y1 : 0  "
+                                ", x2: 0 , y2:1 , "
+                                "stop : 0 white , stop : 1 lightBlue);"
+                                "border: 2px solid silver;"
+                                "border-radius: 6px;}");
+    headerSubLayout->addWidget(logo);
+    headerSubLayout->addWidget(title);
+    headerSubLayout->setAlignment(Qt::AlignCenter);
+
+    headerWidget->setLayout(headerSubLayout);
+    headerWidget->setMaximumWidth(500);
+
+    headerLayout->addWidget(headerWidget);
+    headerLayout->setAlignment(Qt::AlignCenter);
 
     opChoiceLayout->addWidget(initBinaryOp());
     opChoiceLayout->addWidget(initUnaryOp());
@@ -323,7 +352,6 @@ QGroupBox* MainWindow::initUnaryOp ()
                 "subcontrol-position:top center;"
                 "font: bold ; color:back;}");
     UnaryOpBox->setMinimumSize(300,180);
-    //UnaryOpBox->setMaximumSize(425,250);
 
     UnaryOpBox->setFont(font);
 
@@ -379,19 +407,19 @@ QGroupBox* MainWindow::initDiagonalisationOp()
                 "font: bold ; color:black;"
                 "}");
     DiaOpBox->setMinimumSize(300,130);
-    //DiaOpBox->setMaximumSize(425,250);
     DiaOpBox->setFont(font);
 
-    const QString tabDiaOp [3] =
+    const QString tabDiaOp [4] =
     {
         "Polynôme caractéristique",
         "Valeurs/Vecteurs propres",
-        "Diagonalisation"
+        "Diagonalisation",
+        "Evaluation d'expression"
     };
 
     QPushButton* DiaOpButtons;
 
-    for(unsigned int i = 11; i < 14; ++i)
+    for(unsigned int i = 11; i < 15; ++i)
     {
         DiaOpButtons = new QPushButton(tabDiaOp[i-11]);
         DiaOpButtons->setCursor(Qt::PointingHandCursor);
@@ -406,8 +434,8 @@ QGroupBox* MainWindow::initDiagonalisationOp()
                 {
                     this->compute_choice(i);
                 });
-
     }
+
     DiaOpBox->setLayout(DiaOpVBox);
 
     return DiaOpBox;
