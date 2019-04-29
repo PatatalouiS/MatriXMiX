@@ -4,32 +4,42 @@
 
 #include <QTableView>
 #include <QStandardItemModel>
+#include <QDialog>
+#include <QLabel>
 #include "MatrixLibrary.h"
+#include "ShowMatrixWidget.h"
+
+using MatrixPair = QPair<const QString&, const Matrix&>;
 
 class MatrixViewWidget : public QTableView
 {
 
     Q_OBJECT
 
-public:
+    public:
 
-    MatrixViewWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
-    ~MatrixViewWidget ();
+        MatrixViewWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
+        ~MatrixViewWidget ();
 
-    const QString nameOfSelectedMatrix() const;
+        const QString nameOfSelectedMatrix() const;
+        virtual bool eventFilter(QObject *watched, QEvent* event) final;
 
-private:
+    private:
 
-    QStandardItemModel* matrixModel;
-    const MatrixLibrary* lib;
+        const MatrixLibrary* lib;
+        QStandardItemModel* matrixModel;
+        QDialog* popup;
+        QLabel* popupLabel;
+        ShowMatrixWidget* imgToolTip;
+        int currentRowHovered;
 
-public slots:
+    public slots:
 
-    void refresh(const std::function<bool(Matrix*)> filter =
-        [](const Matrix*) -> bool {return true;});
+        void refresh(const std::function<bool(Matrix*)> filter =
+            [](const Matrix*) -> bool {return true;});
 
-    void addNewRow(const QString name, const Matrix matrix);
-    void removeRow(const int id);
+        void addNewRow(const MatrixPair& m);
+        void removeRow(const int id);
 };
 
 #endif

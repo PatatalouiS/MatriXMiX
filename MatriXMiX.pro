@@ -28,7 +28,6 @@ HEADERS += src/Matrix.h \
 	src/MatrixLibrary.h \
 	src/MainWindow.h \
     src/LibraryWindow.h \
-    src/AddMatrixWidget.h \
     src/ShowMatrixWidget.h \
     src/Error.h \
     src/MatrixViewWidget.h \
@@ -39,7 +38,8 @@ HEADERS += src/Matrix.h \
     src/BinaryOpMatrixNumberWidget.h \
     src/UnaryOpWidget.h \
     src/DiagonalisationWidget.h \
-    src/ExprEvalWidget.h
+    src/ExprEvalWidget.h \
+    src/SetMatrixWidget.h
 
 SOURCES += src/main.cpp \ 
 	src/Matrix.cpp \
@@ -50,7 +50,6 @@ SOURCES += src/main.cpp \
 	src/MatrixLibrary.cpp \
 	src/MainWindow.cpp \
     src/LibraryWindow.cpp \
-    src/AddMatrixWidget.cpp \
     src/ShowMatrixWidget.cpp \
     src/MatrixViewWidget.cpp \
     src/Error.cpp \
@@ -61,7 +60,8 @@ SOURCES += src/main.cpp \
     src/BinaryOpMatrixNumberWidget.cpp \
     src/UnaryOpWidget.cpp \
     src/DiagonalisationWidget.cpp \
-    src/ExprEvalWidget.cpp
+    src/ExprEvalWidget.cpp \
+    src/SetMatrixWidget.cpp
 
 RESOURCES += \
     data/data.qrc

@@ -4,7 +4,7 @@
 
 #include <QDialog>
 #include <QPushButton>
-#include "AddMatrixWidget.h"
+#include "SetMatrixWidget.h"
 #include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
 
@@ -17,13 +17,13 @@ class LibraryWindow : public QDialog
 
     private:
 
-
-
         //members
 
         MatrixLibrary* lib;
+        QTabWidget* choice;
         MatrixViewWidget* matrixView;
-        AddMatrixWidget* addMatrixWidget;
+        SetMatrixWidget* addMatrixWidget;
+        SetMatrixWidget* editMatrixWidget;
         ShowMatrixWidget* showMatrixWidget;
         QPushButton* edit;
         QPushButton* remove;
@@ -37,6 +37,7 @@ class LibraryWindow : public QDialog
 
         void removeSelectedMatrix();
         void showSelectedMatrix();
+        void computeEditingQuery();
 
     signals:
 

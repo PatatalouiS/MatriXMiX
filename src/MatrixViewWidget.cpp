@@ -3,15 +3,20 @@
 #include "MatrixViewWidget.h"
 #include <QHeaderView>
 #include <QVBoxLayout>
+#include <QMouseEvent>
+#include <QDebug>
+#include <QDesktopWidget>
+#include <QTimer>
 
 
 MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) : QTableView (parent)
 {
     this->lib = lib;
     matrixModel = new QStandardItemModel(0,3, this);
-
+    currentRowHovered = -1;
 
     matrixModel->setHorizontalHeaderLabels({"Nom", "NbL", "NbC"});
+    imgToolTip = new ShowMatrixWidget(this);
 
     setModel(matrixModel);
     setSortingEnabled(true);
@@ -28,6 +33,17 @@ MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) :
                   "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 "
                   "lightBlue, stop: 1 blue); color:white; border: 0px; }");
     horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    viewport()->installEventFilter(this);
+    setMouseTracking(true);
+    popup = new QDialog(this, Qt::Popup | Qt::ToolTip );
+    QVBoxLayout* layout = new QVBoxLayout;
+    popupLabel = new QLabel(popup);
+    popupLabel->setWordWrap(true);
+    layout->addWidget(popupLabel);
+    popup->setLayout(layout);
+    popup->installEventFilter(this);
+
 	refresh();
 }
 
@@ -70,8 +86,10 @@ void MatrixViewWidget::refresh(std::function<bool(Matrix*)> filter)
 }
 
 
-void MatrixViewWidget:: addNewRow (const QString name, const Matrix matrix)
+void MatrixViewWidget:: addNewRow (const MatrixPair& m)
 {
+    QString name = m.first;
+    Matrix matrix = m.second;
     QList<QStandardItem*> line;
     line.append(new QStandardItem(name));
     line.append(new QStandardItem(QString::number(matrix.getNbRows())));
@@ -87,6 +105,38 @@ void MatrixViewWidget:: removeRow (const int id)
     sortByColumn(0, Qt::AscendingOrder);
 }
 
+
+bool MatrixViewWidget:: eventFilter(QObject *watched, QEvent *event)
+{
+//    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+//    QModelIndex index = indexAt(mouseEvent->pos());
+
+//    if(index.isValid())
+//    {
+//        if(event->type() == QEvent::MouseMove)
+//        {
+//            popup->show();
+//            if(index.row() != currentRowHovered)
+//            {
+//                QString hoveredMatrixName = matrixModel->item(index.row())->text();
+//                const Matrix* hoveredMatrix = lib->find(hoveredMatrixName.toStdString());
+//                imgToolTip->computeImgMatrix(*hoveredMatrix, 15);
+//                popupLabel->setPixmap(imgToolTip->getCurrentPixmap());
+//                popup->adjustSize();
+//                currentRowHovered = index.row();
+//            }
+//            int posX = cursor().pos().x();
+//            int posY = cursor().pos().y();
+//            popup->move(posX+10, posY);
+//        }
+//    }
+//    else if(event->type() == QEvent::Leave)
+//    {
+//        popup->hide();
+//    }
+
+//    return QTableView::eventFilter(watched, event);
+}
 
 
 MatrixViewWidget:: ~MatrixViewWidget ()

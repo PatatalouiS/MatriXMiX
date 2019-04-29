@@ -1,6 +1,6 @@
 
-#ifndef ADDMATRIXWIDGET_H
-#define ADDMATRIXWIDGET_H
+#ifndef SET_MATRIX_WIDGET_H
+#define SET_MATRIX_WIDGET_H
 
 #include <QWidget>
 #include <QList>
@@ -10,9 +10,13 @@
 #include <QStandardItem>
 #include "MatrixLibrary.h"
 
-class AddMatrixWidget : public QWidget
+
+
+class SetMatrixWidget : public QWidget
 {
     Q_OBJECT
+
+    using MatrixPair = QPair<const QString&, const Matrix&>;
 
     private:
 
@@ -26,20 +30,25 @@ class AddMatrixWidget : public QWidget
         unsigned int lcols;
 
         bool controlKeyboardInput () const;
+        void constructType();
 
     private slots:
 
-        void compute_add();
-        void update_EditSize();
+        void computeAdd();
+        void updateLineEdits();
 
     public:
 
-        AddMatrixWidget(MatrixLibrary* library, QWidget* parent = nullptr);
-        ~AddMatrixWidget();
+        SetMatrixWidget( MatrixLibrary* library, QWidget* parent = nullptr);
+        ~SetMatrixWidget();
+
+    public slots:
+
+        void computeEditing(const QString& name);
 
     signals:
 
-        void newMatrixAdded(const QString& name, const Matrix& m) const;
+        void newMatrixAdded(const MatrixPair& m) const;
 };
 
 #endif

@@ -24,16 +24,21 @@ ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
     imgSelected->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     scrollArea->setMinimumWidth(100);
     scrollArea->setMaximumSize(700,110);
-
     scrollArea->setAlignment(Qt::AlignHCenter);
-
     showMatrixLayout->addWidget(scrollArea);
     setLayout(showMatrixLayout);
     hide();
 }
 
 
-void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const QColor& col)
+const QPixmap& ShowMatrixWidget:: getCurrentPixmap() const
+{
+    const QPixmap* temp = imgSelected->pixmap();
+    return *temp;
+}
+
+
+void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt, const QColor& col)
 {
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
@@ -54,7 +59,7 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const QColor& col)
 	}
 	latex += "\\end{bmatrix}";
 
-   setPixmapToQLabel(col, latex, 20);
+   setPixmapToQLabel(col, latex, sizeTxt);
 }
 
 

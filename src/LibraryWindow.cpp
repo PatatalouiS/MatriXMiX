@@ -7,7 +7,6 @@
 #include "Error.h"
 
 
-
 using namespace std;
 
 
@@ -15,7 +14,8 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
 {
     lib = library;
     matrixView = new MatrixViewWidget(lib, this);
-    addMatrixWidget = new AddMatrixWidget(lib, this);
+    addMatrixWidget = new SetMatrixWidget(lib, this);
+    editMatrixWidget = new SetMatrixWidget(lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
 
     edit = new QPushButton("Editer");
@@ -32,9 +32,10 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     matrixViewLayout->addWidget(matrixView);
     matrixViewLayout->addLayout(viewFooterLayout);
 
-    QTabWidget* choice = new QTabWidget;
+    choice = new QTabWidget;
     choice->addTab(showMatrixWidget, "Visualiser");
     choice->addTab(addMatrixWidget, "Ajouter");
+    choice->addTab(editMatrixWidget, "Modifier");
     choice->setStyleSheet(
         "QTabBar::tab { background:"
         "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 darkGrey);"
@@ -51,11 +52,14 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
 
     connect(matrixView, &MatrixViewWidget::clicked,
             this, &LibraryWindow::showSelectedMatrix);
-    connect(addMatrixWidget, &AddMatrixWidget::newMatrixAdded,
+    connect(addMatrixWidget, &SetMatrixWidget::newMatrixAdded,
             matrixView, &MatrixViewWidget::addNewRow);
-    connect(addMatrixWidget, &AddMatrixWidget::newMatrixAdded,
+    connect(addMatrixWidget, &SetMatrixWidget::newMatrixAdded,
             this,&LibraryWindow::libraryChanged);
     connect(remove, &QPushButton::clicked, this, &LibraryWindow::removeSelectedMatrix);
+    connect(edit, &QPushButton::clicked, this, &LibraryWindow::computeEditingQuery);
+   // connect(editMatrixWidget, &SetMatrixWidget::matrixEdited, this, &LibraryWindow::libraryChanged);
+    //connect(SetMatrixWidget, &SetMatrixWidget::matrixEdited, matrixView, &MatrixViewWidget::editRow());
 }
 
 
@@ -73,17 +77,37 @@ void LibraryWindow:: removeSelectedMatrix ()
 {
     QString selectedName = matrixView->nameOfSelectedMatrix();
 
-    if(selectedName != "")
+    if(selectedName == "")
     {
-        matrixView->removeRow(matrixView->currentIndex().row());
-        assert(lib->exist(selectedName.toStdString()));
-        lib->erase(selectedName.toStdString());
+        Error::showError("Suppression impossible !", "Veuillez sélectionner une Matrice", this);
     }
 
+    matrixView->removeRow(matrixView->currentIndex().row());
+    assert(lib->exist(selectedName.toStdString()));
+    lib->erase(selectedName.toStdString());
     emit libraryChanged();
 }
+
+
+void LibraryWindow:: computeEditingQuery()
+{
+    QString selectedMatrix = matrixView->nameOfSelectedMatrix();
+
+    if(selectedMatrix == "")
+    {
+        Error::showError("Edition impossible !", "Vous devez sélectionner une matrice !", this);
+        return;
+    }
+
+    choice->setTabEnabled(1, true);
+    editMatrixWidget->computeEditing(selectedMatrix);
+}
+
 
 
 LibraryWindow:: ~LibraryWindow()
 {   
 }
+
+
+

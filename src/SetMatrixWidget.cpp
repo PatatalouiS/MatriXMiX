@@ -3,11 +3,11 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include "LibraryWindow.h"
-#include "AddMatrixWidget.h"
+#include "SetMatrixWidget.h"
 #include "Error.h"
 
 
-AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
+SetMatrixWidget::SetMatrixWidget(MatrixLibrary* library, QWidget* parent)
 : QWidget(parent)
 {
     this->library = library;
@@ -15,7 +15,7 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     nameMatrix = new QLineEdit;
     QRegExpValidator* regex = new QRegExpValidator(QRegExp("[a-zA-Z0-9]+"), nameMatrix);
     nameMatrix->setValidator(regex);
-    nameMatrix->setMaxLength(10);
+    nameMatrix->setMaxLength(20);
     nameMatrix->setFixedSize(75,35);
 
     nbRowsSelector = new QSpinBox;
@@ -81,15 +81,37 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     setLayout(mainLayout);
 
     connect(nbRowsSelector, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &AddMatrixWidget::update_EditSize);
+            this, &SetMatrixWidget::updateLineEdits);
     connect(nbColsSelector, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &AddMatrixWidget::update_EditSize);
-    connect(ajouter, &QPushButton::pressed, this, &AddMatrixWidget::compute_add);
+            this, &SetMatrixWidget::updateLineEdits);
+    connect(ajouter, &QPushButton::pressed, this, &SetMatrixWidget::computeAdd);
 }
 
 
 
-void AddMatrixWidget:: compute_add ()
+void SetMatrixWidget:: computeEditing(const QString& name)
+{
+    assert(library->exist(name.toStdString()));
+    const Matrix* matrixToEdit = library->find(name.toStdString());
+
+    unsigned int nbRows = matrixToEdit->getNbRows();
+    unsigned int nbCols = matrixToEdit->getNbCols();
+    nameMatrix->setText(name);
+    nameMatrix->setDisabled(true);
+    nbRowsSelector->setValue(int(nbRows));
+    nbColsSelector->setValue(int(nbCols));
+
+    QString valueToString;
+    for(unsigned int i = 0; i < nbRows*nbCols; ++i)
+    {
+        valueToString = QString::number(matrixToEdit->getVal(i));
+        lineEditsTab[int(i)]->setText(valueToString.replace('.', ','));
+    }
+}
+
+
+
+void SetMatrixWidget:: computeAdd ()
 {
     if(!controlKeyboardInput())
     {
@@ -112,12 +134,12 @@ void AddMatrixWidget:: compute_add ()
 
     library->addMatrix(name.toStdString(), newMatrix);
 
-    emit newMatrixAdded(name, newMatrix);
+    emit newMatrixAdded(MatrixPair(name, newMatrix));
 }
 
 
 
-bool AddMatrixWidget:: controlKeyboardInput() const
+bool SetMatrixWidget:: controlKeyboardInput() const
 {
     QString name = this->nameMatrix->text();
 
@@ -150,7 +172,7 @@ bool AddMatrixWidget:: controlKeyboardInput() const
 }
 
 
-void AddMatrixWidget:: update_EditSize ()
+void SetMatrixWidget:: updateLineEdits ()
 {
     unsigned int newNbRows = static_cast<unsigned>(nbRowsSelector->value());
     unsigned int newNbCols = static_cast<unsigned>(nbColsSelector->value());
@@ -226,7 +248,7 @@ void AddMatrixWidget:: update_EditSize ()
 }
 
 
-AddMatrixWidget:: ~AddMatrixWidget ()
+SetMatrixWidget:: ~SetMatrixWidget ()
 {
 }
 
