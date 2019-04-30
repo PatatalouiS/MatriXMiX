@@ -3,6 +3,7 @@
 #include <QDialog>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QGroupBox>
 
 class HelpWindow : public QDialog
 {
@@ -10,6 +11,8 @@ class HelpWindow : public QDialog
 
 private:
     QLabel* title;
+    QLabel* logo;
+    QGroupBox* introduction;
 
 public: HelpWindow(QWidget* parent);
         ~HelpWindow();
