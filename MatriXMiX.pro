@@ -7,12 +7,12 @@ CONFIG += link_prl qt debug_and_release
 CONFIG += qt
 QT += widgets
 
-include(ext/latex/jkqtmathtext.pri);
-
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
 MOC_DIR = ./moc
 TARGET = MatriXMiX
+
+include(ext/latex/jkqtmathtext.pri);
 
 INCLUDEPATH += ext/Eigen/
 
@@ -28,7 +28,6 @@ HEADERS += src/Matrix.h \
 	src/MatrixLibrary.h \
 	src/MainWindow.h \
     src/LibraryWindow.h \
-    src/AddMatrixWidget.h \
     src/ShowMatrixWidget.h \
     src/Error.h \
     src/MatrixViewWidget.h \
@@ -40,9 +39,11 @@ HEADERS += src/Matrix.h \
     src/UnaryOpWidget.h \
     src/DiagonalisationWidget.h \
     src/ExprEvalWidget.h \
+    src/SetMatrixWidget.h \
     src/HelpWindow.h
 
-SOURCES += src/main.cpp \ 
+
+SOURCES += src/main.cpp \
 	src/Matrix.cpp \
 	src/VectorX.cpp \ 
 	src/Polynomial.cpp \
@@ -51,7 +52,6 @@ SOURCES += src/main.cpp \
 	src/MatrixLibrary.cpp \
 	src/MainWindow.cpp \
     src/LibraryWindow.cpp \
-    src/AddMatrixWidget.cpp \
     src/ShowMatrixWidget.cpp \
     src/MatrixViewWidget.cpp \
     src/Error.cpp \
@@ -63,6 +63,7 @@ SOURCES += src/main.cpp \
     src/UnaryOpWidget.cpp \
     src/DiagonalisationWidget.cpp \
     src/ExprEvalWidget.cpp \
+    src/SetMatrixWidget.cpp \
     src/HelpWindow.cpp
 
 RESOURCES += \

@@ -72,7 +72,6 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 {
     if(tab.count(name) == 0)
     {
-        cout << "la matrice "<<name<<" n'existe pas dans la libraire" << endl;
         return nullptr;
     }
     return &tab.at(name);
@@ -229,7 +228,7 @@ Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::
 
     Matrix identite(m_a->getNbRows(),m_a->getNbCols(),Matrix::I);
     Matrix bmatrix;
-    bmatrix=static_cast<const double>(b)*identite;
+    bmatrix=static_cast<double>(b)*identite;
 
 
 
@@ -257,7 +256,7 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 
     Matrix identite(m_a->getNbRows(),m_a->getNbCols(),Matrix::I);
     Matrix bmatrix;
-    bmatrix=static_cast<const double>(b)*identite;
+    bmatrix = static_cast<double>(b)*identite;
 
     if(op == "+")
         return *m_a + bmatrix ;

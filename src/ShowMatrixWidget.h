@@ -20,10 +20,11 @@ class ShowMatrixWidget : public QWidget
     public:
 
     explicit ShowMatrixWidget(QWidget *parent = nullptr);
+    const QPixmap& getCurrentPixmap() const;
 
     public slots:
 
-    void computeImgMatrix(const Matrix& mat, const QColor& col = QColor(0,0,0,0));
+    void computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt = 20, const QColor& col = QColor(0,0,0,0));
     void computeImgDimMatrix(const std::pair<unsigned int, unsigned int>& res,
                            const QString& name, const QColor& col = QColor(0,0,0,0));
     void computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2,

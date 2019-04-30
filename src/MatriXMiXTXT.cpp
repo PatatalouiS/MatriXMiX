@@ -9,7 +9,9 @@ using namespace std;
 
 void cl()
 {
-    system("clear");
+    int * n = new int;
+    *n = system("clear");
+    delete n;
 }
 
 

@@ -33,12 +33,12 @@ class UnaryOpWidget : public AbstractOperationWidget
 
     public slots:
 
-        virtual void updateViews() override;
+        virtual void updateViews() override final;
 
     private slots:
 
-        virtual void computeSelection(bool view = 0) override;
-        virtual void computeOperation() override;
+        virtual void computeSelection(bool view = 0) override final;
+        virtual void computeOperation() override final;
 
     private:
 

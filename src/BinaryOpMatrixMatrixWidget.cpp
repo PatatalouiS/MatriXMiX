@@ -83,8 +83,15 @@ BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const Mat
     setLayout(mainLayout);
 }
 
+
 void BinaryOpMatrixMatrixWidget:: updateViews()
 {
+    view1->refresh();
+    view2->refresh();
+    if(op1.second != nullptr)
+    {
+        view2->refresh(sortViewFunction(op1.second));
+    }
 }
 
 void BinaryOpMatrixMatrixWidget:: computeOperation()
@@ -93,7 +100,7 @@ void BinaryOpMatrixMatrixWidget:: computeOperation()
 
     if((op1.second == nullptr) || (op2.second == nullptr))
     {
-        showError("Opérande Manquante !", "Veuillez bien sélectionner vos 2 Matrices", this);
+        Error::showError("Opérande Manquante !", "Veuillez bien sélectionner vos 2 Matrices", this);
         return;
     }
 
@@ -107,22 +114,20 @@ void BinaryOpMatrixMatrixWidget:: computeOperation()
 
 void BinaryOpMatrixMatrixWidget:: computeSelection(bool view)
 {
-    int selectedRow;
-
     if(!view)
     {
         op2.second = nullptr;
         op2.first = "_";
 
-        selectedRow = view1->currentIndex().row();
-        op1.first = view1->model()->item(selectedRow)->data(2).toString();
+        op1.first = view1->nameOfSelectedMatrix();
+        assert(lib->exist(op1.first.toStdString()));
         op1.second = lib->find(op1.first.toStdString());
         view2->refresh(sortViewFunction(op1.second));
     }
     else
     {
-        selectedRow = view2->currentIndex().row();
-        op2.first = view2->model()->item(selectedRow)->data(2).toString();
+        op2.first = view2->nameOfSelectedMatrix();
+        assert(lib->exist(op2.first.toStdString()));
         op2.second = lib->find(op2.first.toStdString());
     }
     description->setText(op1.first + logo + op2.first);

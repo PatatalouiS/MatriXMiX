@@ -70,11 +70,10 @@ AbstractOperationWidget(lib, parent)
 }
 
 
-
-
 void UnaryOpWidget:: updateViews()
 {
-
+    view->refresh();
+    view->refresh(sortFunction);
 }
 
 
@@ -83,7 +82,7 @@ void UnaryOpWidget:: computeOperation()
 {
     if(op.second == nullptr)
     {
-        showError("opérande Manquante !", "Veuillez bien sélectionner votre Matrice !", this);
+        Error::showError("opérande Manquante !", "Veuillez bien sélectionner votre Matrice !", this);
     }
 
     result.setValue(operation(op));
@@ -95,8 +94,8 @@ void UnaryOpWidget:: computeOperation()
 void UnaryOpWidget:: computeSelection(bool viewId)
 {
     (void)viewId;
-    int selectedRow = view->currentIndex().row();
-    op.first = view->model()->item(selectedRow)->data(2).toString();
+    op.first = view->nameOfSelectedMatrix();
+    assert(lib->exist(op.first.toStdString()));
     op.second = lib->find(op.first.toStdString());
     description->setText(op.first);
 }

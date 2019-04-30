@@ -17,20 +17,20 @@ class MainWindow : public QMainWindow
     
         MainWindow ();
         ~MainWindow ();
-    
-    signals:
-    
-    public slots:
-    
-        void addNewMatrix(const QString name, const Matrix matrix);
-        void compute_choice (const unsigned int choice);
-    
+       
+    private slots:
+
+          void show_library ();
+          void transferResult (const QVariant& res);
+          void compute_choice (const unsigned int choice);
+
     private:
 
         // members
     
         MenuBar* menuBar;
-        MatrixLibrary lib;
+        MatrixLibrary library;
+        LibraryWindow* libraryWindow;
         AbstractOperationWidget* currentOpWidget;
         QVBoxLayout* currentOpLayout;
         unsigned int currentChoice;
@@ -40,9 +40,7 @@ class MainWindow : public QMainWindow
         // functions
 
         void setFunctorTab ();
-        void show_library ();
-        void transferResult (const QVariant& res);
-        QGroupBox *initBinaryOp();
-        QGroupBox *initUnaryOp();
-        QGroupBox *initDiagonalisationOp();
+        QGroupBox* initBinaryOp();
+        QGroupBox* initUnaryOp();
+        QGroupBox* initDiagonalisationOp();
 };
