@@ -1,11 +1,10 @@
 
-
 #include <QLabel>
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QDebug>
+#include <QScrollBar>
 #include "MainWindow.h"
-
 #include "BinaryOpMatrixMatrixWidget.h"
 #include "BinaryOpMatrixNumberWidget.h"
 #include "UnaryOpWidget.h"
@@ -15,26 +14,26 @@
 MainWindow:: MainWindow() : QMainWindow()
 {
   // Aide pour le Debug
-    Matrix a (3,3, Matrix::I);
-    Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
-    Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
-    Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
-    Matrix e (10,10, {15488,1545497,1679885,1654974,1524654,145464,1465464,12464,1264,14464,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,});
+//    Matrix a (3,3, Matrix::I);
+//    Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
+//    Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
+//    Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
+//    Matrix e (10,10, {15488,1545497,1679885,1654974,1524654,145464,1465464,12464,1264,14464,
+//              1,1,1,1,1,1,1,1,1,1,
+//              1,1,1,1,1,1,1,1,1,1,
+//              1,1,1,1,1,1,1,1,1,1,
+//              1,1,1,1,1,1,1,1,1,1,
+//              1,1,1,1,1,1,1,1,1,1,
+//              1,1,1,1,1,1,1,1,1,1,
+//              1,1,1,1,1,1,1,1,1,1,
+//              1,1,1,1,1,1,1,1,1,1,
+//              1,1,1,1,1,1,1,1,1,1,});
 
-    addNewMatrix("A", a);
-    addNewMatrix("B", b);
-    addNewMatrix("C", c);
-    addNewMatrix("D", d);
-    addNewMatrix("E", e);
+//    addNewMatrix("A", a);
+//    addNewMatrix("B", b);
+//    addNewMatrix("C", c);
+//    addNewMatrix("D", d);
+//    addNewMatrix("E", e);
   // Nouvelles matrices
 
     setFunctorTab();
@@ -65,12 +64,12 @@ MainWindow:: MainWindow() : QMainWindow()
     logo->setMaximumWidth(150);
     logo->setStyleSheet("background-color: QColor(0,0,0,0); border:0px;");
     QLabel* title = new QLabel("Bienvenue sur MatriXMiX!");
-    title->setStyleSheet("font-size: 20px; font:bold; background-color: QColor(0,0,0,0);"
-                         "border:0px;");
+    title->setStyleSheet("font-size: 20px; font:bold; background-color: "
+                         "QColor(0,0,0,0); border:0px;");
     title->setAlignment(Qt::AlignCenter);
 
-    headerWidget->setStyleSheet("QWidget {background-color: qlineargradient(x1 : 0 , y1 : 0  "
-                                ", x2: 0 , y2:1 , "
+    headerWidget->setStyleSheet("QWidget {background-color: qlineargradient"
+                                "(x1 : 0 , y1 : 0 , x2: 0 , y2:1 , "
                                 "stop : 0 white , stop : 1 lightBlue);"
                                 "border: 2px solid silver;"
                                 "border-radius: 6px;}");
@@ -88,7 +87,7 @@ MainWindow:: MainWindow() : QMainWindow()
     opChoiceLayout->addWidget(initUnaryOp());
     opChoiceLayout->addWidget(initDiagonalisationOp());
     opBox -> setStyleSheet(
-                "QGroupBox { border: 3px solid silver;"
+                "QGroupBox { border: 1px solid silver;"
                 "background-color:white;"
                 "margin-top: 32px;"
                 "margin-left:30px; margin-right:30px;"
@@ -100,10 +99,9 @@ MainWindow:: MainWindow() : QMainWindow()
     opBox->setFont(font);
     opBox->setLayout(opChoiceLayout);
     opShowBox -> setStyleSheet(
-                "QGroupBox { border: 3px solid silver;"
+                "QGroupBox { border: 1px solid silver;"
                 "background-color:white;"
                 "margin-top: 32px;"
-                "margin-right:30px;"
                 "border-radius:6px;}"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
@@ -117,19 +115,30 @@ MainWindow:: MainWindow() : QMainWindow()
     imgResult->setStyleSheet("background-color: white;");
 
     QScrollArea* scrollArea = new QScrollArea;
-    scrollArea->setFrameShadow(QFrame::Plain);
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(imgResult);
-    imgResult->setMaximumSize(1500,300);
-    scrollArea->setStyleSheet("background-color:white ; border-radius:6px solid silver;");
-    scrollArea->setAlignment(Qt::AlignHCenter);
-
+    scrollArea->setStyleSheet("background-color:white ; border-radius:6px;");
+    scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical "
+               "{border: 1px solid #999999; background:white;"
+               "width:15px; margin: 0px 0px 0px 0px;}"
+               "QScrollBar::handle:vertical { background: qlineargradient"
+               "(x1:0, y1:0, x2:1, y2:0,stop: 0 lightBlue, stop:1 Blue);"
+               "border-radius:6px;}"
+               "QScrollBar::add-line:vertical {height: 0px;}"
+               "QScrollBar::sub-line:vertical {height: 0 px;}");
+    scrollArea->horizontalScrollBar()->setStyleSheet("QScrollBar:horizontal "
+               "{border: 1px solid #999999; background:white; height:15px;}"
+               "QScrollBar::handle:horizontal {background: qlineargradient"
+               "(x1:0, y1:0, x2:0, y2:1,stop: 0 lightBlue, stop:1 Blue);"
+               "border-radius:6px;}"
+               "QScrollBar::add-line:horizontal {height: 0px;}"
+               "QScrollBar::sub-line:horizontal {height: 0 px;}");
 
     QGridLayout* subLayout = new QGridLayout;
     subLayout->addWidget(opBox, 0, 0, 2, 1);
     subLayout->addWidget(opShowBox, 0, 1);
     subLayout->addWidget(scrollArea, 1, 1);
-    subLayout->setAlignment(Qt::AlignCenter);
+    subLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->setContentsMargins(0,0,20,0);
 
     mainLayout->setContentsMargins(0, 10, 0, 15);
@@ -245,7 +254,7 @@ void MainWindow:: compute_choice (const unsigned int choice)
 
 void MainWindow:: transferResult (const QVariant& res)
 {
-    if(currentChoice <= 5 || currentChoice == 8 || currentChoice == 9 || currentChoice == 13)
+    if(currentChoice <= 5 || currentChoice == 8 || currentChoice == 9 || currentChoice == 13 || currentChoice==14)
     {
         assert(res.canConvert<Matrix>());
         imgResult->computeImgMatrix(res.value<Matrix>());

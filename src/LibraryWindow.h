@@ -42,6 +42,4 @@ signals:
      void close();
 };
 
-
-
 #endif

@@ -6,9 +6,7 @@
 #include "LibraryWindow.h"
 #include "MainWindow.h"
 
-
 using namespace std;
-
 
 LibraryWindow:: LibraryWindow (MainWindow* main, MatrixLibrary* library) : QDialog(main)
 {
