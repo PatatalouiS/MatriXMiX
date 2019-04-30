@@ -78,7 +78,6 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
             }
             break;
         }
-        default: break;
     }
 }
 
@@ -116,9 +115,6 @@ Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 }
 
 
-Matrix:: ~Matrix ()
-{
-}
 
 
 
@@ -835,13 +831,14 @@ const Matrix Matrix:: gaussReduction()const
             pivot_gauss.push_back(Gauss(nonzero_row_id, col));
             for (int row = next_row_id; row < r; row++)
             {
-                if (res[row][col] == 0.0)
+                if (res[static_cast<unsigned int>(row)][static_cast<unsigned int>(col)] == 0.0)
                     continue;
                 if (row == nonzero_row_id)
                     continue;
                 g.rowReplace(res.tab.begin() + row,
                             res.tab.begin() + nonzero_row_id,
-                            -res.tab[row][col] / res.tab[nonzero_row_id][col]);
+                            -res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(col)] /
+                        res.tab[static_cast<unsigned int>(nonzero_row_id)][static_cast<unsigned int>(col)]);
             }
             next_row_id++;
         }
@@ -857,15 +854,17 @@ const Matrix Matrix:: gaussReduction()const
 
         if (pos->getVal(res) != 1.0)
         {
-            g.rowScale(res.tab.begin() + pos->row, 1 / res.tab[pos->row][pos->col]);
+            g.rowScale(res.tab.begin() + pos->row, 1
+                       / res.tab[static_cast<unsigned int>(pos->row)][static_cast<unsigned int>(pos->col)]);
         }
 
         for (int row = 0; row < r; row++)
         {
-            if (res.tab[row][pos->col] != 0.0 && row != pos->row)
+            if (res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(pos->col)] != 0.0 && row != pos->row)
             {
                 g.rowReplace(res.tab.begin() + row, res.tab.begin() + pos->row,
-                            -res.tab[row][pos->col] / res.tab[pos->row][pos->col]);
+                            -res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(pos->col)]
+                        / res.tab[static_cast<unsigned int>(pos->row)][static_cast<unsigned int>(pos->col)]);
             }
         }
     }
@@ -947,9 +946,8 @@ const vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
 {
     vector<Polynomial> result;
     Polynomial temp(1);
-    unsigned int i,r,c;
+    unsigned int i,r;
     r = getNbRows();
-    c = getNbCols();
 
     vector<double> eigen_values;
     eigen_values = eigenValues();

@@ -48,7 +48,6 @@ public:
     Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z);
     Matrix (const unsigned int rows, const unsigned int cols, const VectorX& values);
     Matrix (const Matrix & m);
-    ~Matrix ();
     
     
     //Accesseurs / Opérateurs de calcul / Fonctions de calcul algébrique
