@@ -20,6 +20,11 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
    QHBoxLayout* headerLayout = new QHBoxLayout;
    headerLayout->addWidget(logo);
    headerLayout->addWidget(title);
+   headerLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+   QWidget* headerWidget = new QWidget;
+   headerWidget->setLayout(headerLayout);
+   headerWidget->setMinimumHeight(100);
 
    QFont font ("Arial Bold");
    font.setWeight(QFont::Bold);
@@ -30,7 +35,7 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
    introduction -> setStyleSheet(
                "QGroupBox { border: 1px solid silver;"
                "background-color:white;"
-               "margin-top: 32px;"
+               "margin-top: 30px;"
                "border-radius:6px;}"
                "QGroupBox::title { subcontrol-origin:margin;"
                "subcontrol-position:top left;"
@@ -48,7 +53,7 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
 
 
    QVBoxLayout* mainLayout = new QVBoxLayout;
-   mainLayout->addLayout(headerLayout);
+   mainLayout->addWidget(headerWidget);
    mainLayout->addWidget(introduction);
 
    wind->setLayout(mainLayout);
