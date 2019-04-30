@@ -21,6 +21,7 @@ const string PATH = "../../data/sauvegarde.txt";
 const vector<double> Matrix:: vector_noEigen = vector<double>();
 const vector<pair<double,VectorX>> Matrix:: vector_pair_noEigen = vector<pair<double,VectorX>>();
 const Matrix Matrix:: matrix_noEigen = Matrix();
+const double Matrix:: double_notExist = double();
 
 
 // ********* CONSTRUCTEURS / DESTRUCTEUR *********
@@ -180,7 +181,7 @@ double Matrix:: getVal ( const unsigned int indice ) const
     if ( indice >= (rows * cols))
     {
         cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
-        exit ( EXIT_FAILURE );
+        return double_notExist;
     }
 
     return tab[indice/rows][indice%rows];
@@ -337,7 +338,7 @@ const Matrix Matrix:: operator+ (const Matrix & m) const
     if ( (rows!=m.rows) || (cols!=m.cols) )
     {
         cout << "Addition impossible!" << endl;
-        exit (EXIT_FAILURE);
+        return matrix_noEigen;
     }
 
     Matrix copy(*this);
@@ -358,7 +359,7 @@ const Matrix Matrix:: operator- (const Matrix & m) const
     if ((rows!=m.rows) || (cols!=m.cols))
     {
         cout << "Soustraction impossible!" << endl;
-        exit (EXIT_FAILURE);
+        return matrix_noEigen;
     }
 
     Matrix copy(*this);
@@ -379,7 +380,7 @@ const Matrix Matrix:: operator * (const Matrix & m) const
     if (cols != m.rows)
     {
         cout << "Multiplication impossible!" << endl << "A * B->Le nombre de ligne de A = nombre de colonne de B!" << endl;
-        exit ( EXIT_FAILURE );
+        return matrix_noEigen;
     }
 
     double s;
@@ -427,7 +428,7 @@ const Matrix Matrix:: operator / (const Matrix & m) const
     if ( !m.isSQMatrix() )
     {
         cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
-        exit (EXIT_FAILURE);
+        return matrix_noEigen;
     }
     if (m.determinant() == 0.0)
     {
@@ -444,13 +445,13 @@ const Matrix Matrix:: operator ^ (const int & p) const
     if ( p < -1 )
     {
         cerr << "Erreur, la puissance demandée est invalide ! " << endl;
-        exit(EXIT_FAILURE);
+        return matrix_noEigen;
     }
 
     if ( !isSQMatrix() )
     {
         cerr << "Erreur, la matrice n'est pas carrée ! " << endl;
-        exit(EXIT_FAILURE);
+        return matrix_noEigen;
     }
 
     if ( p == 0 )
@@ -542,7 +543,7 @@ double Matrix:: traceMatrix() const
     if ( !isSQMatrix() )
     {
         cerr << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
-        exit (EXIT_FAILURE);
+        return double_notExist;
     }
 
     double s = 0;
@@ -560,7 +561,7 @@ double Matrix:: determinant() const
     if (!isSQMatrix())
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
-        exit (EXIT_FAILURE);
+        return double_notExist;
     }
 
     if (isDiagonalisable())
@@ -587,7 +588,7 @@ Matrix Matrix::coMatrix() const
     if ( !isSQMatrix() )
     {
         cerr << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
-        exit (EXIT_FAILURE);
+        return matrix_noEigen;
     }
 
 
@@ -626,13 +627,13 @@ Matrix Matrix:: inverse() const
     if (!isSQMatrix())
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
-        exit (EXIT_FAILURE);
+        return matrix_noEigen;
     }
 
     if (determinant() == 0.0)
     {
         cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
-        exit(EXIT_FAILURE);
+        return matrix_noEigen;
     }
 
     if (isDiagonalisable())

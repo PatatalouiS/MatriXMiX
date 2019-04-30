@@ -21,6 +21,7 @@ public:
     static const std::vector<double> vector_noEigen;
     static const std::vector<std::pair<double,VectorX>> vector_pair_noEigen;
     static const Matrix matrix_noEigen;
+    static const double double_notExist;
     
     
 private:
