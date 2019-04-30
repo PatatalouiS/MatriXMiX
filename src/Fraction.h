@@ -3,6 +3,7 @@
 #define FRACTION_H
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Fraction
@@ -26,7 +27,8 @@ public:
     Fraction inverse();
     bool isFraction(const double & d);
     Fraction attal(const double & d);
-
+    void recursivite (std::vector<long int> & table,double rest);
+    Fraction hanattal (double d);
 };
 
 

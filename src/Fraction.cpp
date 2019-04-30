@@ -333,4 +333,47 @@ Fraction Fraction:: attal(const double & d)
     return f;
 }
 
+void Fraction ::recursivite (vector<long int> & table, double rest)
+{
+    //cout << "rest is " << rest << endl;
+    if ((table.size()<20) && (abs(rest) > EPSILON))
+    {
+        long int integer;
+        double div,new_rest;
+
+        div = 1 / rest;
+        integer = static_cast<long int>(floor(div));
+        new_rest = div - integer;
+        table.push_back(integer);
+
+        recursivite(table,new_rest);
+    }
+
+    cout << "le reste final est " <<rest << endl;
+
+}
+
+
+Fraction Fraction:: hanattal (double d)
+{
+    vector<long int>table;
+    long int integer;
+    double rest;
+
+    integer = static_cast<long int>(floor(d));
+    rest = d - integer;
+
+    table.push_back(integer);
+    recursivite(table,rest);
+
+    cout << "Affichage du tableau de taille " << table.size() << endl;
+    for (unsigned int i = 0 ; i < table.size() ; i++)
+    {
+        cout << i << "  " << table[i] << endl ;
+    }
+
+    Fraction f(1,2);
+    return f;
+}
+
 
