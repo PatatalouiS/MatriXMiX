@@ -6,8 +6,6 @@ using namespace std;
 
 
 const double EPSILON = 0.0001;
-const double SHORT_EPSILON = 0.001;
-const int EPSILON_INVERSE = 1000;
 
 
 Fraction::Fraction()
@@ -29,9 +27,6 @@ Fraction::Fraction(const long int & n, const long int & m)
     numerateur = n;
     denominateur = m;
 }
-
-
-
 
 
 ostream& operator<<(ostream& flux, Fraction const & f)
@@ -145,7 +140,6 @@ Fraction operator/ (const Fraction & f1, const Fraction & f2)
 }
 
 
-
 bool Fraction:: isFraction(const double & d)
 {
     long int integer = static_cast<long int>(d);
@@ -223,11 +217,10 @@ Fraction Fraction:: attal(const double & d)
 
     integer0 = static_cast<long int>(floor(d0));
     reste0 = d - integer0;
-
+    cout << "Reste d = " << reste0 << endl;
     if (abs(reste0) < 0.001)
     {
         Fraction f (static_cast<long int>(d),1);
-
         return f;
     }
 
@@ -260,6 +253,8 @@ Fraction Fraction:: attal(const double & d)
         f = integer2 + f;
         f = f.inverse();
         f = integer0 + integer1 + f;
+        f = f.inverse();
+        f.simplifie();
         if (d - d0 != 0.0)
             f = f * -1;
         return f;
@@ -281,6 +276,7 @@ Fraction Fraction:: attal(const double & d)
         f = integer2 + f;
         f = f.inverse();
         f = integer0 + integer1 + f;
+        f = f.inverse();
         f.simplifie();
         if (d - d0 != 0.0)
             f = f * -1;
@@ -305,6 +301,7 @@ Fraction Fraction:: attal(const double & d)
         f = integer2 + f;
         f = f.inverse();
         f = integer0 + integer1 + f;
+        f = f.inverse();
         f.simplifie();
         if (d - d0 != 0.0)
             f = f * -1;
@@ -329,6 +326,7 @@ Fraction Fraction:: attal(const double & d)
     f = integer2 + f;
     f = f.inverse();
     f = integer0 + integer1 + f;
+    f = f.inverse();
     f.simplifie();
     if (d - d0 != 0.0)
         f = f * -1;
