@@ -90,8 +90,6 @@ void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::
     setPixmapToQLabel(col, latex, 30);
 }
 
-
-
 void ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<double, VectorX>>& res,
 const QString& name, const QColor& col)
 {

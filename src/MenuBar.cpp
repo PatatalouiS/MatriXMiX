@@ -36,7 +36,7 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
 void MenuBar::showPage()
 {
     HelpWindow* wind = new HelpWindow(this);
-    hide();
+    //hide();
     //wind->show();
 }
 

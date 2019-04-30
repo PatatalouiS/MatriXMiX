@@ -63,7 +63,7 @@ MainWindow:: MainWindow() : QMainWindow()
     logo->setPixmap(im);
     logo->setMaximumWidth(150);
     logo->setStyleSheet("background-color: QColor(0,0,0,0); border:0px;");
-    QLabel* title = new QLabel("Bienvenue sur MatriXMiX!");
+    QLabel* title = new QLabel(" MatriXMiX");
     title->setStyleSheet("font-size: 20px; font:bold; background-color: "
                          "QColor(0,0,0,0); border:0px;");
     title->setAlignment(Qt::AlignCenter);
@@ -78,7 +78,7 @@ MainWindow:: MainWindow() : QMainWindow()
     headerSubLayout->setAlignment(Qt::AlignHCenter);
 
     headerWidget->setLayout(headerSubLayout);
-    headerWidget->setFixedWidth(500);
+    headerWidget->setFixedWidth(300);
 
     headerLayout->addWidget(headerWidget);
     headerLayout->setAlignment(Qt::AlignHCenter);
@@ -448,6 +448,8 @@ QGroupBox* MainWindow::initDiagonalisationOp()
                                     "QPushButton:hover{ background-color: lightBlue }");
         DiaOpButtons->setMinimumSize(100,20);
         DiaOpButtons->setMaximumSize(600,80);
+
+        //DiaOpBox->setToolTip("Matrice de Passage/Matrice Diagonale");
 
         DiaOpVBox -> addWidget(DiaOpButtons);
           connect(DiaOpButtons, &QPushButton::clicked,
