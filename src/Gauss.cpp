@@ -25,7 +25,7 @@ double Gauss:: getVal(const Matrix & m)
 }
 
 
-void Gauss:: row_scale(tab2D_iter row, double ratio)
+void Gauss:: rowScale(tab2D_iter row, double ratio)
 {
     for (auto &i : *row)
     {
@@ -34,7 +34,7 @@ void Gauss:: row_scale(tab2D_iter row, double ratio)
 }
 
 
-void Gauss:: row_replace(tab2D_iter base, tab2D_iter op, double ratio)
+void Gauss:: rowReplace(tab2D_iter base, tab2D_iter op, double ratio)
 {
     for (vector<double>::iterator i = base->begin(); i < base->end(); i++)
     {
@@ -43,7 +43,7 @@ void Gauss:: row_replace(tab2D_iter base, tab2D_iter op, double ratio)
 }
 
 
-void Gauss:: row_exchange(tab2D_iter a, tab2D_iter b)
+void Gauss:: rowExchange(tab2D_iter a, tab2D_iter b)
 {
     for (vector<double>::iterator i = a->begin(); i < a->end(); i++)
     {
@@ -54,7 +54,7 @@ void Gauss:: row_exchange(tab2D_iter a, tab2D_iter b)
 }
 
 
-int Gauss:: is_nonzero_column(const Matrix & matrix, int column_id, int rows, int next_row_id)
+int Gauss:: isNonZeroColumn(const Matrix & matrix, int column_id, int rows, int next_row_id)
 {
     for (int row = next_row_id; row < rows; row++)
     {

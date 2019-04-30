@@ -4,7 +4,7 @@
 
 
 #include <vector>
-#include <Dense>
+#include <Dense>  // librairie externe Eigen 3
 #include "VectorX.h"
 #include "Polynomial.h"
 
@@ -25,7 +25,9 @@ public:
     
 private:
 
+    std::vector<std::string> explode (const std::string & expression) const;
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
+    Matrix checkCast () const;
     double determinant(unsigned int dim) const;
     Eigen::MatrixXd class2Eigen() const;
     const Matrix eigen2Class(const Eigen::MatrixXd & m) const;
@@ -46,7 +48,6 @@ public:
     Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z);
     Matrix (const unsigned int rows, const unsigned int cols, const VectorX& values);
     Matrix (const Matrix & m);
-    ~Matrix ();
     
     
     //Accesseurs / Opérateurs de calcul / Fonctions de calcul algébrique
@@ -58,8 +59,7 @@ public:
     double getVal(const unsigned int indice) const;
     std::vector<double>& operator [] (const unsigned int indice);
     const std::vector<double>& operator [] (const unsigned int indice) const;
-    friend std::ostream& operator << (std::ostream& flux, const Matrix & m);
-    std::vector<std::string> decoupe (const std::string & expression);
+    friend std::ostream& operator << (std::ostream& flux, const Matrix & m) ;
     Matrix operator << (const std::string& values);
     friend std::istream& operator >> (std::istream& flux, Matrix & m);
     void setMatrixKB();
@@ -68,12 +68,11 @@ public:
     const Matrix operator - (const Matrix & m) const;
     const Matrix operator * (const Matrix & m) const;
     const Matrix operator * (const double & lambda) const;
-    friend const Matrix operator * (const double & lambda, const Matrix & m);
+    friend const Matrix operator * (const double & lambda, const Matrix & m) ;
     const Matrix operator / (const Matrix & m) const;
     const Matrix operator ^ (const int & p) const;
     bool operator == (const Matrix & m) const;
     bool operator != (const Matrix & m) const;
-    Matrix checkCast () const;
     bool isSQMatrix() const;
     double traceMatrix() const;
     double determinant() const;

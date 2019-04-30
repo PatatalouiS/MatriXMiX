@@ -78,7 +78,6 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
             }
             break;
         }
-        default: break;
     }
 }
 
@@ -116,9 +115,6 @@ Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 }
 
 
-Matrix:: ~Matrix ()
-{
-}
 
 
 
@@ -219,14 +215,7 @@ ostream& operator << (ostream& flux, const Matrix & m)
     {
         for (auto j : i)
         {
-            if(static_cast<int>(j*1000000) == 0)
-            {
-                flux << "0" << "  ";
-            }
-            else
-            {
-                flux << j << "  ";
-            }
+            flux << j << "  ";
         }
         flux << endl;
     }
@@ -234,14 +223,13 @@ ostream& operator << (ostream& flux, const Matrix & m)
 }
 
 
-vector<string> Matrix:: decoupe (const string & expression)
+vector<string> Matrix:: explode (const string & expression) const
 {
     unsigned int i;
     unsigned  long taille =expression.length();
     vector<string> tab;
     string c, temp;
     temp="";
-
     for (i=0; i<taille; i++)
     {
         c=expression[i];
@@ -268,7 +256,7 @@ Matrix Matrix:: operator << (const string& values)
 {
     string c;
     vector<string> table;
-    table=decoupe(values);
+    table = explode(values);
     unsigned int i,j;
 
     if (table.size() != rows*cols)
@@ -447,7 +435,7 @@ const Matrix Matrix:: operator / (const Matrix & m) const
         exit(EXIT_FAILURE);
     }
     Matrix result( (*this) * m.inverse());
-    return result.checkCast();
+    return result ;
 }
 
 
@@ -569,27 +557,26 @@ double Matrix:: traceMatrix() const
 
 double Matrix:: determinant() const
 {
-    if ( !isSQMatrix() )
+    if (!isSQMatrix())
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
     }
 
-    unsigned int i,j,r,c;
-    r = getNbRows();
-    c = getNbCols();
-
-    for (i=0; i<r; i++)
+    if (isDiagonalisable())
     {
-        for (j=0; j<c; j++)
+        Matrix diag;
+        diag = diagonalise();
+        double det = 0.0;
+        unsigned int i, r;
+        r = getNbRows();
+        for (i=0; i<r; i++)
         {
-            if ( (i!=j) && tab[i]==tab[j])
-            {
-                return 0.0;
-            }
+            det *= tab[i][i];
         }
-    }
 
+        return det;
+    }
 
     return determinant(rows);
 }
@@ -636,7 +623,7 @@ Matrix Matrix:: transposeMatrix() const
 
 Matrix Matrix:: inverse() const
 {
-    if ( !isSQMatrix() )
+    if (!isSQMatrix())
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         exit (EXIT_FAILURE);
@@ -648,12 +635,26 @@ Matrix Matrix:: inverse() const
         exit(EXIT_FAILURE);
     }
 
-    Matrix temp(rows,cols), inverse(rows,cols);
-    temp=(*this).coMatrix();
-    temp=temp.transposeMatrix();
-    inverse=temp*(1/determinant());
+    if (isDiagonalisable())
+    {
+        Matrix transferC2B, diagonal, transferB2C;
+        allMatrix(transferC2B,diagonal,transferB2C);
+        unsigned int i, r;
+        r = getNbRows();
+        for (i=0; i<r; i++)
+        {
+            diagonal[i][i] = (1/diagonal[i][i]);
+        }
 
-    return inverse.checkCast();
+        return transferC2B*diagonal*transferB2C;
+    }
+
+    Matrix temp(rows,cols), inverse(rows,cols);
+    temp = (*this).coMatrix();
+    temp = temp.transposeMatrix();
+    inverse = temp*(1/determinant());
+
+    return inverse;
 }
 
 
@@ -819,24 +820,25 @@ const Matrix Matrix:: gaussReduction()const
 
     for (col = 0; col < c; col++)
     {
-        nonzero_row_id = g.is_nonzero_column(res, col, r, next_row_id);
+        nonzero_row_id = g.isNonZeroColumn(res, col, r, next_row_id);
         if (nonzero_row_id >= 0)
         {
             if (nonzero_row_id != next_row_id)
             {
-                g.row_exchange(res.tab.begin() + next_row_id, res.tab.begin() + nonzero_row_id);
+                g.rowExchange(res.tab.begin() + next_row_id, res.tab.begin() + nonzero_row_id);
                 nonzero_row_id = next_row_id;
             }
             pivot_gauss.push_back(Gauss(nonzero_row_id, col));
             for (int row = next_row_id; row < r; row++)
             {
-                if (res[row][col] == 0.0)
+                if (res[static_cast<unsigned int>(row)][static_cast<unsigned int>(col)] == 0.0)
                     continue;
                 if (row == nonzero_row_id)
                     continue;
-                g.row_replace(res.tab.begin() + row,
+                g.rowReplace(res.tab.begin() + row,
                             res.tab.begin() + nonzero_row_id,
-                            -res.tab[row][col] / res.tab[nonzero_row_id][col]);
+                            -res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(col)] /
+                        res.tab[static_cast<unsigned int>(nonzero_row_id)][static_cast<unsigned int>(col)]);
             }
             next_row_id++;
         }
@@ -852,15 +854,17 @@ const Matrix Matrix:: gaussReduction()const
 
         if (pos->getVal(res) != 1.0)
         {
-            g.row_scale(res.tab.begin() + pos->row, 1 / res.tab[pos->row][pos->col]);
+            g.rowScale(res.tab.begin() + pos->row, 1
+                       / res.tab[static_cast<unsigned int>(pos->row)][static_cast<unsigned int>(pos->col)]);
         }
 
         for (int row = 0; row < r; row++)
         {
-            if (res.tab[row][pos->col] != 0.0 && row != pos->row)
+            if (res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(pos->col)] != 0.0 && row != pos->row)
             {
-                g.row_replace(res.tab.begin() + row, res.tab.begin() + pos->row,
-                            -res.tab[row][pos->col] / res.tab[pos->row][pos->col]);
+                g.rowReplace(res.tab.begin() + row, res.tab.begin() + pos->row,
+                            -res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(pos->col)]
+                        / res.tab[static_cast<unsigned int>(pos->row)][static_cast<unsigned int>(pos->col)]);
             }
         }
     }
@@ -942,9 +946,8 @@ const vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
 {
     vector<Polynomial> result;
     Polynomial temp(1);
-    unsigned int i,r,c;
+    unsigned int i,r;
     r = getNbRows();
-    c = getNbCols();
 
     vector<double> eigen_values;
     eigen_values = eigenValues();
@@ -1289,19 +1292,3 @@ void Matrix::testRegression() const
 }
 
 
-
-
-/*
- début
-pour i= 1 :n
-L(i,i) = 1
-    pour j=max(1,i−b) :i−1
-        L(i,j) =A(i,j)
-        pourk=max(1,i−b,j−b) :j−1
-            L(i,j) =L(i,j)−L(i,k)∗D(k,k)∗L(j,k)
-        L(i,j) =L(i,j)/D(j,j)
-    D(i,i) =A(i,i)
-    pourj=max(1,i−b) :i−1
-        D(i,i) =D(i,i)−L(i,j)2∗D(j,j)
-fin
-*/
