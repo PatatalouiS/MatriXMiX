@@ -31,11 +31,19 @@ Fraction::Fraction(const long int & n, const long int & m)
 
 ostream& operator<<(ostream& flux, Fraction const & f)
 {
-    if (f.denominateur!=1)
+
         flux << f.numerateur << "/" << f.denominateur;
-    else
-        flux << f.numerateur;
+
     return flux;
+}
+
+
+Fraction& Fraction:: operator=(const Fraction &f)
+{
+    numerateur = f.numerateur;
+    denominateur = f.denominateur;
+
+    return *this;
 }
 
 
@@ -53,18 +61,22 @@ long int Fraction::pgcd(long int a, long int b)
 }
 
 
-void Fraction::simplifie()
+Fraction Fraction::simplifie()
 {
-    long int diviseur = pgcd(numerateur,denominateur);
-    numerateur = numerateur/diviseur;
-    denominateur = denominateur/diviseur;
+    long int div, num, den;
+    div = pgcd(numerateur,denominateur);
+    num = numerateur/div;
+    den = denominateur/div;
 
-    if(denominateur<0)
+    if(den < 0)
     {
-        denominateur *= -1;
-        numerateur *= -1;
+        den *= -1;
+        num *= -1;
     }
 
+    Fraction f (num,den);
+
+    return f;
 
 }
 
@@ -190,9 +202,11 @@ Fraction Fraction::double2Fraction(const double & d)
 }
 
 
-Fraction operator+ (const long int & d, const Fraction & f)
+Fraction Fraction:: operator+ (const long int &f)
 {
-    Fraction res (d*f.denominateur+f.numerateur,f.denominateur);
+    long int temp = f * denominateur;
+    temp = temp + numerateur;
+    Fraction res (temp, denominateur);
     return res;
 }
 
@@ -204,133 +218,62 @@ Fraction Fraction:: inverse()
 }
 
 
-Fraction Fraction:: attal(const double & d)
+void Fraction:: recursive (vector<long int> &tab, const double &rest)
 {
-    double d0;
-    if (d < 0.0)
-        d0 = -d;
-    else
-        d0 = d;
-
-    double reste0;
-    long int integer0;
-
-    integer0 = static_cast<long int>(floor(d0));
-    reste0 = d - integer0;
-    cout << "Reste d = " << reste0 << endl;
-    if (abs(reste0) < 0.001)
+    if ( tab.size() < 20 && rest > EPSILON)
     {
-        Fraction f (static_cast<long int>(d),1);
-        return f;
+        double div, rest2;
+        long int integer;
+        div = 1 / rest;
+        integer = static_cast<long int>(floor(div));
+        rest2 = div - integer;
+        tab.push_back(integer);
+        recursive(tab,rest2);
     }
 
-    double div1, reste1;
-    long int integer1;
-
-    div1 = 1/d;
-    integer1 = static_cast<long int>(floor(div1));
-    reste1 = div1 - integer1;
-
-    if (reste1 < 0.001)
-    {
-        Fraction f(1,1000);
-        f = integer0 + f;
-        if (d - d0 != 0.0)
-            f = f * -1;
-        return f;
-    }
-
-    long int integer2;
-    double div2, reste2;
-
-    div2 = 1/reste1;
-    integer2 = static_cast<long int>(floor(div2));
-    reste2 = div2 - integer2;
-
-    if (reste2 < 0.001)
-    {
-        Fraction f (1,1000);
-        f = integer2 + f;
-        f = f.inverse();
-        f = integer0 + integer1 + f;
-        f = f.inverse();
-        f.simplifie();
-        if (d - d0 != 0.0)
-            f = f * -1;
-        return f;
-    }
-
-    double div3, reste3;
-    long int integer3;
-
-    div3 = 1/reste2;
-    integer3 = static_cast<long int>(floor(div3));
-    reste3 = div3 - integer3;
-
-    if (reste3 < 0.001 )
-    {
-
-        Fraction f (1,1000);
-        f = integer3 + f;
-        f = f.inverse();
-        f = integer2 + f;
-        f = f.inverse();
-        f = integer0 + integer1 + f;
-        f = f.inverse();
-        f.simplifie();
-        if (d - d0 != 0.0)
-            f = f * -1;
-        return f;
-    }
-
-
-    double div4, reste4;
-    long int integer4;
-
-    div4 = 1/reste3;
-    integer4 = static_cast<long int>(floor(div4));
-    reste4 = div4 - integer4;
-
-    if (reste3 < 0.001 )
-    {
-        Fraction f (1,1000);
-        f = integer4 + f;
-        f = f.inverse();
-        f = integer3 + f;
-        f = f.inverse();
-        f = integer2 + f;
-        f = f.inverse();
-        f = integer0 + integer1 + f;
-        f = f.inverse();
-        f.simplifie();
-        if (d - d0 != 0.0)
-            f = f * -1;
-        return f;
-    }
-
-
-    double div5, reste5;
-    long int integer5;
-
-    div5 = 1/reste4;
-    integer5 = static_cast<long int>(floor(div5));
-    reste5 = div5 - integer5;
-
-    Fraction f (1,1000);
-    f = integer5 + f;
-    f = f.inverse();
-    f = integer4 + f;
-    f = f.inverse();
-    f = integer3 + f;
-    f = f.inverse();
-    f = integer2 + f;
-    f = f.inverse();
-    f = integer0 + integer1 + f;
-    f = f.inverse();
-    f.simplifie();
-    if (d - d0 != 0.0)
-        f = f * -1;
-    return f;
 }
 
 
+Fraction Fraction:: hanattal(const double &d)
+{
+    double abs_d = abs(d);
+    vector <long int> tab;
+
+    double rest;
+    long int integer;
+    unsigned long int size;
+
+    integer = static_cast<long int>(floor(abs_d));
+    rest = abs_d - integer;
+
+    tab.push_back(integer);
+    recursive(tab,rest);
+
+    size = tab.size();
+
+    if (size == 1)
+    {
+        Fraction f (tab[0],1);
+        return f;
+    }
+    if (size == 2)
+    {
+        Fraction f (1,tab[1]);
+        f = f + tab[0];
+        return f;
+    }
+
+    Fraction f (1,tab[size-2]);
+
+    for (unsigned long int i = size - 2 ; i > 0 ; i--)
+    {
+        f = f + tab[i];
+        f = f.inverse();
+    }
+
+    f = f + tab[0];
+    f = f.simplifie();
+
+    return f;
+
+}
