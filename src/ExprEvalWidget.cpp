@@ -12,27 +12,38 @@ AbstractOperationWidget (lib, parent)
     setTitle("Evaluation d'expression");
 
     view = new MatrixViewWidget(lib, this);
-    view->setFixedSize(200, 200);
 
     QVBoxLayout* subLayout1 = new QVBoxLayout;
     subLayout1->addWidget(title);
     subLayout1->addWidget(view);
+    subLayout1->setAlignment(Qt::AlignCenter);
 
-    QWidget* subWidget1 = new QWidget(this);
-    subWidget1->setLayout(subLayout1);
+    QLabel* titleExpr = new QLabel("Insérer votre expression : ");
+    titleExpr->setAlignment(Qt::AlignBottom |Qt::AlignCenter);
 
     expression = new QLineEdit();
-    expression->setMinimumSize(200, 30);
+    expression->setMaximumSize(400, 40);
+    expression->setPlaceholderText("Ex: A+B*C/D");
 
     QVBoxLayout* buttonLayout = new QVBoxLayout;
     buttonLayout->addWidget(calculer);
-    buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+    buttonLayout->setAlignment(Qt::AlignCenter);
+
+    QVBoxLayout* subLayout2 = new QVBoxLayout;
+    subLayout2->addWidget(titleExpr);
+    subLayout2->addWidget(expression);
+    subLayout2->addLayout(buttonLayout);
+
+    QHBoxLayout* subLayout3 = new QHBoxLayout;
+    subLayout3->addLayout(subLayout1);
+    subLayout3->addLayout(subLayout2);
+
+    QWidget* subWidget1 = new QWidget(this);
+    subWidget1->setLayout(subLayout3);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
-    mainLayout->addWidget(expression);
-    mainLayout->addLayout(buttonLayout);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     view->refresh(sortFunction);
@@ -44,8 +55,6 @@ void ExprEvalWidget:: updateViews()
 {
 
 }
-
-
 
 void ExprEvalWidget:: computeOperation ()
 {

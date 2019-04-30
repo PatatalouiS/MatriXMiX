@@ -44,6 +44,4 @@ class LibraryWindow : public QDialog
         void libraryChanged() const;
 };
 
-
-
 #endif

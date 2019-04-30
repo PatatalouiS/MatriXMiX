@@ -9,7 +9,6 @@
 
 
 
-
 class BinaryOpMatrixMatrixWidget : public AbstractOperationWidget
 {
     Q_OBJECT

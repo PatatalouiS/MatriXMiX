@@ -6,8 +6,8 @@
 #include "LibraryWindow.h"
 #include "Error.h"
 
-
 using namespace std;
+
 
 
 LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(main)

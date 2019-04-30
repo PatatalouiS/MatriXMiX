@@ -15,13 +15,15 @@ AbstractOperationWidget(lib, parent)
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
+    op1Title -> setAlignment(Qt::AlignCenter);
     view = new MatrixViewWidget(lib, this);
-    view->setFixedSize(200, 200);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(view);
+    op1ChoiceLayout->setContentsMargins(0,0,20,0);
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
     QLabel* op2Title = new QLabel("Choix du nombre:");
+    op2Title -> setAlignment(Qt::AlignCenter);
     edit = new QLineEdit;
     edit->setFixedSize(75,35);
     edit->setStyleSheet("QLineEdit{border: 1px solid grey; border-radius: 3px;"
@@ -32,6 +34,8 @@ AbstractOperationWidget(lib, parent)
     edit->setText("0");
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(edit);
+    op2ChoiceLayout->setAlignment(Qt::AlignVCenter);
+    op2ChoiceLayout->setContentsMargins(20,0,0,0);
 
     QHBoxLayout* formLayout = new QHBoxLayout;
     formLayout->addLayout(op1ChoiceLayout);
@@ -39,21 +43,32 @@ AbstractOperationWidget(lib, parent)
 
     description->setText(op1.first + logo + QString::number(op2));
     description->setStyleSheet("font-size: 40px");
-    description->setAlignment(Qt::AlignCenter);
-    description->setContentsMargins(0,25,0, 25);
+    //description->setAlignment(Qt::AlignCenter);
+
+    QVBoxLayout* buttonLayout = new QVBoxLayout;
+    buttonLayout->addWidget(calculer);
+    buttonLayout->setAlignment(Qt::AlignCenter| Qt::AlignTop);
 
     QVBoxLayout* subLayout1 = new QVBoxLayout;
     subLayout1->addWidget(title);
     subLayout1->addLayout(formLayout);
-    subLayout1->addWidget(description);
+
+    QVBoxLayout* subLayout2 = new QVBoxLayout;
+    subLayout2->addWidget(description);
+    subLayout2->addLayout(buttonLayout);
+
+    QHBoxLayout* subLayout3 = new QHBoxLayout;
+    subLayout3->addLayout(subLayout1);
+    subLayout3->addLayout(subLayout2);
+
     QWidget* subWidget1 = new QWidget(this);
-    subWidget1->setLayout(subLayout1);
-    subWidget1->setFixedHeight(400);
+    subWidget1->setLayout(subLayout3);
+    subWidget1->setFixedHeight(300);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
-    mainLayout->addWidget(calculer);
+    //mainLayout->addWidget(calculer);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     connect(view, &MatrixViewWidget::clicked,
