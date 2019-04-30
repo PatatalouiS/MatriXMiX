@@ -14,19 +14,36 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
 
    QFont fontTitle ("Arial");
    fontTitle.setPointSize(20);
+
    title->setFont(fontTitle);
 
    QHBoxLayout* headerLayout = new QHBoxLayout;
    headerLayout->addWidget(logo);
    headerLayout->addWidget(title);
 
-   introduction = new QGroupBox(tr("Introduction"));
+   QFont font ("Arial Bold");
+   font.setWeight(QFont::Bold);
+   fontTitle.setPointSize(16);
 
-   QLabel* def = new QLabel("MatriXMiX est une application destinée aux matimaticiens"
-                            "pour faciliter le calcul matriciel. MatriXMiX permet de faire"
-                            "des actions binaires,unaires et des actions liés à la diagonalisation.");
+   introduction = new QGroupBox(tr("Introduction"));
+   introduction->setFont(font);
+   introduction -> setStyleSheet(
+               "QGroupBox { border: 1px solid silver;"
+               "background-color:white;"
+               "margin-top: 32px;"
+               "border-radius:6px;}"
+               "QGroupBox::title { subcontrol-origin:margin;"
+               "subcontrol-position:top left;"
+               "font-weight: 75; color: #283676;}");
+
+   QLabel* def = new QLabel("MatriXMiX est une application destinée aux matimaticiens "
+                            "pour faciliter le calcul matriciel. ");
+   QLabel* def2 = new QLabel("MatriXMiX permet de faire des opérations binaires,unaires et des "
+                             "opérations liés à la diagonalisation.");
+   def->setMaximumWidth(650);
    QVBoxLayout* subLayout = new QVBoxLayout;
    subLayout->addWidget(def);
+   subLayout->addWidget(def2);
    introduction->setLayout(subLayout);
 
 
