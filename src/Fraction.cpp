@@ -163,45 +163,6 @@ bool Fraction:: isFraction(const double & d)
 }
 
 
-Fraction Fraction::double2Fraction(const double & d)
-{
-    int i,j;
-    double r = d - floor(d);
-    for (i = 1 ; i < 10001; i++)
-    {
-        for (j = -500; j < 500; j++ )
-        {
-            if ( abs(j - i * r) < EPSILON && i!= 0)
-            {
-                double num = floor(i * r + 2 * EPSILON) + i * floor(d);
-                Fraction f (static_cast<long int>(num),i);
-                f.simplifie();
-                return f;
-            }
-
-        }
-
-    }
-
-    i=1;
-    long int num=1, den=1;
-    double f2=d*10;
-    while(i<10)
-    {
-        if ( num - static_cast<long int>(f2*pow(10,i)) < EPSILON)
-        {
-            num = static_cast<long int>(f2*pow(10,i-1)) ;
-            den *= 10;
-        }
-        i++;
-    }
-    Fraction fraction(num,den);
-
-    fraction.simplifie();
-    return fraction;
-}
-
-
 Fraction Fraction:: operator+ (const long int &f)
 {
     long int temp = f * denominateur;
@@ -220,7 +181,7 @@ Fraction Fraction:: inverse()
 
 void Fraction:: recursive (vector<long int> &tab, const double &rest)
 {
-    if ( tab.size() < 20 && rest > EPSILON)
+    if ( tab.size() < 10 && rest > EPSILON)
     {
         double div, rest2;
         long int integer;
@@ -254,13 +215,29 @@ Fraction Fraction:: hanattal(const double &d)
     if (size == 1)
     {
         Fraction f (tab[0],1);
-        return f;
+        if ( d * f.numerateur > 0 && d * f.denominateur > 0 )
+        {
+            return f;
+        }
+        else
+        {
+            f.numerateur *= -1;
+            return f;
+        }
     }
     if (size == 2)
     {
         Fraction f (1,tab[1]);
         f = f + tab[0];
-        return f;
+        if ( d * f.numerateur > 0 && d * f.denominateur > 0 )
+        {
+            return f;
+        }
+        else
+        {
+            f.numerateur *= -1;
+            return f;
+        }
     }
 
     Fraction f (1,tab[size-2]);
@@ -269,11 +246,20 @@ Fraction Fraction:: hanattal(const double &d)
     {
         f = f + tab[i];
         f = f.inverse();
+        f = f.simplifie();
     }
 
     f = f + tab[0];
     f = f.simplifie();
 
-    return f;
+    if ( d * f.numerateur > 0 && d * f.denominateur > 0 )
+    {
+        return f;
+    }
+    else
+    {
+        f.numerateur *= -1;
+        return f;
+    }
 
 }

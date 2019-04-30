@@ -1020,16 +1020,15 @@ const vector<pair<double,VectorX>> Matrix:: allEigen()const
 
 bool Matrix:: isDiagonalisable()const
 {
+    cout << "isDiagonalisable" << endl;
     if (!isSQMatrix())
         return false;
 
     Matrix copy(*this);
     Matrix P1(*this);
     Matrix P2(*this);
-
     allMatrix(P1,copy,P2);
-
-    if (P1==P2)
+    if (P2 == matrix_noEigen)
     {
         return false;
     }
@@ -1046,14 +1045,13 @@ bool Matrix:: isDiagonalisable()const
                 return false;
         }
     }
-
     return true;
 }
 
 
 const Matrix Matrix:: diagonalise()const
 {
-
+    cout << "diagonalise" << endl;
     Matrix m;
     Eigen:: MatrixXd a,b;
     a = class2Eigen();
@@ -1061,14 +1059,15 @@ const Matrix Matrix:: diagonalise()const
     b = res.pseudoEigenvalueMatrix();
     m = eigen2Class(b);
 
-    return m.checkCast();
+    return m;
 
 }
 
 
 const Matrix Matrix::transferMatrix()const
 {
-    unsigned int i, j, n=getNbRows();
+    cout << "transferMatrix" << endl;
+    unsigned int i, j, n = getNbRows();
     Matrix result(n,n);
     Eigen::MatrixXd a;
 
@@ -1077,24 +1076,25 @@ const Matrix Matrix::transferMatrix()const
 
     result = eigen2Class(m.pseudoEigenvectors());
 
-    for(i=0; i<n; i++)
+    for(i = 0; i < n; i++)
     {
 
-        for(j=0; j<n; j++)
+        for(j = 0; j < n; j++)
         {
             if (abs(result[i][j]) < EPSILON)
                 result[i][j]=0;
         }
 
     }
-
-    return result.checkCast();
+cout << "result" << endl;
+    return result;
 
 }
 
 
 void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const
 {
+   cout << "allMatrix" << endl;
    transferC2B = transferMatrix();
    diagonal = diagonalise();
    if (transferC2B.determinant()==0.0)
