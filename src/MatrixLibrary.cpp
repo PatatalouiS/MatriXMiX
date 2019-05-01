@@ -462,8 +462,7 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
 string MatrixLibrary:: isCalculableExpression(const string & expression)
 {
     vector<string> result = decoupe(expression);
-    string temp;
-    unsigned long int i, s = result.size();
+    unsigned long int i, j, s = result.size();
 
     string calculable = "calculable";
     string error1 = "Expression vide" ;
@@ -473,111 +472,109 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)
     if (s == 1)
         return calculable;
 
-
     string error2 = "Parenthèse fermante détectée..."
-                    "\nVeuillez vérifier l'organisation des parenthèse" ;
+                    "\nVeuillez vérifier l'organisation des parenthèses" ;
     string error3a = "Calcul de " ;
     string error3b = " impossible" ;
     string error4 = " doit être un réel" ;
     string error5 = "\nPour les puissances négatives, veuillez utiliser '~' pour inverser, puis '^' pour l'exposant" ;
     string error6 = "\nUn réel doit être précédé d'un opérateur de calcul (+,-,*,/,^)" ;
     string error7 = "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
-    string error8 = "Hormis '~' et '^' les caractères spéciaux ne sont pas admis" ;
+    string error8 = "Hormis '~' et '^', les caractères spéciaux ne sont pas admis" ;
     string error9 = "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M" ;
 
     short int nbp = 0;
 
 
-    for(i = 0; i < s; i++)
+    for (i = 0; i < s; i++)
     {
-        temp = result[i];          //   <    >
-
-        if (temp == "(")
+        if (result[i] == "(")
         {
             nbp++;
+
         }
-        else if (temp == ")")
+        else if (result[i] == ")")
         {
             nbp--;
             if (nbp < 0)
-                return error2;
+            return error2;
         }
-            else if (isOperator(temp))
-                {
-                    if (i == s-1)
-                        return ("Impossible de calculer " + result[i-1] + temp);
-                    if (isOperator(result[i-1]) || isOperator(result[i+1]))
-                        return "Deux opérateurs à la suite... \n Impossible à calculer";
-                }
+    }
 
-                else if (isName(temp))
+    if (nbp != 0)
+        return error7;
+
+
+    for(i = 0; i < s; i++)
+    {
+        cout << i << " : " << result[i] << endl;
+
+            if (isOperator(result[i]))
+            {
+
+            if (i == 0)
+                   return ("Calcul de " + result[i] + result[i+1] + " impossible!");
+               if (i == s - 1)
+                   return ("Impossible de calculer " + result[i-1] + result[i]);
+               if (isOperator(result[i-1]))
+                   return "Deux opérateurs à la suite... \nImpossible à calculer";
+           }
+                else if (isName(result[i]))
                 {
+                    if (i == 0)
+                        continue;
                     if (i == 1)
-                        return (error3a + result[i-1] + temp + error3b);
-                    if (i == s-2)
-                        return (error3a + temp + result[i+1] + error3b);
+                        return (error3a + result[i-1] + result[i] + error3b);
+                    if (i == s - 2)
+                        return (error3a + result[i] + result[i+1] + error3b);
 
                     if ( (i > 1) && (i < s-2) )
                     {
                         if (!isOperator(result[i-1]))
-                            return (error3a+result[i-1]+error3b);
+                            return (error3a + result[i-1] + error3b);
                         else if ( (!isName(result[i-2])) && (!isFloat(result[i-2])) )
-                            return (error3a + result[i-2] + result[i-1] + temp + error3b);
+                            return (error3a + result[i-2] + result[i-1] + result[i] + error3b);
 
                         if (result[i+1] == "^")
                         {
                             if (!isFloat(result[i+2]))
-                                return (error3a + temp + result[i+1] + result[i+2] + error3a + "\n" + result[i+2] + error4);
-                            if ( atoi(result[i+2].c_str()) < -1 )
-                                return (error3a + temp + result[i+1] + result[i+2] + error3a + error5);
-                            // ATTENTION AUX REELS/ENTIERS !!!!
+                                return (error3a + result[i] + result[i+1] + result[i+2] + error3a + "\n" + result[i+2] + error4);
+                            if (atoi(result[i+2].c_str()) < 0)
+                                return (error3a + result[i] + result[i+1] + result[i+2] + error3a + error5);
+                            if (atoi(result[i+2].c_str()) - atof(result[i+2].c_str()) != 0.0)
+                                return ("Impossible de calculer " + result[i]
+                                        + result[i+1] + result[i+2] + "...\nCalcul d'une puissance réelle impossible");
                         }
 
                     }
 
                 }
 
-                else if (isFloat(temp))
-                        {
-                            if (i == 1)
-                                return (error3a + result[i-1] + temp + error3b);
-                            if (i == s-2)
-                                return (error3a + temp + result[i+1] + error3b);
-                            if (i == s-1)
-                                if (result[i-1] != "^" && result[i-1] != "*")
-                                    return (error3a + result[i-2] + result[i-1] + temp + error3b);
-
-                            if (!isOperator(result[i-1]))
+                    else if (isFloat(result[i]))
                             {
-                                if (result[i-1] != "^")
-                                    return (error3a + result[i-1] + temp + error3b + error6);
-                                else if (atof(temp.c_str()) < 0.0)
-                                    return (error3a + result[i-2] + result[i-1] + temp + error3b + error9);
-
-                                // ATTENTION RÉELS ENTIERS
-                            }
-                            else if (isName(result[i-1]) || isName(result[i+1]))
+                                if (i == 0)
+                                    continue;
+                                if (i == 1)
+                                    return (error3a + result[i-1] + result[i] + error3b);
+                                if (i == s - 2)
+                                    return (error3a + result[i] + result[i+1] + error3b);
+                                if (!isOperator(result[i-1]))
+            //   <    >         {
                                 {
-                                    if (isName(result[i-1]))
-                                        return "L'opération " + result[i-1] + " n'est pas définie" ;
-                                    else
+                                    if (result[i-1] != "^")
+                                        return ("Impossible de calculer " + result[i-1] + result[i]);
+                                    if (atof(result[i].c_str()) < 0.0)
+                                        return (error3a + result[i-2] + result[i-1] + result[i] + error3b + error9);
+                                    if (atof(result[i].c_str()) - atoi(result[i].c_str()) != 0.0)
+                                        return ("Calcul d'une puissance réelle impossible");
+                                }
+                                else if ( (i < s - 1) && isName(result[i+1]) )
                                         return "L'opération " + result[i+1] + " n'est pas définie" ;
-                                }
+                            }
 
-                                else if (result[i-1] == "+" || result[i-1] == "-")
-                                {
-                                    if (i < s-3 && (result[i+1] != "*" || !isName(result[i+2])) )
-                                            return "Opération non définie";
-                                        if ( isName(result[i-2]) && isName(result[i+2]) )
-                                            return "On ne peut pas addition un réel et une matrice";
-                                }
+    }
 
-                        }
 
-   }
-
-    if (nbp != 0)
-        return error7;
 
     return calculable;
 }

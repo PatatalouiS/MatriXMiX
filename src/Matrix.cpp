@@ -574,7 +574,7 @@ Matrix Matrix::coMatrix() const
 {
     if ( !isSQMatrix() )
     {
-        cerr << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
+        cout << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
         return matrix_noEigen;
     }
 
@@ -587,7 +587,7 @@ Matrix Matrix::coMatrix() const
         for(j = 0; j < cols; j++)
         {
             sub = subMatrix(i,j);
-            com[i][j] = pow(-1,i+j) * sub.determinant();
+            com[i][j] = pow(-1,i + j) * sub.determinant();
         }
     }
     return com;

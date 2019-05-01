@@ -94,6 +94,8 @@ public:
     const Matrix diagonalise() const;
     const Matrix transferMatrix() const;
     void allMatrix(Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const;
+
+    // Regression test
     void testRegression() const;
 
 

@@ -9,13 +9,24 @@
 #include "MatriXMiXTXT.h"
 #include "MatrixLibrary.h"
 #include "Fraction.h"
-
+#include <stdlib.h>
 using namespace std;
 
 int main (int argc, char* argv[])
 {
+    MatrixLibrary lib;
 
-    Matrix a(10,10,{1,0,0,0,0,0,0,0,0,0,
+    string expression("3*3*a+3.15+a+e+r5*(5+4)");
+    cout << lib.isCalculableExpression(expression);
+
+
+
+
+
+
+
+
+   /* Matrix a(10,10,{1,0,0,0,0,0,0,0,0,0,
                   0,1,0,0,0,0,0,0,0,0,
                   0,0,1,0,0,0,0,0,0,0,
                   0,0,0,1,0,0,0,0,0,0,
@@ -29,11 +40,7 @@ int main (int argc, char* argv[])
     Matrix b(3,3,{1,2,3,4,5,6,7,8,0});
     Matrix p(3,3,{0.5,0.25,0.2,0.25,0.5,0.2,0.2,0.5,0.25});
 
-    p = p^(-5);
-    std::cout << p;
 
-
-    /*
     Matrix d(10,10,{2.9104602,-0.99999999,99999999,0.55555,0,888,0.524,-0.33333,0.39715,0.461654,
              0.99999999,-9,0.99999999,0.55555,0,888,0.524,-0.33333,-0.39715,0.461654,
              0.9104602,9,99999999,0.55555,0,888,0.524,-0.33333,0.39715,0.461654,
