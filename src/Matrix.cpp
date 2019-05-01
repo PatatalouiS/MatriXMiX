@@ -1,12 +1,10 @@
 
 #include <iostream>
 #include <complex>
-#include <fstream>
 #include <cstring>
 #include <cassert>
 #include <cmath>
 #include <ctime>
-#include <stack>
 #include <utility>
 #include <Dense>
 #include "Matrix.h"
@@ -16,7 +14,7 @@
 using namespace std;
 
 const double EPSILON = 0.0001;
-const string PATH = "../../data/sauvegarde.txt";
+
 
 const vector<double> Matrix:: vector_noEigen = vector<double>();
 const vector<pair<double,VectorX>> Matrix:: vector_pair_noEigen = vector<pair<double,VectorX>>();
@@ -564,21 +562,6 @@ double Matrix:: determinant() const
         return double_notExist;
     }
 
-    if (isDiagonalisable())
-    {
-        Matrix diag;
-        diag = diagonalise();
-        double det = 0.0;
-        unsigned int i, r;
-        r = getNbRows();
-        for (i=0; i<r; i++)
-        {
-            det *= tab[i][i];
-        }
-
-        return det;
-    }
-
     return determinant(rows);
 }
 
@@ -603,7 +586,7 @@ Matrix Matrix::coMatrix() const
             com[i][j]=pow(-1,i+j)*sub.determinant();
         }
     }
-    return com.checkCast();
+    return com;
 }
 
 
@@ -634,20 +617,6 @@ Matrix Matrix:: inverse() const
     {
         cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
         return matrix_noEigen;
-    }
-
-    if (isDiagonalisable())
-    {
-        Matrix transferC2B, diagonal, transferB2C;
-        allMatrix(transferC2B,diagonal,transferB2C);
-        unsigned int i, r;
-        r = getNbRows();
-        for (i=0; i<r; i++)
-        {
-            diagonal[i][i] = (1/diagonal[i][i]);
-        }
-
-        return transferC2B*diagonal*transferB2C;
     }
 
     Matrix temp(rows,cols), inverse(rows,cols);
@@ -1020,15 +989,15 @@ const vector<pair<double,VectorX>> Matrix:: allEigen()const
 
 bool Matrix:: isDiagonalisable()const
 {
-    cout << "isDiagonalisable" << endl;
     if (!isSQMatrix())
         return false;
-
+    Matrix ne;
     Matrix copy(*this);
-    Matrix P1(*this);
-    Matrix P2(*this);
-    allMatrix(P1,copy,P2);
-    if (P2 == matrix_noEigen)
+    Matrix p1(*this);
+    Matrix p2(*this);
+    Matrix id(getNbRows(),getNbCols(),I);
+    allMatrix(p1,copy,p2);
+    if (p2 == matrix_noEigen)
     {
         return false;
     }
@@ -1036,7 +1005,6 @@ bool Matrix:: isDiagonalisable()const
     unsigned int i, j, r, c;
     r = copy.getNbRows();
     c = copy.getNbCols();
-
     for(i = 0; i < r; i++)
     {
         for(j = 0; j < c; j++)
@@ -1045,20 +1013,19 @@ bool Matrix:: isDiagonalisable()const
                 return false;
         }
     }
+
     return true;
 }
 
 
 const Matrix Matrix:: diagonalise()const
 {
-    cout << "diagonalise" << endl;
     Matrix m;
     Eigen:: MatrixXd a,b;
     a = class2Eigen();
     Eigen::EigenSolver<Eigen::MatrixXd> res(a);
     b = res.pseudoEigenvalueMatrix();
     m = eigen2Class(b);
-
     return m;
 
 }
@@ -1066,7 +1033,6 @@ const Matrix Matrix:: diagonalise()const
 
 const Matrix Matrix::transferMatrix()const
 {
-    cout << "transferMatrix" << endl;
     unsigned int i, j, n = getNbRows();
     Matrix result(n,n);
     Eigen::MatrixXd a;
@@ -1086,7 +1052,6 @@ const Matrix Matrix::transferMatrix()const
         }
 
     }
-cout << "result" << endl;
     return result;
 
 }
@@ -1094,13 +1059,17 @@ cout << "result" << endl;
 
 void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const
 {
-   cout << "allMatrix" << endl;
    transferC2B = transferMatrix();
    diagonal = diagonalise();
-   if (transferC2B.determinant()==0.0)
+   if (transferC2B.determinant() == 0.0)
+   {
        transferB2C = matrix_noEigen;
+   }
    else
+   {
        transferB2C = (transferC2B^-1);
+   }
+
 }
 
 

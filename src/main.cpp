@@ -14,24 +14,24 @@
 int main (int argc, char* argv[])
 {
 
-    Matrix a(5,5,{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
+    Matrix a(10,10,{1,0,0,0,0,0,0,0,0,0,
+                  0,1,0,0,0,0,0,0,0,0,
+                  0,0,1,0,0,0,0,0,0,0,
+                  0,0,0,1,0,0,0,0,0,0,
+                  0,0,0,0,1,0,0,0,0,0,
+                  0,0,0,0,0,1,0,0,0,0,
+                  0,0,0,0,0,0,1,0,0,0,
+                  0,0,0,0,0,0,0,1,0,0,
+                  0,0,0,0,0,0,0,0,1,0,
+                  0,0,0,0,0,0,0,0,0,1 });
+
     Matrix b(3,3,{1,2,3,4,5,6,7,8,0});
-    cout << Matrix::matrix_noEigen<< endl;
-    if (b.isDiagonalisable())
-        cout << "Je suis diagonalisable" << endl;
 
+    if (a.isDiagonalisable())
+        cout << "I10 diagonalisable" ;
 
-
-
-
-
-
-
-
-
-
-/*
-    Matrix i(10,10,{2.9104602,-0.99999999,99999999,0.55555,0,888,0.524,-0.33333,0.39715,0.461654,
+    /*
+    Matrix d(10,10,{2.9104602,-0.99999999,99999999,0.55555,0,888,0.524,-0.33333,0.39715,0.461654,
              0.99999999,-9,0.99999999,0.55555,0,888,0.524,-0.33333,-0.39715,0.461654,
              0.9104602,9,99999999,0.55555,0,888,0.524,-0.33333,0.39715,0.461654,
              0.9104602,9,99999999,0.55555,0,888,0.524,-0.33333,0.39715,0.461654,
@@ -46,11 +46,11 @@ int main (int argc, char* argv[])
 
     app.setQuitOnLastWindowClosed(false);
     ShowMatrixWidget * fenetre = new ShowMatrixWidget;
-    fenetre->computeImgMatrix(i,20,c);
+    fenetre->computeImgMatrix(d,20,c);
     fenetre->show();
 
-    return app.exec();
-*/
+    return app.exec();*/
+
 
 /*
     MatrixLibrary lib;
