@@ -1,21 +1,7 @@
 
 #include <QApplication>
 #include "MainWindow.h"
-
-
-#include <iostream>
-#include <sstream>
-#include <QString>
-#include <QDebug>
-#include <cmath>
-
-
-using namespace std;
-
-
-
-
-
+//#include "MatrixLibrary.h"
 
 int main (int argc, char* argv[])
 {
@@ -24,16 +10,19 @@ int main (int argc, char* argv[])
     mainWindow.show();
     return app.exec();
 
+//        Matrix e (10,10, {1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,
+//                  1,1,1,1,1,1,1,1,1,1,});
 
-//   double a = 1244776836434675647;
+//        e.diagonalise();
 
-//   QString str;
-
-//   if(floor(a) == a)
-//   str.setNum(a, 'f', 0);
-//   else str.setNum(a, 'f', 10);
-
-//   qDebug() <<(str);
 
 
 
