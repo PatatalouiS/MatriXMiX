@@ -31,19 +31,23 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
 {
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
-    clock_t t1 = clock();
     QString latex = "\\begin{bmatrix}";
     Fraction ftemp;
     for(unsigned int i = 0; i < rows; ++i)
     {
         if (ftemp.isFraction(mat[i][0]))
         {
-            Fraction f (ftemp.double2Fraction(mat[i][0]));
-            latex += "\t " + QString ("\\frac{")
-                    + QString::number(f.numerateur)
-                    + QString ("}{")
-                    + QString::number(f.denominateur)
-                    + QString ("}");
+            Fraction f (ftemp.double2fraction(mat[i][0]));
+            if (f.getDenominator() == 1)
+                latex += "\t" +  QString::number(f.getNumerator());
+            else
+            {
+                latex += "\t " + QString ("\\frac{")
+                        + QString::number(f.getNumerator())
+                        + QString ("}{")
+                        + QString::number(f.getDenominator())
+                        + QString ("}");
+            }
         }
         else
         {
@@ -56,12 +60,18 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
             else latex += " &";
             if (ftemp.isFraction(mat[i][j]))
             {
-                Fraction f (ftemp.double2Fraction(mat[i][j]));
-                latex += "\t " + QString ("\\frac{")
-                        + QString::number(f.numerateur)
-                        + QString ("}{")
-                        + QString::number(f.denominateur)
-                        + QString ("}");
+                Fraction f (ftemp.double2fraction(mat[i][j]));
+                if (f.getDenominator() == 1)
+                    latex += "\t" +  QString::number(f.getNumerator());
+                else
+                {
+                    latex += "\t " + QString ("\\frac{")
+                            + QString::number(f.getNumerator())
+                            + QString ("}{")
+                            + QString::number(f.getDenominator())
+                            + QString ("}");
+                }
+
             }
             else
             {
@@ -71,9 +81,6 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
         }
     }
     latex += "\\end{bmatrix}";
-
-    clock_t t2 = clock();
-    cout << "Temps d'exécution : " << t2-t1 << endl;
    setPixmapToQLabel(col, latex, sizeTxt);
 }
 

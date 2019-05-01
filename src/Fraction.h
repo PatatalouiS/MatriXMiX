@@ -1,42 +1,48 @@
-
 #ifndef FRACTION_H
 #define FRACTION_H
 
 #include <iostream>
-using namespace std;
+#include <vector>
 
 class Fraction
 {
 
-public:
-    long int numerateur, denominateur;
+private:
+    long int numerator, denominator;
+
+
+private:
+    Fraction& operator = (const Fraction & f);
+    void recursived2f (std::vector<long int> &tab, const double & rest) const;
+
 
 public:
     Fraction();
     Fraction(const long int & n);
-    Fraction(const long int & n, const long int & m);
+    Fraction(const long int & n, const long int & d);
 
-    friend std::ostream& operator<<(std::ostream& flux, Fraction const& fraction);
-    bool estEgal(const Fraction & f) const;
-    bool estPlusPetitQue(const Fraction & f) const;
-    Fraction& operator+=(const Fraction & f);
-    long int pgcd(long int a, long int b);
-    void simplifie();
-    Fraction double2Fraction(const double & f);
-    Fraction inverse();
-    bool isFraction(const double & d);
-    Fraction attal(const double & d);
+    long int getNumerator() const;
+    long int getDenominator() const;
+    friend std::ostream& operator << (std::ostream& flux, Fraction const& fraction);
+    bool operator == (const Fraction & f) const;
+    bool operator < (const Fraction & f) const;
+    const Fraction inverse () const;
+    long int pgcd (long int a, long int b) const;
+    const Fraction simplify () const;
+    const Fraction operator + (const Fraction & f) const;
+    const Fraction operator + (const long int & d) const;
+    const Fraction operator * (const Fraction & f) const;
+    const Fraction operator / (const Fraction & f) const;
+    bool isFraction (const double & d) const;
+    const Fraction double2fraction (const double & d) const;
 
 };
 
 
 
-bool operator==(const Fraction & f1, const Fraction & f2);
-bool operator<(const Fraction & f1, const Fraction & f2);
-Fraction operator+(const Fraction & f1, const Fraction & f2);
-Fraction operator* (const Fraction & f1, const Fraction & f2);
-Fraction operator+ (const long int & d, const Fraction & f1);
-Fraction operator/ (const Fraction & f1, const Fraction & f2);
+
+
+
 
 
 

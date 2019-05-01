@@ -1,12 +1,10 @@
 
 #include <iostream>
 #include <complex>
-#include <fstream>
 #include <cstring>
 #include <cassert>
 #include <cmath>
 #include <ctime>
-#include <stack>
 #include <utility>
 #include <Dense>
 #include "Matrix.h"
@@ -16,7 +14,7 @@
 using namespace std;
 
 const double EPSILON = 0.0001;
-const string PATH = "../../data/sauvegarde.txt";
+
 
 const vector<double> Matrix:: vector_noEigen = vector<double>();
 const vector<pair<double,VectorX>> Matrix:: vector_pair_noEigen = vector<pair<double,VectorX>>();
@@ -35,7 +33,7 @@ Matrix:: Matrix () : tab ( vector<vector<double>> ())
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double value) :
+Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const double value) :
         tab (vector<vector<double>>(rows,vector<double> (cols, value)))
 {
     this->rows = rows;
@@ -43,7 +41,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const double
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum initMatrix& type) :
+Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type) :
         tab (vector<vector<double>> (rows, vector<double> (cols, 0)))
 {
     this->cols = cols;
@@ -83,7 +81,7 @@ Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const enum i
 }
 
 
-Matrix:: Matrix ( const unsigned int rows, const unsigned int cols, const VectorX & values)
+Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const VectorX & values)
 {
     if (values.size() != rows * cols)
     {
@@ -164,7 +162,7 @@ void Matrix:: setNbCols(unsigned int col)
 }
 
 
-double& Matrix:: getVal ( const unsigned int indice )
+double& Matrix:: getVal (const unsigned int indice)
 {
     if ( indice >= (rows * cols))
     {
@@ -176,7 +174,7 @@ double& Matrix:: getVal ( const unsigned int indice )
 }
 
 
-double Matrix:: getVal ( const unsigned int indice ) const
+double Matrix:: getVal (const unsigned int indice) const
 {
     if ( indice >= (rows * cols))
     {
@@ -188,7 +186,7 @@ double Matrix:: getVal ( const unsigned int indice ) const
 }
 
 
-vector<double>&  Matrix:: operator [] ( const unsigned int indice )
+vector<double>&  Matrix:: operator [] (const unsigned int indice)
 {
     if ( indice >= rows)
     {
@@ -199,7 +197,7 @@ vector<double>&  Matrix:: operator [] ( const unsigned int indice )
 }
 
 
-const std::vector<double>& Matrix:: operator [] ( const unsigned int indice ) const
+const std::vector<double>& Matrix:: operator [] (const unsigned int indice) const
 {
     if ( indice >= rows)
     {
@@ -227,13 +225,13 @@ ostream& operator << (ostream& flux, const Matrix & m)
 vector<string> Matrix:: explode (const string & expression) const
 {
     unsigned int i;
-    unsigned  long taille =expression.length();
+    unsigned  long l = expression.length();
     vector<string> tab;
     string c, temp;
     temp="";
-    for (i=0; i<taille; i++)
+    for (i = 0; i < l; i++)
     {
-        c=expression[i];
+        c = expression[i];
 
         if(c == ",")
         {
@@ -242,7 +240,7 @@ vector<string> Matrix:: explode (const string & expression) const
         }
         else if (!c.empty())
         {
-            temp+=c;
+            temp += c;
         }
 
     }
@@ -255,23 +253,24 @@ vector<string> Matrix:: explode (const string & expression) const
 
 Matrix Matrix:: operator << (const string& values)
 {
+    unsigned int i,j;
     string c;
     vector<string> table;
     table = explode(values);
-    unsigned int i,j;
 
     if (table.size() != rows*cols)
     {
-        cout<<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice"<<endl;
+        cout<<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice" << endl;
+        return matrix_noEigen;
     }
 
     else
-    {  for ( i = 0; i < this->rows; i++ )
+    {  for (i = 0; i < this->rows; i++)
         {
-            for ( j = 0; j < this->cols; j++ )
+            for ( j = 0; j < this->cols; j++)
             {
-                c=table[i*cols+j];
-                tab[i][j]=atof(c.c_str());
+                c = table[i*cols+j];
+                tab[i][j] = atof(c.c_str());
             }
         }
      }
@@ -282,19 +281,17 @@ Matrix Matrix:: operator << (const string& values)
 istream& operator >> (istream& flux, Matrix & m)
 {
     unsigned int i,j,rows,cols;
-    cout<<"Entrez le nombre de lignes puis de colonnes"<<endl;
-    flux>>rows>>cols;
     double value;
+    flux >> rows >> cols;    //Entering rows and columns numbers
     m.setNbRows(rows);
     m.setNbCols(cols);
 
-    cout<<"Entrez les valeurs de la matrice"<<endl;
     for ( i = 0; i < rows; ++i )
     {
         for ( j = 0; j < cols; ++j )
         {
             flux >> value;
-            m.tab[i][j]=value;
+            m.tab[i][j] = value;      // Entering des coefficients
         }
     }
 
@@ -333,7 +330,7 @@ void Matrix:: setMatrixRA ()
 }
 
 
-const Matrix Matrix:: operator+ (const Matrix & m) const
+const Matrix Matrix:: operator + (const Matrix & m) const
 {
     if ( (rows!=m.rows) || (cols!=m.cols) )
     {
@@ -341,20 +338,21 @@ const Matrix Matrix:: operator+ (const Matrix & m) const
         return matrix_noEigen;
     }
 
+    unsigned int i,j;
     Matrix copy(*this);
 
-    for (unsigned int i=0; i< rows; i++)
+    for (i = 0; i < rows; i++)
     {
-        for (unsigned int j=0; j< cols; j++)
+        for (j = 0; j < cols; j++)
         {
-            copy[i][j]=copy[i][j]+m[i][j];
+            copy[i][j] = copy[i][j] + m[i][j];
         }
     }
     return copy;
 }
 
 
-const Matrix Matrix:: operator- (const Matrix & m) const
+const Matrix Matrix:: operator - (const Matrix & m) const
 {
     if ((rows!=m.rows) || (cols!=m.cols))
     {
@@ -362,13 +360,14 @@ const Matrix Matrix:: operator- (const Matrix & m) const
         return matrix_noEigen;
     }
 
+    unsigned int i,j;
     Matrix copy(*this);
 
-    for (unsigned int i=0; i<m.rows; i++)
+    for (i = 0; i < rows; i++)
     {
-        for (unsigned int j=0; j<m.cols; j++)
+        for (j = 0; j < cols; j++)
         {
-            copy[i][j]=copy[i][j]-m[i][j];
+            copy[i][j] = copy[i][j] - m[i][j];
         }
     }
     return copy;
@@ -379,47 +378,50 @@ const Matrix Matrix:: operator * (const Matrix & m) const
 {
     if (cols != m.rows)
     {
-        cout << "Multiplication impossible!" << endl << "A * B->Le nombre de ligne de A = nombre de colonne de B!" << endl;
+        cout << "Multiplication impossible!" << endl <<
+                "A * B -> Le nombre de ligne de A doit  nombre de colonne de B!" << endl;
         return matrix_noEigen;
     }
 
-    double s;
-    Matrix temp(rows, m.cols, Matrix::Z);
+    unsigned int i,j,k;
+    double sum;
+    Matrix res(rows, m.cols, Matrix::Z);
 
-    for (unsigned int i=0; i<rows; i++)
+    for (i = 0; i < rows; i++)
     {
-        for (unsigned int j=0; j<m.cols; j++)
+        for (j = 0; j < m.cols; j++)
         {
-            s=0;
-            for (unsigned int k=0; k<cols; k++)
+            sum = 0;
+            for (k = 0; k < cols; k++)
             {
-                s+=tab[i][k]*(m[k][j]);
+                sum += tab[i][k] * (m[k][j]);
             }
-            temp[i][j]=s;
+            res[i][j] = sum;
         }
     }
-    return temp;
+    return res;
 }
 
 
 const Matrix Matrix:: operator * (const double & lambda) const
 {
+    unsigned int i,j;
     Matrix copy(*this);
 
-    for (unsigned int i=0; i < rows; i++)
+    for (i = 0; i < rows; i++)
     {
-        for (unsigned int j=0; j < cols; j++)
+        for (j = 0; j < cols; j++)
         {
-            copy[i][j]=lambda*copy[i][j];
+            copy[i][j] = lambda * copy[i][j];
         }
     }
     return copy;
 }
 
 
-const Matrix operator * (const double & lambda, const Matrix & m)
+const Matrix operator * (const double & lambda, const Matrix & m)    // friend operator
 {
-    return m*lambda;
+    return m * lambda;
 }
 
 
@@ -432,21 +434,16 @@ const Matrix Matrix:: operator / (const Matrix & m) const
     }
     if (m.determinant() == 0.0)
     {
-        cerr << "division impossible, la metrice diviseur n'est pas inversible !" << endl;
-        exit(EXIT_FAILURE);
+        cerr << "division impossible, la matrice diviseur n'est pas inversible !" << endl;
+        return matrix_noEigen;
     }
-    Matrix result( (*this) * m.inverse());
+    Matrix result ((*this) * m.inverse());
     return result ;
 }
 
 
 const Matrix Matrix:: operator ^ (const int & p) const
 {
-    if ( p < -1 )
-    {
-        cerr << "Erreur, la puissance demandée est invalide ! " << endl;
-        return matrix_noEigen;
-    }
 
     if ( !isSQMatrix() )
     {
@@ -465,13 +462,19 @@ const Matrix Matrix:: operator ^ (const int & p) const
     }
 
     Matrix temp (*this);
-    Matrix temp2 (*this);
+    Matrix temp2 (*this);    
 
-    for (int i=1; i<p; ++i )
+    if ( p < -1 )
+    {
+        temp = temp.inverse();
+        temp2 = temp2.inverse();
+    }
+
+    for (int i = 1; i < abs(p); ++i )
     {
         temp = (temp * temp2);
     }
-    return temp.checkCast();
+    return temp;
 }
 
 
@@ -518,7 +521,7 @@ Matrix Matrix:: checkCast() const
         {
             for (l = -150 ; l < 150; l++)
             {
-                if ( abs(tab[i][j]-l) < EPSILON )
+                if ( abs(tab[i][j] - l) < EPSILON )
                 {
                     result[i][j] = l;
                     continue ;
@@ -534,7 +537,7 @@ Matrix Matrix:: checkCast() const
 
 bool Matrix:: isSQMatrix() const
 {
-    return rows==cols;
+    return rows == cols;
 }
 
 
@@ -542,13 +545,12 @@ double Matrix:: traceMatrix() const
 {
     if ( !isSQMatrix() )
     {
-        cerr << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
+        cout << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
         return double_notExist;
     }
 
     double s = 0;
-
-    for ( unsigned int i=0; i<rows; i++)
+    for ( unsigned int i = 0; i < rows; i++)
     {
         s += tab[i][i];
     }
@@ -564,22 +566,7 @@ double Matrix:: determinant() const
         return double_notExist;
     }
 
-    if (isDiagonalisable())
-    {
-        Matrix diag;
-        diag = diagonalise();
-        double det = 0.0;
-        unsigned int i, r;
-        r = getNbRows();
-        for (i=0; i<r; i++)
-        {
-            det *= tab[i][i];
-        }
-
-        return det;
-    }
-
-    return determinant(rows);
+    return determinant(rows);   // call to the private recursive function
 }
 
 
@@ -591,34 +578,35 @@ Matrix Matrix::coMatrix() const
         return matrix_noEigen;
     }
 
-
+    unsigned int i, j;
     Matrix com(rows,cols);
-    Matrix sub(rows - 1, cols-1);
+    Matrix sub(rows - 1, cols - 1);
 
-    for(unsigned int i = 0; i < rows; i++)
+    for(i = 0; i < rows; i++)
     {
-        for(unsigned int j = 0; j < cols; j++)
+        for(j = 0; j < cols; j++)
         {
-            sub=subMatrix(i,j);
-            com[i][j]=pow(-1,i+j)*sub.determinant();
+            sub = subMatrix(i,j);
+            com[i][j] = pow(-1,i+j) * sub.determinant();
         }
     }
-    return com.checkCast();
+    return com;
 }
 
 
 Matrix Matrix:: transposeMatrix() const
 {
+    unsigned int i, j;
     Matrix copy(*this);
 
-    for (unsigned int i=0; i<copy.rows; i++)
+    for (i = 0; i < copy.rows; i++)
     {
-        for (unsigned int j=0; j<copy.cols; j++)
+        for (j = 0; j < copy.cols; j++)
         {
             copy[i][j] = tab[j][i];
         }
     }
-    return copy.checkCast();
+    return copy;
 }
 
 
@@ -636,24 +624,10 @@ Matrix Matrix:: inverse() const
         return matrix_noEigen;
     }
 
-    if (isDiagonalisable())
-    {
-        Matrix transferC2B, diagonal, transferB2C;
-        allMatrix(transferC2B,diagonal,transferB2C);
-        unsigned int i, r;
-        r = getNbRows();
-        for (i=0; i<r; i++)
-        {
-            diagonal[i][i] = (1/diagonal[i][i]);
-        }
-
-        return transferC2B*diagonal*transferB2C;
-    }
-
     Matrix temp(rows,cols), inverse(rows,cols);
     temp = (*this).coMatrix();
     temp = temp.transposeMatrix();
-    inverse = temp*(1/determinant());
+    inverse = temp * (1 / determinant());
 
     return inverse;
 }
@@ -665,17 +639,17 @@ unsigned int Matrix:: rank()const
     bool non_zero = false;
     r = getNbRows();
     c = getNbCols();
-    Matrix copy(*this);
-    copy = copy.gaussReduction();
+    Matrix reduction(*this);
+    reduction = reduction.gaussReduction();
 
     for (i = 0; i < r; i++)
     {
         non_zero = false;
         for (j = 0; j < c; j++)
         {
-            if (copy[i][j]!=0.0)
+            if (reduction[i][j]!=0.0)
             {
-                non_zero = true;
+                non_zero = true;    // rank is the number of non zero lines after gaussReduction
             }
         }
         if (non_zero)
@@ -696,22 +670,23 @@ unsigned int Matrix:: rank()const
 
 Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
 {
+    unsigned int i, j;
     unsigned int ii = 0, jj = 0;
     unsigned int r = rows;
     unsigned int c = cols;
 
     Matrix sub(r-1,c-1);
 
-    for(unsigned int i=0; i<r; i++)
+    for(i = 0; i < r; i++)
     {
-        jj=0;
-        if(i!=a)
+        jj = 0;
+        if(i != a)
         {
-            for (unsigned int j=0; j<c; j++)
+            for (j = 0; j < c; j++)
             {
-                if (j!=b)
+                if (j != b)
                 {
-                    sub[ii][jj]=tab[i][j];
+                    sub[ii][jj] = tab[i][j];
                     jj++;
                 }
             }
@@ -724,7 +699,7 @@ Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
 
 double Matrix:: determinant(unsigned int dim) const
 {
-    unsigned int i,j,x,subi=0,subj=0;
+    unsigned int i, j, x, subi = 0, subj = 0;
 
     Matrix submatrix (dim,dim);
     double det = 0;
@@ -739,13 +714,13 @@ double Matrix:: determinant(unsigned int dim) const
         return ((tab[0][0] * tab[1][1]) - (tab[1][0] * tab[0][1]));
     }
 
-    for (x=0; x<dim; x++)
+    for (x = 0; x < dim; x++)
     {
         subi = 0;
-        for (i=1; i<dim; i++)
+        for (i = 1; i < dim; i++)
         {
             subj = 0;
-            for (j=0; j<dim; j++)
+            for (j = 0; j < dim; j++)
             {
                 if (j != x)
                 {
@@ -763,14 +738,14 @@ double Matrix:: determinant(unsigned int dim) const
 
 Eigen::MatrixXd Matrix:: class2Eigen () const
 {
-    unsigned int i,j,r,c;
+    unsigned int i, j, r, c;
     r = getNbRows();
     c = getNbCols();
     Eigen:: MatrixXd m(r,c);
 
-    for(i=0 ; i<r ; i++)
+    for(i = 0 ; i < r ; i++)
     {
-        for(j=0 ; j<c ; j++)
+        for(j = 0 ; j < c ; j++)
         {
             m(i,j) = tab[i][j] ;
         }
@@ -782,14 +757,14 @@ Eigen::MatrixXd Matrix:: class2Eigen () const
 
 const Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m) const
 {
-    unsigned int i,j,r,c ;
+    unsigned int i, j, r, c ;
     r = static_cast<unsigned int>(m.rows());
     c = static_cast<unsigned int>(m.cols());
     Matrix a(r,c);
 
-    for(i=0 ; i<r ; i++)
+    for(i = 0 ; i < r ; i++)
     {
-        for(j=0 ; j<c ; j++)
+        for(j = 0 ; j < c ; j++)
         {
             a.tab[i][j] = m(i,j) ;
         }
@@ -876,9 +851,9 @@ const Matrix Matrix:: gaussReduction()const
 
 const pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
 {
-    unsigned int dim_E = getNbRows();
+    unsigned int dim_E = getNbCols();   // number of cols = dimension of start set of linear application
     unsigned int dim_im = rank();
-    unsigned int dim_ker = dim_E - dim_im;
+    unsigned int dim_ker = dim_E - dim_im;   // using rank theorem
 
     return make_pair(dim_im,dim_ker);
 }
@@ -886,17 +861,18 @@ const pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
 
 const vector<double> Matrix:: eigenValues() const
 {
-    unsigned int i,n;
+    unsigned int i, n;
     vector<double> result;
     Eigen::MatrixXd a;
 
+    // convertion to eigen3 MatrixXd and using its solver
     a = class2Eigen();
     Eigen::EigenSolver<Eigen::MatrixXd> m(a);
     n = static_cast<unsigned int>(m.eigenvalues().size());
 
-    for (i=0; i<n; i++)
+    for (i = 0; i < n; i++)
     {
-        if (m.eigenvalues()(i).imag() != 0.0)
+        if (m.eigenvalues()(i).imag() != 0.0) // no study of complex matrix
         {
             return Matrix::vector_noEigen;
         }
@@ -918,15 +894,15 @@ const Polynomial Matrix:: characteristicPolynomial()const
     Polynomial result(r);
     Polynomial temp(1);
 
-
-
     vector<double> eigen_values;
     eigen_values = eigenValues();
     if (eigen_values == vector_noEigen)
-        return Polynomial:: polynomial_noEigen;
+        return Polynomial:: polynomial_noEigen;  // no study of complex matrix
 
+    // matrix characteristic polynomial is eigen values product
     result.tab[0] = eigen_values[0];
     result.tab[1] = -1;
+
     for(i = 2; i < r+1; i++)
     {
         result.tab[i] = 0;
@@ -936,7 +912,7 @@ const Polynomial Matrix:: characteristicPolynomial()const
     {
         temp.tab[0] = eigen_values[i];
         temp.tab[1] = -1;
-        result = result*temp;
+        result = result * temp;
     }
 
     return result;
@@ -966,18 +942,18 @@ const vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
 
 const vector<VectorX> Matrix:: eigenVectors()const
 {
-    unsigned int i, j, n=getNbRows();
+    unsigned int i, j, n = getNbRows();
     vector<VectorX> tab;
     VectorX temp;
 
     Matrix a(n,n);
-    a=transferMatrix();
+    a = transferMatrix();
 
-    for(i=0; i<n; i++)
+    for(i = 0; i<n; i++)
     {
         temp.clear();
 
-        for(j=0; j<n; j++)
+        for(j = 0; j<n; j++)
         {
             temp.push_back(a[i][j]);
         }
@@ -1024,12 +1000,11 @@ bool Matrix:: isDiagonalisable()const
         return false;
 
     Matrix copy(*this);
-    Matrix P1(*this);
-    Matrix P2(*this);
+    Matrix p1(*this);
+    Matrix p2(*this);
 
-    allMatrix(P1,copy,P2);
-
-    if (P1==P2)
+    allMatrix(p1,copy,p2);
+    if (p2 == matrix_noEigen)
     {
         return false;
     }
@@ -1037,7 +1012,6 @@ bool Matrix:: isDiagonalisable()const
     unsigned int i, j, r, c;
     r = copy.getNbRows();
     c = copy.getNbCols();
-
     for(i = 0; i < r; i++)
     {
         for(j = 0; j < c; j++)
@@ -1053,22 +1027,23 @@ bool Matrix:: isDiagonalisable()const
 
 const Matrix Matrix:: diagonalise()const
 {
-
     Matrix m;
     Eigen:: MatrixXd a,b;
     a = class2Eigen();
     Eigen::EigenSolver<Eigen::MatrixXd> res(a);
     b = res.pseudoEigenvalueMatrix();
     m = eigen2Class(b);
-
-    return m.checkCast();
+    return m;
 
 }
 
 
 const Matrix Matrix::transferMatrix()const
 {
-    unsigned int i, j, n=getNbRows();
+    if (!isSQMatrix())
+        return matrix_noEigen;
+
+    unsigned int n = getNbRows();
     Matrix result(n,n);
     Eigen::MatrixXd a;
 
@@ -1077,18 +1052,7 @@ const Matrix Matrix::transferMatrix()const
 
     result = eigen2Class(m.pseudoEigenvectors());
 
-    for(i=0; i<n; i++)
-    {
-
-        for(j=0; j<n; j++)
-        {
-            if (abs(result[i][j]) < EPSILON)
-                result[i][j]=0;
-        }
-
-    }
-
-    return result.checkCast();
+    return result;
 
 }
 
@@ -1097,10 +1061,15 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
 {
    transferC2B = transferMatrix();
    diagonal = diagonalise();
-   if (transferC2B.determinant()==0.0)
+   if (transferC2B.determinant() == 0.0)
+   {
        transferB2C = matrix_noEigen;
+   }
    else
+   {
        transferB2C = (transferC2B^-1);
+   }
+
 }
 
 
