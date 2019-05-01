@@ -46,9 +46,11 @@ class MatrixLibrary
     Matrix calculateMatrixFloat (const std::string & op, const std::string & a, const float & b)const;
     Matrix calculateFloatMatrix (const std::string & op, const std::string & a, const float & b)const;
 
-    public:
     void polish(const std::string & chaine, std::vector<std::string> & polish_notation)const;
     std::string isCalculableExpression(const std::string & expression)const;
+
+    public:
+
     Matrix expressionCalcul(const std::string & chaine);
 
     void saveFile (const std::string filename)const;
