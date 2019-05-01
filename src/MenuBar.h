@@ -8,6 +8,7 @@
 #include <QToolTip>
 #include "LibraryWindow.h"
 #include "HelpWindow.h"
+#include "HelpWindowQt.h"
 
 class MenuBar : public QMenuBar
 {
@@ -22,7 +23,8 @@ class MenuBar : public QMenuBar
         QAction *libraryMatrix;
         QAction *showMatrix;
         QMenu *menuHelp;
-        QAction* actionHelp;
+        QAction* actionHelpMatrix;
+        QAction* actionHelpQt;
         QMenu *menuQuit;
         QAction *actionQuit;
 
@@ -37,7 +39,8 @@ class MenuBar : public QMenuBar
         void openLibrary();
 
     private slots:
-        void showPage();
+        void showPageMatrix();
+        void showPageQt();
 
 };
 
