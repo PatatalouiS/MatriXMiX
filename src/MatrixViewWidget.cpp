@@ -135,7 +135,7 @@ bool MatrixViewWidget:: eventFilter(QObject *watched, QEvent *event)
 //        popup->hide();
 //    }
 
-//    return QTableView::eventFilter(watched, event);
+    return QTableView::eventFilter(watched, event);
 }
 
 

@@ -730,7 +730,7 @@ JKQTP_LIB_EXPORT std::string jkqtp_toupper(const std::string& s);
 /** \brief std::string wrapper around sprintf()
  * \ingroup jkqtptools_string
  */
-JKQTP_LIB_EXPORT std::string jkqtp_format(const std::string& templ, ...);
+JKQTP_LIB_EXPORT std::string jkqtp_format(const std::string templ, ...);
 
 /** \brief convert a number of bytes to a string, formatting e.g. 1024 as 1kB, ...
  * \ingroup jkqtptools_string
