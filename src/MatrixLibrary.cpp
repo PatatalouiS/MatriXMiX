@@ -459,7 +459,135 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
 }
 
 
+
 string MatrixLibrary:: isCalculableExpression(const string & expression)
+{
+   vector<string> result = decoupe(expression);
+   unsigned long int i, j, s = result.size();
+
+   string calculable = "calculable";
+
+
+   if (s == 0)
+       return "Expression vide";
+   if (s == 1)
+       return calculable;
+
+   short int nbp = 0;
+   for (i = 0; i < s; i++)
+   {
+       if (result[i] == "(")
+       {
+           nbp++;
+       }
+       else if (result[i] == ")")
+       {
+           nbp--;
+           if (nbp < 0)
+           return "Parenthèse fermante détectée..."
+                  "\nVeuillez vérifier l'organisation des parenthèses" ;
+       }
+   }
+
+   if (nbp != 0)
+       return "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
+
+   vector<string> temp1, temp2;
+
+   for (i = 0; i < s; i++)
+   {
+       if (result[i] == "(")
+       {
+           if (!isOperator(result[i-1]))
+               return ("Il doit y avoir des opérateurs autour des parenthèses");
+           if (temp1.empty())
+           temp1.pop_back();
+
+           j = i;
+           while (j < s && result[i] !=")")
+           {
+              temp2.push_back(result[i]);
+              j++;
+           }
+           i++;
+       }
+       else if (result[i] == ")")
+       {
+           temp1.push_back(result[i]);
+       }
+
+   }
+
+
+
+
+   return "je retourne";
+}
+
+
+
+/*string MatrixLibrary:: isCalculableExpression(const string & expression)
+{
+     cout << "push";
+    vector<string> result = decoupe(expression);
+    unsigned long int i, j, s = result.size();
+
+  string calculable = "calculable";
+
+    if (s == 0)
+        return "Expression vide";
+    if (s == 1)
+        return calculable;
+
+    short int nbp = 0;
+
+    for (i = 0; i < s; i++)
+    {
+        if (result[i] == "(")
+        {
+            nbp++;
+        }
+        else if (result[i] == ")")
+        {
+            nbp--;
+            if (nbp < 0)
+            return "Parenthèse fermante détectée..."
+                   "\nVeuillez vérifier l'organisation des parenthèses" ;
+        }
+    }
+
+    if (nbp != 0)
+        return "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
+
+    vector<string> temp1, temp2;
+
+    for (i = 0; i < s; i++)
+    {
+        if (result[i] == "(")
+        {
+            if (!isOperator(result[i-1]))
+                return ("Il doit y avoir des opérateurs autour des parenthèses");
+            temp1.pop_back();
+            j = i;
+            while (j < s && result[i] !=")")
+            {
+               temp2.push_back(result[i]);
+               j++;
+            }
+            i++;
+        }
+        else if (result[i] == ")")
+        {
+            temp1.push_back(result[i]);
+        }
+
+    }
+
+    return calculable;
+}
+
+
+string MatrixLibrary:: isCalculableExpressionBis(const string & expression)
 {
     vector<string> result = decoupe(expression);
     unsigned long int i, j, s = result.size();
@@ -483,26 +611,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)
     string error8 = "Hormis '~' et '^', les caractères spéciaux ne sont pas admis" ;
     string error9 = "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M" ;
 
-    short int nbp = 0;
 
-
-    for (i = 0; i < s; i++)
-    {
-        if (result[i] == "(")
-        {
-            nbp++;
-
-        }
-        else if (result[i] == ")")
-        {
-            nbp--;
-            if (nbp < 0)
-            return error2;
-        }
-    }
-
-    if (nbp != 0)
-        return error7;
 
 
     for(i = 0; i < s; i++)
@@ -577,7 +686,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)
 
 
     return calculable;
-}
+}*/
 
 
 const string MatrixLibrary:: saveRights(const string & matrixname) const

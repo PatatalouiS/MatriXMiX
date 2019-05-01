@@ -16,7 +16,7 @@ int main (int argc, char* argv[])
 {
     MatrixLibrary lib;
 
-    string expression("3*3*a+3.15+a+e+r5*(5+4)");
+    string expression("a+(5*a)+b");
     cout << lib.isCalculableExpression(expression);
 
 
