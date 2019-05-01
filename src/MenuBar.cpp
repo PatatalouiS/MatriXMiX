@@ -22,22 +22,35 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
 
     menuHelp = addMenu("Aide");
     menuHelp->setCursor(Qt::PointingHandCursor);
-    actionHelp = new QAction("Page d'aide",this);
-    menuHelp->addAction(actionHelp);
+    actionHelpMatrix = new QAction("About MatriXMix",this);
+    menuHelp->addAction(actionHelpMatrix);
+
+    menuHelp->addSeparator();
+
+    actionHelpQt = new QAction("About QT",this);
+    menuHelp->addAction(actionHelpQt);
 
     menuQuit = addMenu("Quitter");
     menuQuit->setCursor(Qt::PointingHandCursor);
 
+
     connect(libraryMatrix, &QAction::triggered, [this]() -> void { emit openLibrary();});
-    connect(actionHelp, &QAction::triggered , this, &MenuBar::showPage);
+    connect(actionHelpMatrix, &QAction::triggered , this, &MenuBar::showPageMatrix);
+    connect(actionHelpQt, &QAction::triggered , this, &MenuBar::showPageQt);
+
 
 }
 
-void MenuBar::showPage()
+void MenuBar::showPageMatrix()
 {
     HelpWindow* wind = new HelpWindow(this);
-    //hide();
-    //wind->show();
+    wind->hide();
+}
+
+void MenuBar::showPageQt()
+{
+    HelpWindowQt* wind = new HelpWindowQt(this);
+    wind->hide();
 }
 
 MenuBar::~MenuBar()
