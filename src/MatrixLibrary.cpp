@@ -58,13 +58,11 @@ void MatrixLibrary:: print () const
 }
 
 
-void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& resultat)
+void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& resultat)const
 {
-    unsigned long int i, length = resultat.size();
-
-    for (i=0; i<length; i++)
+    for (auto i :resultat)
     {
-        expression.push_back(resultat[i]);
+        expression.push_back(i);
     }
 
 }
@@ -105,19 +103,19 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 }
 
 
-bool MatrixLibrary:: isName(const string & chaine) const
+bool MatrixLibrary:: isName(const string & chain) const
 {
-    unsigned long int i = 1, s = chaine.length();
+    unsigned long int i = 1, s = chain.length();
 
-    if ( !( ((chaine[0] >= 'A') && (chaine[0] <= 'Z'))
-         || ((chaine[0] >= 'a') && (chaine[0] <= 'z')) ) )
+    if ( !( ((chain[0] >= 'A') && (chain[0] <= 'Z'))
+         || ((chain[0] >= 'a') && (chain[0] <= 'z')) ) )
         return false;
 
     while (i<s)
     {
-        if ( ((chaine[i] >= 'A') && (chaine[i] <= 'Z'))
-             || ((chaine[i] >= 'a') && (chaine[i] <= 'z'))
-             || ((chaine[i] >= '0') && (chaine[i] <= '9')))
+        if ( ((chain[i] >= 'A') && (chain[i] <= 'Z'))
+             || ((chain[i] >= 'a') && (chain[i] <= 'z'))
+             || ((chain[i] >= '0') && (chain[i] <= '9')))
             i++;
         else return false;
     }
@@ -126,16 +124,16 @@ bool MatrixLibrary:: isName(const string & chaine) const
 }
 
 
-bool MatrixLibrary:: isFloat(const string & chaine) const
+bool MatrixLibrary:: isFloat(const string & chain) const
 {
-    unsigned long int i = 0, s = chaine.length();
+    unsigned long int i = 0, s = chain.length();
     unsigned short int nbcoma = 0;
 
     while (i<s)
     {
-        if (chaine[i]=='.')
+        if (chain[i]=='.')
             nbcoma++;
-        else if (! ((chaine[i]>='0') && (chaine[i]<='9')) )
+        else if (! ((chain[i]>='0') && (chain[i]<='9')) )
             return false ;
 
         if (nbcoma > 1)
@@ -148,28 +146,26 @@ bool MatrixLibrary:: isFloat(const string & chaine) const
 }
 
 
-bool MatrixLibrary:: isOperator (const string & chaine) const
+bool MatrixLibrary:: isOperator (const string & chain) const
 {
-    return ( (chaine == "+")
-             ||  (chaine == "-")
-             ||  (chaine == "/")
-             || (chaine == "^")
-             || (chaine == "~")
-             || (chaine == "*"));
+    return ( (chain == "+")
+             ||  (chain == "-")
+             ||  (chain == "/")
+             || (chain == "^")
+             || (chain == "~")
+             || (chain == "*"));
 }
 
 
-vector<string> MatrixLibrary:: decoupe (const string & expression)
+vector<string> MatrixLibrary:: decoupe (const string & expression)const
 {
-    unsigned int i;
-    unsigned  long taille = expression.length();
     vector<string> tab;
     string c, temp;
     temp="";
 
-    for (i=0; i<taille; i++)
+    for (auto i : expression)
     {
-        c=expression[i];
+        c=i;
 
         if((isOperator(c)) || (c == ")") || (c == "(") || (c == "=") )
         {
@@ -215,7 +211,7 @@ Matrix MatrixLibrary:: calculate (const string & op, const string & a, const str
 }
 
 
-double MatrixLibrary:: calculateFloat (const std::string & op, const std::string & a, const std::string & b)
+double MatrixLibrary:: calculateFloat (const std::string & op, const std::string & a, const std::string & b) const
 {
     if(op == "+")
         return atof(a.c_str()) + atof(b.c_str());
@@ -233,7 +229,7 @@ double MatrixLibrary:: calculateFloat (const std::string & op, const std::string
 }
 
 
-Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::string & a, const float & b)
+Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::string & a, const float & b)const
 {
     const Matrix* m_a;
     m_a=find(a);
@@ -261,7 +257,7 @@ Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::
 }
 
 
-Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::string &a, const float &b)
+Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::string &a, const float &b)const
 {
     const Matrix* m_a;
     m_a = find(a);
@@ -280,7 +276,7 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 }
 
 
-bool MatrixLibrary:: priorite_sup_egal (const string & opd,const string & opg) const
+bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg) const
 {
     switch (opd[0])
     {
@@ -307,105 +303,108 @@ bool MatrixLibrary:: priorite_sup_egal (const string & opd,const string & opg) c
 }
 
 
-void MatrixLibrary:: polonaise(const std::string & chaine , std::vector<std::string> & notation_polonaise)
+void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string> & polish_notation)const
 {
     stack<string> p;
     vector<string> expression;
-    copy_vector(expression,decoupe(chaine));
+    copy_vector(expression,decoupe(chain));
 
-    unsigned long int i, s = expression.size();
-
-    for (i = 0; i < s; i++)
+    for (auto i : expression)
     {
-        if ( (!isOperator(expression[i])) && (expression[i] != "(") && (expression[i] != ")") && (expression[i] != "=") )
+        if ( (!isOperator(i)) && (i != "(") && (i != ")") && (i != "=") )
         {
-            notation_polonaise.push_back(expression[i]);
+            polish_notation.push_back(i);
         }
-        else if ( (expression[i] == "("))
+        else if ( (i == "("))
         {
-            p.push(expression[i]);
+            p.push(i);
         }
-        else if (isOperator(expression[i]))
+        else if (isOperator(i))
         {
             if (!p.empty())
             {
-                while ((!p.empty()) && priorite_sup_egal(expression[i],p.top()))
+                while ((!p.empty()) && high_equal_priority(i,p.top()))
                 {
-                    notation_polonaise.push_back(p.top());
+                    polish_notation.push_back(p.top());
                     p.pop();
                 }
             }
 
-            p.push(expression[i]);
+            p.push(i);
 
         }
-        else if (expression[i] == ")")
+        else if (i == ")")
         {
             do
             {
-                notation_polonaise.push_back(p.top());
+                polish_notation.push_back(p.top());
                 p.pop();
 
             }while ((p.top() !=  "(") && (!p.empty()));
             p.pop();
         }
     }
-    if(notation_polonaise[notation_polonaise.size()-1]=="")
-        notation_polonaise.pop_back();
+    if(polish_notation[polish_notation.size()-1]=="")
+        polish_notation.pop_back();
 
     while (!p.empty())
     {
-        notation_polonaise.push_back(p.top());
+        polish_notation.push_back(p.top());
         p.pop();
     }
 }
 
 
-Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
+Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)
 {
-    vector<string> polish;
-    polonaise(chaine,polish);
+    vector<string> polish_not;
+    polish(chain,polish_not);                //I write my expression in Polish notation
+
     stack<string> pile;
     Matrix temp;
     string identify;
-    int nom=0;
+    int name=0;
 
-    unsigned long int i;
-
-    for (i = 0; i < polish.size(); i++ )
+    for (auto i : polish_not)
     {
-        if (polish[i] == "~")
+        if (i == "~")
         {
+            /* if the current element is a tilde, I calculate the inverse of the matrix*/
+
             string a = pile.top();
             pile.pop();
 
             temp= *(find(a))^-1;
 
-            identify = static_cast<char>('0'+ nom);
+            identify = static_cast<char>('0'+ name);
             pile.push("temp" + identify);
             addMatrix("temp" + identify,temp);
-            nom++;
+            name++;
         }
-        else if ((isOperator(polish[i])) && (polish[i] != "~"))
+        else if ((isOperator(i)) && (i != "~"))
         {
+            /* In the case of binary operation, I extract both operands from the stack*/
+
             string b = pile.top();
             pile.pop();
             string a = pile.top();
             pile.pop();
 
+            /* depending on the type of the two operands I calculate the result */
+
             if ((isName(b) && isName(a)) || (isFloat(a) && isName(b)) || (isFloat(b) && isName(a)) )
             {
                 if ((isName(b) && isName(a)))
                 {
-                    temp = calculate(polish[i],a,b);
+                    temp = calculate(i,a,b);
                 }
                 else if (isFloat(b) && isName(a))
                 {
-                    if(polish[i] == "*")
+                    if(i == "*")
                     {
                         temp = *(find(a)) * atof(b.c_str());
                     }
-                    else if (polish[i] == "^")
+                    else if (i == "^")
                     {
                         temp= *(find(a)) ^ (atoi(b.c_str()));
                     }
@@ -413,12 +412,12 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
                     {
                         float scale;
                         scale = static_cast<float>(atof(b.c_str()));
-                        temp = calculateMatrixFloat(polish[i],a,scale);
+                        temp = calculateMatrixFloat(i,a,scale);
                     }
                 }
                 else if (isFloat(a) && isName(b))
                 {
-                    if(polish[i] == "*")
+                    if(i == "*")
                     {
                         temp = *(find(b)) * atof(a.c_str());
 
@@ -427,18 +426,22 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
                     {
                         float scale;
                         scale = static_cast<float>(atof(a.c_str()));
-                        temp = calculateFloatMatrix(polish[i],b,scale);
+                        temp = calculateFloatMatrix(i,b,scale);
                     }
                 }
-                identify = static_cast<char>('0'+ nom);
-                pile.push ("temp" + identify);
+
+                /* I store the resulting matrix in the library and its name in the stack */
+
+                identify = static_cast<char>('0'+ name);
+                pile.push ("temp" + identify);          // i choose different names for the saved matrices
                 addMatrix ("temp" + identify, temp);
-                nom++;
+                name++;
             }
             else if (  isFloat(a) && isFloat(b) )
             {
+                /* if both operands are floats i calculate the result diffrently then i store it in the stack */
                 ostringstream ss;
-                ss << calculateFloat (polish[i],a,b);
+                ss << calculateFloat (i,a,b);
                 string res = ss.str();
                 pile.push(res);
             }
@@ -450,26 +453,29 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
         }
         else
         {
-            pile.push(polish[i]);
+            /* if the current element is not an operator, i store it in the stack  */
+            pile.push(i);
         }
     }
 
+    /* the stack contains the name of the resulting matrix */
+
     const Matrix* res;
     res = find(pile.top());
-    Matrix resultat(*res);
+    Matrix result(*res);
 
-    for(int i=0; i<=nom-1; i++)
+    for(int i=0; i<=name-1; i++)
     {
         identify = static_cast<char>('0'+ i);
-        erase("temp" + identify);
+        erase("temp" + identify);                       // I empty the library from intermediate matrices
     }
 
 
-    return resultat;
+    return result;
 }
 
 
-string MatrixLibrary:: isCalculableExpression(const string & expression)
+string MatrixLibrary:: isCalculableExpression(const string & expression)const
 {
     vector<string> result = decoupe(expression);
     string temp;
@@ -636,6 +642,8 @@ void MatrixLibrary:: testRegression()
 
 
     /* fonctions expressionCalcul */
+
+    // the expressionCalcul function is used to test several functions such as polish
 
     lib.addMatrix("matrice2",b);
 
