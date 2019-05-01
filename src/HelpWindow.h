@@ -13,6 +13,8 @@ private:
     QLabel* title;
     QLabel* logo;
     QGroupBox* introduction;
+    QGroupBox* utilisation;
+    QGroupBox* maths;
 
 public: HelpWindow(QWidget* parent);
         ~HelpWindow();
