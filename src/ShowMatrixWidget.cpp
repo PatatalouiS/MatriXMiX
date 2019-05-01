@@ -61,15 +61,15 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
     {
         if (ftemp.isFraction(mat[i][0]))
         {
-            Fraction f (ftemp.hanattal(mat[i][0]));
-            if (f.denominateur == 1)
-                latex += "\t" +  QString::number(f.numerateur);
+            Fraction f (ftemp.double2fraction(mat[i][0]));
+            if (f.getDenominator() == 1)
+                latex += "\t" +  QString::number(f.getNumerator());
             else
             {
                 latex += "\t " + QString ("\\frac{")
-                        + QString::number(f.numerateur)
+                        + QString::number(f.getNumerator())
                         + QString ("}{")
-                        + QString::number(f.denominateur)
+                        + QString::number(f.getDenominator())
                         + QString ("}");
             }
         }
@@ -84,15 +84,15 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
             else latex += " &";
             if (ftemp.isFraction(mat[i][j]))
             {
-                Fraction f (ftemp.hanattal(mat[i][j]));
-                if (f.denominateur == 1)
-                    latex += "\t" +  QString::number(f.numerateur);
+                Fraction f (ftemp.double2fraction(mat[i][j]));
+                if (f.getDenominator() == 1)
+                    latex += "\t" +  QString::number(f.getNumerator());
                 else
                 {
                     latex += "\t " + QString ("\\frac{")
-                            + QString::number(f.numerateur)
+                            + QString::number(f.getNumerator())
                             + QString ("}{")
-                            + QString::number(f.denominateur)
+                            + QString::number(f.getDenominator())
                             + QString ("}");
                 }
 

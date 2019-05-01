@@ -10,6 +10,7 @@
 #include "MatrixLibrary.h"
 #include "Fraction.h"
 
+using namespace std;
 
 int main (int argc, char* argv[])
 {
@@ -26,9 +27,11 @@ int main (int argc, char* argv[])
                   0,0,0,0,0,0,0,0,0,1 });
 
     Matrix b(3,3,{1,2,3,4,5,6,7,8,0});
+    Matrix p(3,3,{0.5,0.25,0.2,0.25,0.5,0.2,0.2,0.5,0.25});
 
-    if (a.isDiagonalisable())
-        cout << "I10 diagonalisable" ;
+    p = p^(-5);
+    std::cout << p;
+
 
     /*
     Matrix d(10,10,{2.9104602,-0.99999999,99999999,0.55555,0,888,0.524,-0.33333,0.39715,0.461654,
