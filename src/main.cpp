@@ -14,7 +14,7 @@
 
 int main (int argc, char* argv[])
 {
-  /*Fraction f;
+ /* Fraction f;
   double d1 = 5.5;
   double d2 = -9.66666666666;
 
@@ -29,39 +29,23 @@ int main (int argc, char* argv[])
     app.setQuitOnLastWindowClosed(false);
     MainWindow* win = new MainWindow;
     win->showMinimized();
-    return app.exec();
+    return app.exec();*/
 
     MatrixLibrary lib;
-    vector<string> resultat;
-    lib.cleanSaves();
-    string expression("A+2+B");
-    resultat = lib.decoupe(expression);
-
-
-    cout << lib.isCalculableExpression(expression) << endl;
-
     Matrix a (2,2,{1,0,0,1});
     Matrix b (2,2,{5,0,0,1});
     Matrix res;
 
     lib.addMatrix("identite",a);
     lib.addMatrix("matrice",b);
-    lib.saveMatrix("identite");
-    lib.saveMatrix("matrice");
+
+    //lib.saveFile("../data/sauvegarde.txt");
+    lib.readFile("../data/sauvegarde.txt");
+    lib.print();
 
 
-    resultat = lib.decoupe("matrice^-1");
 
-    lib.polonaise("matrice*2+(identite^-1)",resultat);
-
-    for(unsigned int i = 0 ; i < resultat.size() ; i++)
-    {
-        cout << resultat[i]<<endl;
-    }*/
-
-    MatrixLibrary lib;
-    lib.testRegression();
-
+    return 0;
 
 }
 
