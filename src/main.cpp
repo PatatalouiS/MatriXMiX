@@ -14,19 +14,8 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
-    MatrixLibrary lib;
 
-    string expression("a+(5*a)+b");
-    cout << lib.isCalculableExpression(expression);
-
-
-
-
-
-
-
-
-   /* Matrix a(10,10,{1,0,0,0,0,0,0,0,0,0,
+    Matrix a(10,10,{1,0,0,0,0,0,0,0,0,0,
                   0,1,0,0,0,0,0,0,0,0,
                   0,0,1,0,0,0,0,0,0,0,
                   0,0,0,1,0,0,0,0,0,0,

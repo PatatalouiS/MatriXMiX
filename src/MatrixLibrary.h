@@ -48,7 +48,6 @@ class MatrixLibrary
     public:
     void polonaise(const std::string & chaine, std::vector<std::string> & notation_polonaise);
     std::string isCalculableExpression(const std::string & expression) ;
-    std::string isCalculableExpressionBis(const std::string & expression) ;
     Matrix expressionCalcul(const std::string & chaine) ;
 
     const std::string saveRights(const std::string & matrixname) const;
@@ -57,6 +56,7 @@ class MatrixLibrary
     Matrix readMatrix(const std::string & matrixname) const;
 
     void testRegression();
+
 
 };
 

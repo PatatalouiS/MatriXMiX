@@ -459,11 +459,10 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chaine)
 }
 
 
-
 string MatrixLibrary:: isCalculableExpression(const string & expression)
 {
    vector<string> result = decoupe(expression);
-   unsigned long int i, j, s = result.size();
+   unsigned long int i, s = result.size();
 
    string calculable = "calculable";
 
@@ -492,107 +491,27 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)
    if (nbp != 0)
        return "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
 
-   vector<string> temp1, temp2;
+   vector<string> no_parenthesis;
 
    for (i = 0; i < s; i++)
    {
-       if (result[i] == "(")
+       if (result[i] != "(" && result[i] != ")")
        {
-           if (!isOperator(result[i-1]))
-               return ("Il doit y avoir des opérateurs autour des parenthèses");
-           if (temp1.empty())
-           temp1.pop_back();
-
-           j = i;
-           while (j < s && result[i] !=")")
-           {
-              temp2.push_back(result[i]);
-              j++;
-           }
-           i++;
+            no_parenthesis.push_back(result[i]);
        }
-       else if (result[i] == ")")
+       else if (result[i] == "(")
        {
-           temp1.push_back(result[i]);
+            if (i == s - 1)
+                return ("Impossible de calculer une expression se terminant par '(' ");
+            else if (result[i+1] == ")")
+            {
+                return ("Impossible de calculer '()'");
+            }
        }
-
    }
 
+    s = no_parenthesis.size();
 
-
-
-   return "je retourne";
-}
-
-
-
-/*string MatrixLibrary:: isCalculableExpression(const string & expression)
-{
-     cout << "push";
-    vector<string> result = decoupe(expression);
-    unsigned long int i, j, s = result.size();
-
-  string calculable = "calculable";
-
-    if (s == 0)
-        return "Expression vide";
-    if (s == 1)
-        return calculable;
-
-    short int nbp = 0;
-
-    for (i = 0; i < s; i++)
-    {
-        if (result[i] == "(")
-        {
-            nbp++;
-        }
-        else if (result[i] == ")")
-        {
-            nbp--;
-            if (nbp < 0)
-            return "Parenthèse fermante détectée..."
-                   "\nVeuillez vérifier l'organisation des parenthèses" ;
-        }
-    }
-
-    if (nbp != 0)
-        return "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
-
-    vector<string> temp1, temp2;
-
-    for (i = 0; i < s; i++)
-    {
-        if (result[i] == "(")
-        {
-            if (!isOperator(result[i-1]))
-                return ("Il doit y avoir des opérateurs autour des parenthèses");
-            temp1.pop_back();
-            j = i;
-            while (j < s && result[i] !=")")
-            {
-               temp2.push_back(result[i]);
-               j++;
-            }
-            i++;
-        }
-        else if (result[i] == ")")
-        {
-            temp1.push_back(result[i]);
-        }
-
-    }
-
-    return calculable;
-}
-
-
-string MatrixLibrary:: isCalculableExpressionBis(const string & expression)
-{
-    vector<string> result = decoupe(expression);
-    unsigned long int i, j, s = result.size();
-
-    string calculable = "calculable";
     string error1 = "Expression vide" ;
 
     if (s == 0)
@@ -611,82 +530,82 @@ string MatrixLibrary:: isCalculableExpressionBis(const string & expression)
     string error8 = "Hormis '~' et '^', les caractères spéciaux ne sont pas admis" ;
     string error9 = "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M" ;
 
-
-
-
     for(i = 0; i < s; i++)
     {
-        cout << i << " : " << result[i] << endl;
-
-            if (isOperator(result[i]))
+            if (isOperator(no_parenthesis[i]))
             {
-
-            if (i == 0)
-                   return ("Calcul de " + result[i] + result[i+1] + " impossible!");
-               if (i == s - 1)
-                   return ("Impossible de calculer " + result[i-1] + result[i]);
-               if (isOperator(result[i-1]))
-                   return "Deux opérateurs à la suite... \nImpossible à calculer";
-           }
-                else if (isName(result[i]))
+                if (i == 0)
+                    return ("Calcul de " + no_parenthesis[i] + no_parenthesis[i+1] + " impossible!");
+                if (i == s - 1)
+                    return ("Impossible de calculer " + no_parenthesis[i-1] + no_parenthesis[i]);
+                if (isOperator(no_parenthesis[i-1]))
+                    return "Deux opérateurs à la suite... \nImpossible à calculer";
+            }
+                else if (isName(no_parenthesis[i]))
                 {
                     if (i == 0)
                         continue;
                     if (i == 1)
-                        return (error3a + result[i-1] + result[i] + error3b);
+                        return (error3a + no_parenthesis[i-1] + no_parenthesis[i] + error3b);
                     if (i == s - 2)
-                        return (error3a + result[i] + result[i+1] + error3b);
+                        return (error3a + no_parenthesis[i] + no_parenthesis[i+1] + error3b);
 
                     if ( (i > 1) && (i < s-2) )
                     {
-                        if (!isOperator(result[i-1]))
-                            return (error3a + result[i-1] + error3b);
-                        else if ( (!isName(result[i-2])) && (!isFloat(result[i-2])) )
-                            return (error3a + result[i-2] + result[i-1] + result[i] + error3b);
+                        if (!isOperator(no_parenthesis[i-1]))
+                            return (error3a + no_parenthesis[i-1] + error3b);
 
-                        if (result[i+1] == "^")
+                        else if ( (!isName(no_parenthesis[i-2])) && (!isFloat(no_parenthesis[i-2])) )
+                            return (error3a + no_parenthesis[i-2] + no_parenthesis[i-1]
+                                    + no_parenthesis[i] + error3b);
+
+                        if (no_parenthesis[i+1] == "^")
                         {
-                            if (!isFloat(result[i+2]))
-                                return (error3a + result[i] + result[i+1] + result[i+2] + error3a + "\n" + result[i+2] + error4);
-                            if (atoi(result[i+2].c_str()) < 0)
-                                return (error3a + result[i] + result[i+1] + result[i+2] + error3a + error5);
-                            if (atoi(result[i+2].c_str()) - atof(result[i+2].c_str()) != 0.0)
-                                return ("Impossible de calculer " + result[i]
-                                        + result[i+1] + result[i+2] + "...\nCalcul d'une puissance réelle impossible");
+                            if (!isFloat(no_parenthesis[i+2]))
+                                return (error3a + no_parenthesis[i] + no_parenthesis[i+1]
+                                        + no_parenthesis[i+2] + error3b + "\n"
+                                        + no_parenthesis[i+2] + " doit être un entier");
+
+                            if (atoi(no_parenthesis[i+2].c_str()) < 0)
+                                return (error3a + no_parenthesis[i] + no_parenthesis[i+1]
+                                        + no_parenthesis[i+2] + error3b
+                                        + "\nVeuillez utiliser '~' pour désigner l'inverse d'une matrice");
+
+                            if (atoi(no_parenthesis[i+2].c_str()) - atof(no_parenthesis[i+2].c_str()) != 0.0)
+                                return ("Impossible de calculer " + no_parenthesis[i]
+                                        + no_parenthesis[i+1] + no_parenthesis[i+2]
+                                        + "...\nCalcul d'une puissance réelle impossible");
                         }
 
                     }
 
                 }
 
-                    else if (isFloat(result[i]))
+                    else if (isFloat(no_parenthesis[i]))
                             {
                                 if (i == 0)
                                     continue;
                                 if (i == 1)
-                                    return (error3a + result[i-1] + result[i] + error3b);
+                                    return (error3a + no_parenthesis[i-1] + no_parenthesis[i] + error3b);
                                 if (i == s - 2)
-                                    return (error3a + result[i] + result[i+1] + error3b);
-                                if (!isOperator(result[i-1]))
-            //   <    >         {
+                                    return (error3a + no_parenthesis[i] + no_parenthesis[i+1] + error3b);
+                                if (!isOperator(no_parenthesis[i-1]))
                                 {
-                                    if (result[i-1] != "^")
-                                        return ("Impossible de calculer " + result[i-1] + result[i]);
-                                    if (atof(result[i].c_str()) < 0.0)
-                                        return (error3a + result[i-2] + result[i-1] + result[i] + error3b + error9);
-                                    if (atof(result[i].c_str()) - atoi(result[i].c_str()) != 0.0)
+                                    if (no_parenthesis[i-1] != "^")
+                                        return ("Impossible de calculer " + no_parenthesis[i-1] + no_parenthesis[i]);
+                                    if (atof(no_parenthesis[i].c_str()) < 0.0)
+                                        return (error3a + no_parenthesis[i-2] + no_parenthesis[i-1]
+                                                + no_parenthesis[i] + error3b + error9);
+                                    if (atof(no_parenthesis[i].c_str()) - atoi(no_parenthesis[i].c_str()) != 0.0)
                                         return ("Calcul d'une puissance réelle impossible");
                                 }
-                                else if ( (i < s - 1) && isName(result[i+1]) )
-                                        return "L'opération " + result[i+1] + " n'est pas définie" ;
+                                else if ( (i < s - 1) && isName(no_parenthesis[i+1]) )
+                                        return "L'opération " + no_parenthesis[i+1] + " n'est pas définie" ;
                             }
 
     }
-
-
-
     return calculable;
-}*/
+}
 
 
 const string MatrixLibrary:: saveRights(const string & matrixname) const
@@ -847,7 +766,52 @@ void MatrixLibrary:: testRegression()
 {
      cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
 
-    MatrixLibrary lib;
+
+     MatrixLibrary lib;
+
+
+
+     string s1("a+b+c+(d+e)++f+g");
+     string s2("a+b+c+f+1*");
+     string s3("a+b");
+     string s4("a");
+     string s5("a+");
+     string s6("()a");
+     string s7("a+b+(c)");
+     string s8("");
+     string s9("(a+b)");
+     string s10("a+b+(a+b)c");
+     string s11("a+b(a+c)");
+     string s12("()a()");
+     cout << endl << endl << s1 << "  " << lib.isCalculableExpression(s1);
+     cout << endl << endl << s2 << "  " << lib.isCalculableExpression(s2);
+     cout << endl << endl << s3 << "  " << lib.isCalculableExpression(s3);
+     cout << endl << endl << s4 << "  " << lib.isCalculableExpression(s4);
+     cout << endl << endl << s5 << "  " << lib.isCalculableExpression(s5);
+     cout << endl << endl << s6 << "  " << lib.isCalculableExpression(s6);
+     cout << endl << endl << s7 << "  " << lib.isCalculableExpression(s7);
+     cout << endl << endl << s8 << "  " << lib.isCalculableExpression(s8);
+     cout << endl << endl << s9 << "  " << lib.isCalculableExpression(s9);
+     cout << endl << endl << s10 << "  " << lib.isCalculableExpression(s10);
+     cout << endl << endl << s11 << "  " << lib.isCalculableExpression(s11);
+     cout << endl << endl << s12 << "  " << lib.isCalculableExpression(s12);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Matrix identite(3,3,{1,0,0,0,1,0,0,0,1});
     Matrix a(3,3,{1,2,3,4,5,6,7,8,9});
@@ -924,6 +888,4 @@ void MatrixLibrary:: testRegression()
 
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 }
-
-
 

@@ -30,6 +30,7 @@ private:
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     Matrix checkCast () const;
     double determinant(unsigned int dim) const;
+    bool isNulDeterminant() const;
     Eigen::MatrixXd class2Eigen() const;
     const Matrix eigen2Class(const Eigen::MatrixXd & m) const;
 

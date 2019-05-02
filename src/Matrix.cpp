@@ -618,7 +618,7 @@ Matrix Matrix:: inverse() const
         return matrix_noEigen;
     }
 
-    if (determinant() == 0.0)
+    if (isNulDeterminant())
     {
         cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
         return matrix_noEigen;
@@ -733,6 +733,12 @@ double Matrix:: determinant(unsigned int dim) const
         det = det + (pow(-1, x) * tab[0][x] * submatrix.determinant(dim - 1));
     }
     return det;
+}
+
+
+bool Matrix:: isNulDeterminant() const
+{
+    return (! (rows == rank()));
 }
 
 
@@ -877,10 +883,7 @@ const vector<double> Matrix:: eigenValues() const
             return Matrix::vector_noEigen;
         }
 
-        if(abs(m.eigenvalues()(i).real()) < EPSILON)
-            result.push_back(0);
-        else
-            result.push_back(m.eigenvalues()(i).real());
+        result.push_back(m.eigenvalues()(i).real());
     }
 
     return result;
@@ -1061,7 +1064,7 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
 {
    transferC2B = transferMatrix();
    diagonal = diagonalise();
-   if (transferC2B.determinant() == 0.0)
+   if (transferC2B.isNulDeterminant())
    {
        transferB2C = matrix_noEigen;
    }
