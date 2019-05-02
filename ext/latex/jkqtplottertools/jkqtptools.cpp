@@ -81,10 +81,12 @@ std::string jkqtp_tolower(const std::string& s){
   return d;
 };
 
- std::string jkqtp_format(const std::string& templ, ...){
+ std::string jkqtp_format(const std::string templ, ...){
   va_list ap;
   char buffer[4096];
   va_start (ap, templ);
+//  const char* temp = templ.data();
+//  const char a [templ.size()];
   vsprintf (buffer, templ.c_str(), ap);
   va_end (ap);
   std::string ret(buffer);
@@ -132,7 +134,7 @@ std::string jkqtp_tolower(const std::string& s){
   std::string r=jkqtp_format(form,data);
   //std::cout<<r<<std::endl;
   if (remove_trail0 && (jkqtp_tolower(r).find('e')==std::string::npos)) {
-      if (data==0) return "0";
+      if ((data>=0)&&(data<=0)) return "0";
       //size_t cp=r.find(".");
       //if (cp<r.size()) return r;
       std::string re;
@@ -140,18 +142,18 @@ std::string jkqtp_tolower(const std::string& s){
       if (dpos==std::string::npos) {
           return r;
       } else {
-          long i=r.size()-1;
+          long i=long(r.size()-1);
           bool nonz=false;
           while (i>=0) {
               //std::cout<<i<<"\n";
-              if (r[i]!='0') {
+              if (r[size_t(i)]!='0') {
                   nonz=true;
               }
               if (nonz || (i<long(dpos))) {
-                  if (re.size()==0 && r[i]=='.') {
+                  if (re.size()==0 && r[size_t(i)]=='.') {
                       // swallow decimal dot, if only 0 folowed
                   } else {
-                      re=r[i]+re;
+                      re=r[size_t(i)]+re;
                   }
               }
               i--;
@@ -164,7 +166,7 @@ std::string jkqtp_tolower(const std::string& s){
 }
 
  std::string jkqtp_floattounitstr(double dataa, const std::string& unitname){
-  if (dataa==0) return jkqtp_floattostr(dataa)+unitname;
+  if ((dataa>=0) && (dataa <= 0)) return jkqtp_floattostr(dataa)+unitname;
   std::string u="";
   double factor=1;
   double data=fabs(dataa);
@@ -186,7 +188,7 @@ std::string jkqtp_tolower(const std::string& s){
 
 
  std::string jkqtp_floattounitstr(double data, int past_comma, bool remove_trail0){
-   if (data==0) return "0";
+   if ((data>=0) && (data <= 0)) return "0";
    std::string form="%."+jkqtp_inttostr(past_comma)+"lf";
    std::string res=jkqtp_format(form,data);
    if (fabs(data)>=1e3) res=jkqtp_format(form,data/1e3)+"k";
@@ -200,7 +202,7 @@ std::string jkqtp_tolower(const std::string& s){
    if (fabs(data)<1e-9) res=jkqtp_format(form,data/1e-12)+"f";
    if (fabs(data)==0) res=jkqtp_format(form,data);
    if (remove_trail0) {
-       if (data==0) return "0";
+       if ((data>=0) && (data <= 0)) return "0";
        if (res.find('.')==std::string::npos) return res;
        size_t i=res.size()-1;
        while (i>0 && res[i]=='0') {
@@ -214,7 +216,7 @@ std::string jkqtp_tolower(const std::string& s){
 
  std::string jkqtp_floattolatexstr(double data, int past_comma, bool remove_trail0, double belowIsZero, double minNoExponent, double maxNoExponent){
    if ((belowIsZero>0) && (fabs(data)<belowIsZero)) return "\\rm{0}";
-   if (data==0) return "\\rm{0}";
+   if ((data>=0) && (data <= 0))return "\\rm{0}";
    double adata=fabs(data);
    std::string res=jkqtp_floattostr(data, past_comma, remove_trail0);
    /*std::string form="%."+inttostr(past_comma)+"lf";
@@ -222,7 +224,7 @@ std::string jkqtp_tolower(const std::string& s){
    std::string s="";
    if (data<0) s="-";*/
 
-   long exp=(long)floor(log(adata)/log(10.0));
+   long exp=long(floor(log(adata))/log(10.0));
    //std::cout<<"data="<<data<<"   res="<<res<<"   exp="<<exp<<"   past_comma="<<past_comma<<std::endl;
    //if (exp==0 || exp==-1 || exp==1) return res;
    if ((minNoExponent<=fabs(data)) && (fabs(data)<=maxNoExponent)) return res;
@@ -239,7 +241,7 @@ std::string jkqtp_tolower(const std::string& s){
  std::string jkqtp_floattohtmlstr(double data, int past_comma, bool remove_trail0, double belowIsZero, double minNoExponent, double maxNoExponent){
    std::string result;
    if ((belowIsZero>0) && (fabs(data)<belowIsZero)) return "0";
-   if (data==0) return "0";
+   if ((data>=0) && (data <= 0)) return "0";
    double adata=fabs(data);
    std::string res=jkqtp_floattostr(data, past_comma, remove_trail0);
 
@@ -628,7 +630,7 @@ std::string jkqtp_booltostr(bool data){
 
 static const struct RGBData {
     const char *name;
-    unsigned int  value;
+    unsigned long  value;
 } rgbTbl[] = {
     { "aliceblue", rgb(240, 248, 255) },
     { "antiquewhite", rgb(250, 235, 215) },
@@ -785,7 +787,7 @@ static const int rgbTblSize = sizeof(rgbTbl) / sizeof(RGBData);
 QString jkqtp_rgbtostring(unsigned char r, unsigned char g, unsigned char b, unsigned char a, bool useSpecialTransparencySyntax) {
     if (a==255) {// only for non-transparent colors
         for (int i=0; i<rgbTblSize; i++) {
-            if (rgb(r,g,b)==rgbTbl[i].value) {
+            if ((rgb(unsigned(r),unsigned(g),b))==rgbTbl[i].value) {
                 return rgbTbl[i].name;
             }
         }

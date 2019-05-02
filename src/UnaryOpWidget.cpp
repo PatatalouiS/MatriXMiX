@@ -83,6 +83,7 @@ void UnaryOpWidget:: computeOperation()
     if(op.second == nullptr)
     {
         Error::showError("opérande Manquante !", "Veuillez bien sélectionner votre Matrice !", this);
+        return;
     }
 
     result.setValue(operation(op));

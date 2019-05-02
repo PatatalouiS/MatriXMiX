@@ -125,6 +125,7 @@ void BinaryOpMatrixNumberWidget:: computeSelection(bool viewId)
     {
         op2 = edit->text().replace(',', '.').toDouble();
     }
+
     description->setText(op1.first + logo + QString::number(op2));
 }
 

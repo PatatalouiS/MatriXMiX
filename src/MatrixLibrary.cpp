@@ -7,7 +7,7 @@
 #include <cassert>
 using namespace std;
 
-const string PATH = "sauvegarde.txt";
+const string PATH = "../data/sauvegarde.txt";
 
 
 MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
@@ -29,6 +29,15 @@ unsigned long int MatrixLibrary:: size () const
 bool MatrixLibrary:: isEmpty () const
 {
     return size() == 0;
+}
+
+
+void MatrixLibrary:: empty ()
+{
+    for (auto it = tab.begin(); it != tab.end(); it++ )
+    {
+        erase(it->first);
+    }
 }
 
 
@@ -70,6 +79,16 @@ void MatrixLibrary:: addMatrix (const string& name, const Matrix& m)
 
 
 const Matrix* MatrixLibrary:: find (const string& name) const
+{
+    if(tab.count(name) == 0)
+    {
+        return nullptr;
+    }
+    return &tab.at(name);
+}
+
+
+Matrix* MatrixLibrary:: find (const string& name)
 {
     if(tab.count(name) == 0)
     {
@@ -608,160 +627,6 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)
 }
 
 
-const string MatrixLibrary:: saveRights(const string & matrixname) const
-{
-    ifstream file (PATH);
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    string first_string, stringpos;
-
-    file >> first_string;
-
-    while(!file.eof())
-    {
-        file >> stringpos;
-        if(stringpos==matrixname)
-            return string("used");
-    }
-
-    return first_string;
-
-}
-
-
-void MatrixLibrary:: saveMatrix (const string & matrixname) const
-{
-    Matrix m(*find(matrixname));
-    cout << m;
-
-    string filename (PATH);
-    ofstream file (filename.c_str(), ios::app);
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du fichier "
-                "\nVeuillez vérifier le chemin du fichier" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    string testRights = saveRights(matrixname);
-
-    if (testRights.empty())
-    {
-        file << "Matrix" << endl;
-
-    }
-    else if (testRights=="used")
-    {
-        cout << "Une matrice du même nom a déjà été sauvegardée"
-                "\nVeuillez sélectionner un autre nom" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else if(testRights!="Matrix")
-    {
-        cout << endl << "Erreur !"
-                        "\nModification du fichier 'sauvegarde.txt' " << endl;
-        // MAXIME GESTION ERREUR
-        exit(EXIT_FAILURE);
-    }
-
-    file << endl << matrixname << endl;
-    file << m.getNbRows() << " " << m.getNbCols() << endl;
-
-    for (unsigned int i = 0; i < m.getNbRows(); i++)
-    {
-        for (unsigned int j = 0; j < m.getNbCols(); j++)
-        {
-
-            file << m[i][j] << " ";
-        }
-        file << endl;
-    }
-
-    cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
-
-    file.close();
-
-}
-
-
-void MatrixLibrary:: cleanSaves() const
-{
-    string filename(PATH);
-    ofstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    file.close();
-    cout << "Fichier de sauvegarde nettoyé" << endl << endl;
-
-}
-
-
-Matrix MatrixLibrary:: readMatrix(const string & matrixname) const
-{
-    string filename(PATH);
-    ifstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-        return Matrix::matrix_noEigen;
-    }
-
-    string testfile;
-    file >> testfile ;
-
-    if( testfile == "Matrix")
-    {
-        while(!file.eof() && testfile!=matrixname)
-        {
-            file >> testfile;
-        }
-        if (file.eof())
-        {
-            cout << "Erreur avec " << matrixname <<
-                    "\nCette matrice n'a pas été sauvegardée dans 'sauvegarde.txt' " << endl;
-             return Matrix::matrix_noEigen;
-             //Exception Qt
-        }
-
-        unsigned int r,c;
-        file >> r >> c;
-
-        Matrix m(r,c);
-
-        for (unsigned int i = 0; i < r; i++)
-        {
-            for (unsigned int j = 0; j < c; j++)
-            {
-                file >> m[i][j];
-            }
-
-        }
-
-        file.close();
-        cout << "fermeture réussie" << endl << endl;
-        return m;
-    }
-    else
-    {
-        cout << "Erreur" << endl ;
-        return Matrix::matrix_noEigen;
-        // exception QT Maxime
-    }
-}
-
-
 void MatrixLibrary:: testRegression()
 {
      cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
@@ -860,6 +725,7 @@ void MatrixLibrary:: testRegression()
     Matrix resultat4(3,3,{33,-13,2,-13,20,-1,2,-1,12});
     Matrix resultat5(3,3,{615,-379,55,-379,235,-34,55,-34,6});
     Matrix resultat6(3,3,0);
+    Matrix resultat7(3,3,{5,0,0,0,5,0,0,0,5});
 
 
     res = lib.expressionCalcul("identite+identite~");
@@ -878,14 +744,112 @@ void MatrixLibrary:: testRegression()
     assert(res == resultat4);
 
 
-
     res = lib.expressionCalcul("1+(matrice2~)^2");
     assert(res == resultat5);
+
 
     res = lib.expressionCalcul("2*matrice2*matrice2*(matrice2*matrice2)~-2");
     assert(res == resultat6);
 
 
+    res = lib.expressionCalcul("matrice1*2/2-1+1");
+    assert(res == a);
+
+
+    res = lib.expressionCalcul("matrice2/matrice2");
+    assert(res == identite);
+
+
+    res = lib.expressionCalcul("2+3*identite/identite~^3");
+    assert(res == resultat7);
+
+
+
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 }
+
+
+void MatrixLibrary:: saveFile (const string filename)const
+{
+    ofstream file (filename.c_str());
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du fichier "
+                "\nVeuillez vérifier le chemin du fichier" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    file << "Matrix" << endl;
+
+    for (auto it = tab.begin(); it != tab.end(); it++ )
+    {
+       string matrixname = it->first;
+       Matrix m(*find(matrixname));
+
+       file << endl << matrixname << endl;
+       file << m.getNbRows() << " " << m.getNbCols() << endl;
+
+       for (unsigned int i = 0; i < m.getNbRows(); i++)
+       {
+           for (unsigned int j = 0; j < m.getNbCols(); j++)
+           {
+
+               file << m[i][j] << " ";
+           }
+           file << endl;
+       }
+       cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
+    }
+
+    file.close();
+}
+
+
+void MatrixLibrary:: readFile (const string filename)
+{
+    string matrixname;
+    unsigned int r,c;
+    ifstream file (filename.c_str());
+
+    empty();
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+    }
+
+    string testfile;
+    file >> testfile ;
+
+    if( testfile == "Matrix")
+    {
+        while(!file.eof())
+        {
+            file >> matrixname;
+            file >> r >> c;
+
+            Matrix m(r,c);
+
+            for (unsigned int i = 0; i < r; i++)
+            {
+                for (unsigned int j = 0; j < c; j++)
+                {
+                    file >> m[i][j];
+                }
+
+            }
+            addMatrix(matrixname,m);
+        }
+
+        file.close();
+
+    }
+    else
+    {
+        cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
+
+    }
+}
+
 

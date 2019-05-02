@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <QDebug>
 #include <QPainter>
@@ -28,31 +29,6 @@ const QPixmap& ShowMatrixWidget:: getCurrentPixmap() const
 
 void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt, const QColor& col)
 {
-//<<<<<<< HEAD
-//    unsigned int rows = mat.getNbRows();
-//    unsigned int cols = mat.getNbCols();
-
-//	QString latex = "\\begin{bmatrix}";
-
-//	for(unsigned int i = 0; i < rows; ++i)
-//	{
-//        latex += "\t" +  QString::number(mat[i][0]);
-
-//		for(unsigned int j = 1; j < cols; ++j)
-//		{
-//			if(j != cols) latex += " & ";
-//			else latex += " &";
-//            latex += QString::number(mat[i][j]);
-//			if((j == cols-1) && (i != rows-1)) latex += "\\\\";
-//		}
-//	}
-//	latex += "\\end{bmatrix}";
-
-//   setPixmapToQLabel(col, latex, sizeTxt);
-//=======
-
-
-
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
     QString latex = "\\begin{bmatrix}";
@@ -133,8 +109,6 @@ const QString& name, const QColor& col)
 }
 
 
-
-
 void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2, const QString& name, const QColor& col)
 {
     std::ostringstream flux;
@@ -142,7 +116,38 @@ void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::
     QString factorizedForm;
 
     flux << res1;
-    developpedForm = flux.str().c_str();
+    //developpedForm = flux.str().c_str();
+
+    for(unsigned int i = 0; i < res1.tab.size(); i++)
+    {
+        QString x;
+        QString power;
+
+        if (i == 0)
+            x = QString("");
+        else
+            x = QString("+X^{");
+        if (i == 1)
+            power = QString ("");
+        else
+            power = QString::number(i);
+
+        if (res1.tab[i] != 0.0)
+        {
+            if (res1.tab[i] == 1.0)
+                developpedForm += x + power +  QString("}") ;
+            else if (-res1.tab[i] == 1.0)
+                developpedForm += QString("-")
+                        + QString("X^{") + power +  QString("}") ;
+                else if (res1.tab[i] > 0.0)
+                    developpedForm += QString("+") + QString::number(res1.tab[i])
+                            + QString("X^{") + power +  QString("}") ;
+                    else
+                        developpedForm += QString::number(res1.tab[i])
+                                + QString("X^{") + power +  QString("}") ;
+        }
+    }
+
     for(auto i : res2)
     {
         flux.str("");
@@ -155,6 +160,7 @@ void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::
 
     setPixmapToQLabel(col, latex, 30);
 }
+
 
 void ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<double, VectorX>>& res,
 const QString& name, const QColor& col)

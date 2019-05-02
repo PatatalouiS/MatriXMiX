@@ -39,6 +39,7 @@ class MatrixViewWidget : public QTableView
             [](const Matrix*) -> bool {return true;});
 
         void addNewRow(const MatrixPair& m);
+        void editRow(const MatrixPair& m);
         void removeRow(const int id);
 };
 

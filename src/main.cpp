@@ -1,18 +1,14 @@
+
 #include <QApplication>
-#include "ShowMatrixWidget.h"
-#include <iostream>
-#include <QDir>
-#include <QDebug>
 #include "MainWindow.h"
 #include "LibraryWindow.h"
-#include "Matrix.h"
 #include "MatriXMiXTXT.h"
 #include "MatrixLibrary.h"
 #include "Fraction.h"
 #include <stdlib.h>
 using namespace std;
 
-int main (int argc, char* argv[])
+/*int main (int argc, char* argv[])
 {
 
     Matrix a(10,10,{1,0,0,0,0,0,0,0,0,0,
@@ -51,17 +47,17 @@ int main (int argc, char* argv[])
     return app.exec();
 
 
-/*
+
     MatrixLibrary lib;
     vector<string> resultat;
     lib.cleanSaves();
     string expression("A+2+B");
-    resultat = lib.decoupe(expression);*/
+    resultat = lib.decoupe(expression);
 
 
     //cout << lib.isCalculableExpression(expression) << endl;
 
-    /*
+
     Matrix a (2,2,{1,0,0,1});
     Matrix b (2,2,{5,0,0,1});
     Matrix res;
@@ -88,7 +84,7 @@ int main (int argc, char* argv[])
    // res=a^-1;
    cout << res << endl;
 
-*/
+
 
 
 
@@ -97,6 +93,15 @@ int main (int argc, char* argv[])
 
     //cout << lib.readMatrix("I+B") << endl << endl;
 
+}*/
 
+
+int main (int argc, char* argv[])
+{
+    QApplication app(argc, argv);
+    MainWindow mainWindow;
+    mainWindow.show();
+    return app.exec();
 }
+
 
