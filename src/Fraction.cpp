@@ -57,6 +57,14 @@ Fraction& Fraction:: operator = (const Fraction &f)
 }
 
 
+Fraction& Fraction:: operator = (const double &d)
+{
+    numerator = double2fraction(d).numerator;
+    denominator = double2fraction(d).denominator;
+    return *this;
+}
+
+
 bool Fraction:: operator == (const Fraction &f) const
 {
     long int num1, num2;

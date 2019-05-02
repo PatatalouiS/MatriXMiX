@@ -98,6 +98,7 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
+    Matrix a; a.testRegression();
     QApplication app(argc, argv);
     MainWindow mainWindow;
     mainWindow.show();

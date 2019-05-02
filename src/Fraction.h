@@ -12,7 +12,6 @@ private:
 
 
 private:
-    Fraction& operator = (const Fraction & f);
     void recursived2f (std::vector<long int> &tab, const double & rest) const;
 
 
@@ -24,6 +23,8 @@ public:
     long int getNumerator() const;
     long int getDenominator() const;
     friend std::ostream& operator << (std::ostream& flux, Fraction const& fraction);
+    Fraction& operator = (const Fraction & f);
+    Fraction& operator = (const double &d);
     bool operator == (const Fraction & f) const;
     bool operator < (const Fraction & f) const;
     const Fraction inverse () const;
