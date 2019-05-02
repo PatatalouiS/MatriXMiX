@@ -48,7 +48,7 @@ int main (int argc, char* argv[])
     fenetre->computeImgMatrix(d,20,c);
     fenetre->show();
 
-    return app.exec();*/
+    return app.exec();
 
 
 /*
