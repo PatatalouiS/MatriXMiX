@@ -130,6 +130,7 @@ void BinaryOpMatrixMatrixWidget:: computeSelection(bool view)
         assert(lib->exist(op2.first.toStdString()));
         op2.second = lib->find(op2.first.toStdString());
     }
+
     description->setText(op1.first + logo + op2.first);
 }
 

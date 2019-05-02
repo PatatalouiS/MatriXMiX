@@ -18,7 +18,7 @@ MainWindow:: MainWindow() : QMainWindow()
     Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
     Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
     Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
-    Matrix e (10,10, {1,1,1,1,1,1,1,1,1,1,
+    Matrix e (10,10, {1465.875412448474,1,1,1,1,1,1,1,1,1,
               1,1,1,1,1,1,1,1,1,1,
               1,1,1,1,1,1,1,1,1,1,
               1,1,1,1,1,1,1,1,1,1,
@@ -33,7 +33,7 @@ MainWindow:: MainWindow() : QMainWindow()
     library.addMatrix("B", b);
     library.addMatrix("C", c);
     library.addMatrix("D", d);
-    library.addMatrix("E", e);
+   library.addMatrix("E", e);
   // Nouvelles matrices
 
     setFunctorTab();
@@ -134,6 +134,7 @@ MainWindow:: MainWindow() : QMainWindow()
                "border-radius:6px;}"
                "QScrollBar::add-line:horizontal {height: 0px;}"
                "QScrollBar::sub-line:horizontal {height: 0 px;}");
+    scrollArea->resize(300,300);
 
     QGridLayout* subLayout = new QGridLayout;
     subLayout->addWidget(opBox, 0, 0, 2, 1);
@@ -151,6 +152,7 @@ MainWindow:: MainWindow() : QMainWindow()
                               "stop : 0 #283676 , stop : 1 #000066)}");
     connect(menuBar, &MenuBar::openLibrary, this, &MainWindow::show_library);
     compute_choice(0);
+    imgResult->show();
     setCentralWidget(mainWidget);
 }
 
@@ -253,8 +255,8 @@ void MainWindow:: compute_choice (const unsigned int choice)
                 currentOpWidget, &AbstractOperationWidget::updateViews);
     }
 
-    currentOpWidget->show();
     imgResult->hide();
+    currentOpWidget->show();
     currentChoice = choice;
 }
 

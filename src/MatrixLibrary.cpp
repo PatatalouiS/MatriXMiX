@@ -88,6 +88,17 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 }
 
 
+Matrix* MatrixLibrary:: find (const string& name)
+{
+    if(tab.count(name) == 0)
+    {
+        return nullptr;
+    }
+    return &tab.at(name);
+}
+
+
+
 void MatrixLibrary:: erase (const string & name)
 {
     tab.erase(name);

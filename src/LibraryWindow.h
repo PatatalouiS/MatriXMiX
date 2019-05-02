@@ -4,9 +4,9 @@
 
 #include <QDialog>
 #include <QPushButton>
-#include "SetMatrixWidget.h"
 #include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
+#include "SetMatrixWidget.h"
 
 
 using MatrixViewItem = QPair<const int, const QString>;
@@ -22,10 +22,9 @@ class LibraryWindow : public QDialog
         MatrixLibrary* lib;
         QTabWidget* choice;
         MatrixViewWidget* matrixView;
-        SetMatrixWidget* addMatrixWidget;
-        SetMatrixWidget* editMatrixWidget;
+        SetMatrixWidget* addMatrix;
+        SetMatrixWidget* editMatrix;
         ShowMatrixWidget* showMatrixWidget;
-        QPushButton* edit;
         QPushButton* remove;
 
     public: //fonctions
@@ -36,8 +35,7 @@ class LibraryWindow : public QDialog
     private slots:
 
         void removeSelectedMatrix();
-        void showSelectedMatrix();
-        void computeEditingQuery();
+        void computeViewSelection();
 
     signals:
 

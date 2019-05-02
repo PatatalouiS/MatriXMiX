@@ -52,7 +52,6 @@ SOURCES += src/main.cpp \
 	src/MatrixLibrary.cpp \
 	src/MainWindow.cpp \
     src/LibraryWindow.cpp \
-    src/ShowMatrixWidget.cpp \
     src/MatrixViewWidget.cpp \
     src/Error.cpp \
     src/MenuBar.cpp \
@@ -64,6 +63,7 @@ SOURCES += src/main.cpp \
     src/DiagonalisationWidget.cpp \
     src/ExprEvalWidget.cpp \
     src/SetMatrixWidget.cpp \
+	src/ShowMatrixWidget.cpp \
     src/HelpWindow.cpp
 
 RESOURCES += \
