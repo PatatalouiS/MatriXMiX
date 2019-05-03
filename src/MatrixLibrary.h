@@ -37,7 +37,8 @@ private:
 
     bool isName(const std::string & chaine) const;
     bool isFloat(const std::string & chaine) const;
-    bool isOperator (const std::string & chaine) const;
+    bool isOperator(const std::string & chaine) const;
+    bool isSpecialCaractere(const std::string & chaine) const;
 
     std::vector<std::string> decoupe (const std::string & expression)const;
     bool high_equal_priority (const std::string & opd,const std::string & opg) const;

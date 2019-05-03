@@ -98,11 +98,12 @@ using namespace std;
 
 int main (int argc, char* argv[])
 {
-    Matrix a; a.testRegression();
-    QApplication app(argc, argv);
-    MainWindow mainWindow;
-    mainWindow.show();
-    return app.exec();
+    //Matrix a; a.testRegression();
+    MatrixLibrary lib; lib.testRegression();
+    //QApplication app(argc, argv);
+    //MainWindow mainWindow;
+    //mainWindow.show();
+    //return app.exec();
 }
 
 
