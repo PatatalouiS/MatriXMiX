@@ -36,6 +36,7 @@ class SetMatrixWidget : public QWidget
         QList<QLineEdit*> lineEditsTab;
         QGridLayout* lineEditsLayout;
         QPushButton* compute;
+
         unsigned int lrows;
         unsigned int lcols;
         QPair<QString, Matrix*> selectedMatrix;

@@ -74,10 +74,18 @@ SetMatrixWidget::SetMatrixWidget(const enum type& t, MatrixLibrary* library, QWi
 
     compute = new QPushButton;
     QVBoxLayout* mainLayout = new QVBoxLayout;
+
     compute->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
+    compute->setMinimumSize(250,30);
+
+    QVBoxLayout* buttonLayout = new QVBoxLayout;
+    buttonLayout->addWidget(compute);
+    buttonLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+
     mainLayout->addWidget(setSpecsWidget);
     mainLayout->addWidget(lineEditsWidget);
-    mainLayout->addWidget(compute);
+    mainLayout->addLayout(buttonLayout);
+
     setLayout(mainLayout);
 
     constructType(t);

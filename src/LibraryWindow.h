@@ -25,6 +25,10 @@ class LibraryWindow : public QDialog
         SetMatrixWidget* addMatrix;
         SetMatrixWidget* editMatrix;
         ShowMatrixWidget* showMatrixWidget;
+<<<<<<< HEAD
+=======
+        //QPushButton* edit;
+>>>>>>> origin/modif_graph
         QPushButton* remove;
 
     public: //fonctions

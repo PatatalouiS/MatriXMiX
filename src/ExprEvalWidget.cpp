@@ -40,6 +40,8 @@ AbstractOperationWidget (lib, parent)
 
     QWidget* subWidget1 = new QWidget(this);
     subWidget1->setLayout(subLayout3);
+    subWidget1->setMaximumHeight(300);
+    subWidget1->setMaximumWidth(600);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);

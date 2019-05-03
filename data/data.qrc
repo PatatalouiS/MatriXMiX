@@ -5,5 +5,11 @@
         <file>plus.png</file>
         <file>minus.png</file>
         <file>bg.jpg</file>
+        <file>qt.png</file>
+        <file>quitter.jpg</file>
+        <file>poubelle.png</file>
+        <file>library.png</file>
+        <file>save.png</file>
+        <file>create.png</file>
     </qresource>
 </RCC>

@@ -1,8 +1,12 @@
 
 #include <QGridLayout>
 #include <QScrollBar>
+<<<<<<< HEAD
 #include <QFileDialog>
 
+=======
+#include <QListView>
+>>>>>>> origin/modif_graph
 #include "MainWindow.h"
 #include "BinaryOpMatrixMatrixWidget.h"
 #include "BinaryOpMatrixNumberWidget.h"
@@ -71,14 +75,14 @@ MainWindow:: MainWindow() : QMainWindow()
     headerWidget->setStyleSheet("QWidget {background-color: qlineargradient"
                                 "(x1 : 0 , y1 : 0 , x2: 0 , y2:1 , "
                                 "stop : 0 white , stop : 1 lightBlue);"
-                                "border: 2px solid silver;"
-                                "border-radius: 6px;}");
+                                "border: 1px solid silver;"
+                                "border-radius: 3px;}");
     headerSubLayout->addWidget(logo);
     headerSubLayout->addWidget(title);
     headerSubLayout->setAlignment(Qt::AlignHCenter);
 
     headerWidget->setLayout(headerSubLayout);
-    headerWidget->setFixedWidth(300);
+    headerWidget->setFixedWidth(240);
 
     headerLayout->addWidget(headerWidget);
     headerLayout->setAlignment(Qt::AlignHCenter);
@@ -142,19 +146,38 @@ MainWindow:: MainWindow() : QMainWindow()
     subLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->setContentsMargins(0,0,20,0);
 
+    QPixmap im1(":/img/bg.jpg");
+
+//    QListView w;
+//    QPalette p = w.palette();
+//    p.setBrush(QPalette::Base, im1);
+//    w.setPalette(p);
+//    w.resize(im1.size());
+
     mainLayout->setContentsMargins(0, 10, 0, 15);
     mainLayout->addLayout(headerLayout);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
-    mainWidget->setStyleSheet("QWidget {background-color : qlineargradient(x1 : 0 , y1 : 0  "
+    mainWidget->setStyleSheet("QWidget {background: qlineargradient(x1 : 0 , y1 : 0  "
                               ", x2: 0 , y2:1 , "
+<<<<<<< HEAD
                               "stop : 0 #283676 , stop : 1 #000066)}");
     connect(menuBar, &MenuBar::openLibraryWindow, this, &MainWindow::showLibraryWindow);
     connect(menuBar, &MenuBar::openSaveTool, this, &MainWindow::execSaveTool);
     connect(menuBar, &MenuBar::openLoadTool, this, &MainWindow::execLoadTool);
     compute_choice(0);
     imgResult->show();
+=======
+                              "stop : 0 #3d004d, stop: 0.3 #b3d9ff, stop : 0.5 #000066)}");
+
+    //mainWidget->setStyleSheet("QMainWindow {background-image: url(:/img/bg.jpg)}");
+    //mainWidget->setPalette(p);
+
+    connect(menuBar, &MenuBar::openLibrary, this, &MainWindow::show_library);
+
+>>>>>>> origin/modif_graph
     setCentralWidget(mainWidget);
+    compute_choice(0);
 }
 
 void MainWindow::setFunctorTab()
@@ -343,7 +366,6 @@ QGroupBox* MainWindow::initBinaryOp ()
     {
         BinaryOpButtons = new QPushButton(tabBinaryOp[i]);
         BinaryOpButtons->setCursor(Qt::PointingHandCursor);
-        //Ajout du style pour les boutons
         BinaryOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
                                        "QPushButton:hover{ background-color: lightBlue }");
         BinaryOpButtons->setMinimumSize(100,20);
@@ -373,7 +395,8 @@ QGroupBox* MainWindow::initUnaryOp ()
 
     UnaryOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
-                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, "
+                "y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
                 "border-radius: 6px;"
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
@@ -427,7 +450,8 @@ QGroupBox* MainWindow::initDiagonalisationOp()
 
     DiaOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
-                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                " stop: 0 lightBlue, stop: 1 Blue);"
                 "border-radius: 6px;"
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
@@ -456,8 +480,6 @@ QGroupBox* MainWindow::initDiagonalisationOp()
                                     "QPushButton:hover{ background-color: lightBlue }");
         DiaOpButtons->setMinimumSize(100,20);
         DiaOpButtons->setMaximumSize(600,80);
-
-        //DiaOpBox->setToolTip("Matrice de Passage/Matrice Diagonale");
 
         DiaOpVBox -> addWidget(DiaOpButtons);
           connect(DiaOpButtons, &QPushButton::clicked,

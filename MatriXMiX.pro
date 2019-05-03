@@ -40,7 +40,8 @@ HEADERS += src/Matrix.h \
     src/DiagonalisationWidget.h \
     src/ExprEvalWidget.h \
     src/SetMatrixWidget.h \
-    src/HelpWindow.h
+    src/HelpWindow.h \
+    src/HelpWindowQt.h
 
 
 SOURCES += src/main.cpp \
@@ -64,7 +65,8 @@ SOURCES += src/main.cpp \
     src/ExprEvalWidget.cpp \
     src/SetMatrixWidget.cpp \
 	src/ShowMatrixWidget.cpp \
-    src/HelpWindow.cpp
+    src/HelpWindow.cpp \
+    src/HelpWindowQt.cpp
 
 RESOURCES += \
     data/data.qrc
