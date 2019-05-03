@@ -8,29 +8,30 @@
 using namespace std;
 
 
-const double EPSILON=0.00001;
+const double EPSILON=0.0001;
+const Polynomial Polynomial:: polynomial_null = Polynomial();
 const Polynomial Polynomial:: polynomial_noEigen = Polynomial();
 
 
 
 Polynomial :: Polynomial() : tab (vector<double>(1,0))
 {
-    this->degree=0;
+    this->degree = 0;
 }
 
 
 Polynomial :: Polynomial(const unsigned int & d) : tab(vector<double>(d+1,1))
 {
-    this->degree=d;
+    this->degree = d;
 }
 
 
 Polynomial :: Polynomial(const unsigned int & d, const VectorX & values)
 {
-    if ( values.size() != d+1 )
+    if ( values.size() != d + 1 )
     {
-        cout << "Erreur : Pas le nombre de coefficients" << endl;
-        exit ( EXIT_FAILURE );
+        cerr << "Erreur : Pas le nombre de coefficients" << endl;
+        return;
     }
 
     this->degree = d;
@@ -46,11 +47,6 @@ Polynomial :: Polynomial(const unsigned int & d, const VectorX & values)
 Polynomial::Polynomial(const Polynomial &p) : tab (vector<double>(p.tab))
 {
     degree = p.degree;
-}
-
-
-Polynomial::~Polynomial()
-{
 }
 
 
@@ -252,12 +248,15 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
 
     while (copy.degree - i >= divisor.degree)
     {
-        quotient.tab[copy.degree - divisor.degree - i] = copy.tab[degree - i] / divisor.tab[divisor.degree];
+        quotient.tab[copy.degree - divisor.degree - i] = 
+        											copy.tab[degree - i] 
+        											/ divisor.tab[divisor.degree];
 
         for (j = i; j <= divisor.degree; j++)
         {
-            copy.tab[copy.degree - j] = copy.tab[copy.degree - j] - divisor.tab[divisor.degree - (j - i)] *
-                                                          quotient.tab[copy.degree - divisor.degree - i];
+            copy.tab[copy.degree - j] = copy.tab[copy.degree - j]
+            							- divisor.tab[divisor.degree - (j - i)]
+            							* quotient.tab[copy.degree - divisor.degree - i];
 
         }
         i++;
@@ -288,11 +287,12 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
 }
 
 
-void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, double & x2)
+void Polynomial:: equation2degre (unsigned int  & nbsolution, 
+									double & x1, double & x2)
 {
-    if (degree!=2)
+    if (degree != 2)
     {
-        cout << "C'est pas du second degré ça :/" << endl;
+        cout << "Equation de degré différent de 2" << endl;
         exit(EXIT_FAILURE);
     }
 

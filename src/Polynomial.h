@@ -15,6 +15,7 @@ public:
     unsigned int degree;
     std::vector<double> tab;
 
+    static const Polynomial polynomial_null;
     static const Polynomial polynomial_noEigen ;
 
 public:
@@ -22,7 +23,6 @@ public:
     Polynomial(const unsigned int & d);
     Polynomial(const unsigned int & d, const VectorX & values);
     Polynomial(const Polynomial & p);
-    ~Polynomial ();
     void check ();
     friend std::ostream& operator << (std::ostream& flux, const Polynomial & p);
     Polynomial& operator = (const Polynomial & p);

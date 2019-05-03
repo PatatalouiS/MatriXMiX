@@ -190,7 +190,8 @@ const QString& name, const QColor& col)
                 temp += QString::number(f.getNumerator()) + ", ";
             else
                 temp += QString ("\\frac{") + QString::number(f.getNumerator())
-                        + QString ("}{") + QString::number(f.getDenominator()) + QString ("}") + ", ";
+                        + QString ("}{") + QString::number(f.getDenominator())
+                        + QString ("}") + ", ";
         }
         temp.truncate(temp.size() - 2);
         temp += " )";

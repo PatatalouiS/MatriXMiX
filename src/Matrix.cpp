@@ -19,6 +19,7 @@ const double EPSILON = 0.0001;
 const vector<double> Matrix:: vector_noEigen = vector<double>();
 const vector<pair<double,VectorX>> Matrix:: vector_pair_noEigen = vector<pair<double,VectorX>>();
 const Matrix Matrix:: matrix_noEigen = Matrix();
+const Matrix Matrix:: matrix_null = Matrix();
 const double Matrix:: double_notExist = double();
 
 
@@ -233,7 +234,7 @@ vector<string> Matrix:: explode (const string & expression) const
     {
         c = expression[i];
 
-        if(c == ",")
+        if (c == ",")
         {
             if (temp.length()!=0) tab.push_back(temp);
             temp="";
@@ -244,7 +245,7 @@ vector<string> Matrix:: explode (const string & expression) const
         }
 
     }
-    if(temp != "")
+    if (temp != "")
     tab.push_back(temp);
 
     return tab;
@@ -429,13 +430,13 @@ const Matrix Matrix:: operator / (const Matrix & m) const
 {
     if ( !m.isSQMatrix() )
     {
-        cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
-        return matrix_noEigen;
+        cerr << "Division est impossible, la matrice diviseure n'est pas une matrice carrée !" << endl;
+        return matrix_null;
     }
     if (m.isNulDeterminant())
     {
-        cerr << "division impossible, la matrice diviseur n'est pas inversible !" << endl;
-        return matrix_noEigen;
+        cerr << "Division impossible, la matrice diviseure n'est pas inversible !" << endl;
+        return matrix_null;
     }
     Matrix result ((*this) * m.inverse());
     return result ;
@@ -448,7 +449,7 @@ const Matrix Matrix:: operator ^ (const int & p) const
     if ( !isSQMatrix() )
     {
         cerr << "Erreur, la matrice n'est pas carrée ! " << endl;
-        return matrix_noEigen;
+        return matrix_null;
     }
 
     if ( p == 0 )
@@ -574,7 +575,7 @@ Matrix Matrix::coMatrix() const
     if ( !isSQMatrix() )
     {
         cout << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
-        return matrix_noEigen;
+        return matrix_null;
     }
 
     unsigned int i, j;
@@ -614,13 +615,13 @@ Matrix Matrix:: inverse() const
     if (!isSQMatrix())
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
-        return matrix_noEigen;
+        return matrix_null;
     }
 
     if (isNulDeterminant())
     {
         cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
-        return matrix_noEigen;
+        return matrix_null;
     }
 
     Matrix temp(rows,cols), inverse(rows,cols);
@@ -1120,9 +1121,12 @@ void Matrix::testRegression() const
         z = a + b;
         z = z.checkCast();
         if(z == r1)
-            cout << "Mêmes résultats, poursuite..." << endl;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur!" << endl ;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
     }
 
@@ -1131,9 +1135,12 @@ void Matrix::testRegression() const
         z = c + d;
         z = z.checkCast();
         if (z == r2)
-            cout << "Mêmes résultats, poursuite..." << endl;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
     }
@@ -1143,9 +1150,12 @@ void Matrix::testRegression() const
         z = a - b;
         z = z.checkCast();
         if(z == r3)
-            cout << "Mêmes résultats, poursuite..." << endl;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
     }
@@ -1155,9 +1165,12 @@ void Matrix::testRegression() const
         y = c * e;
         y = y.checkCast();
         if (y == r4)
-            cout << "Mêmes résultats, poursuite..." << endl;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
     }
@@ -1166,9 +1179,12 @@ void Matrix::testRegression() const
     {
         tra = a.traceMatrix();
         if(tra + 47 == 0.0)
-            cout << "Mêmes résultats, poursuite..." << endl;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl;
         cout << endl;
     }
@@ -1177,9 +1193,12 @@ void Matrix::testRegression() const
     {
         det = f.determinant();
         if (det == 0.0)
-            cout << "Mêmes résultats, poursuite..." << endl;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl;
         cout << endl;
     }
@@ -1189,9 +1208,12 @@ void Matrix::testRegression() const
         x = (g^-1)*9;
         x = x.checkCast();
         if (x == r5)
-            cout << "Mêmes résultats, poursuite..." << endl ;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
     }
@@ -1201,9 +1223,12 @@ void Matrix::testRegression() const
         z = a^5;
         z = z.checkCast();
         if (r6 == z)
-            cout << "Mêmes résultats, poursuite..." << endl;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
     }
@@ -1213,49 +1238,63 @@ void Matrix::testRegression() const
         x = g*(g^-1);
         x = x.checkCast();
         if (x == r7)
-            cout << "Mêmes résultats, poursuite..." << endl ;
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Détection d'une erreur!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
     }
 
-    cout << "Test de réduction avec la méthode de Gauss" << endl;
+    cout << "! Echelonnage d'une matrice avec la méthode de Gauss" << endl;
     {
-        if (g.gaussReduction() != r7)
-            cout << "Détection d'une erreur!" << endl;
+        if (g.gaussReduction() == r7)
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Correct!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
 
-        cout << endl ;
+        cout << "- Test avec une seconde matrice..." << endl ;
 
-        if (h.gaussReduction() != r8)
-            cout << "Détection d'une erreur!" << endl;
+        if (h.gaussReduction() == r8)
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Correct!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
 
         cout << endl << endl  ;
     }
 
-    cout << "Test de allMatrix" << endl;
+    cout << "! Test de allMatrix" << endl;
     {
         g.allMatrix(x1,x2,x3);
         x = x1 * x2 * x3 ;
         x = x.checkCast();
-        if (x != g)
-            cout << "Détection d'une erreur!" << endl;
+        if (x == g)
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Correct!" << endl;
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
 
-        cout << endl ;
+        cout << "- Test avec une seconde matrice..." << endl; ;
 
         a.allMatrix(z1,z2,z3);
         z = z1 * z2 * z3;
-        if (z.checkCast() != a)
-            cout << "Détection d'une erreur!" << endl;
+        if (z.checkCast() == a)
+            cout << "Résultat correct! Poursuite..." << endl;
         else
-            cout << "Correct!" << endl;
-
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl << endl  ;
     }
 
@@ -1263,8 +1302,8 @@ void Matrix::testRegression() const
 
 
 
-
-    cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
+    cout << endl << endl << "******* TEST REUSSI ******" << endl << endl
+           <<  "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 
 }
 
