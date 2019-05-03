@@ -14,6 +14,7 @@ ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
     QHBoxLayout* showMatrixLayout = new QHBoxLayout;
     showMatrixLayout->setAlignment(Qt::AlignCenter);
     imgSelected = new QLabel(this);
+    clear();
     showMatrixLayout->addWidget(imgSelected);
     setLayout(showMatrixLayout);
     hide();
@@ -168,6 +169,7 @@ const QString& name, const QColor& col)
 
 void ShowMatrixWidget:: setPixmapToQLabel (const QColor &col, const QString& latex, const unsigned int sizeTxt)
 {
+    clear();
     JKQTMathText mathText;
     mathText.useXITS();
     mathText.setFontSize(sizeTxt);
@@ -180,6 +182,12 @@ void ShowMatrixWidget:: setPixmapToQLabel (const QColor &col, const QString& lat
     mathText.draw(painter, Qt::AlignCenter, QRectF(-5, 0, temp.width(), temp.height()), false);
     painter.end();
     imgSelected->setPixmap(temp);
+}
+
+
+void ShowMatrixWidget:: clear ()
+{
+    imgSelected->setPixmap(QPixmap());
 }
 
 

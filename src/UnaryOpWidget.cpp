@@ -72,7 +72,6 @@ AbstractOperationWidget(lib, parent)
 
 void UnaryOpWidget:: updateViews()
 {
-    view->refresh();
     view->refresh(sortFunction);
 }
 

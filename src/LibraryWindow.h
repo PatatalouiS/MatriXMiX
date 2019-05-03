@@ -34,7 +34,7 @@ class LibraryWindow : public QDialog
 
     public slots:
 
-         void updateView();
+         void update();
 
     private slots:
 

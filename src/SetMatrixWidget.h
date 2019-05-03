@@ -2,11 +2,9 @@
 #ifndef SET_MATRIX_WIDGET_H
 #define SET_MATRIX_WIDGET_H
 
-#include <QList>
 #include <QLineEdit>
 #include <QGridLayout>
 #include <QSpinBox>
-#include <QStandardItem>
 #include <QPushButton>
 #include "MatrixLibrary.h"
 
@@ -29,7 +27,7 @@ class SetMatrixWidget : public QWidget
         SetMatrixWidget(const enum type& t, MatrixLibrary* library, QWidget* parent = nullptr);
         ~SetMatrixWidget();
 
-    protected:
+    private:
 
         MatrixLibrary* library;
         QLineEdit* nameMatrix;
@@ -49,14 +47,12 @@ class SetMatrixWidget : public QWidget
     private slots:
 
         void computeMatrix();
-
-    protected slots:
-
         void updateLineEdits();
 
     public slots:
 
         void chargeMatrix(const QString& matrixName);
+        void updateSelectedMatrix();
 
     signals:
 

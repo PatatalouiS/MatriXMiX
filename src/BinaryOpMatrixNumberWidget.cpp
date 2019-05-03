@@ -91,6 +91,7 @@ AbstractOperationWidget(lib, parent)
 
 void BinaryOpMatrixNumberWidget:: updateViews()
 {
+    view->refresh(sortFunction);
 }
 
 

@@ -1,10 +1,8 @@
 
-#include <QLabel>
 #include <QGridLayout>
-//#include <QVBoxLayout>
-#include <QDebug>
 #include <QScrollBar>
 #include <QFileDialog>
+
 #include "MainWindow.h"
 #include "BinaryOpMatrixMatrixWidget.h"
 #include "BinaryOpMatrixNumberWidget.h"
@@ -19,16 +17,16 @@ MainWindow:: MainWindow() : QMainWindow()
     Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
     Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
     Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
-    Matrix e (10,10, {1465.875412448474,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,});
+    Matrix e (9,9, {1465.875412448474,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+       });
 
     library.addMatrix("A", a);
     library.addMatrix("B", b);
@@ -242,6 +240,7 @@ void MainWindow::setFunctorTab()
 
 void MainWindow:: compute_choice (const unsigned int choice)
 {
+    imgResult->clear();
     if(currentOpWidget != nullptr)
     {
         currentOpLayout->removeWidget(currentOpWidget);
@@ -258,7 +257,6 @@ void MainWindow:: compute_choice (const unsigned int choice)
                 currentOpWidget, &AbstractOperationWidget::updateViews);
     }
 
-    imgResult->hide();
     currentOpWidget->show();
     currentChoice = choice;
 }
@@ -305,8 +303,6 @@ void MainWindow:: transferResult (const QVariant& res)
     {
         assert(false);
     }
-
-    imgResult->show();
 }
 
 
@@ -483,7 +479,7 @@ void MainWindow:: showLibraryWindow()
     connect(libraryWindow, &LibraryWindow::libraryChanged,
             currentOpWidget,&AbstractOperationWidget::updateViews);
     connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
-    connect(this, &MainWindow::libraryChanged, libraryWindow, &LibraryWindow::updateView);
+    connect(this, &MainWindow::libraryChanged, libraryWindow, &LibraryWindow::update);
     libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
     libraryWindow->show();
 }

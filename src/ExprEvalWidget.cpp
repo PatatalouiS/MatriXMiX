@@ -53,7 +53,7 @@ AbstractOperationWidget (lib, parent)
 
 void ExprEvalWidget:: updateViews()
 {
-
+    view->refresh();
 }
 
 void ExprEvalWidget:: computeOperation ()

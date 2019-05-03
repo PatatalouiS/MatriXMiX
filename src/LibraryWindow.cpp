@@ -1,13 +1,8 @@
 
-#include <QCloseEvent>
-#include <QDirModel>
-#include <QHeaderView>
-#include <QDebug>
 #include "LibraryWindow.h"
 #include "Error.h"
 
 using namespace std;
-
 
 
 LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(main)
@@ -90,14 +85,15 @@ void LibraryWindow:: removeSelectedMatrix ()
     matrixView->removeRow(matrixView->currentIndex().row());
     assert(lib->exist(selectedName.toStdString()));
     lib->erase(selectedName.toStdString());
-    lib->print();
+    editMatrix->updateSelectedMatrix();
     emit libraryChanged();
 }
 
 
-void LibraryWindow:: updateView()
+void LibraryWindow:: update()
 {
     matrixView->refresh();
+    editMatrix->updateSelectedMatrix();
 }
 
 

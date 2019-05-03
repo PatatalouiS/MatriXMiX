@@ -4,8 +4,6 @@
 #include "SetMatrixWidget.h"
 #include "Error.h"
 
-#include <iostream>
-
 
 SetMatrixWidget::SetMatrixWidget(const enum type& t, MatrixLibrary* library, QWidget* parent)
 : QWidget(parent)
@@ -130,8 +128,6 @@ void SetMatrixWidget:: computeMatrix ()
 
     Matrix newMatrix (nbL, nbC, values);
 
-    library->print();
-
     if(type == ADD)
     {
         library->addMatrix(name.toStdString(), newMatrix);
@@ -174,7 +170,7 @@ bool SetMatrixWidget:: controlKeyboardInput() const
     {
         if(selectedMatrix.second == nullptr)
         {
-            Error::showError("Erreir !", "Vous devez d'abord sélectionner la matrice à éditer.");
+            Error::showError("Erreur !", "Vous devez d'abord sélectionner la matrice à éditer.");
             return false;
         }
     }
@@ -196,6 +192,7 @@ bool SetMatrixWidget:: controlKeyboardInput() const
 void SetMatrixWidget:: chargeMatrix(const QString& name)
 {
     assert(library->exist(name.toStdString()));
+    selectedMatrix.first = name;
     selectedMatrix.second = library->find(name.toStdString());
     Matrix temp = *selectedMatrix.second;
 
@@ -223,6 +220,27 @@ void SetMatrixWidget:: chargeMatrix(const QString& name)
     }
 }
 
+
+
+void SetMatrixWidget:: updateSelectedMatrix()
+{
+    if(!library->exist(selectedMatrix.first.toStdString()))
+    {
+        selectedMatrix.first = "";
+        selectedMatrix.second = nullptr;
+        nameMatrix->setText("");
+        nbRowsSelector->setValue(3);
+        nbColsSelector->setValue(3);
+        for(auto i : lineEditsTab)
+        {
+            i->setText("");
+        }
+    }
+    else
+    {
+        chargeMatrix(selectedMatrix.first);
+    }
+}
 
 
 

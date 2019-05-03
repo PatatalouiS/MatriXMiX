@@ -115,7 +115,7 @@ void DiagonalisationWidget:: emitResultChoice(const ResultChoice& c)
 
 void DiagonalisationWidget::updateViews()
 {
-
+    view->refresh(sortFunction);
 }
 
 
