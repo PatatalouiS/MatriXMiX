@@ -20,6 +20,15 @@ MatrixLibrary:: ~MatrixLibrary()
 }
 
 
+MatrixLibrary::  MatrixLibrary (const MatrixLibrary & lib)
+{
+    for (auto it = lib.tab.begin(); it != lib.tab.end(); it++ )
+    {
+        addMatrix(it->first,it->second);
+    }
+}
+
+
 unsigned long int MatrixLibrary:: size () const
 {
     return tab.size();
@@ -58,16 +67,6 @@ void MatrixLibrary:: print () const
 }
 
 
-void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& resultat)const
-{
-    for (auto i :resultat)
-    {
-        expression.push_back(i);
-    }
-
-}
-
-
 void MatrixLibrary:: addMatrix (const string& name, const Matrix& m)
 {
     if (isName(name))
@@ -100,6 +99,16 @@ void MatrixLibrary:: erase (const string & name)
 const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 {
     return tab;
+}
+
+
+void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& result)const
+{
+    for (auto i :result)
+    {
+        expression.push_back(i);
+    }
+
 }
 
 
@@ -184,6 +193,33 @@ vector<string> MatrixLibrary:: decoupe (const string & expression)const
     tab.push_back(temp);
 
     return tab;
+}
+
+
+bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg) const
+{
+    switch (opd[0])
+    {
+        case '*':
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
+        case '/':
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
+        case '+':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
+        case '-':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
+        case '^':
+            return ((opg[0] == '^') || (opg[0] == '~'));
+
+        case '~':
+            return ((opg[0] == '^') || (opg[0] == '~'));
+
+        default: return false;
+    }
 }
 
 
@@ -276,33 +312,6 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 }
 
 
-bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg) const
-{
-    switch (opd[0])
-    {
-        case '*':
-            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
-
-        case '/':
-            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
-
-        case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
-
-        case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
-
-        case '^':
-            return ((opg[0] == '^') || (opg[0] == '~'));
-
-        case '~':
-            return ((opg[0] == '^') || (opg[0] == '~'));
-
-        default: return false;
-    }
-}
-
-
 void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string> & polish_notation)const
 {
     stack<string> p;
@@ -352,126 +361,6 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
         polish_notation.push_back(p.top());
         p.pop();
     }
-}
-
-
-Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)
-{
-    vector<string> polish_not;
-    polish(chain,polish_not);                //I write my expression in Polish notation
-
-    stack<string> pile;
-    Matrix temp;
-    string identify;
-    int name=0;
-
-    for (auto i : polish_not)
-    {
-        if (i == "~")
-        {
-            /* if the current element is a tilde, I calculate the inverse of the matrix*/
-
-            string a = pile.top();
-            pile.pop();
-
-            temp= *(find(a))^-1;
-
-            identify = static_cast<char>('0'+ name);
-            pile.push("temp" + identify);
-            addMatrix("temp" + identify,temp);
-            name++;
-        }
-        else if ((isOperator(i)) && (i != "~"))
-        {
-            /* In the case of binary operation, I extract both operands from the stack*/
-
-            string b = pile.top();
-            pile.pop();
-            string a = pile.top();
-            pile.pop();
-
-            /* depending on the type of the two operands I calculate the result */
-
-            if ((isName(b) && isName(a)) || (isFloat(a) && isName(b)) || (isFloat(b) && isName(a)) )
-            {
-                if ((isName(b) && isName(a)))
-                {
-                    temp = calculate(i,a,b);
-                }
-                else if (isFloat(b) && isName(a))
-                {
-                    if(i == "*")
-                    {
-                        temp = *(find(a)) * atof(b.c_str());
-                    }
-                    else if (i == "^")
-                    {
-                        temp= *(find(a)) ^ (atoi(b.c_str()));
-                    }
-                    else
-                    {
-                        float scale;
-                        scale = static_cast<float>(atof(b.c_str()));
-                        temp = calculateMatrixFloat(i,a,scale);
-                    }
-                }
-                else if (isFloat(a) && isName(b))
-                {
-                    if(i == "*")
-                    {
-                        temp = *(find(b)) * atof(a.c_str());
-
-                    }
-                    else
-                    {
-                        float scale;
-                        scale = static_cast<float>(atof(a.c_str()));
-                        temp = calculateFloatMatrix(i,b,scale);
-                    }
-                }
-
-                /* I store the resulting matrix in the library and its name in the stack */
-
-                identify = static_cast<char>('0'+ name);
-                pile.push ("temp" + identify);          // i choose different names for the saved matrices
-                addMatrix ("temp" + identify, temp);
-                name++;
-            }
-            else if (  isFloat(a) && isFloat(b) )
-            {
-                /* if both operands are floats i calculate the result diffrently then i store it in the stack */
-                ostringstream ss;
-                ss << calculateFloat (i,a,b);
-                string res = ss.str();
-                pile.push(res);
-            }
-            else
-            {
-                cout << "Caractère spécial détecté..."
-                        "\nVeuillez rééssayer (gestion erreur... +1 point :)" << endl;
-            }
-        }
-        else
-        {
-            /* if the current element is not an operator, i store it in the stack  */
-            pile.push(i);
-        }
-    }
-
-    /* the stack contains the name of the resulting matrix */
-
-    const Matrix* res;
-    res = find(pile.top());
-    Matrix result(*res);
-
-    for(int i=0; i<=name-1; i++)
-    {
-        identify = static_cast<char>('0'+ i);
-        erase("temp" + identify);                       // I empty the library from intermediate matrices
-    }
-
-
-    return result;
 }
 
 
@@ -599,6 +488,211 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 }
 
 
+Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
+{
+    MatrixLibrary copy(*this);
+    vector<string> polish_not;
+    copy.polish(chain,polish_not);                //I write my expression in Polish notation
+
+    stack<string> pile;
+    Matrix temp;
+    string identify;
+    int name=0;
+
+    for (auto i : polish_not)
+    {
+        if (i == "~")
+        {
+            /* if the current element is a tilde, I calculate the inverse of the matrix*/
+
+            string a = pile.top();
+            pile.pop();
+
+            temp= *(copy.find(a))^-1;
+
+            identify = static_cast<char>('0'+ name);
+            pile.push("temp" + identify);
+            copy.addMatrix("temp" + identify,temp);
+            name++;
+        }
+        else if ((copy.isOperator(i)) && (i != "~"))
+        {
+            /* In the case of binary operation, I extract both operands from the stack*/
+
+            string b = pile.top();
+            pile.pop();
+            string a = pile.top();
+            pile.pop();
+
+            /* depending on the type of the two operands I calculate the result */
+
+            if ((copy.isName(b) && copy.isName(a)) || (copy.isFloat(a) && copy.isName(b)) || (copy.isFloat(b) && copy.isName(a)) )
+            {
+                if ((copy.isName(b) && copy.isName(a)))
+                {
+                    temp = copy.calculate(i,a,b);
+                }
+                else if (copy.isFloat(b) && copy.isName(a))
+                {
+                    if(i == "*")
+                    {
+                        temp = *(copy.find(a)) * atof(b.c_str());
+                    }
+                    else if (i == "^")
+                    {
+                        temp= *(copy.find(a)) ^ (atoi(b.c_str()));
+                    }
+                    else
+                    {
+                        float scale;
+                        scale = static_cast<float>(atof(b.c_str()));
+                        temp =copy.calculateMatrixFloat(i,a,scale);
+                    }
+                }
+                else if (copy.isFloat(a) && copy.isName(b))
+                {
+                    if(i == "*")
+                    {
+                        temp = *(copy.find(b)) * atof(a.c_str());
+
+                    }
+                    else
+                    {
+                        float scale;
+                        scale = static_cast<float>(atof(a.c_str()));
+                        temp = copy.calculateFloatMatrix(i,b,scale);
+                    }
+                }
+
+                /* I store the resulting matrix in the library and its name in the stack */
+
+                identify = static_cast<char>('0'+ name);
+                pile.push ("temp" + identify);          // i choose different names for the saved matrices
+                copy.addMatrix ("temp" + identify, temp);
+                name++;
+            }
+            else if (  copy.isFloat(a) && copy.isFloat(b) )
+            {
+                /* if both operands are floats i calculate the result diffrently then i store it in the stack */
+                ostringstream ss;
+                ss << copy.calculateFloat (i,a,b);
+                string res = ss.str();
+                pile.push(res);
+            }
+            else
+            {
+                cout << "Caractère spécial détecté..."
+                        "\nVeuillez rééssayer (gestion erreur... +1 point :)" << endl;
+            }
+        }
+        else
+        {
+            /* if the current element is not an operator, i store it in the stack  */
+            pile.push(i);
+        }
+    }
+
+    /* the stack contains the name of the resulting matrix */
+
+    const Matrix* res;
+    res = copy.find(pile.top());
+    Matrix result(*res);
+
+    for(int i=0; i<=name-1; i++)
+    {
+        identify = static_cast<char>('0'+ i);
+        copy.erase("temp" + identify);                       // I empty the library from intermediate matrices
+    }
+
+
+    return result;
+}
+
+
+void MatrixLibrary:: saveFile (const string filename)const
+{
+    ofstream file (filename.c_str());
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du fichier "
+                "\nVeuillez vérifier le chemin du fichier" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    file << "Matrix" << endl;
+
+    for (auto it = tab.begin(); it != tab.end(); it++ )
+    {
+       string matrixname = it->first;
+       Matrix m(*find(matrixname));
+
+       file << endl << matrixname << endl;
+       file << m.getNbRows() << " " << m.getNbCols() << endl;
+
+       for (unsigned int i = 0; i < m.getNbRows(); i++)
+       {
+           for (unsigned int j = 0; j < m.getNbCols(); j++)
+           {
+
+               file << m[i][j] << " ";
+           }
+           file << endl;
+       }
+       cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
+    }
+
+    file.close();
+}
+
+
+void MatrixLibrary:: readFile (const string filename)
+{
+    string matrixname;
+    unsigned int r,c;
+    ifstream file (filename.c_str());
+
+    empty();
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+    }
+
+    string testfile;
+    file >> testfile ;
+
+    if( testfile == "Matrix")
+    {
+        while(!file.eof())
+        {
+            file >> matrixname;
+            file >> r >> c;
+
+            Matrix m(r,c);
+
+            for (unsigned int i = 0; i < r; i++)
+            {
+                for (unsigned int j = 0; j < c; j++)
+                {
+                    file >> m[i][j];
+                }
+
+            }
+            addMatrix(matrixname,m);
+        }
+
+        file.close();
+
+    }
+    else
+    {
+        cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
+
+    }
+}
+
+
 void MatrixLibrary:: testRegression()
 {
      cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
@@ -693,92 +787,14 @@ void MatrixLibrary:: testRegression()
     assert(res == resultat7);
 
 
+    res = lib.expressionCalcul("identite~~");
+    assert(res == identite);
+
+
 
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 }
 
 
-void MatrixLibrary:: saveFile (const string filename)const
-{
-    ofstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du fichier "
-                "\nVeuillez vérifier le chemin du fichier" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    file << "Matrix" << endl;
-
-    for (auto it = tab.begin(); it != tab.end(); it++ )
-    {
-       string matrixname = it->first;
-       Matrix m(*find(matrixname));
-
-       file << endl << matrixname << endl;
-       file << m.getNbRows() << " " << m.getNbCols() << endl;
-
-       for (unsigned int i = 0; i < m.getNbRows(); i++)
-       {
-           for (unsigned int j = 0; j < m.getNbCols(); j++)
-           {
-
-               file << m[i][j] << " ";
-           }
-           file << endl;
-       }
-       cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
-    }
-
-    file.close();
-}
-
-
-void MatrixLibrary:: readFile (const string filename)
-{
-    string matrixname;
-    unsigned int r,c;
-    ifstream file (filename.c_str());
-
-    empty();
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-    }
-
-    string testfile;
-    file >> testfile ;
-
-    if( testfile == "Matrix")
-    {
-        while(!file.eof())
-        {
-            file >> matrixname;
-            file >> r >> c;
-
-            Matrix m(r,c);
-
-            for (unsigned int i = 0; i < r; i++)
-            {
-                for (unsigned int j = 0; j < c; j++)
-                {
-                    file >> m[i][j];
-                }
-
-            }
-            addMatrix(matrixname,m);
-        }
-
-        file.close();
-
-    }
-    else
-    {
-        cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
-
-    }
-}
 
 

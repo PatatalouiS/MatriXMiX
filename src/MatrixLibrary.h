@@ -8,13 +8,14 @@
 
 class MatrixLibrary
 {
-	private:
+private:
 	
 	std::map<std::string, Matrix> tab;
 	
-	public:
+public:
 	
     MatrixLibrary ();
+    MatrixLibrary (const MatrixLibrary & lib);
     ~MatrixLibrary ();
     
     unsigned int long size () const;
@@ -29,9 +30,9 @@ class MatrixLibrary
 	const std::map<std::string, Matrix>& data () const;
 
 
-    private:
+private:
 
-    void copy_vector(std::vector<std::string>& expression,const std::vector<std::string>&resultat)const;
+    void copy_vector(std::vector<std::string>& expression,const std::vector<std::string>&result)const;
 
     bool isName(const std::string & chaine) const;
     bool isFloat(const std::string & chaine) const;
@@ -49,9 +50,9 @@ class MatrixLibrary
     void polish(const std::string & chaine, std::vector<std::string> & polish_notation)const;
     std::string isCalculableExpression(const std::string & expression)const;
 
-    public:
+public:
 
-    Matrix expressionCalcul(const std::string & chaine);
+    Matrix expressionCalcul(const std::string & chaine)const;
 
     void saveFile (const std::string filename)const;
     void readFile (const std::string filename);
