@@ -2,7 +2,6 @@
 
 HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
 {
-   QWidget* wind  = new QWidget;
    title = new QLabel("MatriXMiX Guide");
 
    QPixmap im(":/img/logo.png");
@@ -138,8 +137,7 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
    mainLayout->addWidget(maths);
    mainLayout->addLayout(matrixLayout);
    mainLayout->setAlignment(Qt::AlignCenter);
-   wind->setLayout(mainLayout);
-   wind->show();
+   setLayout(mainLayout);
 }
 
 HelpWindow::~HelpWindow()

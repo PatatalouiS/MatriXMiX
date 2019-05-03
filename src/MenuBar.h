@@ -40,14 +40,9 @@ class MenuBar : public QMenuBar
         void openLoadTool();
 
     private slots:
-<<<<<<< HEAD
 
-        void showPage();
-=======
         void showPageMatrix();
         void showPageQt();
->>>>>>> origin/modif_graph
-
 };
 
 #endif

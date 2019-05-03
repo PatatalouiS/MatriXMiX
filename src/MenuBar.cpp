@@ -7,15 +7,11 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     menuFile = addMenu("Fichier");
     menuFile->setCursor(Qt::PointingHandCursor);
 
-<<<<<<< HEAD
-    actionSave = new QAction("Sauver.." , this);
-=======
     QPixmap im(":/img/save.png");
     im = im.scaled(50, 50);
 
-    actionSave = new QAction("Sauvegarder" , this);
+    actionSave = new QAction("Sauver.." , this);
     actionSave->setIcon(im);
->>>>>>> origin/modif_graph
     menuFile -> addAction(actionSave);
 
     QPixmap im4(":/img/create.png");
@@ -23,12 +19,8 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
 
     menuFile -> addSeparator();
 
-<<<<<<< HEAD
     actionLoad = new QAction("Ouvrir..", this);
-=======
-    actionLoad = new QAction("Créer", this);
     actionLoad->setIcon(im4);
->>>>>>> origin/modif_graph
     menuFile -> addAction(actionLoad);
 
     menuMatrix = addMenu("Matrice");
@@ -58,12 +50,6 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     menuQuit = addMenu("Quitter");
     menuQuit->setCursor(Qt::PointingHandCursor);
 
-<<<<<<< HEAD
-    connect(libraryMatrix, &QAction::triggered, this, &MenuBar::openLibraryWindow);
-    connect(actionSave, &QAction::triggered, this, &MenuBar::openSaveTool);
-    connect(actionLoad, &QAction::triggered, this, &MenuBar::openLoadTool);
-    connect(actionHelp, &QAction::triggered , this, &MenuBar::showPage);
-=======
     QPixmap im3(":/img/quitter.jpg");
     im3 = im3.scaled(200, 200);
 
@@ -71,32 +57,29 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     actionQuit->setIcon(im3);
     menuQuit->addAction(actionQuit);
 
-    connect(libraryMatrix, &QAction::triggered, [this]() -> void { emit openLibrary();});
     connect(actionHelpMatrix, &QAction::triggered , this, &MenuBar::showPageMatrix);
     connect(actionHelpQt, &QAction::triggered , this, &MenuBar::showPageQt);
     connect(actionQuit, &QAction::triggered, this , &QApplication::quit);
-
->>>>>>> origin/modif_graph
-
+    connect(libraryMatrix, &QAction::triggered, this, &MenuBar::openLibraryWindow);
+    connect(actionSave, &QAction::triggered, this, &MenuBar::openSaveTool);
+    connect(actionLoad, &QAction::triggered, this, &MenuBar::openLoadTool);
 }
+
 
 void MenuBar::showPageMatrix()
 {
     HelpWindow* wind = new HelpWindow(this);
-<<<<<<< HEAD
-    (void) wind;
-    //hide();
-    //wind->show();
-=======
-    wind->hide();
+    wind->setAttribute(Qt::WA_DeleteOnClose);
+    wind->exec();
 }
 
 void MenuBar::showPageQt()
 {
     HelpWindowQt* wind = new HelpWindowQt(this);
-    wind->hide();
->>>>>>> origin/modif_graph
+    wind->setAttribute(Qt::WA_DeleteOnClose);
+    wind->exec();
 }
+
 
 MenuBar::~MenuBar()
 {

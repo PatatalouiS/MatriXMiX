@@ -114,7 +114,6 @@ void MatrixViewWidget:: removeRow (const int id)
 
 bool MatrixViewWidget:: eventFilter(QObject *watched, QEvent *event)
 {
-<<<<<<< HEAD
 //    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 //    QModelIndex index = indexAt(mouseEvent->pos());
 
@@ -141,35 +140,6 @@ bool MatrixViewWidget:: eventFilter(QObject *watched, QEvent *event)
 //    {
 //        popup->hide();
 //    }
-=======
-    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-    QModelIndex index = indexAt(mouseEvent->pos());
-
-    if(index.isValid())
-    {
-        if(event->type() == QEvent::MouseMove)
-        {
-            popup->show();
-            if(index.row() != currentRowHovered)
-            {
-                QString hoveredMatrixName = matrixModel->item(index.row())->text();
-                const Matrix* hoveredMatrix = lib->find(hoveredMatrixName.toStdString());
-                imgToolTip->computeImgMatrix(*hoveredMatrix, 15);
-                popupLabel->setPixmap(imgToolTip->getCurrentPixmap());
-                popup->adjustSize();
-                currentRowHovered = index.row();
-            }
-            int posX = cursor().pos().x();
-            int posY = cursor().pos().y();
-            popup->move(posX+10, posY);
-        }
-    }
-    else if(event->type() == QEvent::Leave)
-    {
-        popup->hide();
-    }
->>>>>>> origin/modif_graph
-
     return QTableView::eventFilter(watched, event);
 }
 

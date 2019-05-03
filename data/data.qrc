@@ -11,5 +11,6 @@
         <file>library.png</file>
         <file>save.png</file>
         <file>create.png</file>
+        <file>bg2.png</file>
     </qresource>
 </RCC>

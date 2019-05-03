@@ -1,3 +1,4 @@
+
 #ifndef HELPWINDOW_H
 #define HELPWINDOW_H
 #include <QDialog>

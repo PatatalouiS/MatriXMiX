@@ -15,11 +15,7 @@ ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
     QHBoxLayout* showMatrixLayout = new QHBoxLayout;
     showMatrixLayout->setAlignment(Qt::AlignCenter);
     imgSelected = new QLabel(this);
-<<<<<<< HEAD
     clear();
-=======
-
->>>>>>> origin/modif_graph
     showMatrixLayout->addWidget(imgSelected);
     showMatrixLayout->setAlignment(Qt::AlignHCenter);
     setLayout(showMatrixLayout);
@@ -36,30 +32,6 @@ const QPixmap& ShowMatrixWidget:: getCurrentPixmap() const
 
 void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt, const QColor& col)
 {
-<<<<<<< HEAD
-=======
-
-//    unsigned int rows = mat.getNbRows();
-//    unsigned int cols = mat.getNbCols();
-
-//	QString latex = "\\begin{bmatrix}";
-
-//	for(unsigned int i = 0; i < rows; ++i)
-//	{
-//        latex += "\t" +  QString::number(mat[i][0]);
-
-//		for(unsigned int j = 1; j < cols; ++j)
-//		{
-//			if(j != cols) latex += " & ";
-//			else latex += " &";
-//            latex += QString::number(mat[i][j]);
-//			if((j == cols-1) && (i != rows-1)) latex += "\\\\";
-//		}
-//	}
-//	latex += "\\end{bmatrix}";
-//   setPixmapToQLabel(col, latex, sizeTxt);
-
->>>>>>> origin/modif_graph
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
     QString latex = "\\begin{bmatrix}";

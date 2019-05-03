@@ -1,8 +1,8 @@
+
 #include "HelpWindowQt.h"
 
 HelpWindowQt::HelpWindowQt(QWidget* parent) : QDialog (parent)
 {
-    QWidget* wind = new QWidget;
     title = new QLabel("About QT");
 
     QFont fontTitle ("Arial");
@@ -83,8 +83,8 @@ HelpWindowQt::HelpWindowQt(QWidget* parent) : QDialog (parent)
     mainLayout->addWidget(documentation);
     mainLayout->addLayout(qtLayout);
     mainLayout->setAlignment(Qt::AlignCenter);
-    wind->setLayout(mainLayout);
-    wind->show();
+    setLayout(mainLayout);
+    show();
 }
 
 HelpWindowQt::~HelpWindowQt()

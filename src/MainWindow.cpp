@@ -1,12 +1,9 @@
 
 #include <QGridLayout>
 #include <QScrollBar>
-<<<<<<< HEAD
 #include <QFileDialog>
 
-=======
-#include <QListView>
->>>>>>> origin/modif_graph
+
 #include "MainWindow.h"
 #include "BinaryOpMatrixMatrixWidget.h"
 #include "BinaryOpMatrixNumberWidget.h"
@@ -91,7 +88,7 @@ MainWindow:: MainWindow() : QMainWindow()
     opChoiceLayout->addWidget(initUnaryOp());
     opChoiceLayout->addWidget(initDiagonalisationOp());
     opBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid silver;"
+                "QGroupBox { border: 0px solid silver;"
                 "background-color:white;"
                 "margin-top: 32px;"
                 "margin-left:30px; margin-right:30px;"
@@ -103,7 +100,7 @@ MainWindow:: MainWindow() : QMainWindow()
     opBox->setFont(font);
     opBox->setLayout(opChoiceLayout);
     opShowBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid silver;"
+                "QGroupBox { border: 3px solid silver;"
                 "background-color:white;"
                 "margin-top: 32px;"
                 "border-radius:6px;}"
@@ -117,7 +114,6 @@ MainWindow:: MainWindow() : QMainWindow()
 
     imgResult = new ShowMatrixWidget;
     imgResult->setStyleSheet("background-color: white;");
-
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(imgResult);
@@ -146,39 +142,20 @@ MainWindow:: MainWindow() : QMainWindow()
     subLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->setContentsMargins(0,0,20,0);
 
-    QPixmap im1(":/img/bg.jpg");
-
-//    QListView w;
-//    QPalette p = w.palette();
-//    p.setBrush(QPalette::Base, im1);
-//    w.setPalette(p);
-//    w.resize(im1.size());
-
-    mainLayout->setContentsMargins(0, 10, 0, 15);
+    mainLayout->setContentsMargins(4,10,10,30);
     mainLayout->addLayout(headerLayout);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
-    mainWidget->setStyleSheet("QWidget {background: qlineargradient(x1 : 0 , y1 : 0  "
-                              ", x2: 0 , y2:1 , "
-<<<<<<< HEAD
-                              "stop : 0 #283676 , stop : 1 #000066)}");
+
     connect(menuBar, &MenuBar::openLibraryWindow, this, &MainWindow::showLibraryWindow);
     connect(menuBar, &MenuBar::openSaveTool, this, &MainWindow::execSaveTool);
     connect(menuBar, &MenuBar::openLoadTool, this, &MainWindow::execLoadTool);
-    compute_choice(0);
     imgResult->show();
-=======
-                              "stop : 0 #3d004d, stop: 0.3 #b3d9ff, stop : 0.5 #000066)}");
-
-    //mainWidget->setStyleSheet("QMainWindow {background-image: url(:/img/bg.jpg)}");
-    //mainWidget->setPalette(p);
-
-    connect(menuBar, &MenuBar::openLibrary, this, &MainWindow::show_library);
-
->>>>>>> origin/modif_graph
+    setStyleSheet("MainWindow{border-image:url(:/img/bg.jpg) 0 0 0 0 stretch stretch;}");
     setCentralWidget(mainWidget);
-    compute_choice(0);
+    compute_choice(0); 
 }
+
 
 void MainWindow::setFunctorTab()
 {

@@ -20,4 +20,4 @@ public:
     ~HelpWindowQt();
 };
 
-#endif // HELPWINDOWQT_H
+#endif

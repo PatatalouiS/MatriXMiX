@@ -1,13 +1,10 @@
 
-<<<<<<< HEAD
-=======
 #include <QCloseEvent>
 #include <QDirModel>
 #include <QHeaderView>
 #include <QDebug>
 #include <QScrollArea>
 #include <QScrollBar>
->>>>>>> origin/modif_graph
 #include "LibraryWindow.h"
 #include "Error.h"
 
@@ -22,11 +19,9 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     editMatrix = new SetMatrixWidget(SetMatrixWidget::EDIT, lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
 
-<<<<<<< HEAD
     remove = new QPushButton("Supprimer");
     remove->setMinimumSize(100,50);
     remove->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
-=======
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(showMatrixWidget);
@@ -59,7 +54,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     remove->setCursor(Qt::PointingHandCursor);
     remove->setStyleSheet("QPushButton:hover{ background-color: red;}");
     remove->setToolTip("Sélectionner une matrice et supprimer");
->>>>>>> origin/modif_graph
     QHBoxLayout* viewFooterLayout = new QHBoxLayout;
     viewFooterLayout->addWidget(remove);
 
@@ -68,15 +62,9 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
     matrixViewLayout->addLayout(viewFooterLayout);
 
     choice = new QTabWidget;
-<<<<<<< HEAD
-    choice->addTab(showMatrixWidget, "Visualiser");
+    choice->addTab(scrollArea, "Visualiser");
     choice->addTab(addMatrix, "Ajouter");
     choice->addTab(editMatrix, "Modifier");
-=======
-    choice->addTab(scrollArea, "Visualiser");
-    choice->addTab(addMatrixWidget, "Ajouter");
-    choice->addTab(editMatrixWidget, "Modifier");
->>>>>>> origin/modif_graph
     choice->setStyleSheet(
         "QTabBar::tab { background:"
         "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 darkGrey);"
@@ -97,7 +85,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
             matrixView, &MatrixViewWidget::addNewRow);
     connect(addMatrix, &SetMatrixWidget::newMatrixAdded,
             this,&LibraryWindow::libraryChanged);
-<<<<<<< HEAD
     connect(editMatrix, &SetMatrixWidget::matrixEdited,
             matrixView, &MatrixViewWidget::editRow);
     connect(editMatrix, &SetMatrixWidget::matrixEdited,
@@ -110,12 +97,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
             });
     connect(remove, &QPushButton::clicked,
             this, &LibraryWindow::removeSelectedMatrix);
-=======
-    connect(remove, &QPushButton::clicked, this, &LibraryWindow::removeSelectedMatrix);
-    //connect(edit, &QPushButton::clicked, this, &LibraryWindow::computeEditingQuery);
-   //connect(editMatrixWidget, &SetMatrixWidget::matrixEdited, this, &LibraryWindow::libraryChanged);
-   //connect(SetMatrixWidget, &SetMatrixWidget::matrixEdited, matrixView, &MatrixViewWidget::editRow());
->>>>>>> origin/modif_graph
 }
 
 
@@ -137,12 +118,14 @@ void LibraryWindow:: removeSelectedMatrix ()
     if(selectedName == "")
     {
         Error::showError("Suppression impossible !", "Veuillez sélectionner une Matrice", this);
+        return;
     }
 
     matrixView->removeRow(matrixView->currentIndex().row());
     assert(lib->exist(selectedName.toStdString()));
     lib->erase(selectedName.toStdString());
     editMatrix->updateSelectedMatrix();
+    showMatrixWidget->clear();
     emit libraryChanged();
 }
 
