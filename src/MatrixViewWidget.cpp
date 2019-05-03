@@ -28,7 +28,7 @@ MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) :
     setShowGrid(false);
     setAlternatingRowColors(true);
     setStyleSheet("* {alternate-background-color: lightBlue;background-color: white;"
-                  "border: 1px solid silver; border-radius:6px;}"
+                  "border: 1px solid silver;}"
                   "QHeaderView::section { background:"
                   "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 "
                   "lightBlue, stop: 1 blue); color:white; border: 0px; }");
@@ -108,34 +108,34 @@ void MatrixViewWidget:: removeRow (const int id)
 
 bool MatrixViewWidget:: eventFilter(QObject *watched, QEvent *event)
 {
-//    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-//    QModelIndex index = indexAt(mouseEvent->pos());
+    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+    QModelIndex index = indexAt(mouseEvent->pos());
 
-//    if(index.isValid())
-//    {
-//        if(event->type() == QEvent::MouseMove)
-//        {
-//            popup->show();
-//            if(index.row() != currentRowHovered)
-//            {
-//                QString hoveredMatrixName = matrixModel->item(index.row())->text();
-//                const Matrix* hoveredMatrix = lib->find(hoveredMatrixName.toStdString());
-//                imgToolTip->computeImgMatrix(*hoveredMatrix, 15);
-//                popupLabel->setPixmap(imgToolTip->getCurrentPixmap());
-//                popup->adjustSize();
-//                currentRowHovered = index.row();
-//            }
-//            int posX = cursor().pos().x();
-//            int posY = cursor().pos().y();
-//            popup->move(posX+10, posY);
-//        }
-//    }
-//    else if(event->type() == QEvent::Leave)
-//    {
-//        popup->hide();
-//    }
+    if(index.isValid())
+    {
+        if(event->type() == QEvent::MouseMove)
+        {
+            popup->show();
+            if(index.row() != currentRowHovered)
+            {
+                QString hoveredMatrixName = matrixModel->item(index.row())->text();
+                const Matrix* hoveredMatrix = lib->find(hoveredMatrixName.toStdString());
+                imgToolTip->computeImgMatrix(*hoveredMatrix, 15);
+                popupLabel->setPixmap(imgToolTip->getCurrentPixmap());
+                popup->adjustSize();
+                currentRowHovered = index.row();
+            }
+            int posX = cursor().pos().x();
+            int posY = cursor().pos().y();
+            popup->move(posX+10, posY);
+        }
+    }
+    else if(event->type() == QEvent::Leave)
+    {
+        popup->hide();
+    }
 
-//    return QTableView::eventFilter(watched, event);
+    return QTableView::eventFilter(watched, event);
 }
 
 

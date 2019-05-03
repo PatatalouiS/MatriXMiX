@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QHBoxLayout>
+#include <QScrollBar>
 #include "ShowMatrixWidget.h"
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "Fraction.h"
@@ -13,7 +14,9 @@ ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
     QHBoxLayout* showMatrixLayout = new QHBoxLayout;
     showMatrixLayout->setAlignment(Qt::AlignCenter);
     imgSelected = new QLabel(this);
+
     showMatrixLayout->addWidget(imgSelected);
+    showMatrixLayout->setAlignment(Qt::AlignHCenter);
     setLayout(showMatrixLayout);
     hide();
 }
@@ -28,7 +31,7 @@ const QPixmap& ShowMatrixWidget:: getCurrentPixmap() const
 
 void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt, const QColor& col)
 {
-//<<<<<<< HEAD
+
 //    unsigned int rows = mat.getNbRows();
 //    unsigned int cols = mat.getNbCols();
 
@@ -47,9 +50,8 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
 //		}
 //	}
 //	latex += "\\end{bmatrix}";
-
 //   setPixmapToQLabel(col, latex, sizeTxt);
-//=======
+
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
     clock_t t1 = clock();
@@ -97,7 +99,6 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
     cout << "Temps d'exécution : " << t2-t1 << endl;
    setPixmapToQLabel(col, latex, sizeTxt);
 }
-
 
 void ShowMatrixWidget:: computeImgDet(const double scalar, const QString& name, const QColor& col)
 {

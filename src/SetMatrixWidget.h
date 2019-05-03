@@ -8,6 +8,7 @@
 #include <QGridLayout>
 #include <QSpinBox>
 #include <QStandardItem>
+#include <QPushButton>
 #include "MatrixLibrary.h"
 
 
@@ -26,6 +27,7 @@ class SetMatrixWidget : public QWidget
         QSpinBox* nbColsSelector;
         QList<QLineEdit*> lineEditsTab;
         QGridLayout* lineEditsLayout;
+        QPushButton* ajouter;
         unsigned int lrows;
         unsigned int lcols;
 

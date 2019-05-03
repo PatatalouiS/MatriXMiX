@@ -72,12 +72,18 @@ SetMatrixWidget::SetMatrixWidget(MatrixLibrary* library, QWidget* parent)
     lineEditsWidget->setLayout(lineEditsLayout);
     lineEditsWidget->setMinimumSize(700, 350);
 
-    QPushButton* ajouter = new QPushButton("Ajouter");
-    QVBoxLayout* mainLayout = new QVBoxLayout;
+    ajouter = new QPushButton("Ajouter");
+    ajouter->setMinimumSize(250,30);
     ajouter->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
+
+    QVBoxLayout* buttonLayout = new QVBoxLayout;
+    buttonLayout->addWidget(ajouter);
+    buttonLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+
+    QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->addWidget(setSpecsWidget);
     mainLayout->addWidget(lineEditsWidget);
-    mainLayout->addWidget(ajouter);
+    mainLayout->addLayout(buttonLayout);
     setLayout(mainLayout);
 
     connect(nbRowsSelector, QOverload<int>::of(&QSpinBox::valueChanged),
