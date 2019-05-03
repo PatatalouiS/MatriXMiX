@@ -1,9 +1,10 @@
 
 #include <QLabel>
 #include <QGridLayout>
-#include <QVBoxLayout>
+//#include <QVBoxLayout>
 #include <QDebug>
 #include <QScrollBar>
+#include <QFileDialog>
 #include "MainWindow.h"
 #include "BinaryOpMatrixMatrixWidget.h"
 #include "BinaryOpMatrixNumberWidget.h"
@@ -150,7 +151,9 @@ MainWindow:: MainWindow() : QMainWindow()
     mainWidget->setStyleSheet("QWidget {background-color : qlineargradient(x1 : 0 , y1 : 0  "
                               ", x2: 0 , y2:1 , "
                               "stop : 0 #283676 , stop : 1 #000066)}");
-    connect(menuBar, &MenuBar::openLibrary, this, &MainWindow::show_library);
+    connect(menuBar, &MenuBar::openLibraryWindow, this, &MainWindow::showLibraryWindow);
+    connect(menuBar, &MenuBar::openSaveTool, this, &MainWindow::execSaveTool);
+    connect(menuBar, &MenuBar::openLoadTool, this, &MainWindow::execLoadTool);
     compute_choice(0);
     imgResult->show();
     setCentralWidget(mainWidget);
@@ -474,15 +477,73 @@ QGroupBox* MainWindow::initDiagonalisationOp()
 }
 
 
-void MainWindow:: show_library()
+void MainWindow:: showLibraryWindow()
 {
     libraryWindow = new LibraryWindow(this, &library);
     connect(libraryWindow, &LibraryWindow::libraryChanged,
             currentOpWidget,&AbstractOperationWidget::updateViews);
     connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
+    connect(this, &MainWindow::libraryChanged, libraryWindow, &LibraryWindow::updateView);
     libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
     libraryWindow->show();
 }
+
+
+
+void MainWindow:: execSaveTool()
+{
+    QUrl selectedPath;
+    menuBar->setEnabled(false);
+    QFileDialog* saveTool = new QFileDialog(this, Qt::Dialog);
+    saveTool->setDefaultSuffix("mtmx");
+    saveTool->setNameFilter("*.mtmx");
+    saveTool->setWindowModality(Qt::ApplicationModal);
+    saveTool->setAcceptMode(QFileDialog::AcceptSave);
+    saveTool->setAttribute(Qt::WA_DeleteOnClose);
+    connect(saveTool, &QFileDialog::urlSelected,
+            [&selectedPath] (const QUrl& url) -> void
+            {
+                selectedPath = url;
+            });
+
+    saveTool->exec();
+    if(selectedPath.isValid())
+    {
+          library.saveFile(selectedPath.path().toStdString());
+    }
+    menuBar->setEnabled(true);
+}
+
+
+
+void MainWindow:: execLoadTool()
+{
+    QUrl selectedPath;
+    menuBar->setEnabled(false);
+    QFileDialog* saveTool = new QFileDialog(this, Qt::Dialog);
+    saveTool->setNameFilter("*.mtmx");
+    saveTool->setWindowModality(Qt::ApplicationModal);
+    saveTool->setAcceptMode(QFileDialog::AcceptOpen);
+    saveTool->setAttribute(Qt::WA_DeleteOnClose);
+
+    connect(saveTool, &QFileDialog::fileSelected,
+            [&selectedPath] (const QUrl& url) -> void
+            {
+                selectedPath = url;
+            });
+
+    saveTool->exec();
+    if(selectedPath.isValid())
+    {
+          library.readFile(selectedPath.path().toStdString());
+    }
+    menuBar->setEnabled(true);
+    currentOpWidget->updateViews();
+    emit libraryChanged();
+}
+
+
+
 
 
 MainWindow:: ~MainWindow()

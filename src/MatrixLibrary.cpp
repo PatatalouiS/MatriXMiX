@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cassert>
+#include <QDebug>
 using namespace std;
 
 const string PATH = "../data/sauvegarde.txt";
@@ -32,12 +33,9 @@ bool MatrixLibrary:: isEmpty () const
 }
 
 
-void MatrixLibrary:: empty ()
+void MatrixLibrary:: clear ()
 {
-    for (auto it = tab.begin(); it != tab.end(); it++ )
-    {
-        erase(it->first);
-    }
+    tab.clear();
 }
 
 
@@ -700,7 +698,7 @@ void MatrixLibrary:: testRegression()
 }
 
 
-void MatrixLibrary:: saveFile (const string filename)const
+void MatrixLibrary:: saveFile (const string& filename)const
 {
     ofstream file (filename.c_str());
 
@@ -737,13 +735,13 @@ void MatrixLibrary:: saveFile (const string filename)const
 }
 
 
-void MatrixLibrary:: readFile (const string filename)
+void MatrixLibrary:: readFile (const string& filename)
 {
     string matrixname;
     unsigned int r,c;
     ifstream file (filename.c_str());
 
-    empty();
+    clear();
 
     if(!file.is_open())
     {
@@ -772,9 +770,7 @@ void MatrixLibrary:: readFile (const string filename)
             }
             addMatrix(matrixname,m);
         }
-
         file.close();
-
     }
     else
     {

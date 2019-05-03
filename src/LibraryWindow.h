@@ -32,6 +32,10 @@ class LibraryWindow : public QDialog
         LibraryWindow (QWidget* main, MatrixLibrary* lib);
         ~LibraryWindow ();
 
+    public slots:
+
+         void updateView();
+
     private slots:
 
         void removeSelectedMatrix();

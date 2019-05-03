@@ -19,7 +19,7 @@ class MatrixLibrary
     
     unsigned int long size () const;
     bool isEmpty () const;
-    void empty ();
+    void clear ();
 	bool exist (const std::string& name) const;
     void print () const;
 
@@ -52,8 +52,8 @@ class MatrixLibrary
     std::string isCalculableExpression(const std::string & expression) ;
     Matrix expressionCalcul(const std::string & chaine) ;
 
-    void saveFile (const std::string filename)const;
-    void readFile (const std::string filename);
+    void saveFile (const std::string& filename)const;
+    void readFile (const std::string& filename);
 
     void testRegression();
 

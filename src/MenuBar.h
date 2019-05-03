@@ -26,7 +26,6 @@ class MenuBar : public QMenuBar
         QMenu *menuQuit;
         QAction *actionQuit;
 
-
     public:
 
         MenuBar(QWidget* parent = nullptr);
@@ -34,9 +33,12 @@ class MenuBar : public QMenuBar
 
     signals:
 
-        void openLibrary();
+        void openLibraryWindow();
+        void openSaveTool();
+        void openLoadTool();
 
     private slots:
+
         void showPage();
 
 };

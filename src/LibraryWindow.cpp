@@ -95,7 +95,10 @@ void LibraryWindow:: removeSelectedMatrix ()
 }
 
 
-
+void LibraryWindow:: updateView()
+{
+    matrixView->refresh();
+}
 
 
 

@@ -65,23 +65,17 @@ void MatrixViewWidget::refresh(std::function<bool(Matrix*)> filter)
     matrixModel->removeRows(0, matrixModel->rowCount());
 
     Matrix* matrix;
-    QString matrixName;
-    QList<QStandardItem*> line;
 
     for(auto i : lib->data())
     {
-        line.clear();
         matrix = &(i.second);
 
         if(filter(matrix))
         {
-            matrixName = QString(i.first.data());
-            line.append(new QStandardItem(matrixName));
-            line.append(new QStandardItem(QString::number(matrix->getNbRows())));
-            line.append(new QStandardItem(QString::number(matrix->getNbCols())));
-            matrixModel->appendRow(line);
+            addNewRow(MatrixPair(QString::fromStdString(i.first), i.second));
         }
     }
+    update();
     sortByColumn(0, Qt::AscendingOrder);
 }
 
@@ -96,6 +90,7 @@ void MatrixViewWidget:: addNewRow (const MatrixPair& m)
     line.append(new QStandardItem(QString::number(matrix.getNbRows())));
     line.append(new QStandardItem(QString::number(matrix.getNbCols())));
     matrixModel->appendRow(line);
+    update();
     sortByColumn(0, Qt::AscendingOrder);
     showRow(matrixModel->indexFromItem(line[0]).row());
     selectRow(matrixModel->indexFromItem(line[0]).row());

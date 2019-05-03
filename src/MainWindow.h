@@ -20,7 +20,9 @@ class MainWindow : public QMainWindow
        
     private slots:
 
-          void show_library ();
+          void showLibraryWindow ();
+          void execSaveTool ();
+          void execLoadTool ();
           void transferResult (const QVariant& res);
           void compute_choice (const unsigned int choice);
 
@@ -43,4 +45,8 @@ class MainWindow : public QMainWindow
         QGroupBox* initBinaryOp();
         QGroupBox* initUnaryOp();
         QGroupBox* initDiagonalisationOp();
+
+    signals :
+
+        void libraryChanged();
 };
