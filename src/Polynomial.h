@@ -11,6 +11,7 @@
 
 class Polynomial
 {
+
 public:
     unsigned int degree;
     std::vector<double> tab;
@@ -31,7 +32,9 @@ public:
     const Polynomial operator - (const Polynomial & p) const;
     const Polynomial operator * (const Polynomial & p) const;
     const Polynomial operator * (const double & scale) const;
-    const Polynomial division(const Polynomial & divisor, Polynomial & reste);
+
+
+    const Polynomial division(const Polynomial & divisor, Polynomial & rest);
     void equation2degre (unsigned int & nbsolution, double & x1, double & x2);
 
 

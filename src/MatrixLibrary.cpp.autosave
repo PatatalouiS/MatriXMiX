@@ -20,15 +20,6 @@ MatrixLibrary:: ~MatrixLibrary()
 }
 
 
-MatrixLibrary::  MatrixLibrary (const MatrixLibrary & lib)
-{
-    for (auto it = lib.tab.begin(); it != lib.tab.end(); it++ )
-    {
-        addMatrix(it->first,it->second);
-    }
-}
-
-
 unsigned long int MatrixLibrary:: size () const
 {
     return tab.size();
@@ -79,16 +70,7 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 {
     if(tab.count(name) == 0)
     {
-        return nullptr;
-    }
-    return &tab.at(name);
-}
-
-
-Matrix* MatrixLibrary:: find (const string& name)
-{
-    if(tab.count(name) == 0)
-    {
+        cout << "la matrice "<<name<<" n'existe pas dans la libraire" << endl;
         return nullptr;
     }
     return &tab.at(name);
@@ -111,9 +93,9 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 }
 
 
-void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& result)const
+void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& resultat)const
 {
-    for (auto i :result)
+    for (auto i :resultat)
     {
         expression.push_back(i);
     }
@@ -205,33 +187,6 @@ vector<string> MatrixLibrary:: decoupe (const string & expression)const
 }
 
 
-bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg) const
-{
-    switch (opd[0])
-    {
-        case '*':
-            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
-
-        case '/':
-            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
-
-        case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
-
-        case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
-
-        case '^':
-            return ((opg[0] == '^') || (opg[0] == '~'));
-
-        case '~':
-            return ((opg[0] == '^') || (opg[0] == '~'));
-
-        default: return false;
-    }
-}
-
-
 Matrix MatrixLibrary:: calculate (const string & op, const string & a, const string & b) const
 {
     const Matrix* m_a;
@@ -281,7 +236,7 @@ Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::
 
     Matrix identite(m_a->getNbRows(),m_a->getNbCols(),Matrix::I);
     Matrix bmatrix;
-    bmatrix=static_cast<double>(b)*identite;
+    bmatrix=static_cast<const double>(b)*identite;
 
 
 
@@ -309,7 +264,7 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 
     Matrix identite(m_a->getNbRows(),m_a->getNbCols(),Matrix::I);
     Matrix bmatrix;
-    bmatrix = static_cast<double>(b)*identite;
+    bmatrix=static_cast<const double>(b)*identite;
 
     if(op == "+")
         return *m_a + bmatrix ;
@@ -318,6 +273,33 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
         return bmatrix - *m_a;
 
     else return *m_a;
+}
+
+
+bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg) const
+{
+    switch (opd[0])
+    {
+        case '*':
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
+        case '/':
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
+        case '+':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
+        case '-':
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
+
+        case '^':
+            return ((opg[0] == '^') || (opg[0] == '~'));
+
+        case '~':
+            return ((opg[0] == '^') || (opg[0] == '~'));
+
+        default: return false;
+    }
 }
 
 
@@ -373,161 +355,10 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
 }
 
 
-string MatrixLibrary:: isCalculableExpression(const string & expression)const
+Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)
 {
-   vector<string> result = decoupe(expression);
-   unsigned long int i, s = result.size();
-
-   string calculable = "calculable";
-
-
-   if (s == 0)
-       return "Expression vide";
-   if (s == 1)
-       return calculable;
-
-   short int nbp = 0;
-   for (i = 0; i < s; i++)
-   {
-       if (result[i] == "(")
-       {
-           nbp++;
-       }
-       else if (result[i] == ")")
-       {
-           nbp--;
-           if (nbp < 0)
-           return "Parenthèse fermante détectée..."
-                  "\nVeuillez vérifier l'organisation des parenthèses" ;
-       }
-   }
-
-   if (nbp != 0)
-       return "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
-
-   vector<string> no_parenthesis;
-
-   for (i = 0; i < s; i++)
-   {
-       if (result[i] != "(" && result[i] != ")")
-       {
-            no_parenthesis.push_back(result[i]);
-       }
-       else if (result[i] == "(")
-       {
-            if (i == s - 1)
-                return ("Impossible de calculer une expression se terminant par '(' ");
-            else if (result[i+1] == ")")
-            {
-                return ("Impossible de calculer '()'");
-            }
-       }
-   }
-
-    s = no_parenthesis.size();
-
-    string error1 = "Expression vide" ;
-
-    if (s == 0)
-        return error1;
-    if (s == 1)
-        return calculable;
-
-    string error2 = "Parenthèse fermante détectée..."
-                    "\nVeuillez vérifier l'organisation des parenthèses" ;
-    string error3a = "Calcul de " ;
-    string error3b = " impossible" ;
-    string error4 = " doit être un réel" ;
-    string error5 = "\nPour les puissances négatives, veuillez utiliser '~' pour inverser, puis '^' pour l'exposant" ;
-    string error6 = "\nUn réel doit être précédé d'un opérateur de calcul (+,-,*,/,^)" ;
-    string error7 = "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
-    string error8 = "Hormis '~' et '^', les caractères spéciaux ne sont pas admis" ;
-    string error9 = "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M" ;
-
-    for(i = 0; i < s; i++)
-    {
-            if (isOperator(no_parenthesis[i]))
-            {
-                if (i == 0)
-                    return ("Calcul de " + no_parenthesis[i] + no_parenthesis[i+1] + " impossible!");
-                if (i == s - 1)
-                    return ("Impossible de calculer " + no_parenthesis[i-1] + no_parenthesis[i]);
-                if (isOperator(no_parenthesis[i-1]))
-                    return "Deux opérateurs à la suite... \nImpossible à calculer";
-            }
-                else if (isName(no_parenthesis[i]))
-                {
-                    if (i == 0)
-                        continue;
-                    if (i == 1)
-                        return (error3a + no_parenthesis[i-1] + no_parenthesis[i] + error3b);
-                    if (i == s - 2)
-                        return (error3a + no_parenthesis[i] + no_parenthesis[i+1] + error3b);
-
-                    if ( (i > 1) && (i < s-2) )
-                    {
-                        if (!isOperator(no_parenthesis[i-1]))
-                            return (error3a + no_parenthesis[i-1] + error3b);
-
-                        else if ( (!isName(no_parenthesis[i-2])) && (!isFloat(no_parenthesis[i-2])) )
-                            return (error3a + no_parenthesis[i-2] + no_parenthesis[i-1]
-                                    + no_parenthesis[i] + error3b);
-
-                        if (no_parenthesis[i+1] == "^")
-                        {
-                            if (!isFloat(no_parenthesis[i+2]))
-                                return (error3a + no_parenthesis[i] + no_parenthesis[i+1]
-                                        + no_parenthesis[i+2] + error3b + "\n"
-                                        + no_parenthesis[i+2] + " doit être un entier");
-
-                            if (atoi(no_parenthesis[i+2].c_str()) < 0)
-                                return (error3a + no_parenthesis[i] + no_parenthesis[i+1]
-                                        + no_parenthesis[i+2] + error3b
-                                        + "\nVeuillez utiliser '~' pour désigner l'inverse d'une matrice");
-
-                            if (atoi(no_parenthesis[i+2].c_str()) - atof(no_parenthesis[i+2].c_str()) != 0.0)
-                                return ("Impossible de calculer " + no_parenthesis[i]
-                                        + no_parenthesis[i+1] + no_parenthesis[i+2]
-                                        + "...\nCalcul d'une puissance réelle impossible");
-                        }
-
-                    }
-
-                }
-
-                    else if (isFloat(no_parenthesis[i]))
-                            {
-                                if (i == 0)
-                                    continue;
-                                if (i == 1)
-                                    return (error3a + no_parenthesis[i-1] + no_parenthesis[i] + error3b);
-                                if (i == s - 2)
-                                    return (error3a + no_parenthesis[i] + no_parenthesis[i+1] + error3b);
-                                if (!isOperator(no_parenthesis[i-1]))
-                                {
-                                    if (no_parenthesis[i-1] != "^")
-                                        return ("Impossible de calculer " + no_parenthesis[i-1] + no_parenthesis[i]);
-                                    if (atof(no_parenthesis[i].c_str()) < 0.0)
-                                        return (error3a + no_parenthesis[i-2] + no_parenthesis[i-1]
-                                                + no_parenthesis[i] + error3b + error9);
-                                    if (atof(no_parenthesis[i].c_str()) - atoi(no_parenthesis[i].c_str()) != 0.0)
-                                        return ("Calcul d'une puissance réelle impossible");
-                                }
-                                else if ( (i < s - 1) && isName(no_parenthesis[i+1]) )
-                                        return "L'opération " + no_parenthesis[i+1] + " n'est pas définie" ;
-                            }
-
-    }
-    return calculable;
-}
-
-
-Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
-{
-
-    MatrixLibrary copy(*this);
     vector<string> polish_not;
-    copy.polish(chain,polish_not);                //I write my expression in Polish notation
+    polish(chain,polish_not);                //I write my expression in Polish notation
 
     stack<string> pile;
     Matrix temp;
@@ -543,14 +374,14 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
             string a = pile.top();
             pile.pop();
 
-            temp= *(copy.find(a))^-1;
+            temp= *(find(a))^-1;
 
             identify = static_cast<char>('0'+ name);
             pile.push("temp" + identify);
-            copy.addMatrix("temp" + identify,temp);
+            addMatrix("temp" + identify,temp);
             name++;
         }
-        else if ((copy.isOperator(i)) && (i != "~"))
+        else if ((isOperator(i)) && (i != "~"))
         {
             /* In the case of binary operation, I extract both operands from the stack*/
 
@@ -561,41 +392,41 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
 
             /* depending on the type of the two operands I calculate the result */
 
-            if ((copy.isName(b) && copy.isName(a)) || (copy.isFloat(a) && copy.isName(b)) || (copy.isFloat(b) && copy.isName(a)) )
+            if ((isName(b) && isName(a)) || (isFloat(a) && isName(b)) || (isFloat(b) && isName(a)) )
             {
-                if ((copy.isName(b) && copy.isName(a)))
+                if ((isName(b) && isName(a)))
                 {
-                    temp = copy.calculate(i,a,b);
+                    temp = calculate(i,a,b);
                 }
-                else if (copy.isFloat(b) && copy.isName(a))
+                else if (isFloat(b) && isName(a))
                 {
                     if(i == "*")
                     {
-                        temp = *(copy.find(a)) * atof(b.c_str());
+                        temp = *(find(a)) * atof(b.c_str());
                     }
                     else if (i == "^")
                     {
-                        temp= *(copy.find(a)) ^ (atoi(b.c_str()));
+                        temp= *(find(a)) ^ (atoi(b.c_str()));
                     }
                     else
                     {
                         float scale;
                         scale = static_cast<float>(atof(b.c_str()));
-                        temp =copy.calculateMatrixFloat(i,a,scale);
+                        temp = calculateMatrixFloat(i,a,scale);
                     }
                 }
-                else if (copy.isFloat(a) && copy.isName(b))
+                else if (isFloat(a) && isName(b))
                 {
                     if(i == "*")
                     {
-                        temp = *(copy.find(b)) * atof(a.c_str());
+                        temp = *(find(b)) * atof(a.c_str());
 
                     }
                     else
                     {
                         float scale;
                         scale = static_cast<float>(atof(a.c_str()));
-                        temp = copy.calculateFloatMatrix(i,b,scale);
+                        temp = calculateFloatMatrix(i,b,scale);
                     }
                 }
 
@@ -603,14 +434,14 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
 
                 identify = static_cast<char>('0'+ name);
                 pile.push ("temp" + identify);          // i choose different names for the saved matrices
-                copy.addMatrix ("temp" + identify, temp);
+                addMatrix ("temp" + identify, temp);
                 name++;
             }
-            else if (  copy.isFloat(a) && copy.isFloat(b) )
+            else if (  isFloat(a) && isFloat(b) )
             {
                 /* if both operands are floats i calculate the result diffrently then i store it in the stack */
                 ostringstream ss;
-                ss << copy.calculateFloat (i,a,b);
+                ss << calculateFloat (i,a,b);
                 string res = ss.str();
                 pile.push(res);
             }
@@ -630,13 +461,13 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
     /* the stack contains the name of the resulting matrix */
 
     const Matrix* res;
-    res = copy.find(pile.top());
+    res = find(pile.top());
     Matrix result(*res);
 
     for(int i=0; i<=name-1; i++)
     {
         identify = static_cast<char>('0'+ i);
-        copy.erase("temp" + identify);                       // I empty the library from intermediate matrices
+        erase("temp" + identify);                       // I empty the library from intermediate matrices
     }
 
 
@@ -644,87 +475,127 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
 }
 
 
-void MatrixLibrary:: saveFile (const string filename)const
+string MatrixLibrary:: isCalculableExpression(const string & expression)const
 {
-    ofstream file (filename.c_str());
+    vector<string> result = decoupe(expression);
+    string temp;
+    unsigned long int i, s = result.size();
 
-    if(!file.is_open())
+    string calculable = "calculable";
+    string error1 = "Expression vide" ;
+
+    if (s == 0)
+        return error1;
+    if (s == 1)
+        return calculable;
+
+
+    string error2 = "Parenthèse fermante détectée..."
+                    "\nVeuillez vérifier l'organisation des parenthèse" ;
+    string error3a = "Calcul de " ;
+    string error3b = " impossible" ;
+    string error4 = " doit être un réel" ;
+    string error5 = "\nPour les puissances négatives, veuillez utiliser '~' pour inverser, puis '^' pour l'exposant" ;
+    string error6 = "\nUn réel doit être précédé d'un opérateur de calcul (+,-,*,/,^)" ;
+    string error7 = "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
+    string error8 = "Hormis '~' et '^' les caractères spéciaux ne sont pas admis" ;
+    string error9 = "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M" ;
+
+    short int nbp = 0;
+
+
+    for(i = 0; i < s; i++)
     {
-        cout << "Erreur lors de la lecture du fichier "
-                "\nVeuillez vérifier le chemin du fichier" << endl;
-        exit(EXIT_FAILURE);
-    }
+        temp = result[i];          //   <    >
 
-    file << "Matrix" << endl;
-
-    for (auto it = tab.begin(); it != tab.end(); it++ )
-    {
-       string matrixname = it->first;
-       Matrix m(*find(matrixname));
-
-       file << endl << matrixname << endl;
-       file << m.getNbRows() << " " << m.getNbCols() << endl;
-
-       for (unsigned int i = 0; i < m.getNbRows(); i++)
-       {
-           for (unsigned int j = 0; j < m.getNbCols(); j++)
-           {
-
-               file << m[i][j] << " ";
-           }
-           file << endl;
-       }
-       cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
-    }
-
-    file.close();
-}
-
-
-void MatrixLibrary:: readFile (const string filename)
-{
-    string matrixname;
-    unsigned int r,c;
-    ifstream file (filename.c_str());
-
-    empty();
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-    }
-
-    string testfile;
-    file >> testfile ;
-
-    if( testfile == "Matrix")
-    {
-        while(!file.eof())
+        if (temp == "(")
         {
-            file >> matrixname;
-            file >> r >> c;
-
-            Matrix m(r,c);
-
-            for (unsigned int i = 0; i < r; i++)
-            {
-                for (unsigned int j = 0; j < c; j++)
+            nbp++;
+        }
+        else if (temp == ")")
+        {
+            nbp--;
+            if (nbp < 0)
+                return error2;
+        }
+            else if (isOperator(temp))
                 {
-                    file >> m[i][j];
+                    if (i == s-1)
+                        return ("Impossible de calculer " + result[i-1] + temp);
+                    if (isOperator(result[i-1]) || isOperator(result[i+1]))
+                        return "Deux opérateurs à la suite... \n Impossible à calculer";
                 }
 
-            }
-            addMatrix(matrixname,m);
-        }
+                else if (isName(temp))
+                {
+                    if (i == 1)
+                        return (error3a + result[i-1] + temp + error3b);
+                    if (i == s-2)
+                        return (error3a + temp + result[i+1] + error3b);
 
-        file.close();
+                    if ( (i > 1) && (i < s-2) )
+                    {
+                        if (!isOperator(result[i-1]))
+                            return (error3a+result[i-1]+error3b);
+                        else if ( (!isName(result[i-2])) && (!isFloat(result[i-2])) )
+                            return (error3a + result[i-2] + result[i-1] + temp + error3b);
 
-    }
-    else
-    {
-        cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
+                        if (result[i+1] == "^")
+                        {
+                            if (!isFloat(result[i+2]))
+                                return (error3a + temp + result[i+1] + result[i+2] + error3a + "\n" + result[i+2] + error4);
+                            if ( atoi(result[i+2].c_str()) < -1 )
+                                return (error3a + temp + result[i+1] + result[i+2] + error3a + error5);
+                            // ATTENTION AUX REELS/ENTIERS !!!!
+                        }
 
-    }
+                    }
+
+                }
+
+                else if (isFloat(temp))
+                        {
+                            if (i == 1)
+                                return (error3a + result[i-1] + temp + error3b);
+                            if (i == s-2)
+                                return (error3a + temp + result[i+1] + error3b);
+                            if (i == s-1)
+                                if (result[i-1] != "^" && result[i-1] != "*")
+                                    return (error3a + result[i-2] + result[i-1] + temp + error3b);
+
+                            if (!isOperator(result[i-1]))
+                            {
+                                if (result[i-1] != "^")
+                                    return (error3a + result[i-1] + temp + error3b + error6);
+                                else if (atof(temp.c_str()) < 0.0)
+                                    return (error3a + result[i-2] + result[i-1] + temp + error3b + error9);
+
+                                // ATTENTION RÉELS ENTIERS
+                            }
+                            else if (isName(result[i-1]) || isName(result[i+1]))
+                                {
+                                    if (isName(result[i-1]))
+                                        return "L'opération " + result[i-1] + " n'est pas définie" ;
+                                    else
+                                        return "L'opération " + result[i+1] + " n'est pas définie" ;
+                                }
+
+                                else if (result[i-1] == "+" || result[i-1] == "-")
+                                {
+                                    if (i < s-3 && (result[i+1] != "*" || !isName(result[i+2])) )
+                                            return "Opération non définie";
+                                        if ( isName(result[i-2]) && isName(result[i+2]) )
+                                            return "On ne peut pas addition un réel et une matrice";
+                                }
+
+                        }
+
+   }
+
+    if (nbp != 0)
+        return error7;
+
+    return calculable;
 }
 
 
@@ -822,14 +693,92 @@ void MatrixLibrary:: testRegression()
     assert(res == resultat7);
 
 
-    res = lib.expressionCalcul("identite~~");
-    assert(res == identite);
-
-
 
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 }
 
 
+void MatrixLibrary:: saveFile (const string filename)const
+{
+    ofstream file (filename.c_str());
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du fichier "
+                "\nVeuillez vérifier le chemin du fichier" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    file << "Matrix" << endl;
+
+    for (auto it = tab.begin(); it != tab.end(); it++ )
+    {
+       string matrixname = it->first;
+       Matrix m(*find(matrixname));
+
+       file << endl << matrixname << endl;
+       file << m.getNbRows() << " " << m.getNbCols() << endl;
+
+       for (unsigned int i = 0; i < m.getNbRows(); i++)
+       {
+           for (unsigned int j = 0; j < m.getNbCols(); j++)
+           {
+
+               file << m[i][j] << " ";
+           }
+           file << endl;
+       }
+       cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
+    }
+
+    file.close();
+}
+
+
+void MatrixLibrary:: readFile (const string filename)
+{
+    string matrixname;
+    unsigned int r,c;
+    ifstream file (filename.c_str());
+
+    empty();
+
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+    }
+
+    string testfile;
+    file >> testfile ;
+
+    if( testfile == "Matrix")
+    {
+        while(!file.eof())
+        {
+            file >> matrixname;
+            file >> r >> c;
+
+            Matrix m(r,c);
+
+            for (unsigned int i = 0; i < r; i++)
+            {
+                for (unsigned int j = 0; j < c; j++)
+                {
+                    file >> m[i][j];
+                }
+
+            }
+            addMatrix(matrixname,m);
+        }
+
+        file.close();
+
+    }
+    else
+    {
+        cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
+
+    }
+}
 
 

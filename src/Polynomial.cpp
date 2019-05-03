@@ -52,11 +52,11 @@ Polynomial::Polynomial(const Polynomial &p) : tab (vector<double>(p.tab))
 
 void Polynomial:: check()
 {
-    for(unsigned int i=0; i<=degree; i++)
+    for(auto i : tab)
     {
-        if(abs(tab[i])<EPSILON)
+        if(abs(i)<EPSILON)
         {
-            tab[i]=0;
+            i=0;
         }
 
     }
@@ -145,26 +145,26 @@ const Polynomial Polynomial:: operator + (const Polynomial & p)const
     unsigned int i;
     if (degree>p.degree)
     {
-        Polynomial resultat(*this);
+        Polynomial result(*this);
 
         for (i=0; i<=p.degree;i++)
         {
-            resultat.tab[i]+=p.tab[i];
+            result.tab[i]+=p.tab[i];
         }
 
-        return resultat;
+        return result;
 
     }
     else
     {
-        Polynomial resultat(p);
+        Polynomial result(p);
 
         for (i=0; i<=degree;i++)
         {
-            resultat.tab[i]+=tab[i];
+            result.tab[i]+=tab[i];
         }
 
-        return resultat;
+        return result;
     }
 
 }
@@ -174,7 +174,7 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)const
 {
     unsigned int i, mindegree;
 
-    Polynomial resultat(*this);
+    Polynomial result(*this);
 
     if(degree>p.degree)
         mindegree=p.degree;
@@ -183,19 +183,19 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)const
 
     for(i=0; i<=mindegree; i++)
     {
-        resultat.tab[i]-=p.tab[i];
+        result.tab[i]-=p.tab[i];
     }
 
     if(mindegree==degree)
     {
         for(i=mindegree+1; i<=p.degree; i++)
         {
-            resultat.tab.push_back(-p.tab[i]);
-            resultat.degree++;
+            result.tab.push_back(-p.tab[i]);
+            result.degree++;
         }
     }
 
-    return resultat;
+    return result;
 }
 
 
@@ -238,7 +238,7 @@ const Polynomial Polynomial:: operator * (const double & scale)const
 }
 
 
-const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & reste)
+const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & rest)
 {
     Polynomial quotient(degree - divisor.degree);
     Polynomial copy(*this);
@@ -263,23 +263,23 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
     }
 
     copy=quotient*divisor;
-    reste = (*this) - copy;
+    rest = (*this) - copy;
 
     tampon=0;
-    k=reste.degree;
+    k=rest.degree;
 
-    while (reste.tab[k] == 0.0)
+    while (rest.tab[k] == 0.0)
     {
         tampon++;
         k--;
     }
-    reste.degree=reste.degree-tampon;
+    rest.degree=rest.degree-tampon;
 
 
-    if (reste.degree>divisor.degree)
+    if (rest.degree>divisor.degree)
     {
-        Polynomial quotient2 (reste.degree-divisor.degree);
-        quotient2=reste.division(divisor,reste);
+        Polynomial quotient2 (rest.degree-divisor.degree);
+        quotient2=rest.division(divisor,rest);
         quotient=quotient+quotient2;
     }
 
