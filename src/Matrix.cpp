@@ -85,8 +85,8 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const VectorX
 {
     if (values.size() != rows * cols)
     {
-        cout << "Erreur : la dimension du vecteur passé en paramètre ne correspond pas aux dimensions de la matrice" << endl;
-        exit ( EXIT_FAILURE );
+        cerr << "Erreur : la dimension du vecteur passé en paramètre ne correspond pas aux dimensions de la matrice" << endl;
+        exit (EXIT_FAILURE);
     }
 
     this->cols = cols;
@@ -228,7 +228,7 @@ Matrix Matrix:: operator << (const string& values)
 
     if (table.size() != rows*cols)
     {
-        cout<<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice" << endl;
+        cerr <<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice" << endl;
         return matrix_noEigen;
     }
 
@@ -302,7 +302,7 @@ const Matrix Matrix:: operator + (const Matrix & m) const
 {
     if ( (rows!=m.rows) || (cols!=m.cols) )
     {
-        cout << "Addition impossible!" << endl;
+        cerr << "Addition impossible!" << endl;
         return matrix_noEigen;
     }
 
@@ -324,7 +324,7 @@ const Matrix Matrix:: operator - (const Matrix & m) const
 {
     if ((rows!=m.rows) || (cols!=m.cols))
     {
-        cout << "Soustraction impossible!" << endl;
+        cerr << "Soustraction impossible!" << endl;
         return matrix_noEigen;
     }
 
@@ -346,7 +346,7 @@ const Matrix Matrix:: operator * (const Matrix & m) const
 {
     if (cols != m.rows)
     {
-        cout << "Multiplication impossible!" << endl <<
+        cerr << "Multiplication impossible!" << endl <<
                 "A * B -> Le nombre de ligne de A doit  nombre de colonne de B!" << endl;
         return matrix_noEigen;
     }
@@ -485,7 +485,7 @@ double Matrix:: traceMatrix() const
 {
     if ( !isSQMatrix() )
     {
-        cout << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
+        cerr << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
         return double_notExist;
     }
 
@@ -516,7 +516,7 @@ Matrix Matrix::coMatrix() const
 {
     if ( !isSQMatrix() )
     {
-        cout << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
+        cerr << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
         return matrix_null;
     }
 
@@ -978,7 +978,10 @@ const vector<pair<double,VectorX>> Matrix:: allEigen()const
     e_value = eigenValues();
     e_vector = eigenVectors();
     if (e_value == vector_noEigen)
+    {
         return vector_pair_noEigen;
+
+    }
 
     n = e_value.size();
 

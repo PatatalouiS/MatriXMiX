@@ -171,6 +171,12 @@ const QString& name, const QColor& col)
     Fraction f;
     QString temp, coef;
 
+
+    if (res.empty())
+    {
+
+    }
+
     for(auto i : res)
     {
         temp = "( ";
