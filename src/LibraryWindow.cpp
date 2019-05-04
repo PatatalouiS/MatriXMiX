@@ -19,14 +19,12 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
     editMatrix = new SetMatrixWidget(SetMatrixWidget::EDIT, lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
 
-    remove = new QPushButton("Supprimer");
-    remove->setMinimumSize(100,50);
-    remove->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(showMatrixWidget);
 
-    scrollArea->setStyleSheet("background-color:white ; border: none;");
+    scrollArea->setStyleSheet("border: none;"
+                              "background:transparent;");
     scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical "
                "{border: 1px solid #999999; background:white;"
                "width:15px; margin: 0px 0px 0px 0px;}"
@@ -43,13 +41,12 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
                "QScrollBar::add-line:horizontal {height: 0px;}"
                "QScrollBar::sub-line:horizontal {height: 0 px;}");
 
-
-    remove = new QPushButton;
+    remove = new QPushButton("  Supprimer");
 
     QPixmap im(":/img/poubelle.png");
-    im = im.scaled(50, 50);
+    im = im.scaled(30, 30);
     remove->setIcon(im);
-    remove->setFixedSize(60,60);
+    remove->setMinimumSize(100,30);
     remove->setIconSize(im.rect().size());
     remove->setCursor(Qt::PointingHandCursor);
     remove->setStyleSheet("QPushButton:hover{ background-color: red;}");
@@ -61,6 +58,8 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
     matrixViewLayout->addWidget(matrixView);
     matrixViewLayout->addLayout(viewFooterLayout);
 
+    matrixViewLayout->setContentsMargins(0,38,0,0);
+
     choice = new QTabWidget;
     choice->addTab(scrollArea, "Visualiser");
     choice->addTab(addMatrix, "Ajouter");
@@ -71,11 +70,17 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
         "padding: 10px; border-radius: 6px; border:1px solid darkGrey ;} "
         "QTabBar::tab:selected { background: "
         "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue); color:white } "
-        "QTabWidget::tab-bar { alignment : center;}");
+        "QTabWidget::tab-bar { alignment : center;}"
+        "QTabWidget::pane{border-radius:6px; border: 1px solid silver;"
+        "background-color:white;}");
 
     QHBoxLayout* mainLayout = new QHBoxLayout;
     mainLayout->addLayout(matrixViewLayout);
     mainLayout->addWidget(choice);
+    mainLayout->setContentsMargins(30,10,30,30);
+
+    QWidget* mainWidget = new QWidget;
+    mainWidget->setLayout(mainLayout);
 
     setLayout(mainLayout);
 
@@ -97,6 +102,11 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
             });
     connect(remove, &QPushButton::clicked,
             this, &LibraryWindow::removeSelectedMatrix);
+    QPalette p;
+    p = palette();
+    p.setBrush(QPalette::Window, QBrush(QPixmap(":/img/bg2.png")));
+    setPalette(p);
+
 }
 
 

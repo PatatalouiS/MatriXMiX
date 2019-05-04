@@ -88,11 +88,10 @@ MainWindow:: MainWindow() : QMainWindow()
     opChoiceLayout->addWidget(initUnaryOp());
     opChoiceLayout->addWidget(initDiagonalisationOp());
     opBox -> setStyleSheet(
-                "QGroupBox { border: 0px solid silver;"
+                "QGroupBox { border: 1px solid grey;"
                 "background-color:white;"
                 "margin-top: 32px;"
-                "margin-left:30px; margin-right:30px;"
-                "border-radius:6px;}"
+                "border-radius:3px;}"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
                 "font: bold ; color:white; }");
@@ -100,14 +99,14 @@ MainWindow:: MainWindow() : QMainWindow()
     opBox->setFont(font);
     opBox->setLayout(opChoiceLayout);
     opShowBox -> setStyleSheet(
-                "QGroupBox { border: 3px solid silver;"
-                "background-color:white;"
+                "QGroupBox { border: 1px solid grey;"
+                "background-color: white;"
                 "margin-top: 32px;"
-                "border-radius:6px;}"
+                "border-radius:3px;}"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
                 "font: bold ;color:white; }");
-    opShowBox->setFont(fontTitle);
+    opShowBox->setFont(font);
     opShowBox->setLayout(currentOpLayout);
     currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
     currentOpLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
@@ -117,7 +116,8 @@ MainWindow:: MainWindow() : QMainWindow()
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(imgResult);
-    scrollArea->setStyleSheet("background-color:white ; border-radius:6px;");
+    scrollArea->setStyleSheet("background-color:white ; "
+                              "border-radius: 3px;");
     scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical "
                "{border: 1px solid #999999; background:white;"
                "width:15px; margin: 0px 0px 0px 0px;}"
@@ -142,7 +142,7 @@ MainWindow:: MainWindow() : QMainWindow()
     subLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->setContentsMargins(0,0,20,0);
 
-    mainLayout->setContentsMargins(4,10,10,30);
+    mainLayout->setContentsMargins(30,10,10,30);
     mainLayout->addLayout(headerLayout);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
@@ -322,7 +322,7 @@ QGroupBox* MainWindow::initBinaryOp ()
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ; color:black;}");
+                "font: bold ; color: black;}");
     BinaryOpBox->setMinimumSize(300,200);
 
     BinaryOpBox->setFont(font);
@@ -378,7 +378,7 @@ QGroupBox* MainWindow::initUnaryOp ()
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ; color:back;}");
+                "font: bold ; color: black;}");
     UnaryOpBox->setMinimumSize(300,180);
 
     UnaryOpBox->setFont(font);
@@ -433,8 +433,7 @@ QGroupBox* MainWindow::initDiagonalisationOp()
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ; color:black;"
-                "}");
+                "font: bold ; color:black;}");
     DiaOpBox->setMinimumSize(300,130);
     DiaOpBox->setFont(font);
 
