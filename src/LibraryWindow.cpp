@@ -19,6 +19,9 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
     editMatrix = new SetMatrixWidget(SetMatrixWidget::EDIT, lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
 
+    setObjectName("LibraryWindow");
+    setStyleSheet("LibraryWindow{border-image:url(:/img/bg2.png) 0 0 0 0 stretch stretch;}");
+
     remove = new QPushButton("Supprimer");
     remove->setMinimumSize(100,50);
     remove->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
@@ -111,13 +114,15 @@ void LibraryWindow:: computeViewSelection ()
 }
 
 
+
+
 void LibraryWindow:: removeSelectedMatrix ()
 {
     QString selectedName = matrixView->nameOfSelectedMatrix();
 
     if(selectedName == "")
     {
-        Error::showError("Suppression impossible !", "Veuillez sélectionner une Matrice", this);
+        Error::showError("Suppression impossible !", "Veuillez sélectionner une Matrice");
         return;
     }
 

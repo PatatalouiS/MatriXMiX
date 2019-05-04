@@ -1,8 +1,5 @@
 
-#include <QGridLayout>
 #include <QScrollBar>
-#include <QFileDialog>
-
 
 #include "MainWindow.h"
 #include "BinaryOpMatrixMatrixWidget.h"
@@ -10,6 +7,7 @@
 #include "UnaryOpWidget.h"
 #include "DiagonalisationWidget.h"
 #include "ExprEvalWidget.h"
+
 
 MainWindow:: MainWindow() : QMainWindow()
 {
@@ -142,18 +140,26 @@ MainWindow:: MainWindow() : QMainWindow()
     subLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->setContentsMargins(0,0,20,0);
 
-    mainLayout->setContentsMargins(4,10,10,30);
+    mainLayout->setContentsMargins(4,10,14,30);
     mainLayout->addLayout(headerLayout);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
 
     connect(menuBar, &MenuBar::openLibraryWindow, this, &MainWindow::showLibraryWindow);
-    connect(menuBar, &MenuBar::openSaveTool, this, &MainWindow::execSaveTool);
-    connect(menuBar, &MenuBar::openLoadTool, this, &MainWindow::execLoadTool);
+    connect(menuBar, &MenuBar::openSaveTool,
+            [this]() -> void
+            {
+                showFileTool(QFileDialog::AcceptSave);
+            });
+    connect(menuBar, &MenuBar::openLoadTool,
+            [this]() -> void
+            {
+                showFileTool(QFileDialog::AcceptOpen);
+            });
     imgResult->show();
     setStyleSheet("MainWindow{border-image:url(:/img/bg2.png) 0 0 0 0 stretch stretch;}");
     setCentralWidget(mainWidget);
-    compute_choice(0); 
+    computeChoice(0);
 }
 
 
@@ -238,7 +244,7 @@ void MainWindow::setFunctorTab()
 }
 
 
-void MainWindow:: compute_choice (const unsigned int choice)
+void MainWindow:: computeChoice (const unsigned int choice)
 {
     imgResult->clear();
     if(currentOpWidget != nullptr)
@@ -351,11 +357,10 @@ QGroupBox* MainWindow::initBinaryOp ()
         connect(BinaryOpButtons, &QPushButton::clicked,
                 [i, this] () -> void
                 {
-                    this->compute_choice(i);
+                    this->computeChoice(i);
                 });
 
         BinaryOpLayout -> addWidget(BinaryOpButtons);
-
     }
 
     BinaryOpBox->setLayout(BinaryOpLayout);
@@ -408,7 +413,7 @@ QGroupBox* MainWindow::initUnaryOp ()
         connect(UnaryOpButtons, &QPushButton::clicked,
                 [i, this] () -> void
                 {
-                    this->compute_choice(i);
+                    this->computeChoice(i);
                 });
 
     }
@@ -462,7 +467,7 @@ QGroupBox* MainWindow::initDiagonalisationOp()
           connect(DiaOpButtons, &QPushButton::clicked,
                 [i, this] () -> void
                 {
-                    this->compute_choice(i);
+                    this->computeChoice(i);
                 });
     }
 
@@ -474,72 +479,65 @@ QGroupBox* MainWindow::initDiagonalisationOp()
 
 void MainWindow:: showLibraryWindow()
 {
-    libraryWindow = new LibraryWindow(nullptr, &library);
-    connect(libraryWindow, &LibraryWindow::libraryChanged,
-            currentOpWidget,&AbstractOperationWidget::updateViews);
-    connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
-    connect(this, &MainWindow::libraryChanged, libraryWindow, &LibraryWindow::update);
-    libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
-    libraryWindow->setWindowModality(Qt::NonModal);
-    libraryWindow->show();
+    if(libraryWindow == nullptr)
+    {
+        libraryWindow = new LibraryWindow(nullptr, &library);
+        connect(libraryWindow, &LibraryWindow::libraryChanged,
+                currentOpWidget,&AbstractOperationWidget::updateViews);
+        connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
+        connect(this, &MainWindow::libraryChanged, libraryWindow, &LibraryWindow::update);
+        libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
+        libraryWindow->setWindowModality(Qt::NonModal);
+        libraryWindow->show();
+    }
 }
 
 
 
-void MainWindow:: execSaveTool()
+void MainWindow:: showFileTool(enum QFileDialog::AcceptMode type)
 {
-    QUrl selectedPath;
+    QUrl savePath;
     menuBar->setEnabled(false);
-    QFileDialog* saveTool = new QFileDialog(this, Qt::Dialog);
-    saveTool->setDefaultSuffix("mtmx");
-    saveTool->setNameFilter("*.mtmx");
-    saveTool->setWindowModality(Qt::ApplicationModal);
-    saveTool->setAcceptMode(QFileDialog::AcceptSave);
-    saveTool->setAttribute(Qt::WA_DeleteOnClose);
-    connect(saveTool, &QFileDialog::urlSelected,
-            [&selectedPath] (const QUrl& url) -> void
+    QFileDialog* fileTool = new QFileDialog(this, Qt::Dialog);
+    fileTool->setDefaultSuffix("mtmx");
+    fileTool->setNameFilter("*.mtmx");
+    fileTool->setWindowModality(Qt::ApplicationModal);
+    fileTool->setAcceptMode(QFileDialog::AcceptSave);
+    fileTool->setAttribute(Qt::WA_DeleteOnClose);
+    fileTool->setAcceptMode(type);
+
+    connect(fileTool, &QFileDialog::accepted,
+            [=]() -> void
             {
-                selectedPath = url;
+                computeLoadOrRead(fileTool, type);
             });
 
-    saveTool->exec();
-    if(selectedPath.isValid())
-    {
-          library.saveFile(selectedPath.path().toStdString());
-    }
-    menuBar->setEnabled(true);
+    fileTool->open();
 }
 
 
 
-void MainWindow:: execLoadTool()
+void MainWindow:: computeLoadOrRead (QFileDialog* fileTool, enum QFileDialog::AcceptMode type)
 {
-    QUrl selectedPath;
-    menuBar->setEnabled(false);
-    QFileDialog* saveTool = new QFileDialog(imgResult, Qt::Dialog);
-    saveTool->setNameFilter("*.mtmx");
-    saveTool->setWindowModality(Qt::ApplicationModal);
-    saveTool->setAcceptMode(QFileDialog::AcceptOpen);
-    saveTool->setAttribute(Qt::WA_DeleteOnClose);
+    QUrl selectedPath = fileTool->selectedUrls()[0];
 
-    connect(saveTool, &QFileDialog::fileSelected,
-            [&selectedPath] (const QUrl& url) -> void
-            {
-                selectedPath = url;
-            });
-
-     saveTool->exec();
     if(selectedPath.isValid())
     {
-          library.readFile(selectedPath.path().toStdString());
+        if(type == QFileDialog::AcceptSave)
+        {
+            library.saveFile(selectedPath.path().toStdString());
+        }
+        else
+        {
+            library.readFile(selectedPath.path().toStdString());
+            currentOpWidget->updateViews();
+            emit libraryChanged();
+        }
     }
+
+    fileTool->close();
     menuBar->setEnabled(true);
-    currentOpWidget->updateViews();
-    emit libraryChanged();
 }
-
-
-
 
 
 MainWindow:: ~MainWindow()

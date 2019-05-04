@@ -9,21 +9,21 @@
 #include <QTimer>
 
 
+ShowMatrixWidget* MatrixViewWidget::matrixPreview = nullptr;
+
+
 MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) : QTableView (parent)
 {
     this->lib = lib;
     matrixModel = new QStandardItemModel(0,3, this);
-    currentRowHovered = -1;
-
     matrixModel->setHorizontalHeaderLabels({"Nom", "NbL", "NbC"});
-    imgToolTip = new ShowMatrixWidget(this);
 
     setModel(matrixModel);
     setSortingEnabled(true);
     setColumnWidth(0, 100);
     setFixedWidth(200);
+    setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    verticalHeader()->hide();
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setShowGrid(false);
     setAlternatingRowColors(true);
@@ -33,19 +33,46 @@ MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) :
                   "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 "
                   "lightBlue, stop: 1 blue); color:white; border: 0px; }");
     horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-    viewport()->installEventFilter(this);
-    setMouseTracking(true);
-    popup = new QDialog(this, Qt::Popup | Qt::ToolTip );
-    QVBoxLayout* layout = new QVBoxLayout;
-    popupLabel = new QLabel(popup);
-    popupLabel->setWordWrap(true);
-    layout->addWidget(popupLabel);
-    popup->setLayout(layout);
-    popup->installEventFilter(this);
-
+    verticalHeader()->hide();
 	refresh();
+    setCurrentIndex(QModelIndex());
+
+    connect(this, &MatrixViewWidget::doubleClicked,
+            this, &MatrixViewWidget::showMatrixPreview);
 }
+
+
+
+void MatrixViewWidget:: showMatrixPreview () const
+{
+    QString currentSelectedName = nameOfSelectedMatrix();
+
+    if(nameOfSelectedMatrix() == "")
+    {
+        return;
+    }
+
+    if(matrixPreview != nullptr)
+    {
+        delete matrixPreview;
+    }
+
+    assert(lib->exist(currentSelectedName.toStdString()));
+    const Matrix* currentMatrix = lib->find(currentSelectedName.toStdString());
+    matrixPreview = new ShowMatrixWidget(nullptr);
+    connect(matrixPreview, &ShowMatrixWidget::destroyed,
+            [this]()
+            {
+                this->matrixPreview = nullptr;
+            });
+    matrixPreview->setAttribute(Qt::WA_DeleteOnClose);
+    matrixPreview->setWindowFlag(Qt::WindowStaysOnTopHint);
+    matrixPreview->computeImgMatrix(*currentMatrix, 15);
+    matrixPreview->move(matrixPreview->parentWidget()->mapFromGlobal(QCursor::pos()));
+    matrixPreview->show();
+}
+
+
 
 const QString MatrixViewWidget:: nameOfSelectedMatrix() const
 {
@@ -105,42 +132,11 @@ void MatrixViewWidget:: editRow (const MatrixPair& m)
 }
 
 
-void MatrixViewWidget:: removeRow (const int id)
+void MatrixViewWidget:: removeRow (const int idRow)
 {
-    matrixModel->removeRow(id);
+    matrixModel->removeRow(idRow);
     sortByColumn(0, Qt::AscendingOrder);
-}
-
-
-bool MatrixViewWidget:: eventFilter(QObject *watched, QEvent *event)
-{
-//    QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-//    QModelIndex index = indexAt(mouseEvent->pos());
-
-//    if(index.isValid())
-//    {
-//        if(event->type() == QEvent::MouseMove)
-//        {
-//            popup->show();
-//            if(index.row() != currentRowHovered)
-//            {
-//                QString hoveredMatrixName = matrixModel->item(index.row())->text();
-//                const Matrix* hoveredMatrix = lib->find(hoveredMatrixName.toStdString());
-//                imgToolTip->computeImgMatrix(*hoveredMatrix, 15);
-//                popupLabel->setPixmap(imgToolTip->getCurrentPixmap());
-//                popup->adjustSize();
-//                currentRowHovered = index.row();
-//            }
-//            int posX = cursor().pos().x();
-//            int posY = cursor().pos().y();
-//            popup->move(posX+10, posY);
-//        }
-//    }
-//    else if(event->type() == QEvent::Leave)
-//    {
-//        popup->hide();
-//    }
-    return QTableView::eventFilter(watched, event);
+    setCurrentIndex(QModelIndex());
 }
 
 

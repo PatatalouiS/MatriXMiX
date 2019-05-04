@@ -22,16 +22,16 @@ class MatrixViewWidget : public QTableView
         ~MatrixViewWidget ();
 
         const QString nameOfSelectedMatrix() const;
-        virtual bool eventFilter(QObject *watched, QEvent* event) final;
 
     private:
 
         const MatrixLibrary* lib;
         QStandardItemModel* matrixModel;
-        QDialog* popup;
-        QLabel* popupLabel;
-        ShowMatrixWidget* imgToolTip;
-        int currentRowHovered;
+        static ShowMatrixWidget* matrixPreview;
+
+    private slots:
+
+        void showMatrixPreview() const;
 
     public slots:
 
