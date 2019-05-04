@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-CONFIG += link_prl qt debug_and_release
+CONFIG += link_prl qt release
 CONFIG += qt
 QT += widgets
 
