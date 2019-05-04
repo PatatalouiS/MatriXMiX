@@ -11,7 +11,7 @@
 using namespace std;
 
 
-LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(main)
+LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(main)
 {
     lib = library;
     matrixView = new MatrixViewWidget(lib, this);

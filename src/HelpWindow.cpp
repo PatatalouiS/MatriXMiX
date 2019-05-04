@@ -40,9 +40,14 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
                "subcontrol-position:top left;"
                "font-weight:75; color: #283676;}");
 
-   QLabel* defIntro = new QLabel("MatriXMiX est une application destinée aux matimaticiens "
-                            "pour faciliter le calcul matriciel. \n"
-                            "MatriXMiX permet d'effectuer des opérations binaires,unaires et des "
+   QLabel* defIntro = new QLabel("MatriXMiX est une application destinée aux étudiants de niveau licence"
+                            "en mathématique. \nElle leur permet de "
+                            "vérifier leurs résultats d'exercices d'algèbre linéaire, "
+                            "ceux ci étant difficilement \ncorrigeables car les corrections"
+                            "ne sont guère souvent données et les erreurs de calcul sont"
+                            "très fréquentes.\n"
+                            "MatriXMiX permet d'effectuer des opérations (de base) binaires, "
+                            "unaires, et des "
                             "opérations liés à la diagonalisation.");
 
    utilisation = new QGroupBox(tr("Utilisation"));

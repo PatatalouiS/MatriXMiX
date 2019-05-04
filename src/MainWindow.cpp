@@ -151,7 +151,7 @@ MainWindow:: MainWindow() : QMainWindow()
     connect(menuBar, &MenuBar::openSaveTool, this, &MainWindow::execSaveTool);
     connect(menuBar, &MenuBar::openLoadTool, this, &MainWindow::execLoadTool);
     imgResult->show();
-    setStyleSheet("MainWindow{border-image:url(:/img/bg.jpg) 0 0 0 0 stretch stretch;}");
+    setStyleSheet("MainWindow{border-image:url(:/img/bg2.png) 0 0 0 0 stretch stretch;}");
     setCentralWidget(mainWidget);
     compute_choice(0); 
 }
@@ -474,12 +474,13 @@ QGroupBox* MainWindow::initDiagonalisationOp()
 
 void MainWindow:: showLibraryWindow()
 {
-    libraryWindow = new LibraryWindow(this, &library);
+    libraryWindow = new LibraryWindow(nullptr, &library);
     connect(libraryWindow, &LibraryWindow::libraryChanged,
             currentOpWidget,&AbstractOperationWidget::updateViews);
     connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
     connect(this, &MainWindow::libraryChanged, libraryWindow, &LibraryWindow::update);
     libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
+    libraryWindow->setWindowModality(Qt::NonModal);
     libraryWindow->show();
 }
 
@@ -515,7 +516,7 @@ void MainWindow:: execLoadTool()
 {
     QUrl selectedPath;
     menuBar->setEnabled(false);
-    QFileDialog* saveTool = new QFileDialog(this, Qt::Dialog);
+    QFileDialog* saveTool = new QFileDialog(imgResult, Qt::Dialog);
     saveTool->setNameFilter("*.mtmx");
     saveTool->setWindowModality(Qt::ApplicationModal);
     saveTool->setAcceptMode(QFileDialog::AcceptOpen);
@@ -527,7 +528,7 @@ void MainWindow:: execLoadTool()
                 selectedPath = url;
             });
 
-    saveTool->exec();
+     saveTool->exec();
     if(selectedPath.isValid())
     {
           library.readFile(selectedPath.path().toStdString());

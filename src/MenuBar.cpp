@@ -53,7 +53,7 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     QPixmap im3(":/img/quitter.jpg");
     im3 = im3.scaled(200, 200);
 
-    actionQuit = new QAction("MatriXMiX");
+    actionQuit = new QAction("MatriXMiX", this);
     actionQuit->setIcon(im3);
     menuQuit->addAction(actionQuit);
 
