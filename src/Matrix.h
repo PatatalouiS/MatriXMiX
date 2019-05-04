@@ -26,12 +26,11 @@ public:
     
     
 private:
-
-    std::vector<std::string> explode (const std::string & expression) const;
     Matrix subMatrix(const unsigned int a, const unsigned int b ) const;
     Matrix checkCast () const;
     double determinant(unsigned int dim) const;
     bool isNulDeterminant() const;
+    std::vector<std::string> explode (const std::string & expression) const;
     Eigen::MatrixXd class2Eigen() const;
     const Matrix eigen2Class(const Eigen::MatrixXd & m) const;
 
@@ -40,7 +39,6 @@ public:
 
     // Fonction statique, renvoie, la matrice identité demandée
     static Matrix ID ( const unsigned int size );
-    
     
     // type énuméré pour l'initialisation
     enum initMatrix { Z, I, R };

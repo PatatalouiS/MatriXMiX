@@ -41,9 +41,9 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
                "subcontrol-position:top left;"
                "font-weight: 75; color: #283676;}");
 
-   QLabel* def = new QLabel("MatriXMiX est une application destinée aux matimaticiens "
-                            "pour faciliter le calcul matriciel. ");
-   QLabel* def2 = new QLabel("MatriXMiX permet de faire des opérations binaires,unaires et des "
+   QLabel* def = new QLabel("MatriXMiX est une application destinée aux mathématiciens "
+                            "pour réaliser des calculs matriciels. ");
+   QLabel* def2 = new QLabel("MatriXMiX permet de faire des opérations unaires, binaires et des "
                              "opérations liés à la diagonalisation.");
    def->setMaximumWidth(650);
    QVBoxLayout* subLayout = new QVBoxLayout;

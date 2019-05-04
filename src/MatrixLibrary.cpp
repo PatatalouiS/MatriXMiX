@@ -384,18 +384,29 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
 
 string MatrixLibrary:: isCalculableExpression(const string & expression)const
 {
+
    vector<string> result = decoupe(expression);
    unsigned long int i, s = result.size();
 
    string calculable = "calculable";
 
-
    if (s == 0)
        return "Expression vide";
    if (s == 1)
-       return calculable;
+   {
+       if (isName(result[0]))
+       {
+           if (find(result[0]) != nullptr)
+               return calculable;
+           else
+               return ("La matrice " + result[0] + " n'existe pas dans la librairie");
+       }
+       else
+           return ("Aucune matrice dans l'expression saisie");
+   }
 
    short int nbp = 0;
+
    for (i = 0; i < s; i++)
    {
        if (result[i] == "(")
@@ -420,35 +431,50 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
    {
        if (result[i] != "(" && result[i] != ")")
        {
-            no_parenthesis.push_back(result[i]);
+           no_parenthesis.push_back(result[i]);
        }
+
        else if (result[i] == "(")
        {
-            if (i == s - 1)
+
+           if (i == s - 1)
                 return ("Impossible de calculer une expression se terminant par '(' ");
             else if (result[i+1] == ")")
             {
                 return ("Impossible de calculer '()'");
             }
        }
+
        else
        {
            if (result[i] == " ")
                return ("Les espaces ne sont pas autorisés");
-           if (isSpecialCaractere(result[i]))
-               return ("Les caractères spéciaux ne sont pas autorisés comme '" + no_parenthesis[i]
+           if (isSpecialCaractere(result[i]) && result[i] != ")")
+               return ("Les caractères spéciaux ne sont pas autorisés comme '" + result[i]
                        + "' ne sont pas autorisés");
        }
+
    }
 
     s = no_parenthesis.size();
+
 
     string error1 = "Expression vide" ;
 
     if (s == 0)
         return error1;
     if (s == 1)
-        return calculable;
+    {
+        if (isName(no_parenthesis[0]))
+        {
+            if (find(no_parenthesis[0]) != nullptr)
+                return calculable;
+            else
+                return ("La matrice " + no_parenthesis[i] + " n'existe pas dans la librairie");
+        }
+        else
+            return ("Aucune matrice dans l'expression saisie");
+    }
 
     string error3a = "Calcul de " ;
     string error3b = " impossible" ;
@@ -464,7 +490,8 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
                 return ("On ne peut calculer que les puissances de matrices");
             if (i < s - 1 && isName(no_parenthesis[i+1]) )
                 return "On ne peut calculer que les puissances de matrices";
-
+            else if (i == s - 1)
+                return "L'opérateur '^' doit être suivi d'un entier";
         }
 
         else if (no_parenthesis[i] == "~")
@@ -487,7 +514,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
         else if (isOperator(no_parenthesis[i]))
         {
             if (i == 0)
-                return ("Calcul de " + no_parenthesis[i] + no_parenthesis[i+1] + " impossible!");
+                return ("L'expression ne peut pas débuter par un opérateur");
             if (i == s - 1)
                 return ("Impossible de calculer " + no_parenthesis[i-1] + no_parenthesis[i]);
             if (isOperator(no_parenthesis[i-1]) && no_parenthesis[i-1] != "~")
@@ -497,19 +524,21 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
         else if (isName(no_parenthesis[i]))
         {
             matrix_result = true;
+
+            if (find(no_parenthesis[i]) == nullptr)
+                return ("La matrice " + no_parenthesis[i] + " n'existe pas dans la librairie");
+
             if (i == 0)
                 continue;
             if (i == 1)
                 return (error3a + no_parenthesis[i-1] + no_parenthesis[i] + error3b);
-            if (i == s - 2)
-                return (error3a + no_parenthesis[i] + no_parenthesis[i+1] + error3b);
             if (i < s - 1 && no_parenthesis[i+1] == "~")
                     {
-                        if (!isOperator(no_parenthesis[i+2]))
+                        if ((i < s - 2) && !isOperator(no_parenthesis[i+2]))
                             return "L'opérateur '~' doit être suivi d'un opérateur";
                     }
 
-            if ( (i > 1) && (i < s-2) )
+            if ( (i > 1) && (i < s - 2) )
             {
                 if (!isOperator(no_parenthesis[i-1]))
                     return (error3a + no_parenthesis[i-1] + error3b);
@@ -563,10 +592,10 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 
     if (!matrix_result)
         return "Le résultat de sortie n'est pas une matrice!" ;
+
+    //cout << "Calculable" << endl << endl;
     return calculable;
 }
-
-
 
 
 Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
@@ -663,8 +692,7 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
             }
             else
             {
-                cout << "Caractère spécial détecté..."
-                        "\nVeuillez rééssayer (gestion erreur... +1 point :)" << endl;
+                return Matrix::matrix_null;
             }
         }
         else
@@ -680,7 +708,7 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
     res = copy.find(pile.top());
     Matrix result(*res);
 
-    for(int i=0; i<=name-1; i++)
+    for(int i = 0; i <= name - 1; i++)
     {
         identify = static_cast<char>('0'+ i);
         copy.erase("temp" + identify);                       // I empty the library from intermediate matrices

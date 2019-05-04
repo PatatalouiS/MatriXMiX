@@ -35,10 +35,10 @@ AbstractOperationWidget (lib, parent)
     description->setText(op.first);
 
 
-    QRadioButton* showP = new QRadioButton("Matrice Passage");
+    QRadioButton* showP = new QRadioButton("Matrice de passage");
     QRadioButton* showD = new QRadioButton("Matrice Diagonale");
     showD->setChecked(true);
-    QRadioButton* showPInverse = new QRadioButton("Matrice Passage^-1");
+    QRadioButton* showPInverse = new QRadioButton("Matrice de passage^-1");
     QHBoxLayout* choiceLayout = new QHBoxLayout;
     choiceLayout->addWidget(showP);
     choiceLayout->addWidget(showD);
@@ -136,7 +136,7 @@ void DiagonalisationWidget:: computeOperation()
 {
     if(op.second == nullptr)
     {
-        Error::showError("opérande Manquante !", "Veuillez bien sélectionner votre Matrice !", this);
+        Error::showError("opérande Manquante !", "Veuillez bien sélectionner votre matrice !", this);
     }
 
     op.second->allMatrix(result[0], result[1], result[2]);

@@ -4,7 +4,6 @@
 #include <cstring>
 #include <cassert>
 #include <cmath>
-#include <ctime>
 #include <utility>
 #include <Dense>
 #include "Matrix.h"
@@ -119,8 +118,6 @@ Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 
 
 
-
-
 // ******** FONCTIONS STATIQUES *********
 
 
@@ -128,7 +125,6 @@ Matrix Matrix:: ID (const unsigned int size)
 {
     return Matrix(size, size, Matrix::I);
 }
-
 
 
 
@@ -220,35 +216,6 @@ ostream& operator << (ostream& flux, const Matrix & m)
         flux << endl;
     }
     return flux;
-}
-
-
-vector<string> Matrix:: explode (const string & expression) const
-{
-    unsigned int i;
-    unsigned  long l = expression.length();
-    vector<string> tab;
-    string c, temp;
-    temp="";
-    for (i = 0; i < l; i++)
-    {
-        c = expression[i];
-
-        if (c == ",")
-        {
-            if (temp.length()!=0) tab.push_back(temp);
-            temp="";
-        }
-        else if (!c.empty())
-        {
-            temp += c;
-        }
-
-    }
-    if (temp != "")
-    tab.push_back(temp);
-
-    return tab;
 }
 
 
@@ -508,31 +475,6 @@ bool Matrix::operator != (const Matrix & m) const
 }
 
 
-Matrix Matrix:: checkCast() const
-{
-    unsigned int i, j, r, c;
-    r = getNbRows();
-    c = getNbCols();
-    int l;
-    Matrix result(*this);
-
-    for (i =0; i < r; i++)
-    {
-        for (j = 0; j < c; j++)
-        {
-            for (l = -150 ; l < 150; l++)
-            {
-                if ( abs(tab[i][j] - l) < EPSILON )
-                {
-                    result[i][j] = l;
-                }
-            }
-        }
-    }
-    return result;
-}
-
-
 bool Matrix:: isSQMatrix() const
 {
     return rows == cols;
@@ -667,6 +609,30 @@ unsigned int Matrix:: rank()const
 
 // ********   FONCTIONS PRIVEES   ***********
 
+Matrix Matrix:: checkCast() const
+{
+    unsigned int i, j, r, c;
+    r = getNbRows();
+    c = getNbCols();
+    int l;
+    Matrix result(*this);
+
+    for (i =0; i < r; i++)
+    {
+        for (j = 0; j < c; j++)
+        {
+            for (l = -150 ; l < 150; l++)
+            {
+                if ( abs(tab[i][j] - l) < EPSILON )
+                {
+                    result[i][j] = l;
+                }
+            }
+        }
+    }
+    return result;
+}
+
 
 Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
 {
@@ -694,6 +660,35 @@ Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
         }
     }
     return sub;
+}
+
+
+vector<string> Matrix:: explode (const string & expression) const
+{
+    unsigned int i;
+    unsigned  long l = expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
+    for (i = 0; i < l; i++)
+    {
+        c = expression[i];
+
+        if (c == ",")
+        {
+            if (temp.length()!=0) tab.push_back(temp);
+            temp="";
+        }
+        else if (!c.empty())
+        {
+            temp += c;
+        }
+
+    }
+    if (temp != "")
+    tab.push_back(temp);
+
+    return tab;
 }
 
 

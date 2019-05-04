@@ -92,7 +92,7 @@ const Fraction Fraction:: inverse() const
 }
 
 
-long int Fraction::pgcd(long int a, long int b) const
+long int Fraction::gcd(long int a, long int b) const
 {
     while (b!=0)
     {
@@ -108,7 +108,7 @@ long int Fraction::pgcd(long int a, long int b) const
 const Fraction Fraction::simplify() const
 {
     long int div, num, den;
-    div = pgcd(numerator,denominator);
+    div = gcd(numerator,denominator);
     num = numerator / div;
     den = denominator / div;
 
@@ -140,7 +140,7 @@ const Fraction Fraction:: operator + (const long int &d) const
 {
     long int temp = d * denominator;
     temp = temp + numerator;
-    Fraction res (temp, denominator);
+    Fraction res(temp, denominator);
     return res;
 }
 

@@ -167,6 +167,7 @@ const QString& name, const QColor& col)
 {
     QString spec;
     QList<QString> vectors;
+    QVector<QString> tab;
     Fraction f;
     QString temp, coef;
 
@@ -180,7 +181,7 @@ const QString& name, const QColor& col)
         else
             coef = QString ("\\frac{") + QString::number(f.getNumerator())
                 + QString ("}{") + QString::number(f.getDenominator()) + QString ("}");
-
+        tab.push_back(coef);
         spec += coef + ", ";
 
         for(auto j : i.second)
@@ -203,7 +204,8 @@ const QString& name, const QColor& col)
 
     for(unsigned int i = 0; i < res.size(); ++i)
     {
-        latex += "\\mathit{\\text{v}_{\\text{" + QString::number(i) + "}}}\\ = " + vectors[int(i)] + "\\\\";
+        latex += "\\mathit{\\text{E}_{\\text{" + tab[i]
+                + "}}}\\ = vect\\{ " + vectors[int(i)] + "\\} \\\\";
     }
     latex += "\\end{matrix}";
 

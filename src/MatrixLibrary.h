@@ -33,7 +33,7 @@ public:
 
 private:
 
-    void copy_vector(std::vector<std::string>& expression,const std::vector<std::string>&result)const;
+    void copy_vector(std::vector<std::string> & expression, const std::vector<std::string> & result)const;
 
     bool isName(const std::string & chaine) const;
     bool isFloat(const std::string & chaine) const;
