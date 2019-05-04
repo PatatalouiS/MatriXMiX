@@ -50,16 +50,24 @@ Polynomial::Polynomial(const Polynomial &p) : tab (vector<double>(p.tab))
 }
 
 
-void Polynomial:: check()
+Polynomial Polynomial:: check() const
 {
-    for(auto i : tab)
+    Polynomial res(*this);
+    unsigned int i, d;
+    int l;
+    d = degree;
+    for (i =0; i < d + 1; i++)
     {
-        if(abs(i)<EPSILON)
+        for (l = -150 ; l < 150; l++)
         {
-            i=0;
+            if ( abs(tab[i] - l) < EPSILON )
+            {
+                res.tab[i] = l;
+            }
         }
 
     }
+    return res;
 }
 
 

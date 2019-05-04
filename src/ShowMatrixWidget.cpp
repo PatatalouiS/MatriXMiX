@@ -115,7 +115,7 @@ const QString& name, const QColor& col)
     QString developpedForm;
     QString factorizedForm;
 
-    flux << res1;
+    flux << res1.check();
     //developpedForm = flux.str().c_str();
 
     for(unsigned int i = 0; i < res1.tab.size(); i++)
@@ -151,7 +151,7 @@ const QString& name, const QColor& col)
     for(auto i : res2)
     {
         flux.str("");
-        flux << i;
+        flux << i.check();
         factorizedForm += QString::fromStdString( "(" + flux.str() + ") ");
     }
 
