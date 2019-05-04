@@ -40,6 +40,8 @@ AbstractOperationWidget(lib, parent)
     QHBoxLayout* formLayout = new QHBoxLayout;
     formLayout->addLayout(op1ChoiceLayout);
     formLayout->addLayout(op2ChoiceLayout);
+    formLayout->setAlignment(Qt::AlignCenter);
+    formLayout->setContentsMargins(0,0,20,0);
 
     description->setText(op1.first + logo + QString::number(op2));
     description->setStyleSheet("font-size: 40px");
@@ -63,7 +65,8 @@ AbstractOperationWidget(lib, parent)
 
     QWidget* subWidget1 = new QWidget(this);
     subWidget1->setLayout(subLayout3);
-    subWidget1->setFixedHeight(300);
+    subWidget1->setMaximumHeight(300);
+    subWidget1->setMaximumWidth(800);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
