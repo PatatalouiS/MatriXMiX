@@ -3,7 +3,6 @@
 #include "AbstractOperationWidget.h"
 
 
-
 AbstractOperationWidget:: AbstractOperationWidget(const MatrixLibrary* lib, QWidget* parent): QWidget (parent)
 {
     this->lib = lib;
@@ -28,10 +27,6 @@ AbstractOperationWidget:: AbstractOperationWidget(const MatrixLibrary* lib, QWid
     connect(calculer, &QPushButton::clicked, this, &AbstractOperationWidget::computeOperation);
 }
 
-void AbstractOperationWidget:: setLib (const MatrixLibrary* lib)
-{
-    this->lib = lib;
-}
 
 
 void AbstractOperationWidget:: setTitle (const QString& str)
@@ -43,5 +38,11 @@ void AbstractOperationWidget:: setTitle (const QString& str)
 void AbstractOperationWidget:: setSortFunction(const SortFunction& s)
 {
     this->sortFunction = s;
+}
+
+
+const MatrixLibrary* AbstractOperationWidget:: getLib() const
+{
+    return lib;
 }
 
