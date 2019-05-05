@@ -15,11 +15,6 @@ MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
 }
 
 
-MatrixLibrary:: ~MatrixLibrary()
-{
-}
-
-
 MatrixLibrary::  MatrixLibrary (const MatrixLibrary & lib)
 {
     for (auto it = lib.tab.begin(); it != lib.tab.end(); it++ )
@@ -27,6 +22,13 @@ MatrixLibrary::  MatrixLibrary (const MatrixLibrary & lib)
         addMatrix(it->first,it->second);
     }
 }
+
+
+MatrixLibrary:: ~MatrixLibrary()
+{
+}
+
+
 
 
 unsigned long int MatrixLibrary:: size () const
@@ -175,10 +177,10 @@ bool MatrixLibrary:: isOperator (const string & chain) const
 }
 
 
-bool MatrixLibrary:: isSpecialCaractere(const std::string &chaine) const
+bool MatrixLibrary:: isSpecialCaractere(const std::string &chain) const
 {
-    if (!isName(chaine) && !isFloat(chaine) &&
-            !isOperator(chaine))
+    if (!isName(chain) && !isFloat(chain) &&
+            !isOperator(chain))
         return true;
     return false;
 }
@@ -597,7 +599,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 }
 
 
-Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
+Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
 {
 
     MatrixLibrary copy(*this);
@@ -718,7 +720,7 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
 }
 
 
-void MatrixLibrary:: saveFile (const string & filename)const
+void MatrixLibrary:: saveFile (const string & filename) const
 {
     ofstream file (filename.c_str());
 
@@ -802,7 +804,7 @@ void MatrixLibrary:: readFile (const string & filename)
 }
 
 
-void MatrixLibrary:: testRegression()
+void MatrixLibrary:: regressionTest() const
 {
      cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
 
@@ -869,9 +871,9 @@ void MatrixLibrary:: testRegression()
     /* fonctions isCalculableExpression */
 
 
-    /* fonctions expressionCalcul */
+    /* fonctions calculateExpression */
 
-    // the expressionCalcul function is used to test several functions such as polish
+    // the calculateExpression function is used to test several functions such as polish
 
     lib.addMatrix("matrice2",b);
 
@@ -886,43 +888,43 @@ void MatrixLibrary:: testRegression()
     Matrix resultat7(3,3,{5,0,0,0,5,0,0,0,5});
 
 
-    res = lib.expressionCalcul("identite+identite~");
+    res = lib.calculateExpression("identite+identite~");
     assert(res == resultat1);
 
 
-    res = lib.expressionCalcul("identite+identite~*5+matrice1");
+    res = lib.calculateExpression("identite+identite~*5+matrice1");
     assert(res == resultat2);
 
 
-    res = lib.expressionCalcul("3*2*matrice1^4");
+    res = lib.calculateExpression("3*2*matrice1^4");
     assert(res == resultat3);
 
 
-    res = lib.expressionCalcul("matrice2~+6*2");
+    res = lib.calculateExpression("matrice2~+6*2");
     assert(res == resultat4);
 
 
-    res = lib.expressionCalcul("1+(matrice2~)^2");
+    res = lib.calculateExpression("1+(matrice2~)^2");
     assert(res == resultat5);
 
 
-    res = lib.expressionCalcul("2*matrice2*matrice2*(matrice2*matrice2)~-2");
+    res = lib.calculateExpression("2*matrice2*matrice2*(matrice2*matrice2)~-2");
     assert(res == resultat6);
 
 
-    res = lib.expressionCalcul("matrice1*2/2-1+1");
+    res = lib.calculateExpression("matrice1*2/2-1+1");
     assert(res == a);
 
 
-    res = lib.expressionCalcul("matrice2/matrice2");
+    res = lib.calculateExpression("matrice2/matrice2");
     assert(res == identite);
 
 
-    res = lib.expressionCalcul("2+3*identite/identite~^3");
+    res = lib.calculateExpression("2+3*identite/identite~^3");
     assert(res == resultat7);
 
 
-    res = lib.expressionCalcul("identite~~");
+    res = lib.calculateExpression("identite~~");
     assert(res == identite);
 
 

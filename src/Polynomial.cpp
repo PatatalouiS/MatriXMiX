@@ -351,7 +351,7 @@ void Polynomial:: equation2degre (unsigned int  & nbsolution,
 }
 
 
-void Polynomial:: testRegression()const
+void Polynomial:: regressionTest()const
 {
     Polynomial p1(1,{0,1});
     Polynomial p2(1,{1,1});
