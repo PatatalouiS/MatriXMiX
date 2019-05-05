@@ -68,7 +68,7 @@ void ExprEvalWidget:: computeOperation ()
         return;
     }
 
-    result = temp->expressionCalcul(expression->text().toStdString());
+    result = temp->calculateExpression(expression->text().toStdString());
 
     if(result == Matrix::matrix_null)
     {

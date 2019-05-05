@@ -92,7 +92,7 @@ class MatrixLibrary
     const std::map<std::string, Matrix>& data () const;
 
 
-    private:
+public:
 
 /**
  * @brief Copy a vector of string in another
@@ -128,7 +128,7 @@ class MatrixLibrary
  * @param [in] chain (\e string)
  * @return \e bool
  */
-    bool isSpecialCaracthere(const std::string & chain) const;
+    bool isSpecialCaractere(const std::string & chain) const;
 
 /**
  * @brief Separates the matrices of the operators
@@ -188,6 +188,11 @@ class MatrixLibrary
  */
     void polish(const std::string & chain, std::vector<std::string> & polish_notation)const;
 
+
+
+
+    public:
+
 /**
  * @brief Tests if the expression is computable
  * @details Returns "computable" if the expression is computable, otherwise returns a string to guide the user
@@ -195,9 +200,6 @@ class MatrixLibrary
  * @return string
  */
     std::string isCalculableExpression(const std::string & expression)const;
-
-
-    public:
 
 /**
  * @brief Evaluates the result of a matrix expression

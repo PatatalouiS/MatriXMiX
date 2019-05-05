@@ -177,7 +177,7 @@ bool MatrixLibrary:: isOperator (const string & chain) const
 }
 
 
-bool MatrixLibrary:: isSpecialCaractere(const std::string &chain) const
+bool MatrixLibrary:: isSpecialCaractere(const string & chain) const
 {
     if (!isName(chain) && !isFloat(chain) &&
             !isOperator(chain))
@@ -334,6 +334,7 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 
 void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string> & polish_notation)const
 {
+
     stack<string> p;
     vector<string> expression;
     copy_vector(expression,explode(chain));
@@ -347,6 +348,7 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
         else if ( (i == "("))
         {
             p.push(i);
+
         }
         else if (isOperator(i))
         {
@@ -361,26 +363,31 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
 
             p.push(i);
 
+
         }
         else if (i == ")")
         {
-            do
+           do
             {
-                polish_notation.push_back(p.top());
+                if (p.top() != "(") polish_notation.push_back(p.top());
                 p.pop();
 
             }while ((p.top() !=  "(") && (!p.empty()));
-            p.pop();
+
+            if (p.top() != "") p.pop();
         }
+
     }
     if(polish_notation[polish_notation.size()-1]=="")
         polish_notation.pop_back();
+
 
     while (!p.empty())
     {
         polish_notation.push_back(p.top());
         p.pop();
     }
+
 }
 
 
