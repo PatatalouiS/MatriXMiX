@@ -111,7 +111,8 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 }
 
 
-void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& result)const
+void MatrixLibrary::copy_vector(std::vector<std::string>& expression,
+                                const std::vector<std::string>& result)const
 {
     for (auto i :result)
     {
@@ -591,12 +592,16 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
                     return (error3a + no_parenthesis[i-1] + no_parenthesis[i] + error3b);
                 if (atof(no_parenthesis[i].c_str()) < 0.0)
                     return (error3a + no_parenthesis[i-2] + no_parenthesis[i-1]
-                            + no_parenthesis[i] + error3b + "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M");
-                if (atof(no_parenthesis[i].c_str()) - atoi(no_parenthesis[i].c_str()) != 0.0)
-                    return ("Calcul d'une puissance réelle impossible, veuillez saisir un entier");
+                            + no_parenthesis[i] + error3b
+                            + "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M");
+                if (atof(no_parenthesis[i].c_str())
+                        - atoi(no_parenthesis[i].c_str()) != 0.0)
+                    return ("Calcul d'une puissance réelle impossible, "
+                            "veuillez saisir un entier");
             }
             else if ( (i < s - 1) && isName(no_parenthesis[i+1]) )
-                return "L'opération " + no_parenthesis[i] + no_parenthesis[i+1] + " n'est pas définie" ;
+                return "L'opération " + no_parenthesis[i] + no_parenthesis[i+1]
+                        + " n'est pas définie" ;
 
         }
 

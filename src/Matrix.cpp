@@ -1057,7 +1057,8 @@ const Matrix Matrix::transferMatrix()const
 }
 
 
-void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const
+void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal,
+                         Matrix & transferB2C) const
 {
    transferC2B = transferMatrix();
    diagonal = diagonalise();

@@ -118,7 +118,8 @@ public:
  * @param [in] cols (\e unsigned \e int)
  * @param [in] type (\e enum \e type)
  */
-    Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z);
+    Matrix (const unsigned int rows, const unsigned int cols,
+            const enum initMatrix& type = Z);
 
 /**
  * @brief Constructor
@@ -404,7 +405,8 @@ public:
  * @param [in-out] diagonal \e Matrix
  * @param [in-out] transferB2C \e Matrix
  */
-    void allMatrix(Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const;
+    void allMatrix(Matrix & transferC2B, Matrix & diagonal,
+                   Matrix & transferB2C) const;
 
 /**
  * @brief Regression test

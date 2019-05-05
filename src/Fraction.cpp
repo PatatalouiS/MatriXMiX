@@ -270,7 +270,9 @@ const Fraction Fraction:: double2fraction(const double &d) const
 void Fraction:: regressionTest() const
 {
 
-    cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION POUR FRACTION ******" << endl << endl << endl;
+    cout << endl << endl
+         << "****** DEBUT DU TEST DE REGRESSION POUR FRACTION ******"
+         << endl << endl << endl;
 
     Fraction f1 (1,1);
     Fraction f2 (1,2);
@@ -396,7 +398,8 @@ void Fraction:: regressionTest() const
 
 
     cout << endl << endl << "******* TEST REUSSI ******" << endl << endl
-           <<  "****** FIN DU TEST DE REGRESSION POUR FRACTION ******" << endl << endl ;
+           <<  "****** FIN DU TEST DE REGRESSION POUR FRACTION ******"
+            << endl << endl ;
 
 }
 
