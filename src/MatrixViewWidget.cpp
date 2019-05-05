@@ -2,11 +2,6 @@
 
 #include "MatrixViewWidget.h"
 #include <QHeaderView>
-#include <QVBoxLayout>
-#include <QMouseEvent>
-#include <QDebug>
-#include <QDesktopWidget>
-#include <QTimer>
 
 
 ShowMatrixWidget* MatrixViewWidget::matrixPreview = nullptr;

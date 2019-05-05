@@ -1,9 +1,6 @@
 
 #include <iostream>
-#include <QDebug>
-#include <QPainter>
 #include <QHBoxLayout>
-#include <QScrollBar>
 #include "ShowMatrixWidget.h"
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "Fraction.h"
@@ -118,7 +115,6 @@ const QString& name, const QColor& col)
     QString factorizedForm;
 
     flux << res1.check();
-    //developpedForm = flux.str().c_str();
 
     for(unsigned int i = 0; i < res1.tab.size(); i++)
     {
@@ -212,16 +208,13 @@ const QString& name, const QColor& col)
 
     for(unsigned int i = 0; i < res.size(); ++i)
     {
-        latex += "\\mathit{\\text{E}_{\\text{" + tab[i]
+        latex += "\\mathit{\\text{E}_{\\text{" + tab[int(i)]
                 + "}}}\\ = vect\\{ " + vectors[int(i)] + "\\} \\\\";
     }
     latex += "\\end{matrix}";
 
     setPixmapToQLabel(col, latex, 30);
 }
-
-
-
 
 
 void ShowMatrixWidget:: setPixmapToQLabel (const QColor &col, const QString& latex, const unsigned int sizeTxt)

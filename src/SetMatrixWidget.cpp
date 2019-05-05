@@ -141,12 +141,12 @@ void SetMatrixWidget:: computeMatrix ()
     if(type == ADD)
     {
         library->addMatrix(name.toStdString(), newMatrix);
-        emit newMatrixAdded(MatrixPair(name, newMatrix));
+        emit newMatrixAdded(QPair<QString, Matrix&>(name, newMatrix));
     }
     else
     {
         *selectedMatrix.second = newMatrix;
-        emit matrixEdited(MatrixPair(name, newMatrix));
+        emit matrixEdited(QPair<QString, Matrix&>(name, newMatrix));
         nameMatrix->setText("");
         selectedMatrix.first = "";
         selectedMatrix.second = nullptr;

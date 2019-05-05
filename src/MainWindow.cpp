@@ -1,5 +1,6 @@
 
 #include <QScrollBar>
+#include <QScrollArea>
 
 #include "MainWindow.h"
 #include "BinaryOpMatrixMatrixWidget.h"

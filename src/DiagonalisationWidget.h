@@ -34,7 +34,7 @@ class DiagonalisationWidget : public AbstractOperationWidget
          * @brief implementation of AbstractOperationWidget::updateViews()
          */
 
-        virtual void updateViews() override;
+        virtual void updateViews() override final;
 
     private:
 
@@ -57,13 +57,13 @@ class DiagonalisationWidget : public AbstractOperationWidget
          * @brief implementation of AbstractOperationWidget::computeSelection(const bool view)
          */
 
-        virtual void computeSelection(const bool view = 0) override;
+        virtual void computeSelection(const bool view = 0) override final;
 
         /**
          * @brief implementation of AbstractOperationWidget::computeOperation()
          */
 
-        virtual void computeOperation() override;
+        virtual void computeOperation() override final;
 
         /** @brief emit the good Matrix Result (using AbstractOperationWidget::newResult(const QVariant result) \n
          *          in fonction of the user selection ( P Matrix, P_INVERSE Matrix or D Matrix).

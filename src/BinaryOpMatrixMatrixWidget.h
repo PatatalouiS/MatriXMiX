@@ -72,6 +72,12 @@ class BinaryOpMatrixMatrixWidget : public AbstractOperationWidget
        SortViewFunction sortViewFunction;
        Matrix result;
 
+       /**
+        * @brief constructType this fonction is called one time, when the object is constructed.\n
+        *       It construct the operation attributes and caracteristics in fonction of the enum BinaryOpMatrixMatrixWidget::type given.
+        * @param [in] the type of the binary operation.
+        */
+
        void constructType(const type& t);
 };
 

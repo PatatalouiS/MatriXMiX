@@ -60,9 +60,7 @@ void ExprEvalWidget:: updateViews()
 
 void ExprEvalWidget:: computeOperation ()
 {
-    MatrixLibrary* temp = const_cast <MatrixLibrary*>(getLib());
-
-    std::string testExpression = temp->isCalculableExpression(expression->text().toStdString());
+    std::string testExpression = getLib()->isCalculableExpression(expression->text().toStdString());
 
     if(testExpression != "calculable")
     {
@@ -70,7 +68,7 @@ void ExprEvalWidget:: computeOperation ()
         return;
     }
 
-    result = temp->expressionCalcul(expression->text().toStdString());
+    result = getLib()->expressionCalcul(expression->text().toStdString());
 
     if(result == Matrix::matrix_null)
     {

@@ -1,12 +1,9 @@
 
-#include <QCloseEvent>
-#include <QDirModel>
-#include <QHeaderView>
-#include <QDebug>
-#include <QScrollArea>
 #include <QScrollBar>
+#include <QScrollArea>
 #include "LibraryWindow.h"
 #include "Error.h"
+
 
 using namespace std;
 
@@ -120,7 +117,6 @@ void LibraryWindow:: computeViewSelection ()
     showMatrixWidget->computeImgMatrix(*selectedMatrix);
     editMatrix->chargeMatrix(selectedName);
 }
-
 
 
 

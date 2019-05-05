@@ -19,7 +19,7 @@ class Error
     /** @brief this fonction show an Error Modal Window to user. He Must close it.
      * @param [in] title the title of the Window
      * @param [in] body the body of the window
-     * @param [in, out] a pointer on a potential parent QWidget, mainly for ensure good deletion.
+     * @param [in, out] parent a pointer on a potential parent QWidget, mainly for ensure good deletion.
      */
 
     static void showError (const QString& title, const QString& body, QWidget* parent = nullptr);
