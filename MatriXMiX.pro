@@ -3,17 +3,15 @@
 ######################################################################
 
 TEMPLATE = app
-CONFIG += link_prl qt release
-CONFIG += qt
-QT += widgets
+CONFIG += release
 
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
 MOC_DIR = ./moc
 TARGET = MatriXMiX
+ICON = MatriXMiX.icns
 
 include(ext/latex/jkqtmathtext.pri);
-
 INCLUDEPATH += ext/Eigen/
 
 DEFINES += QT_DEPRECATED_WARNINGS
