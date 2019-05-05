@@ -192,7 +192,7 @@ public:
 
 /**
  * @brief Friend operator << : shows matrix
- * @param |in] flux \e std::ostream
+ * @param |in-out] flux \e std::ostream
  * @param [in] m (\e Matrix)
  * @return std::ostream&
  */
@@ -274,14 +274,14 @@ public:
     const Matrix operator ^ (const int & p) const;
 
 /**
- * @brief Operator == : test equality between 2 matrix
+ * @brief Operator == : test equality between 2 matrices
  * @param [in] m (\e Matrix)
  * @return \e bool
  */
     bool operator == (const Matrix & m) const;
 
 /**
- * @brief Operator != : test the non equality between 2 matrix
+ * @brief Operator != : test the non equality between 2 matrices
  * @param [in] m (\e Matrix)
  * @return \e bool
  */

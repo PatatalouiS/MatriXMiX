@@ -16,11 +16,6 @@ MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
 }
 
 
-MatrixLibrary:: ~MatrixLibrary()
-{
-}
-
-
 MatrixLibrary::  MatrixLibrary (const MatrixLibrary & lib)
 {
     for (auto it = lib.tab.begin(); it != lib.tab.end(); it++ )
@@ -28,6 +23,13 @@ MatrixLibrary::  MatrixLibrary (const MatrixLibrary & lib)
         addMatrix(it->first,it->second);
     }
 }
+
+
+MatrixLibrary:: ~MatrixLibrary()
+{
+}
+
+
 
 
 unsigned long int MatrixLibrary:: size () const
@@ -173,10 +175,10 @@ bool MatrixLibrary:: isOperator (const string & chain) const
 }
 
 
-bool MatrixLibrary:: isSpecialCaractere(const std::string &chaine) const
+bool MatrixLibrary:: isSpecialCaractere(const string & chain) const
 {
-    if (!isName(chaine) && !isFloat(chaine) &&
-            !isOperator(chaine))
+    if (!isName(chain) && !isFloat(chain) &&
+            !isOperator(chain))
         return true;
     return false;
 }
@@ -212,7 +214,8 @@ vector<string> MatrixLibrary:: explode (const string & expression)const
 }
 
 
-bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg) const
+bool MatrixLibrary:: high_equal_priority (const string & opd,
+                                          const string & opg) const
 {
     switch (opd[0])
     {
@@ -239,7 +242,8 @@ bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg)
 }
 
 
-Matrix MatrixLibrary:: calculate (const string & op, const string & a, const string & b) const
+Matrix MatrixLibrary:: calculate (const string & op, const string & a,
+                                  const string & b) const
 {
     const Matrix* m_a;
     const Matrix* m_b;
@@ -263,7 +267,8 @@ Matrix MatrixLibrary:: calculate (const string & op, const string & a, const str
 }
 
 
-double MatrixLibrary:: calculateFloat (const std::string & op, const std::string & a, const std::string & b) const
+double MatrixLibrary:: calculateFloat (const std::string & op, const std::string & a,
+                                       const std::string & b) const
 {
     if(op == "+")
         return atof(a.c_str()) + atof(b.c_str());
@@ -281,7 +286,8 @@ double MatrixLibrary:: calculateFloat (const std::string & op, const std::string
 }
 
 
-Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::string & a, const float & b)const
+Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::string & a,
+                                             const float & b)const
 {
     const Matrix* m_a;
     m_a=find(a);
@@ -309,7 +315,8 @@ Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::
 }
 
 
-Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::string &a, const float &b)const
+Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::string &a,
+                                            const float &b)const
 {
     const Matrix* m_a;
     m_a = find(a);
@@ -328,8 +335,10 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 }
 
 
-void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string> & polish_notation)const
+void MatrixLibrary:: polish(const std::string & chain ,
+                            std::vector<std::string> & polish_notation)const
 {
+
     stack<string> p;
     vector<string> expression;
     copy_vector(expression,explode(chain));
@@ -343,6 +352,7 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
         else if ( (i == "("))
         {
             p.push(i);
+
         }
         else if (isOperator(i))
         {
@@ -357,26 +367,31 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
 
             p.push(i);
 
+
         }
         else if (i == ")")
         {
-            do
+           do
             {
-                polish_notation.push_back(p.top());
+                if (p.top() != "(") polish_notation.push_back(p.top());
                 p.pop();
 
             }while ((p.top() !=  "(") && (!p.empty()));
-            p.pop();
+
+            if (p.top() != "") p.pop();
         }
+
     }
     if(polish_notation[polish_notation.size()-1]=="")
         polish_notation.pop_back();
+
 
     while (!p.empty())
     {
         polish_notation.push_back(p.top());
         p.pop();
     }
+
 }
 
 
@@ -454,7 +469,6 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
    }
 
     s = no_parenthesis.size();
-
 
     string error1 = "Expression vide" ;
 
@@ -595,12 +609,12 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 }
 
 
-Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
+Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
 {
 
     MatrixLibrary copy(*this);
     vector<string> polish_not;
-    copy.polish(chain,polish_not);        //I write my expression in Polish notation
+    copy.polish(chain,polish_not);      //I write my expression in Polish notation
 
     stack<string> pile;
     Matrix temp;
@@ -634,7 +648,9 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
 
             /* depending on the type of the two operands I calculate the result */
 
-            if ((copy.isName(b) && copy.isName(a)) || (copy.isFloat(a) && copy.isName(b)) || (copy.isFloat(b) && copy.isName(a)) )
+            if ((copy.isName(b) && copy.isName(a))
+                    || (copy.isFloat(a) && copy.isName(b))
+                    || (copy.isFloat(b) && copy.isName(a)) )
             {
                 if ((copy.isName(b) && copy.isName(a)))
                 {
@@ -716,7 +732,7 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
 }
 
 
-void MatrixLibrary:: saveFile (const string & filename)const
+void MatrixLibrary:: saveFile (const string & filename) const
 {
     ofstream file (filename.c_str());
 
@@ -800,7 +816,7 @@ void MatrixLibrary:: readFile (const string & filename)
 }
 
 
-void MatrixLibrary:: testRegression()
+void MatrixLibrary:: regressionTest() const
 {
      cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
 
@@ -867,9 +883,9 @@ void MatrixLibrary:: testRegression()
     /* fonctions isCalculableExpression */
 
 
-    /* fonctions expressionCalcul */
+    /* fonctions calculateExpression */
 
-    // the expressionCalcul function is used to test several functions such as polish
+    // the calculateExpression function is used to test several functions such as polish
 
     lib.addMatrix("matrice2",b);
 
@@ -884,43 +900,43 @@ void MatrixLibrary:: testRegression()
     Matrix resultat7(3,3,{5,0,0,0,5,0,0,0,5});
 
 
-    res = lib.expressionCalcul("identite+identite~");
+    res = lib.calculateExpression("identite+identite~");
     assert(res == resultat1);
 
 
-    res = lib.expressionCalcul("identite+identite~*5+matrice1");
+    res = lib.calculateExpression("identite+identite~*5+matrice1");
     assert(res == resultat2);
 
 
-    res = lib.expressionCalcul("3*2*matrice1^4");
+    res = lib.calculateExpression("3*2*matrice1^4");
     assert(res == resultat3);
 
 
-    res = lib.expressionCalcul("matrice2~+6*2");
+    res = lib.calculateExpression("matrice2~+6*2");
     assert(res == resultat4);
 
 
-    res = lib.expressionCalcul("1+(matrice2~)^2");
+    res = lib.calculateExpression("1+(matrice2~)^2");
     assert(res == resultat5);
 
 
-    res = lib.expressionCalcul("2*matrice2*matrice2*(matrice2*matrice2)~-2");
+    res = lib.calculateExpression("2*matrice2*matrice2*(matrice2*matrice2)~-2");
     assert(res == resultat6);
 
 
-    res = lib.expressionCalcul("matrice1*2/2-1+1");
+    res = lib.calculateExpression("matrice1*2/2-1+1");
     assert(res == a);
 
 
-    res = lib.expressionCalcul("matrice2/matrice2");
+    res = lib.calculateExpression("matrice2/matrice2");
     assert(res == identite);
 
 
-    res = lib.expressionCalcul("2+3*identite/identite~^3");
+    res = lib.calculateExpression("2+3*identite/identite~^3");
     assert(res == resultat7);
 
 
-    res = lib.expressionCalcul("identite~~");
+    res = lib.calculateExpression("identite~~");
     assert(res == identite);
 
 
