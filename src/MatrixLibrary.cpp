@@ -759,7 +759,7 @@ void MatrixLibrary:: readFile (const string & filename)
     unsigned int r,c;
     ifstream file (filename.c_str());
 
-    empty();
+    clear();
 
     if(!file.is_open())
     {
@@ -923,87 +923,38 @@ void MatrixLibrary:: testRegression()
     res = lib.expressionCalcul("identite~~");
     assert(res == identite);
 
-<<<<<<< HEAD
-    cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
-}
-
-
-void MatrixLibrary:: saveFile (const string& filename)const
-{
-    ofstream file (filename.c_str());
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du fichier "
-                "\nVeuillez vérifier le chemin du fichier" << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    file << "Matrix" << endl;
-=======
->>>>>>> origin/calcul_matriciel_tarik
 
     cout << "! Test isCalculable" << endl << endl;
-    {
-        cout << "Expressions non calculable..." << endl << endl;
-        cout << exp1 << "  :  " << isCalculableExpression(exp1) << endl;
-        cout << exp2 << "  :  " << isCalculableExpression(exp2) << endl;
-        cout << exp3 << "  :  " << isCalculableExpression(exp3) << endl;
-        cout << exp4 << "  :  " << isCalculableExpression(exp4) << endl;
-        cout << exp5 << "  :  " << isCalculableExpression(exp5) << endl;
-        cout << exp6 << "  :  " << isCalculableExpression(exp6) << endl;
-        cout << exp7 << "  :  " << isCalculableExpression(exp7) << endl;
-        cout << exp8 << "  :  " << isCalculableExpression(exp8) << endl;
-        cout << exp9 << "  :  " << isCalculableExpression(exp9) << endl;
-        cout << exp10 << "  :  " << isCalculableExpression(exp10) << endl;
-        cout << exp11 << "  :  " << isCalculableExpression(exp11) << endl;
-        cout << exp12 << "  :  " << isCalculableExpression(exp12) << endl;
-        cout << exp13 << "  :  " << isCalculableExpression(exp13) << endl << endl << endl;
-        cout << "Expressions calculable" << endl << endl;
-        cout << exp14 << "  :  " << isCalculableExpression(exp14) << endl;
-        cout << exp15 << "  :  " << isCalculableExpression(exp15) << endl;
-        cout << exp16 << "  :  " << isCalculableExpression(exp16) << endl;
-        cout << exp17 << "  :  " << isCalculableExpression(exp17) << endl;
-        cout << exp18 << "  :  " << isCalculableExpression(exp18) << endl;
-        cout << exp19 << "  :  " << isCalculableExpression(exp19) << endl;
-        cout << exp20 << "  :  " << isCalculableExpression(exp20) << endl;
-        cout << exp21 << "  :  " << isCalculableExpression(exp21) << endl;
-        cout << exp22 << "  :  " << isCalculableExpression(exp22) << endl;
-        cout << exp23 << "  :  " << isCalculableExpression(exp23) << endl;
 
-<<<<<<< HEAD
-void MatrixLibrary:: readFile (const string& filename)
-{
-    string matrixname;
-    unsigned int r,c;
-    ifstream file (filename.c_str());
-
-    clear();
-
-    if(!file.is_open())
-    {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-=======
->>>>>>> origin/calcul_matriciel_tarik
-    }
-
-
-
-<<<<<<< HEAD
-            }
-            addMatrix(matrixname,m);
-        }
-        file.close();
-    }
-    else
-    {
-        cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
-=======
+    cout << "Expressions non calculable..." << endl << endl;
+    cout << exp1 << "  :  " << isCalculableExpression(exp1) << endl;
+    cout << exp2 << "  :  " << isCalculableExpression(exp2) << endl;
+    cout << exp3 << "  :  " << isCalculableExpression(exp3) << endl;
+    cout << exp4 << "  :  " << isCalculableExpression(exp4) << endl;
+    cout << exp5 << "  :  " << isCalculableExpression(exp5) << endl;
+    cout << exp6 << "  :  " << isCalculableExpression(exp6) << endl;
+    cout << exp7 << "  :  " << isCalculableExpression(exp7) << endl;
+    cout << exp8 << "  :  " << isCalculableExpression(exp8) << endl;
+    cout << exp9 << "  :  " << isCalculableExpression(exp9) << endl;
+    cout << exp10 << "  :  " << isCalculableExpression(exp10) << endl;
+    cout << exp11 << "  :  " << isCalculableExpression(exp11) << endl;
+    cout << exp12 << "  :  " << isCalculableExpression(exp12) << endl;
+    cout << exp13 << "  :  " << isCalculableExpression(exp13) << endl << endl << endl;
+    cout << "Expressions calculable" << endl << endl;
+    cout << exp14 << "  :  " << isCalculableExpression(exp14) << endl;
+    cout << exp15 << "  :  " << isCalculableExpression(exp15) << endl;
+    cout << exp16 << "  :  " << isCalculableExpression(exp16) << endl;
+    cout << exp17 << "  :  " << isCalculableExpression(exp17) << endl;
+    cout << exp18 << "  :  " << isCalculableExpression(exp18) << endl;
+    cout << exp19 << "  :  " << isCalculableExpression(exp19) << endl;
+    cout << exp20 << "  :  " << isCalculableExpression(exp20) << endl;
+    cout << exp21 << "  :  " << isCalculableExpression(exp21) << endl;
+    cout << exp22 << "  :  " << isCalculableExpression(exp22) << endl;
+    cout << exp23 << "  :  " << isCalculableExpression(exp23) << endl;
 
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 }
 
->>>>>>> origin/calcul_matriciel_tarik
 
 
 

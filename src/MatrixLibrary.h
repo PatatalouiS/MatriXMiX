@@ -51,16 +51,12 @@ private:
     void polish(const std::string & chaine, std::vector<std::string> & polish_notation)const;
 
 public:
+
     std::string isCalculableExpression(const std::string & expression)const;
     Matrix expressionCalcul(const std::string & chaine)const;
 
-<<<<<<< HEAD
-    void saveFile (const std::string& filename)const;
-    void readFile (const std::string& filename);
-=======
     void saveFile (const std::string & filename)const;
     void readFile (const std::string & filename);
->>>>>>> origin/calcul_matriciel_tarik
 
     void testRegression();
 
