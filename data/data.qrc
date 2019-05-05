@@ -6,11 +6,13 @@
         <file>minus.png</file>
         <file>bg.jpg</file>
         <file>qt.png</file>
-        <file>quitter.jpg</file>
         <file>poubelle.png</file>
         <file>library.png</file>
         <file>save.png</file>
         <file>create.png</file>
         <file>bg2.png</file>
+        <file>quit.png</file>
+        <file>quiter.png</file>
+        <file>quitter.jpg</file>
     </qresource>
 </RCC>

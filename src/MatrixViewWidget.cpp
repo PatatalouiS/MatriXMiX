@@ -28,10 +28,11 @@ MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) :
     setShowGrid(false);
     setAlternatingRowColors(true);
     setStyleSheet("* {alternate-background-color: lightBlue;background-color: white;"
-                  "border: 1px solid silver;}"
+                  "border: 1px solid silver; border-radius:3px;}"
                   "QHeaderView::section { background:"
                   "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 "
-                  "lightBlue, stop: 1 blue); color:white; border: 0px; }");
+                  "lightBlue, stop: 1 blue); color:white; border: 0px; "
+                  "}");
     horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     verticalHeader()->hide();
 	refresh();

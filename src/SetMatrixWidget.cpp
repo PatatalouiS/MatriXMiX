@@ -76,7 +76,9 @@ SetMatrixWidget::SetMatrixWidget(const enum type& t, MatrixLibrary* library, QWi
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
     compute->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
+    compute->setCursor(Qt::PointingHandCursor);
     compute->setMinimumSize(250,30);
+    compute->setToolTip("Ajouter cette matrice à la librairie");
 
     QVBoxLayout* buttonLayout = new QVBoxLayout;
     buttonLayout->addWidget(compute);

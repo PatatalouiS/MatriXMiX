@@ -21,7 +21,6 @@ class MenuBar : public QMenuBar
         QAction *actionLoad;
         QMenu *menuMatrix;
         QAction *libraryMatrix;
-        QAction *showMatrix;
         QMenu *menuHelp;
         QAction* actionHelpMatrix;
         QAction* actionHelpQt;

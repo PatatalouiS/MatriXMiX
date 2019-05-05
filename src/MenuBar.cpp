@@ -23,13 +23,13 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     actionLoad->setIcon(im4);
     menuFile -> addAction(actionLoad);
 
-    menuMatrix = addMenu("Matrice");
+    menuMatrix = addMenu("Librarie");
     QPixmap im1(":/img/library.png");
     im1 = im1.scaled(50, 50);
 
     menuMatrix->setCursor(Qt::PointingHandCursor);
 
-    libraryMatrix = new QAction("Librarie" , this);
+    libraryMatrix = new QAction("Ouvrir" , this);
     libraryMatrix->setIcon(im1);
     menuMatrix -> addAction(libraryMatrix);
 
@@ -50,7 +50,7 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     menuQuit = addMenu("Quitter");
     menuQuit->setCursor(Qt::PointingHandCursor);
 
-    QPixmap im3(":/img/quitter.jpg");
+    QPixmap im3(":/img/quiter.png");
     im3 = im3.scaled(200, 200);
 
     actionQuit = new QAction("MatriXMiX", this);
