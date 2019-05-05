@@ -140,11 +140,7 @@ MainWindow:: MainWindow() : QMainWindow()
     subLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->setContentsMargins(0,0,20,0);
 
-<<<<<<< HEAD
-    mainLayout->setContentsMargins(4,10,14,30);
-=======
-    mainLayout->setContentsMargins(30,10,10,30);
->>>>>>> origin/matrixmix_ana
+    mainLayout->setContentsMargins(30, 10, 12, 30);
     mainLayout->addLayout(headerLayout);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
@@ -161,7 +157,7 @@ MainWindow:: MainWindow() : QMainWindow()
                 showFileTool(QFileDialog::AcceptOpen);
             });
     imgResult->show();
-    setStyleSheet("MainWindow{border-image:url(:/img/bg2.png) 0 0 0 0 stretch stretch;}");
+    setStyleSheet("MainWindow{border-image:url(:/img/background.png) 0 0 0 0 stretch stretch;}");
     setCentralWidget(mainWidget);
     computeChoice(0);
 }
@@ -513,6 +509,13 @@ void MainWindow:: showFileTool(enum QFileDialog::AcceptMode type)
             [=]() -> void
             {
                 computeLoadOrRead(fileTool, type);
+            });
+
+    connect(fileTool, &QFileDialog::rejected,
+            [=]() -> void
+            {
+                fileTool->close();
+                menuBar->setEnabled(true);
             });
 
     fileTool->open();

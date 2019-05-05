@@ -44,7 +44,7 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
 
     remove = new QPushButton("  Supprimer");
 
-    QPixmap im(":/img/poubelle.png");
+    QPixmap im(":/img/trash.png");
     im = im.scaled(30, 30);
     remove->setIcon(im);
     remove->setMinimumSize(100,30);
@@ -85,7 +85,7 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
 
     QPalette p;
     p = palette();
-    p.setBrush(QPalette::Window, QBrush(QPixmap(":/img/bg2.png")));
+    p.setBrush(QPalette::Window, QBrush(QPixmap(":/img/background.png")));
     setPalette(p);
 
     setLayout(mainLayout);

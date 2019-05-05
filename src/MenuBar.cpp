@@ -50,7 +50,7 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     menuQuit = addMenu("Quitter");
     menuQuit->setCursor(Qt::PointingHandCursor);
 
-    QPixmap im3(":/img/quiter.png");
+    QPixmap im3(":/img/quit.png");
     im3 = im3.scaled(200, 200);
 
     actionQuit = new QAction("MatriXMiX", this);
