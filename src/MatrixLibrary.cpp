@@ -479,6 +479,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 
     for(i = 0; i < s; i++)
     {
+        cout << i << endl;
         if (no_parenthesis[i] == "^")
         {
             if (i == 0)
@@ -590,7 +591,6 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
     if (!matrix_result)
         return "Le résultat de sortie n'est pas une matrice!" ;
 
-    //cout << "Calculable" << endl << endl;
     return calculable;
 }
 
