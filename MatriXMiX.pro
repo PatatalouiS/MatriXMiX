@@ -9,7 +9,7 @@ DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
 MOC_DIR = ./moc
 TARGET = MatriXMiX
-ICON = MatriXMiX.icns
+ICON = data/icons/MatriXMiX.icns
 
 include(ext/latex/jkqtmathtext.pri);
 INCLUDEPATH += ext/Eigen/
