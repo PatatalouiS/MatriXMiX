@@ -88,12 +88,12 @@ void UnaryOpWidget:: computeOperation()
 
 
 
-void UnaryOpWidget:: computeSelection(bool viewId)
+void UnaryOpWidget:: computeSelection(const bool viewId)
 {
     (void)viewId;
     op.first = view->nameOfSelectedMatrix();
-    assert(lib->exist(op.first.toStdString()));
-    op.second = lib->find(op.first.toStdString());
+    assert(getLib()->exist(op.first.toStdString()));
+    op.second = getLib()->find(op.first.toStdString());
     description->setText(op.first);
 }
 

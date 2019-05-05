@@ -22,7 +22,7 @@ class ExprEvalWidget : public AbstractOperationWidget
 
     private slots:
 
-        virtual void computeSelection(bool view = 0) override final;
+        virtual void computeSelection(const bool view = 0) override final;
         virtual void computeOperation() override final;
 
     private:

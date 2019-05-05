@@ -117,13 +117,13 @@ void BinaryOpMatrixNumberWidget:: computeOperation()
 }
 
 
-void BinaryOpMatrixNumberWidget:: computeSelection(bool viewId)
+void BinaryOpMatrixNumberWidget:: computeSelection(const bool viewId)
 {
     if(!viewId)
     {
         op1.first = view->nameOfSelectedMatrix();
-        assert(lib->exist(op1.first.toStdString()));
-        op1.second = lib->find(op1.first.toStdString());
+        assert(getLib()->exist(op1.first.toStdString()));
+        op1.second = getLib()->find(op1.first.toStdString());
     }
     else
     {
