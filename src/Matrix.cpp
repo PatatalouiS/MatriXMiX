@@ -4,7 +4,6 @@
 #include <cstring>
 #include <cassert>
 #include <cmath>
-#include <ctime>
 #include <utility>
 #include <Dense>
 #include "Matrix.h"
@@ -19,6 +18,7 @@ const double EPSILON = 0.0001;
 const vector<double> Matrix:: vector_noEigen = vector<double>();
 const vector<pair<double,VectorX>> Matrix:: vector_pair_noEigen = vector<pair<double,VectorX>>();
 const Matrix Matrix:: matrix_noEigen = Matrix();
+const Matrix Matrix:: matrix_null = Matrix();
 const double Matrix:: double_notExist = double();
 
 
@@ -85,8 +85,8 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const VectorX
 {
     if (values.size() != rows * cols)
     {
-        cout << "Erreur : la dimension du vecteur passé en paramètre ne correspond pas aux dimensions de la matrice" << endl;
-        exit ( EXIT_FAILURE );
+        cerr << "Erreur : la dimension du vecteur passé en paramètre ne correspond pas aux dimensions de la matrice" << endl;
+        exit (EXIT_FAILURE);
     }
 
     this->cols = cols;
@@ -118,8 +118,6 @@ Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 
 
 
-
-
 // ******** FONCTIONS STATIQUES *********
 
 
@@ -127,7 +125,6 @@ Matrix Matrix:: ID (const unsigned int size)
 {
     return Matrix(size, size, Matrix::I);
 }
-
 
 
 
@@ -222,35 +219,6 @@ ostream& operator << (ostream& flux, const Matrix & m)
 }
 
 
-vector<string> Matrix:: explode (const string & expression) const
-{
-    unsigned int i;
-    unsigned  long l = expression.length();
-    vector<string> tab;
-    string c, temp;
-    temp="";
-    for (i = 0; i < l; i++)
-    {
-        c = expression[i];
-
-        if(c == ",")
-        {
-            if (temp.length()!=0) tab.push_back(temp);
-            temp="";
-        }
-        else if (!c.empty())
-        {
-            temp += c;
-        }
-
-    }
-    if(temp != "")
-    tab.push_back(temp);
-
-    return tab;
-}
-
-
 Matrix Matrix:: operator << (const string& values)
 {
     unsigned int i,j;
@@ -260,7 +228,7 @@ Matrix Matrix:: operator << (const string& values)
 
     if (table.size() != rows*cols)
     {
-        cout<<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice" << endl;
+        cerr <<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice" << endl;
         return matrix_noEigen;
     }
 
@@ -334,7 +302,7 @@ const Matrix Matrix:: operator + (const Matrix & m) const
 {
     if ( (rows!=m.rows) || (cols!=m.cols) )
     {
-        cout << "Addition impossible!" << endl;
+        cerr << "Addition impossible!" << endl;
         return matrix_noEigen;
     }
 
@@ -356,7 +324,7 @@ const Matrix Matrix:: operator - (const Matrix & m) const
 {
     if ((rows!=m.rows) || (cols!=m.cols))
     {
-        cout << "Soustraction impossible!" << endl;
+        cerr << "Soustraction impossible!" << endl;
         return matrix_noEigen;
     }
 
@@ -378,7 +346,7 @@ const Matrix Matrix:: operator * (const Matrix & m) const
 {
     if (cols != m.rows)
     {
-        cout << "Multiplication impossible!" << endl <<
+        cerr << "Multiplication impossible!" << endl <<
                 "A * B -> Le nombre de ligne de A doit  nombre de colonne de B!" << endl;
         return matrix_noEigen;
     }
@@ -429,13 +397,13 @@ const Matrix Matrix:: operator / (const Matrix & m) const
 {
     if ( !m.isSQMatrix() )
     {
-        cerr << "La division est impossible, le diviseur n'est pas une matrice carrée !" << endl;
-        return matrix_noEigen;
+        cerr << "Division est impossible, la matrice diviseure n'est pas une matrice carrée !" << endl;
+        return matrix_null;
     }
-    if (m.determinant() == 0.0)
+    if (m.isNulDeterminant())
     {
-        cerr << "division impossible, la matrice diviseur n'est pas inversible !" << endl;
-        return matrix_noEigen;
+        cerr << "Division impossible, la matrice diviseure n'est pas inversible !" << endl;
+        return matrix_null;
     }
     Matrix result ((*this) * m.inverse());
     return result ;
@@ -448,7 +416,7 @@ const Matrix Matrix:: operator ^ (const int & p) const
     if ( !isSQMatrix() )
     {
         cerr << "Erreur, la matrice n'est pas carrée ! " << endl;
-        return matrix_noEigen;
+        return matrix_null;
     }
 
     if ( p == 0 )
@@ -507,34 +475,6 @@ bool Matrix::operator != (const Matrix & m) const
 }
 
 
-Matrix Matrix:: checkCast() const
-{
-    Matrix result(*this);
-    unsigned int i, j, r, c;
-    r = getNbRows();
-    c = getNbCols();
-    int l;
-
-    for (i =0; i < r; i++)
-    {
-        for (j = 0; j < c; j++)
-        {
-            for (l = -150 ; l < 150; l++)
-            {
-                if ( abs(tab[i][j] - l) < EPSILON )
-                {
-                    result[i][j] = l;
-                    continue ;
-                }
-                else
-                    result[i][j] = tab[i][j];
-            }
-        }
-    }
-    return result;
-}
-
-
 bool Matrix:: isSQMatrix() const
 {
     return rows == cols;
@@ -545,7 +485,7 @@ double Matrix:: traceMatrix() const
 {
     if ( !isSQMatrix() )
     {
-        cout << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
+        cerr << "Calcul de la trace impossible, la matrice n'est pas carrée" << endl;
         return double_notExist;
     }
 
@@ -565,6 +505,8 @@ double Matrix:: determinant() const
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
         return double_notExist;
     }
+    if (isNulDeterminant())
+        return 0.0;
 
     return determinant(rows);   // call to the private recursive function
 }
@@ -575,7 +517,7 @@ Matrix Matrix::coMatrix() const
     if ( !isSQMatrix() )
     {
         cerr << "Calcul de la comatrice impossible, la matrice n'est pas carrée" << endl;
-        return matrix_noEigen;
+        return matrix_null;
     }
 
     unsigned int i, j;
@@ -587,7 +529,7 @@ Matrix Matrix::coMatrix() const
         for(j = 0; j < cols; j++)
         {
             sub = subMatrix(i,j);
-            com[i][j] = pow(-1,i+j) * sub.determinant();
+            com[i][j] = pow(-1,i + j) * sub.determinant();
         }
     }
     return com;
@@ -615,13 +557,13 @@ Matrix Matrix:: inverse() const
     if (!isSQMatrix())
     {
         cerr << "Calcul du déterminant impossible, la matrice n'est pas carrée" << endl;
-        return matrix_noEigen;
+        return matrix_null;
     }
 
-    if (determinant() == 0.0)
+    if (isNulDeterminant())
     {
         cerr << "Le déterminant est nul, la matrice n'est donc pas inversible!" << endl;
-        return matrix_noEigen;
+        return matrix_null;
     }
 
     Matrix temp(rows,cols), inverse(rows,cols);
@@ -667,8 +609,32 @@ unsigned int Matrix:: rank()const
 
 // ********   FONCTIONS PRIVEES   ***********
 
+Matrix Matrix:: checkCast() const
+{
+    unsigned int i, j, r, c;
+    r = getNbRows();
+    c = getNbCols();
+    int l;
+    Matrix result(*this);
 
-Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
+    for (i =0; i < r; i++)
+    {
+        for (j = 0; j < c; j++)
+        {
+            for (l = -150 ; l < 150; l++)
+            {
+                if ( abs(tab[i][j] - l) < EPSILON )
+                {
+                    result[i][j] = l;
+                }
+            }
+        }
+    }
+    return result;
+}
+
+
+Matrix Matrix :: subMatrix(const unsigned int & a, const unsigned int & b) const
 {
     unsigned int i, j;
     unsigned int ii = 0, jj = 0;
@@ -697,7 +663,36 @@ Matrix Matrix :: subMatrix(const unsigned int a, const unsigned int b) const
 }
 
 
-double Matrix:: determinant(unsigned int dim) const
+vector<string> Matrix:: explode (const string & expression) const
+{
+    unsigned int i;
+    unsigned  long l = expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
+    for (i = 0; i < l; i++)
+    {
+        c = expression[i];
+
+        if (c == ",")
+        {
+            if (temp.length()!=0) tab.push_back(temp);
+            temp="";
+        }
+        else if (!c.empty())
+        {
+            temp += c;
+        }
+
+    }
+    if (temp != "")
+    tab.push_back(temp);
+
+    return tab;
+}
+
+
+double Matrix:: determinant(const unsigned int & dim) const
 {
     unsigned int i, j, x, subi = 0, subj = 0;
 
@@ -733,6 +728,12 @@ double Matrix:: determinant(unsigned int dim) const
         det = det + (pow(-1, x) * tab[0][x] * submatrix.determinant(dim - 1));
     }
     return det;
+}
+
+
+bool Matrix:: isNulDeterminant() const
+{
+    return (! (rows == rank()));
 }
 
 
@@ -877,10 +878,7 @@ const vector<double> Matrix:: eigenValues() const
             return Matrix::vector_noEigen;
         }
 
-        if(abs(m.eigenvalues()(i).real()) < EPSILON)
-            result.push_back(0);
-        else
-            result.push_back(m.eigenvalues()(i).real());
+        result.push_back(m.eigenvalues()(i).real());
     }
 
     return result;
@@ -980,7 +978,10 @@ const vector<pair<double,VectorX>> Matrix:: allEigen()const
     e_value = eigenValues();
     e_vector = eigenVectors();
     if (e_value == vector_noEigen)
+    {
         return vector_pair_noEigen;
+
+    }
 
     n = e_value.size();
 
@@ -1061,7 +1062,7 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
 {
    transferC2B = transferMatrix();
    diagonal = diagonalise();
-   if (transferC2B.determinant() == 0.0)
+   if (transferC2B.isNulDeterminant())
    {
        transferB2C = matrix_noEigen;
    }
@@ -1075,6 +1076,7 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
 
 void Matrix::testRegression() const
 {
+
     cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
 
     double tra, det ;
@@ -1086,178 +1088,220 @@ void Matrix::testRegression() const
     Matrix e(5, 4, {24,-7,15,5,10,-24,-2,-3,-9,-19,5,-9,-5,-22,20,18,-21,18,22,-24});
     Matrix f(5, 5, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25});
     Matrix g(3, 3, {1,2,3,4,5,6,7,8,0});
+    Matrix h(3, 3, {1,2,3,4,5,6,7,8,9});
 
     Matrix r1(5, 5, {-32,-28,1,-6,-1,24,-2,-29,-2,0,17,-3,-34,-5,15,1,18,-36,-8,-15,3,-4,30,-33,19});
     Matrix r2(4, 5, {13,9,14,-13,-26,14,-16,25,-18,10,-32,-9,-37,-6,-18,20,13,-12,-20,0});
     Matrix r3(5, 5, {-6,20,-25,40,9,14,-26,19,-4,36,-25,1,8,5,23,31,-8,-14,-36,-31,-21,-14,14,15,23});
     Matrix r4(4, 4, {458,-342,-222,360,-64,292,530,-810,-47,245,-795,337,-83,734,374,-744});
     Matrix r5(3, 3, {-16,8,-1,14,-7,2,-1,2,-1});
-    Matrix r6(5, 5, {-16687473,-2859275,4429957,38295027,6405675,11243373,2777717,844201,-31171603,-3135973,-12584028,-3513568,10329116,6874376,20116276,24146480,10255020,-32022704,-24798036,-33093968,-8375425,-5884917,24096783,-17068165,33210649});
+    Matrix r6(5, 5, {-16687473,-2859275,4429957,38295027,6405675,
+                     11243373,2777717,844201,-31171603,-3135973,
+                     -12584028,-3513568,10329116,6874376,20116276,
+                     24146480,10255020,-32022704,-24798036,-33093968,
+                     -8375425,-5884917,24096783,-17068165,33210649});
     Matrix r7(3, 3, {1,0,0,0,1,0,0,0,1});
+    Matrix r8(3, 3, {1,0,-1,0,1,2,0,0,0});
 
     Matrix x(3, 3);
+    Matrix x1(3, 3);
+    Matrix x2(3, 3);
+    Matrix x3(3, 3);
     Matrix y(4, 4);
     Matrix z(5, 5);
-
-    cout << "Matrice A =" << endl << a << endl;
-    cout << "Matrice B =" << endl << b << endl;
-    cout << "Matrice C =" << endl << c << endl;
-    cout << "Matrice D =" << endl << d << endl;
-    cout << "Matrice E =" << endl << e << endl;
-    cout << "Matrice F =" << endl << f << endl;
-    cout << "Matrice G =" << endl << g << endl;
+    Matrix z1(5, 5);
+    Matrix z2(5, 5);
+    Matrix z3(5, 5);
 
 
     cout << "! Addition de 2 matrices carrées: 5*5 + 5*5" << endl;
-    if ( (a.getNbRows()==b.getNbRows()) && (a.getNbCols()==b.getNbCols()) )
     {
         z = a + b;
-        cout << "Résultat attendu: A+B =" << endl << r1 << endl;
-        cout << "Résultat produit par l'application: A+B =" << endl << z ;
-        if(r1 == z)
-            cout << "Mêmes résultats, poursuite..." << endl;
+        z = z.checkCast();
+        if(z == r1)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
-        cout << endl ;
-    } else
-    {
-        cout << "Matrices A et B de tailles différentes"
-                "\nAddition impossible!" << endl;
     }
 
     cout << "! Addition de 2 matrices non carrées: 4*5 + 4*5" << endl;
-    if ( (c.getNbRows()==d.getNbRows()) && (c.getNbCols()==d.getNbCols()) )
     {
         z = c + d;
-        cout << "Résultat attendu: C+D =" << endl << r2 << endl;
-        cout << "Résultat produit par l'application: A+C =" << endl << z ;
-        if(r2 == z)
-            cout << "Mêmes résultats, poursuite..." << endl;
+        z = z.checkCast();
+        if (z == r2)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
-    } else
-    {
-        cout << "Matrices C et D de tailles différentes"
-                "\nAddition impossible! " << endl;
     }
 
     cout << "! Soustraction de matrices non carrées: 4*5 - 4*5" << endl;
-    if ( (a.getNbRows()==b.getNbRows()) && (a.getNbCols()==b.getNbCols()) )
     {
         z = a - b;
-        cout << "Résultat attendu: A-B =" << endl << r3 << endl;
-        cout << "Résultat produit par l'application: A-B =" << endl << z ;
-        if(r3 == z)
-            cout << "Mêmes résultats, poursuite..." << endl;
+        z = z.checkCast();
+        if(z == r3)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
-    } else
-    {
-        cout << "Matrices A et B de tailles différentes"
-                "\nSoustraction impossible! " << endl;
     }
 
     cout << "! Multiplication de 2 matrices: 4*5 * 5*4" << endl;
-    if (b.getNbRows()==a.getNbCols())
     {
         y = c * e;
-        cout << "Résultat attendu: C*E =" << endl << r4 << endl;
-        cout << "Résultat produit par l'application: C*E =" << endl << y ;
-        if(r4 == y)
-            cout << "Mêmes résultats, poursuite..." << endl;
+        y = y.checkCast();
+        if (y == r4)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
-    } else {
-        cout << "Matrices C et E de tailles incompatibles"
-                "\nMultiplication impossible!" << endl;
     }
 
     cout << "! Calcul de trace" << endl;
-    if (a.getNbRows()==a.getNbCols())
     {
         tra = a.traceMatrix();
-        cout << "Résultat attendu: tr(A) = -47" << endl;
-        cout << "Résultat produit par l'application: tr(A) = " << tra << endl;
         if(tra + 47 == 0.0)
-            cout << "Mêmes résultats, poursuite..." << endl;
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl;
-    } else {
-        cout << "La matrice A n'est pas carrée"
-                "\nCalcul de trace impossible!" << endl;
+        cout << endl;
     }
 
     cout << "! Calcul de déterminant" << endl;
-    if (f.getNbRows()==f.getNbCols())
     {
         det = f.determinant();
-        cout << "Résultat attendu: det(F) = 0" << endl;
-        cout << "Résultat produit par l'application: det(F) = " << det << endl;
-        if(det == 0.0)
-            cout << "Mêmes résultats, poursuite..." << endl;
+        if (det == 0.0)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl;
-    } else {
-        cout << "La matrice A n'est pas carrée"
-                "\nCalcul de déterminant impossible!" << endl << endl;
-    }
-
-    if (a.getNbRows()==a.getNbCols())
-    {
-        det = a.determinant();
-        cout << "Résultat attendu: det(A) = 8366164" << endl;
-        cout << "Résultat produit par l'application: tr(A) = " << det << endl;
-        if(det == 8366164.0)
-            cout << "Mêmes résultats, poursuite..." << endl;
         cout << endl;
-    } else {
-        cout << "La matrice A n'est pas carrée"
-                "\nCalcul de déterminant impossible!" << endl;
     }
 
     cout << "! Calcul d'inverse et test de l'opérateur scale*Matrix" << endl;
-    if (g.getNbRows()==g.getNbCols())
     {
         x = (g^-1)*9;
-        cout << "Résultat attendu: 9*G^-1 = " << endl << r5 << endl;
-        cout << "Résultat produit par l'application: 9*G^-1 = " << endl << x ;
-        if(r5 == x)
-            cout << "Mêmes résultats, poursuite..." << endl ;
+        x = x.checkCast();
+        if (x == r5)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
-    } else {
-        cout << "La matrice G n'est pas carrée"
-                "\nCalcul d'inverse impossible!" << endl;
     }
 
     cout << "! Calcul de puissance" << endl;
-    if (a.getNbRows()==a.getNbCols())
     {
         z = a^5;
-        cout << "Résultat attendu: A^5 = " << endl << r6 << endl;
-        cout << "Résultat produit par l'application: A^5 = " << endl << z ;
-        if(r6 == z)
-            cout << "Mêmes résultats, poursuite..." << endl;
+        z = z.checkCast();
+        if (r6 == z)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
-    } else {
-        cout << "La matrice A n'est pas carrée"
-                "\nCalcul de puissance impossible!" << endl;
     }
 
-    cout << "! Dernier test " << endl;
-    if (g.getNbRows()==g.getNbCols())
+    cout << "! Calcul de G * G^-1" << endl;
     {
         x = g*(g^-1);
-        cout << "Résultat attendu: G*G^-1 = " << endl << r7 << endl;
-        cout << "Résultat produit par l'application: G*G^-1 = " << endl << x ;
-        if(r7 == x)
-            cout << "Mêmes résultats, poursuite..." << endl ;
+        x = x.checkCast();
+        if (x == r7)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
         cout << endl ;
         cout << endl ;
-    } else {
-        cout << "La matrice G n'est pas carrée"
-                "\nCalcul d'inverse impossible!" << endl;
     }
 
-    cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
+    cout << "! Echelonnage d'une matrice avec la méthode de Gauss" << endl;
+    {
+        if (g.gaussReduction() == r7)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+
+        cout << "- Test avec une seconde matrice..." << endl ;
+
+        if (h.gaussReduction() == r8)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+
+        cout << endl << endl  ;
+    }
+
+    cout << "! Test de allMatrix" << endl;
+    {
+        g.allMatrix(x1,x2,x3);
+        x = x1 * x2 * x3 ;
+        x = x.checkCast();
+        if (x == g)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+
+        cout << "- Test avec une seconde matrice..." << endl; ;
+
+        a.allMatrix(z1,z2,z3);
+        z = z1 * z2 * z3;
+        if (z.checkCast() == a)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl << endl  ;
+    }
+
+
+
+
+
+    cout << endl << endl << "******* TEST REUSSI ******" << endl << endl
+           <<  "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 
 }
 

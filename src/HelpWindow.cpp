@@ -106,7 +106,15 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
    linkDiago->setText("<a href = \"http://www.math.univ-paris13.fr/~schwartz/L2/diag.pdf\"> "
                         "Polynôme caractéristique/ Valeurs/Vecteurs propres / Diagonalisation</a>");
 
+   QLabel* def = new QLabel("MatriXMiX est une application destinée aux mathématiciens "
+                            "pour réaliser des calculs matriciels. ");
+   QLabel* def2 = new QLabel("MatriXMiX permet de faire des opérations unaires, binaires et des "
+                             "opérations liés à la diagonalisation.");
+   def->setMaximumWidth(650);
+
    QVBoxLayout* subLayout = new QVBoxLayout;
+   subLayout->addWidget(def);
+   subLayout->addWidget(def2);
    subLayout->addWidget(defIntro);
    introduction->setLayout(subLayout);
 

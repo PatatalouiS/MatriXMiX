@@ -100,7 +100,7 @@ void BinaryOpMatrixMatrixWidget:: computeOperation()
 
     if((op1.second == nullptr) || (op2.second == nullptr))
     {
-        Error::showError("Opérande Manquante !", "Veuillez bien sélectionner vos 2 Matrices", this);
+        Error::showError("Opérande manquante !", "Veuillez bien sélectionner vos 2 matrices", this);
         return;
     }
 

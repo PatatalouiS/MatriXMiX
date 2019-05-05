@@ -24,8 +24,11 @@ Fraction::Fraction(const long int & n)
 
 Fraction::Fraction(const long int & n, const long int & d)
 {
+    if (d != 0)
+        denominator = d;
+    else
+        exit(EXIT_FAILURE);
     numerator = n;
-    denominator = d;
 }
 
 
@@ -57,6 +60,14 @@ Fraction& Fraction:: operator = (const Fraction &f)
 }
 
 
+Fraction& Fraction:: operator = (const double &d)
+{
+    numerator = double2fraction(d).numerator;
+    denominator = double2fraction(d).denominator;
+    return *this;
+}
+
+
 bool Fraction:: operator == (const Fraction &f) const
 {
     long int num1, num2;
@@ -84,7 +95,7 @@ const Fraction Fraction:: inverse() const
 }
 
 
-long int Fraction::pgcd(long int a, long int b) const
+long int Fraction::gcd(long int a, long int b) const
 {
     while (b!=0)
     {
@@ -100,7 +111,7 @@ long int Fraction::pgcd(long int a, long int b) const
 const Fraction Fraction::simplify() const
 {
     long int div, num, den;
-    div = pgcd(numerator,denominator);
+    div = gcd(numerator,denominator);
     num = numerator / div;
     den = denominator / div;
 
@@ -132,7 +143,7 @@ const Fraction Fraction:: operator + (const long int &d) const
 {
     long int temp = d * denominator;
     temp = temp + numerator;
-    Fraction res (temp, denominator);
+    Fraction res(temp, denominator);
     return res;
 }
 
@@ -254,3 +265,138 @@ const Fraction Fraction:: double2fraction(const double &d) const
     }
 
 }
+
+
+void Fraction:: regressionTest() const
+{
+
+    cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
+
+    Fraction f1 (1,1);
+    Fraction f2 (1,2);
+    Fraction f3 (1,3);
+    Fraction f4 (3,2);
+    Fraction f5 (25,125);
+    Fraction f6 (5,6);
+
+    long int n = 2;
+    double d1 = 0.3333333;
+    double d2 = 0.857163;
+    double temp;
+
+    Fraction r1 (3,2);
+    Fraction r2 (7,3);
+    Fraction r3 (3,6);
+    Fraction r4 (1,5);
+    Fraction r5 (150,625);
+    Fraction r6 (1,3);
+
+    Fraction r;
+
+    cout << "! Addition de 2 fractions" << endl;
+    {
+        r = f1 + f2;
+        if(r == r1)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+    }
+
+    cout << "! Addition d'une fraction et d'un entier" << endl;
+    {
+        r = f3 + n;
+        if (r == r2)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Multiplication de deux fractions" << endl;
+    {
+        r = f3 * f4;
+        if (r == r3)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Simplification d'une fraction" << endl;
+    {
+        r = f5.simplify();
+        if (r.numerator == r4.numerator && r.denominator == r4.denominator)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Division de deux fractions" << endl;
+    {
+        r = f5 / f6;
+        if (r == r5)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Convertion d'un réel en fraction" << endl;
+    {
+        r = d1;
+        if (r == r6)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Convertion d'un réel en fraction n°2" << endl;
+    {
+        r = d2;
+        temp = r.numerator;
+        temp /= r.denominator;
+        if ( temp - d2 < EPSILON)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+
+
+
+    cout << endl << endl << "******* TEST REUSSI ******" << endl << endl
+           <<  "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
+
+}
+

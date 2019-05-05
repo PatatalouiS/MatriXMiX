@@ -105,7 +105,7 @@ void BinaryOpMatrixNumberWidget:: computeOperation()
 
     if(op1.second == nullptr)
     {
-        Error::showError("Opérande Manquante !", "Veuillez bien sélectionner votre matrice !", this);
+        Error::showError("Opérande manquante !", "Veuillez bien sélectionner votre matrice !", this);
         return;
     }
 

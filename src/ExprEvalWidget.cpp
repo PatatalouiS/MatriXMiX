@@ -72,6 +72,12 @@ void ExprEvalWidget:: computeOperation ()
 
     result = temp->expressionCalcul(expression->text().toStdString());
 
+    if(result == Matrix::matrix_null)
+    {
+        Error::showError("Calcul impossible", "Veuillez vérifier que le calcul demandé est réalisable", this);
+        return ;
+    }
+
     QVariant genericResult;
     genericResult.setValue(result);
 

@@ -35,12 +35,12 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
     QString latex = "\\begin{bmatrix}";
-    Fraction ftemp;
+    Fraction f;
     for(unsigned int i = 0; i < rows; ++i)
     {
-        if (ftemp.isFraction(mat[i][0]))
+        if (f.isFraction(mat[i][0]))
         {
-            Fraction f (ftemp.double2fraction(mat[i][0]));
+            f = mat[i][0];
             if (f.getDenominator() == 1)
                 latex += "\t" +  QString::number(f.getNumerator());
             else
@@ -61,9 +61,9 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
         {
             if(j != cols) latex += " & ";
             else latex += " &";
-            if (ftemp.isFraction(mat[i][j]))
+            if (f.isFraction(mat[i][j]))
             {
-                Fraction f (ftemp.double2fraction(mat[i][j]));
+                f = mat[i][j];
                 if (f.getDenominator() == 1)
                     latex += "\t" +  QString::number(f.getNumerator());
                 else
@@ -111,20 +111,49 @@ const QString& name, const QColor& col)
 }
 
 
-
-
-void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2, const QString& name, const QColor& col)
+ void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2, const QString& name, const QColor& col)
 {
     std::ostringstream flux;
     QString developpedForm;
     QString factorizedForm;
 
-    flux << res1;
-    developpedForm = flux.str().c_str();
+    flux << res1.check();
+    //developpedForm = flux.str().c_str();
+
+    for(unsigned int i = 0; i < res1.tab.size(); i++)
+    {
+        QString x;
+        QString power;
+
+        if (i == 0)
+            x = QString("");
+        else
+            x = QString("+X^{");
+        if (i == 1)
+            power = QString ("");
+        else
+            power = QString::number(i);
+
+        if (res1.tab[i] != 0.0)
+        {
+            if (res1.tab[i] == 1.0)
+                developpedForm += x + power +  QString("}") ;
+            else if (-res1.tab[i] == 1.0)
+                developpedForm += QString("-")
+                        + QString("X^{") + power +  QString("}") ;
+                else if (res1.tab[i] > 0.0)
+                    developpedForm += QString("+") + QString::number(res1.tab[i])
+                            + QString("X^{") + power +  QString("}") ;
+                    else
+                        developpedForm += QString::number(res1.tab[i])
+                                + QString("X^{") + power +  QString("}") ;
+        }
+    }
+
     for(auto i : res2)
     {
         flux.str("");
-        flux << i;
+        flux << i.check();
         factorizedForm += QString::fromStdString( "(" + flux.str() + ") ");
     }
 
@@ -134,36 +163,63 @@ void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::
     setPixmapToQLabel(col, latex, 30);
 }
 
+
 void ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<double, VectorX>>& res,
 const QString& name, const QColor& col)
 {
     QString spec;
     QList<QString> vectors;
+    QVector<QString> tab;
+    Fraction f;
+    QString temp, coef;
 
-    QString temp;
+
+    if (res.empty())
+    {
+
+    }
 
     for(auto i : res)
     {
         temp = "( ";
-        spec += QString::number(i.first) + ", ";
+        f = i.first;
+
+        if (f.getDenominator() == 1)
+            coef = QString::number(f.getNumerator());
+        else
+            coef = QString ("\\frac{") + QString::number(f.getNumerator())
+                + QString ("}{") + QString::number(f.getDenominator()) + QString ("}");
+        tab.push_back(coef);
+        spec += coef + ", ";
+
         for(auto j : i.second)
         {
-            temp += QString::number(j) + ", ";
+            f = f.double2fraction(j);
+            if (f.getDenominator() == 1)
+                temp += QString::number(f.getNumerator()) + ", ";
+            else
+                temp += QString ("\\frac{") + QString::number(f.getNumerator())
+                        + QString ("}{") + QString::number(f.getDenominator())
+                        + QString ("}") + ", ";
         }
+        temp.truncate(temp.size() - 2);
         temp += " )";
         vectors.append(temp);
     }
+    spec.truncate(spec.size() - 2);
 
     QString latex = "\\begin{matrix}\\mathit{Spec}\\(" + name + ") = \\{ " + spec + "\\} \\\\";
 
     for(unsigned int i = 0; i < res.size(); ++i)
     {
-        latex += "\\mathit{\\text{v}_{\\text{" + QString::number(i) + "}}}\\ = " + vectors[int(i)] + "\\\\";
+        latex += "\\mathit{\\text{E}_{\\text{" + tab[i]
+                + "}}}\\ = vect\\{ " + vectors[int(i)] + "\\} \\\\";
     }
     latex += "\\end{matrix}";
 
     setPixmapToQLabel(col, latex, 30);
 }
+
 
 
 

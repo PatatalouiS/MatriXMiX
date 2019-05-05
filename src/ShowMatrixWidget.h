@@ -3,7 +3,7 @@
 #define SHOWMATRIXWIDGET_H
 
 #include <QLabel>
-#include<QScrollArea>
+#include <QScrollArea>
 #include "Matrix.h"
 
 class ShowMatrixWidget : public QWidget
