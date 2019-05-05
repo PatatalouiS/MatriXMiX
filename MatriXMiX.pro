@@ -8,8 +8,9 @@ CONFIG += release
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
 MOC_DIR = ./moc
+RCC_DIR = ./resources
 TARGET = MatriXMiX
-ICON = data/icons/MatriXMiX.icns
+macx:ICON = data/icons/MatriXMiX.icns
 
 include(ext/latex/jkqtmathtext.pri);
 INCLUDEPATH += ext/Eigen/
