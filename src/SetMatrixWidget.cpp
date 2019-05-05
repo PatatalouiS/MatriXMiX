@@ -1,26 +1,23 @@
 
 #include <QFormLayout>
-#include <QPushButton>
-#include <QMessageBox>
-#include "LibraryWindow.h"
-#include "AddMatrixWidget.h"
+#include <cmath>
+#include "SetMatrixWidget.h"
 #include "Error.h"
 
-
-AddMatrixWidget::AddMatrixWidget(QWidget *parent) : QWidget(parent)
-{
-}
+#include <iostream>
 
 
-AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
+SetMatrixWidget::SetMatrixWidget(const enum type& t, MatrixLibrary* library, QWidget* parent)
 : QWidget(parent)
 {
     this->library = library;
+    type = t;
+    selectedMatrix = QPair<QString, Matrix*> ("", nullptr);
 
     nameMatrix = new QLineEdit;
     QRegExpValidator* regex = new QRegExpValidator(QRegExp("[a-zA-Z0-9]+"), nameMatrix);
     nameMatrix->setValidator(regex);
-    nameMatrix->setMaxLength(10);
+    nameMatrix->setMaxLength(20);
     nameMatrix->setFixedSize(75,35);
 
     nbRowsSelector = new QSpinBox;
@@ -28,10 +25,10 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     QString styleButton = "QSpinBox{border: 1px solid grey; border-radius: 3px; font-size: 15px;}"
                           "QSpinBox::down-button{width: 20px; background:"
                           "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue);}"
-                          "QSpinBox::down-arrow{ background: white; height:2px ; width: 10px;}"
+                          "QSpinBox::down-arrow{ image: url(:/img/minus.png); width: 12px; height: 30px;}"
                           "QSpinBox::up-button{width: 20px; background:"
                           "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue)}"
-                          "QSpinBox::up-arrow{ background: white; height:10px ; width: 2px;}";
+                          "QSpinBox::up-arrow { image: url(:/img/plus.png); width: 35px; height:35px;}";
 
     nbRowsSelector->setRange(2,10);
     nbColsSelector->setRange(2,10);
@@ -77,33 +74,47 @@ AddMatrixWidget::AddMatrixWidget(MatrixLibrary* library, QWidget* parent)
     lineEditsWidget->setLayout(lineEditsLayout);
     lineEditsWidget->setMinimumSize(700, 350);
 
-    QPushButton* ajouter = new QPushButton("Ajouter");
+    compute = new QPushButton;
     QVBoxLayout* mainLayout = new QVBoxLayout;
-    ajouter->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
+    compute->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
     mainLayout->addWidget(setSpecsWidget);
     mainLayout->addWidget(lineEditsWidget);
-    mainLayout->addWidget(ajouter);
+    mainLayout->addWidget(compute);
     setLayout(mainLayout);
 
+    constructType(t);
+
     connect(nbRowsSelector, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &AddMatrixWidget::update_EditSize);
+            this, &SetMatrixWidget::updateLineEdits);
     connect(nbColsSelector, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &AddMatrixWidget::update_EditSize);
-
-
-    connect(ajouter, &QPushButton::pressed, this, &AddMatrixWidget::compute_add);
-
+            this, &SetMatrixWidget::updateLineEdits);
+    connect(compute, &QPushButton::pressed, this, &SetMatrixWidget::computeMatrix);
 }
 
 
 
-void AddMatrixWidget:: compute_add ()
+void SetMatrixWidget::constructType(const enum type &t)
+{
+    if(t == ADD)
+    {
+        compute->setText("Ajouter");
+    }
+    else
+    {
+        compute->setText("Modifier");
+        nameMatrix->setEnabled(false);
+        nameMatrix->setReadOnly(true);
+    }
+}
+
+
+
+void SetMatrixWidget:: computeMatrix ()
 {
     if(!controlKeyboardInput())
     {
         return;
     }
-
 
     VectorX values;
     QString currentValue;
@@ -119,34 +130,60 @@ void AddMatrixWidget:: compute_add ()
 
     Matrix newMatrix (nbL, nbC, values);
 
-    emit matrixAdded(name, newMatrix);
+    library->print();
+
+    if(type == ADD)
+    {
+        library->addMatrix(name.toStdString(), newMatrix);
+        emit newMatrixAdded(MatrixPair(name, newMatrix));
+    }
+    else
+    {
+        *selectedMatrix.second = newMatrix;
+        emit matrixEdited(MatrixPair(name, newMatrix));
+        nameMatrix->setText("");
+        selectedMatrix.first = "";
+        selectedMatrix.second = nullptr;
+    }
 }
 
 
 
-bool AddMatrixWidget:: controlKeyboardInput() const
+bool SetMatrixWidget:: controlKeyboardInput() const
 {
     QString name = this->nameMatrix->text();
 
-    if(library->find(name.toStdString()))
+    if(type == ADD)
     {
-        showError("La Matrice " + name + " existe déjà !",
-                   "Veuillez changer de nom.");
-        return false;
-    }
+        if(library->find(name.toStdString()))
+        {
+            Error::showError("La Matrice " + name + " existe déjà !",
+                       "Veuillez changer de nom.");
+            return false;
+        }
 
-    if(!nameMatrix->hasAcceptableInput())
+        if(!nameMatrix->hasAcceptableInput())
+        {
+            if((name[0] >= '0') || (name[0] <= '9'))
+            Error::showError("Nom de Matrice " + name + " non valide !",
+                       "Veuillez saisir 10 caractère Maximum, sans caractères spéciaux ni espaces ");
+            return false;
+        }
+    }
+    else
     {
-        showError("Nom de Matrice " + name + " non valide !",
-                   "Veuillez saisir 10 caractère Maximum, sans caractères spéciaux ni espaces ");
-        return false;
+        if(selectedMatrix.second == nullptr)
+        {
+            Error::showError("Erreir !", "Vous devez d'abord sélectionner la matrice à éditer.");
+            return false;
+        }
     }
 
     for(const auto& i : lineEditsTab)
     {
         if (!i->hasAcceptableInput())
         {
-            showError("Les valeurs de votre Matrice " + name + " sont incorrectes !",
+            Error::showError("Les valeurs de votre Matrice " + name + " sont incorrectes !",
                        "Vérifiez votre saisie. Chaque coefficient doit être un nombre Réel.");
             return false;
         }
@@ -156,7 +193,40 @@ bool AddMatrixWidget:: controlKeyboardInput() const
 }
 
 
-void AddMatrixWidget:: update_EditSize ()
+void SetMatrixWidget:: chargeMatrix(const QString& name)
+{
+    assert(library->exist(name.toStdString()));
+    selectedMatrix.second = library->find(name.toStdString());
+    Matrix temp = *selectedMatrix.second;
+
+    unsigned int nbRows = temp.getNbRows();
+    unsigned int nbCols = temp.getNbCols();
+    nameMatrix->setText(name);
+    nbRowsSelector->setValue(int(nbRows));
+    nbColsSelector->setValue(int(nbCols));
+
+    QString valueToString;
+    double val;
+    for(unsigned int i = 0; i < nbRows*nbCols; ++i)
+    {
+        val = temp[i/nbCols][i%nbCols];
+        if(floor(val) == val)
+        {
+            valueToString.setNum(val, 'f', 0);
+        }
+        else
+        {
+            valueToString.setNum(val, 'f', 10)
+                    .replace('.', ',');
+        }
+        lineEditsTab[int(i)]->setText(valueToString);
+    }
+}
+
+
+
+
+void SetMatrixWidget:: updateLineEdits ()
 {
     unsigned int newNbRows = static_cast<unsigned>(nbRowsSelector->value());
     unsigned int newNbCols = static_cast<unsigned>(nbColsSelector->value());
@@ -192,7 +262,7 @@ void AddMatrixWidget:: update_EditSize ()
                 temp = new QLineEdit;
                 temp->setMinimumWidth(30);
                 temp->setMaximumWidth(50);
-                lineEditsTab.append(temp);
+                lineEditsTab.insert(int(lcols+1)*int(i)+int(lcols), temp);
                 temp->setMaxLength(8);
                 temp->setValidator(new QDoubleValidator(temp));
                 lineEditsLayout->addWidget(temp, int(i), int(lcols));
@@ -210,7 +280,7 @@ void AddMatrixWidget:: update_EditSize ()
                 temp = dynamic_cast<QLineEdit*>(lineEditsLayout->itemAtPosition(int(lrows-1), int(i))->widget());
                 lineEditsLayout->removeWidget(temp);
                 lineEditsTab.removeOne(temp);
-                delete temp;
+                temp->deleteLater();
             }
             lrows--;
         }
@@ -224,14 +294,15 @@ void AddMatrixWidget:: update_EditSize ()
                 temp = dynamic_cast<QLineEdit*>(lineEditsLayout->itemAtPosition(int(i), int(lcols-1))->widget());
                 lineEditsLayout->removeWidget(temp);
                 lineEditsTab.removeOne(temp);
-                delete temp;
+                temp->deleteLater();
             }
             lcols--;
         }
     }
 }
 
-AddMatrixWidget:: ~AddMatrixWidget ()
+
+SetMatrixWidget:: ~SetMatrixWidget ()
 {
 }
 

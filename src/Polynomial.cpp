@@ -8,29 +8,30 @@
 using namespace std;
 
 
-const double EPSILON=0.00001;
+const double EPSILON=0.0001;
+const Polynomial Polynomial:: polynomial_null = Polynomial();
 const Polynomial Polynomial:: polynomial_noEigen = Polynomial();
 
 
 
 Polynomial :: Polynomial() : tab (vector<double>(1,0))
 {
-    this->degree=0;
+    this->degree = 0;
 }
 
 
 Polynomial :: Polynomial(const unsigned int & d) : tab(vector<double>(d+1,1))
 {
-    this->degree=d;
+    this->degree = d;
 }
 
 
 Polynomial :: Polynomial(const unsigned int & d, const VectorX & values)
 {
-    if ( values.size() != d+1 )
+    if ( values.size() != d + 1 )
     {
-        cout << "Erreur : Pas le nombre de coefficients" << endl;
-        exit ( EXIT_FAILURE );
+        cerr << "Erreur : Pas le nombre de coefficients" << endl;
+        return;
     }
 
     this->degree = d;
@@ -49,21 +50,24 @@ Polynomial::Polynomial(const Polynomial &p) : tab (vector<double>(p.tab))
 }
 
 
-Polynomial::~Polynomial()
+Polynomial Polynomial:: check() const
 {
-}
-
-
-void Polynomial:: check()
-{
-    for(unsigned int i=0; i<=degree; i++)
+    Polynomial res(*this);
+    unsigned int i, d;
+    int l;
+    d = degree;
+    for (i =0; i < d + 1; i++)
     {
-        if(abs(tab[i])<EPSILON)
+        for (l = -150 ; l < 150; l++)
         {
-            tab[i]=0;
+            if ( abs(tab[i] - l) < EPSILON )
+            {
+                res.tab[i] = l;
+            }
         }
 
     }
+    return res;
 }
 
 
@@ -149,26 +153,26 @@ const Polynomial Polynomial:: operator + (const Polynomial & p)const
     unsigned int i;
     if (degree>p.degree)
     {
-        Polynomial resultat(*this);
+        Polynomial result(*this);
 
         for (i=0; i<=p.degree;i++)
         {
-            resultat.tab[i]+=p.tab[i];
+            result.tab[i]+=p.tab[i];
         }
 
-        return resultat;
+        return result;
 
     }
     else
     {
-        Polynomial resultat(p);
+        Polynomial result(p);
 
         for (i=0; i<=degree;i++)
         {
-            resultat.tab[i]+=tab[i];
+            result.tab[i]+=tab[i];
         }
 
-        return resultat;
+        return result;
     }
 
 }
@@ -178,7 +182,7 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)const
 {
     unsigned int i, mindegree;
 
-    Polynomial resultat(*this);
+    Polynomial result(*this);
 
     if(degree>p.degree)
         mindegree=p.degree;
@@ -187,19 +191,19 @@ const Polynomial Polynomial:: operator - (const Polynomial & p)const
 
     for(i=0; i<=mindegree; i++)
     {
-        resultat.tab[i]-=p.tab[i];
+        result.tab[i]-=p.tab[i];
     }
 
     if(mindegree==degree)
     {
         for(i=mindegree+1; i<=p.degree; i++)
         {
-            resultat.tab.push_back(-p.tab[i]);
-            resultat.degree++;
+            result.tab.push_back(-p.tab[i]);
+            result.degree++;
         }
     }
 
-    return resultat;
+    return result;
 }
 
 
@@ -242,7 +246,7 @@ const Polynomial Polynomial:: operator * (const double & scale)const
 }
 
 
-const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & reste)
+const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & rest)
 {
     Polynomial quotient(degree - divisor.degree);
     Polynomial copy(*this);
@@ -252,35 +256,38 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
 
     while (copy.degree - i >= divisor.degree)
     {
-        quotient.tab[copy.degree - divisor.degree - i] = copy.tab[degree - i] / divisor.tab[divisor.degree];
+        quotient.tab[copy.degree - divisor.degree - i] = 
+        											copy.tab[degree - i] 
+        											/ divisor.tab[divisor.degree];
 
         for (j = i; j <= divisor.degree; j++)
         {
-            copy.tab[copy.degree - j] = copy.tab[copy.degree - j] - divisor.tab[divisor.degree - (j - i)] *
-                                                          quotient.tab[copy.degree - divisor.degree - i];
+            copy.tab[copy.degree - j] = copy.tab[copy.degree - j]
+            							- divisor.tab[divisor.degree - (j - i)]
+            							* quotient.tab[copy.degree - divisor.degree - i];
 
         }
         i++;
     }
 
     copy=quotient*divisor;
-    reste = (*this) - copy;
+    rest = (*this) - copy;
 
     tampon=0;
-    k=reste.degree;
+    k=rest.degree;
 
-    while (reste.tab[k] == 0.0)
+    while (rest.tab[k] == 0.0)
     {
         tampon++;
         k--;
     }
-    reste.degree=reste.degree-tampon;
+    rest.degree=rest.degree-tampon;
 
 
-    if (reste.degree>divisor.degree)
+    if (rest.degree>divisor.degree)
     {
-        Polynomial quotient2 (reste.degree-divisor.degree);
-        quotient2=reste.division(divisor,reste);
+        Polynomial quotient2 (rest.degree-divisor.degree);
+        quotient2=rest.division(divisor,rest);
         quotient=quotient+quotient2;
     }
 
@@ -288,11 +295,12 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
 }
 
 
-void Polynomial:: equation2degre (unsigned int  & nbsolution, double & x1, double & x2)
+void Polynomial:: equation2degre (unsigned int  & nbsolution, 
+									double & x1, double & x2)
 {
-    if (degree!=2)
+    if (degree != 2)
     {
-        cout << "C'est pas du second degré ça :/" << endl;
+        cout << "Equation de degré différent de 2" << endl;
         exit(EXIT_FAILURE);
     }
 

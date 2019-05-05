@@ -4,36 +4,34 @@
 #include <QHeaderView>
 #include <QDebug>
 #include "LibraryWindow.h"
-#include "MainWindow.h"
-
+#include "Error.h"
 
 using namespace std;
+
 
 
 LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(main)
 {
     lib = library;
     matrixView = new MatrixViewWidget(lib, this);
-    addMatrixWidget = new AddMatrixWidget(lib, this);
+    addMatrix = new SetMatrixWidget(SetMatrixWidget::ADD, lib, this);
+    editMatrix = new SetMatrixWidget(SetMatrixWidget::EDIT, lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
 
-    edit = new QPushButton("Editer");
     remove = new QPushButton("Supprimer");
-    edit->setMinimumSize(100,50);
     remove->setMinimumSize(100,50);
-    edit->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
     remove->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
     QHBoxLayout* viewFooterLayout = new QHBoxLayout;
-    viewFooterLayout->addWidget(edit);
     viewFooterLayout->addWidget(remove);
 
     QVBoxLayout* matrixViewLayout = new QVBoxLayout;
     matrixViewLayout->addWidget(matrixView);
     matrixViewLayout->addLayout(viewFooterLayout);
 
-    QTabWidget* choice = new QTabWidget;
+    choice = new QTabWidget;
     choice->addTab(showMatrixWidget, "Visualiser");
-    choice->addTab(addMatrixWidget, "Ajouter");
+    choice->addTab(addMatrix, "Ajouter");
+    choice->addTab(editMatrix, "Modifier");
     choice->setStyleSheet(
         "QTabBar::tab { background:"
         "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 darkGrey);"
@@ -48,32 +46,62 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QDialog(
 
     setLayout(mainLayout);
 
-    connect(this, &LibraryWindow::close, main, &QWidget::show);
     connect(matrixView, &MatrixViewWidget::clicked,
-            this, &LibraryWindow::compute_selection);
-    connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
+            this, &LibraryWindow::computeViewSelection);
+    connect(addMatrix, &SetMatrixWidget::newMatrixAdded,
             matrixView, &MatrixViewWidget::addNewRow);
-    connect(addMatrixWidget, &AddMatrixWidget::matrixAdded,
-            qobject_cast<MainWindow*>(main), &MainWindow::addNewMatrix);
+    connect(addMatrix, &SetMatrixWidget::newMatrixAdded,
+            this,&LibraryWindow::libraryChanged);
+    connect(editMatrix, &SetMatrixWidget::matrixEdited,
+            matrixView, &MatrixViewWidget::editRow);
+    connect(editMatrix, &SetMatrixWidget::matrixEdited,
+            this, &LibraryWindow::libraryChanged);
+    connect(editMatrix, &SetMatrixWidget::matrixEdited,
+            [this]() -> void
+            {
+                computeViewSelection();
+                choice->setCurrentIndex(0);
+            });
+    connect(remove, &QPushButton::clicked,
+            this, &LibraryWindow::removeSelectedMatrix);
 }
 
-void LibraryWindow:: compute_selection()
+
+
+void LibraryWindow:: computeViewSelection ()
 {
-	int currentRow = matrixView->currentIndex().row();
-	QString currentName = matrixView->model()
-            ->item(currentRow, 0)->data(2).toString();
-	const Matrix* currentMatrix = lib->find(currentName.toStdString());
-	showMatrixWidget->computeImgMatrix(currentMatrix, QColor(226, 226, 226));
+    QString selectedName = matrixView->nameOfSelectedMatrix();
+    assert(lib->exist(selectedName.toStdString()));
+    const Matrix* selectedMatrix = lib->find(selectedName.toStdString());
+    showMatrixWidget->computeImgMatrix(*selectedMatrix);
+    editMatrix->chargeMatrix(selectedName);
 }
 
 
-void LibraryWindow:: closeEvent (QCloseEvent* event)
+void LibraryWindow:: removeSelectedMatrix ()
 {
-    emit close();
-    event->accept();
+    QString selectedName = matrixView->nameOfSelectedMatrix();
+
+    if(selectedName == "")
+    {
+        Error::showError("Suppression impossible !", "Veuillez sélectionner une Matrice", this);
+    }
+
+    matrixView->removeRow(matrixView->currentIndex().row());
+    assert(lib->exist(selectedName.toStdString()));
+    lib->erase(selectedName.toStdString());
+    lib->print();
+    emit libraryChanged();
 }
+
+
+
+
 
 
 LibraryWindow:: ~LibraryWindow()
 {   
 }
+
+
+

@@ -3,7 +3,6 @@
 #include <vector>
 #include "VectorX.h"
 #include "Gauss.h"
-#include "Matrix.h"
 
 using namespace std;
 
@@ -19,13 +18,13 @@ Gauss:: Gauss(const int & row, const int & col)
 }
 
 
-double Gauss:: getVal(const Matrix & m)
+double Gauss:: getVal(const Matrix & m) const
 {
     return m[static_cast<unsigned int>(row)][static_cast<unsigned int>(col)];
 }
 
 
-void Gauss:: rowScale(tab2D_iter row, double ratio)
+void Gauss:: rowScale(tab2D_iter row, const double & ratio) const
 {
     for (auto &i : *row)
     {
@@ -34,7 +33,8 @@ void Gauss:: rowScale(tab2D_iter row, double ratio)
 }
 
 
-void Gauss:: rowReplace(tab2D_iter base, tab2D_iter op, double ratio)
+void Gauss:: rowReplace(tab2D_iter base, tab2D_iter op,
+                        const double & ratio) const
 {
     for (vector<double>::iterator i = base->begin(); i < base->end(); i++)
     {
@@ -43,7 +43,7 @@ void Gauss:: rowReplace(tab2D_iter base, tab2D_iter op, double ratio)
 }
 
 
-void Gauss:: rowExchange(tab2D_iter a, tab2D_iter b)
+void Gauss:: rowExchange(tab2D_iter a, tab2D_iter b) const
 {
     for (vector<double>::iterator i = a->begin(); i < a->end(); i++)
     {
@@ -54,11 +54,13 @@ void Gauss:: rowExchange(tab2D_iter a, tab2D_iter b)
 }
 
 
-int Gauss:: isNonZeroColumn(const Matrix & matrix, int column_id, int rows, int next_row_id)
+int Gauss:: isNonZeroColumn(const Matrix & matrix, const int & column_id,
+                            const int & rows, const int & next_row_id) const
 {
     for (int row = next_row_id; row < rows; row++)
     {
-        if (matrix[static_cast<unsigned int>(row)][static_cast<unsigned int>(column_id)] != 0.0)
+        if (matrix[static_cast<unsigned int>(row)]
+        	[static_cast<unsigned int>(column_id)] != 0.0)
             return row;
     }
     return -1;

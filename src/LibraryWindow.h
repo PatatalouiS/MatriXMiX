@@ -4,47 +4,42 @@
 
 #include <QDialog>
 #include <QPushButton>
-#include "AddMatrixWidget.h"
 #include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
+#include "SetMatrixWidget.h"
 
 
+using MatrixViewItem = QPair<const int, const QString>;
 
 class LibraryWindow : public QDialog
 {
     Q_OBJECT
 
-private:
+    private:
 
-    //members
+        //members
 
+        MatrixLibrary* lib;
+        QTabWidget* choice;
+        MatrixViewWidget* matrixView;
+        SetMatrixWidget* addMatrix;
+        SetMatrixWidget* editMatrix;
+        ShowMatrixWidget* showMatrixWidget;
+        QPushButton* remove;
 
-    MatrixLibrary* lib;
-    MatrixViewWidget* matrixView;
-    AddMatrixWidget* addMatrixWidget;
-    ShowMatrixWidget* showMatrixWidget;
-    QPushButton* edit;
-    QPushButton* remove;
+    public: //fonctions
 
-    //fonctions
+        LibraryWindow (QWidget* main, MatrixLibrary* lib);
+        ~LibraryWindow ();
 
-    void closeEvent (QCloseEvent* event);
+    private slots:
 
+        void removeSelectedMatrix();
+        void computeViewSelection();
 
-public: //fonctions
-    
-    LibraryWindow (QWidget* main, MatrixLibrary* lib);
-    ~LibraryWindow ();
+    signals:
 
-private slots:
-
-	void compute_selection();
-        
-signals:
-
-     void close();
+        void libraryChanged() const;
 };
-
-
 
 #endif

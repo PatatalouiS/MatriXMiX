@@ -10,137 +10,167 @@ const double EPSILON = 0.0001;
 
 Fraction::Fraction()
 {
-    numerateur=0 ;
-    denominateur=1;
+    numerator = 0 ;
+    denominator = 1;
 }
 
 
 Fraction::Fraction(const long int & n)
 {
-    numerateur = n;
-    denominateur = 1;
+    numerator = n;
+    denominator = 1;
 }
 
 
-Fraction::Fraction(const long int & n, const long int & m)
+Fraction::Fraction(const long int & n, const long int & d)
 {
-    numerateur = n;
-    denominateur = m;
-}
-
-
-ostream& operator<<(ostream& flux, Fraction const & f)
-{
-    if (f.denominateur!=1)
-        flux << f.numerateur << "/" << f.denominateur;
+    if (d != 0)
+        denominator = d;
     else
-        flux << f.numerateur;
+        exit(EXIT_FAILURE);
+    numerator = n;
+}
+
+
+long int Fraction:: getNumerator() const
+{
+    return numerator;
+}
+
+
+long int Fraction:: getDenominator() const
+{
+    return denominator;
+}
+
+
+ostream& operator << (ostream& flux, const Fraction & f)
+{
+    flux << f.numerator << "/" << f.denominator;
     return flux;
 }
 
 
-long int Fraction::pgcd(long int a, long int b)
+Fraction& Fraction:: operator = (const Fraction &f)
 {
-    while (b!=0)
-    {
-        long int t = b;
-        b = a%b;
-        a = t;
-    }
-
-    return a;
-
-}
-
-
-void Fraction::simplifie()
-{
-    long int diviseur = pgcd(numerateur,denominateur);
-    numerateur = numerateur/diviseur;
-    denominateur = denominateur/diviseur;
-
-    if(denominateur<0)
-    {
-        denominateur *= -1;
-        numerateur *= -1;
-    }
-
-
-}
-
-
-bool Fraction::estEgal(const Fraction & f) const
-{
-    double f1 = numerateur*f.denominateur;
-    double f2 = denominateur*f.numerateur;
-
-    double resultat = f1/f2;
-
-    if (resultat == 1.0)
-        return true;
-    return false;
-}
-
-
-bool operator==(const Fraction & f1, const Fraction & f2)
-{
-    return (f1.estEgal(f2));
-}
-
-
-bool Fraction::estPlusPetitQue(const Fraction & f) const
-{
-    double f1 = numerateur/denominateur;
-    double f2 = f.numerateur/f.denominateur;
-
-    return (f1<f2);
-}
-
-
-bool operator<(const Fraction & f1, const Fraction & f2)
-{
-    return (f1<f2);
-}
-
-
-Fraction& Fraction::operator+=(const Fraction & f)
-{
-    numerateur = numerateur*f.denominateur + denominateur*f.numerateur;
-    denominateur = denominateur*f.denominateur;
+    numerator = f.numerator;
+    denominator = f.denominator;
 
     return *this;
 }
 
 
-Fraction operator+(const Fraction & f1, const Fraction & f2)
+Fraction& Fraction:: operator = (const double &d)
 {
-    Fraction copie(f1);
-    copie+=f2;
-    return copie;
+    numerator = double2fraction(d).numerator;
+    denominator = double2fraction(d).denominator;
+    return *this;
 }
 
 
-Fraction operator* (const Fraction & f1, const Fraction & f2)
+bool Fraction:: operator == (const Fraction &f) const
 {
-    long int num, den;
-    num = f1.numerateur * f2.numerateur;
-    den = f1.denominateur * f2.denominateur;
-    Fraction f(num,den);
+    long int num1, num2;
+    num1 = numerator * f.denominator;
+    num2 = f.numerator * denominator;
+
+    return (num1 == num2);
+
+}
+
+
+bool Fraction:: operator < (const Fraction &f) const
+{
+    double d1 = numerator / denominator;
+    double d2 = f.numerator/f.denominator;
+
+    return (d1 < d2);
+}
+
+
+const Fraction Fraction:: inverse() const
+{
+    Fraction f (denominator,numerator);
     return f;
 }
 
 
-Fraction operator/ (const Fraction & f1, const Fraction & f2)
+long int Fraction::gcd(long int a, long int b) const
 {
-    long int num, den;
-    num = f1.numerateur * f2.denominateur;
-    den = f1.denominateur * f2.numerateur;
-    Fraction f(num,den);
-    return f;
+    while (b!=0)
+    {
+        long int t = b;
+        b = a % b;
+        a = t;
+    }
+
+    return a;
 }
 
 
-bool Fraction:: isFraction(const double & d)
+const Fraction Fraction::simplify() const
+{
+    long int div, num, den;
+    div = gcd(numerator,denominator);
+    num = numerator / div;
+    den = denominator / div;
+
+    if(den < 0)
+    {
+        den *= -1;
+        num *= -1;
+    }
+
+    Fraction f (num,den);
+
+    return f;
+
+}
+
+
+const Fraction Fraction:: operator + (const Fraction & f) const
+{
+    long int num, den;
+    num = numerator * f.denominator + f.numerator * denominator;
+    den = denominator * f.denominator;
+    Fraction res (num,den);
+    res = res.simplify();
+    return res;
+}
+
+
+const Fraction Fraction:: operator + (const long int &d) const
+{
+    long int temp = d * denominator;
+    temp = temp + numerator;
+    Fraction res(temp, denominator);
+    return res;
+}
+
+
+const Fraction Fraction:: operator * (const Fraction & f) const
+{
+    long int num, den;
+    num = numerator * f.numerator;
+    den = denominator * f.denominator;
+    Fraction res(num,den);
+    res = res.simplify();
+    return res;
+}
+
+
+const Fraction Fraction:: operator / (const Fraction & f) const
+{
+    long int num, den;
+    num = numerator * f.denominator;
+    den = denominator * f.numerator;
+    Fraction res(num,den);
+    res = res.simplify();
+    return res;
+}
+
+
+bool Fraction:: isFraction(const double & d) const
 {
     long int integer = static_cast<long int>(d);
     double r = d - integer;
@@ -151,229 +181,222 @@ bool Fraction:: isFraction(const double & d)
 }
 
 
-Fraction Fraction::double2Fraction(const double & d)
+void Fraction:: recursived2f (vector<long int> &tab, const double &rest) const
 {
-    int i,j;
-    double r = d - floor(d);
-    for (i = 1 ; i < 10001; i++)
+    if ( tab.size() < 10 && rest > EPSILON)
     {
-        for (j = -500; j < 500; j++ )
-        {
-            if ( abs(j - i * r) < EPSILON && i!= 0)
-            {
-                double num = floor(i * r + 2 * EPSILON) + i * floor(d);
-                Fraction f (static_cast<long int>(num),i);
-                f.simplifie();
-                return f;
-            }
-
-        }
-
-    }
-
-    i=1;
-    long int num=1, den=1;
-    double f2=d*10;
-    while(i<10)
-    {
-        if ( num - static_cast<long int>(f2*pow(10,i)) < EPSILON)
-        {
-            num = static_cast<long int>(f2*pow(10,i-1)) ;
-            den *= 10;
-        }
-        i++;
-    }
-    Fraction fraction(num,den);
-
-    fraction.simplifie();
-    return fraction;
-}
-
-
-Fraction operator+ (const long int & d, const Fraction & f)
-{
-    Fraction res (d*f.denominateur+f.numerateur,f.denominateur);
-    return res;
-}
-
-
-Fraction Fraction:: inverse()
-{
-    Fraction f (denominateur,numerateur);
-    return f;
-}
-
-
-Fraction Fraction:: attal(const double & d)
-{
-    double d0;
-    if (d < 0.0)
-        d0 = -d;
-    else
-        d0 = d;
-
-    double reste0;
-    long int integer0;
-
-    integer0 = static_cast<long int>(floor(d0));
-    reste0 = d - integer0;
-    cout << "Reste d = " << reste0 << endl;
-    if (abs(reste0) < 0.001)
-    {
-        Fraction f (static_cast<long int>(d),1);
-        return f;
-    }
-
-    double div1, reste1;
-    long int integer1;
-
-    div1 = 1/d;
-    integer1 = static_cast<long int>(floor(div1));
-    reste1 = div1 - integer1;
-
-    if (reste1 < 0.001)
-    {
-        Fraction f(1,1000);
-        f = integer0 + f;
-        if (d - d0 != 0.0)
-            f = f * -1;
-        return f;
-    }
-
-    long int integer2;
-    double div2, reste2;
-
-    div2 = 1/reste1;
-    integer2 = static_cast<long int>(floor(div2));
-    reste2 = div2 - integer2;
-
-    if (reste2 < 0.001)
-    {
-        Fraction f (1,1000);
-        f = integer2 + f;
-        f = f.inverse();
-        f = integer0 + integer1 + f;
-        f = f.inverse();
-        f.simplifie();
-        if (d - d0 != 0.0)
-            f = f * -1;
-        return f;
-    }
-
-    double div3, reste3;
-    long int integer3;
-
-    div3 = 1/reste2;
-    integer3 = static_cast<long int>(floor(div3));
-    reste3 = div3 - integer3;
-
-    if (reste3 < 0.001 )
-    {
-
-        Fraction f (1,1000);
-        f = integer3 + f;
-        f = f.inverse();
-        f = integer2 + f;
-        f = f.inverse();
-        f = integer0 + integer1 + f;
-        f = f.inverse();
-        f.simplifie();
-        if (d - d0 != 0.0)
-            f = f * -1;
-        return f;
-    }
-
-
-    double div4, reste4;
-    long int integer4;
-
-    div4 = 1/reste3;
-    integer4 = static_cast<long int>(floor(div4));
-    reste4 = div4 - integer4;
-
-    if (reste3 < 0.001 )
-    {
-        Fraction f (1,1000);
-        f = integer4 + f;
-        f = f.inverse();
-        f = integer3 + f;
-        f = f.inverse();
-        f = integer2 + f;
-        f = f.inverse();
-        f = integer0 + integer1 + f;
-        f = f.inverse();
-        f.simplifie();
-        if (d - d0 != 0.0)
-            f = f * -1;
-        return f;
-    }
-
-
-    double div5, reste5;
-    long int integer5;
-
-    div5 = 1/reste4;
-    integer5 = static_cast<long int>(floor(div5));
-    reste5 = div5 - integer5;
-
-    Fraction f (1,1000);
-    f = integer5 + f;
-    f = f.inverse();
-    f = integer4 + f;
-    f = f.inverse();
-    f = integer3 + f;
-    f = f.inverse();
-    f = integer2 + f;
-    f = f.inverse();
-    f = integer0 + integer1 + f;
-    f = f.inverse();
-    f.simplifie();
-    if (d - d0 != 0.0)
-        f = f * -1;
-    return f;
-}
-
-void Fraction ::recursivite (vector<long int> & table, double rest)
-{
-    //cout << "rest is " << rest << endl;
-    if ((table.size()<20) && (abs(rest) > EPSILON))
-    {
+        double div, rest2;
         long int integer;
-        double div,new_rest;
-
         div = 1 / rest;
         integer = static_cast<long int>(floor(div));
-        new_rest = div - integer;
-        table.push_back(integer);
-
-        recursivite(table,new_rest);
+        rest2 = div - integer;
+        tab.push_back(integer);
+        recursived2f(tab,rest2);
     }
-
-    cout << "le reste final est " <<rest << endl;
 
 }
 
 
-Fraction Fraction:: hanattal (double d)
+const Fraction Fraction:: double2fraction(const double &d) const
 {
-    vector<long int>table;
-    long int integer;
+    double abs_d = abs(d);
+    vector <long int> tab;
+
     double rest;
+    long int integer;
+    unsigned long int size;
 
-    integer = static_cast<long int>(floor(d));
-    rest = d - integer;
+    integer = static_cast<long int>(floor(abs_d));
+    rest = abs_d - integer;
 
-    table.push_back(integer);
-    recursivite(table,rest);
+    tab.push_back(integer);
+    recursived2f(tab,rest);
 
-    cout << "Affichage du tableau de taille " << table.size() << endl;
-    for (unsigned int i = 0 ; i < table.size() ; i++)
+    size = tab.size();
+
+    if (size == 1)
     {
-        cout << i << "  " << table[i] << endl ;
+        Fraction f (tab[0],1);
+        if ( d * f.numerator > 0 && d * f.denominator > 0 )
+        {
+            return f;
+        }
+        else
+        {
+            f.numerator *= -1;
+            return f;
+        }
+    }
+    if (size == 2)
+    {
+        Fraction f (1,tab[1]);
+        f = f + tab[0];
+        if ( d * f.numerator > 0 && d * f.denominator > 0 )
+        {
+            return f;
+        }
+        else
+        {
+            f.numerator *= -1;
+            return f;
+        }
     }
 
-    Fraction f(1,2);
-    return f;
+    Fraction f (1,tab[size-2]);
+
+    for (unsigned long int i = size - 2 ; i > 0 ; i--)
+    {
+        f = f + tab[i];
+        f = f.inverse();
+        f = f.simplify();
+    }
+
+    f = f + tab[0];
+    f = f.simplify();
+
+    if ( d * f.numerator > 0 && d * f.denominator > 0 )
+    {
+        return f;
+    }
+    else
+    {
+        f.numerator *= -1;
+        return f;
+    }
+
 }
 
+
+void Fraction:: regressionTest() const
+{
+
+    cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;
+
+    Fraction f1 (1,1);
+    Fraction f2 (1,2);
+    Fraction f3 (1,3);
+    Fraction f4 (3,2);
+    Fraction f5 (25,125);
+    Fraction f6 (5,6);
+
+    long int n = 2;
+    double d1 = 0.3333333;
+    double d2 = 0.857163;
+    double temp;
+
+    Fraction r1 (3,2);
+    Fraction r2 (7,3);
+    Fraction r3 (3,6);
+    Fraction r4 (1,5);
+    Fraction r5 (150,625);
+    Fraction r6 (1,3);
+
+    Fraction r;
+
+    cout << "! Addition de 2 fractions" << endl;
+    {
+        r = f1 + f2;
+        if(r == r1)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+    }
+
+    cout << "! Addition d'une fraction et d'un entier" << endl;
+    {
+        r = f3 + n;
+        if (r == r2)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Multiplication de deux fractions" << endl;
+    {
+        r = f3 * f4;
+        if (r == r3)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Simplification d'une fraction" << endl;
+    {
+        r = f5.simplify();
+        if (r.numerator == r4.numerator && r.denominator == r4.denominator)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Division de deux fractions" << endl;
+    {
+        r = f5 / f6;
+        if (r == r5)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Convertion d'un réel en fraction" << endl;
+    {
+        r = d1;
+        if (r == r6)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Convertion d'un réel en fraction n°2" << endl;
+    {
+        r = d2;
+        temp = r.numerator;
+        temp /= r.denominator;
+        if ( temp - d2 < EPSILON)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+
+
+
+    cout << endl << endl << "******* TEST REUSSI ******" << endl << endl
+           <<  "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
+
+}
 

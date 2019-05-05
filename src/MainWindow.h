@@ -7,6 +7,7 @@
 #include <QGroupBox>
 #include "MenuBar.h"
 #include "LibraryWindow.h"
+#include "AbstractOperationWidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -16,27 +17,30 @@ class MainWindow : public QMainWindow
     
         MainWindow ();
         ~MainWindow ();
-    
-    signals:
-    
-    public slots:
-    
-        void addNewMatrix(const QString name, const Matrix matrix);
-        void compute_choice (const unsigned int choice);
-    
+       
+    private slots:
+
+          void show_library ();
+          void transferResult (const QVariant& res);
+          void compute_choice (const unsigned int choice);
+
     private:
 
         // members
     
         MenuBar* menuBar;
-        MatrixLibrary lib;
-        std::function<QWidget*(MatrixLibrary*, QWidget*)> createWindow [15];
+        MatrixLibrary library;
+        LibraryWindow* libraryWindow;
+        AbstractOperationWidget* currentOpWidget;
+        QVBoxLayout* currentOpLayout;
+        unsigned int currentChoice;
+        ShowMatrixWidget* imgResult;
+        std::function<AbstractOperationWidget*(void)> createWindow [15];
 
         // functions
 
         void setFunctorTab ();
-        void show_library ();
-        QGroupBox *initBinaryOp();
-        QGroupBox *initUnaryOp();
-        QGroupBox *initDiagonalisationOp();
+        QGroupBox* initBinaryOp();
+        QGroupBox* initUnaryOp();
+        QGroupBox* initDiagonalisationOp();
 };

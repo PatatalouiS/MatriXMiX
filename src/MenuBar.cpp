@@ -22,12 +22,24 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
 
     menuHelp = addMenu("Aide");
     menuHelp->setCursor(Qt::PointingHandCursor);
+    actionHelp = new QAction("Page d'aide",this);
+    menuHelp->addAction(actionHelp);
+
     menuQuit = addMenu("Quitter");
     menuQuit->setCursor(Qt::PointingHandCursor);
 
     connect(libraryMatrix, &QAction::triggered, [this]() -> void { emit openLibrary();});
+    connect(actionHelp, &QAction::triggered , this, &MenuBar::showPage);
+
 }
 
+void MenuBar::showPage()
+{
+    HelpWindow* wind = new HelpWindow(this);
+    (void) wind;
+    //hide();
+    //wind->show();
+}
 
 MenuBar::~MenuBar()
 {

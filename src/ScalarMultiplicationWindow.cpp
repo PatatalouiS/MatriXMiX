@@ -5,7 +5,7 @@
 #include "Error.h"
 
 
-ScalarMultiplicationWindow::ScalarMultiplicationWindow(MatrixLibrary* lib, QWidget* parent) : QDialog (parent)
+ScalarMultiplicationWindow::ScalarMultiplicationWindow(MatrixLibrary* lib, QWidget* parent) : QWidget (parent)
 {
     this->lib = lib;
     op1Name = "_";
@@ -16,18 +16,21 @@ ScalarMultiplicationWindow::ScalarMultiplicationWindow(MatrixLibrary* lib, QWidg
     resultImg->hide();
 
     QLabel* title = new QLabel("Multiplication Scalaire");
-    title->setStyleSheet("font-size: 30px;");
+    title->setStyleSheet("font-size: 30px; font:bold;");
     title->setAlignment(Qt::AlignCenter);
+    title->setContentsMargins(0,0,0,10);
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
     op1View = new MatrixViewWidget(lib, this);
-    op1View->setFixedSize(200, 200);
+    op1Title -> setAlignment(Qt::AlignCenter);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(op1View);
+    op1ChoiceLayout->setContentsMargins(0,0,20,0);
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
     QLabel* op2Title = new QLabel("Choix du Scalaire :");
+    op2Title -> setAlignment(Qt::AlignBottom);
     op2Edit = new QLineEdit;
     op2Edit->setMinimumWidth(30);
     op2Edit->setMaximumWidth(50);
@@ -36,22 +39,38 @@ ScalarMultiplicationWindow::ScalarMultiplicationWindow(MatrixLibrary* lib, QWidg
 
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(op2Edit);
+    op2ChoiceLayout->setContentsMargins(20,0,0,0);
 
     QHBoxLayout* formLayout = new QHBoxLayout;
     formLayout->addLayout(op1ChoiceLayout);
     formLayout->addLayout(op2ChoiceLayout);
+    formLayout->setAlignment(Qt::AlignCenter);
+
+    QWidget* formWidget = new QWidget;
+    formWidget->setLayout(formLayout);
+    formWidget->setMaximumWidth(1330);
+    formWidget->setMaximumHeight(350);
 
     formula = new QLabel("_  *  _");
     formula->setStyleSheet("font-size: 40px");
     formula->setAlignment(Qt::AlignCenter);
-    formula->setContentsMargins(0,25,0, 25);
+
 
     QPushButton* calculer = new QPushButton("Calculer");
+    calculer->setCursor(Qt::PointingHandCursor);
+    calculer->setStyleSheet("QPushButton{ background-color: lightGrey } "
+                            "QPushButton:hover{ background-color: lightBlue }");
+    calculer->setFixedSize(300,30);
+
+    QVBoxLayout* buttonLayout = new QVBoxLayout;
+    buttonLayout->addWidget(calculer);
+    buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignTop);
 
     QVBoxLayout* subLayout1 = new QVBoxLayout;
     subLayout1->addWidget(title);
-    subLayout1->addLayout(formLayout);
+    subLayout1->addWidget(formWidget);
     subLayout1->addWidget(formula);
+
     QWidget* subWidget1 = new QWidget(this);
     subWidget1->setLayout(subLayout1);
     subWidget1->setFixedHeight(400);
@@ -60,7 +79,7 @@ ScalarMultiplicationWindow::ScalarMultiplicationWindow(MatrixLibrary* lib, QWidg
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
     mainLayout->addWidget(resultImg);
-    mainLayout->addWidget(calculer);
+    mainLayout->addLayout(buttonLayout);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
 
