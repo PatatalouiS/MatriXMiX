@@ -63,7 +63,7 @@ void ExprEvalWidget:: updateViews()
 
 void ExprEvalWidget:: computeOperation ()
 {
-    MatrixLibrary* temp = const_cast <MatrixLibrary*>(lib);
+    MatrixLibrary* temp = const_cast <MatrixLibrary*>(getLib());
 
     std::string testExpression = temp->isCalculableExpression(expression->text().toStdString());
 
@@ -88,7 +88,7 @@ void ExprEvalWidget:: computeOperation ()
 }
 
 
-void ExprEvalWidget:: computeSelection(bool view)
+void ExprEvalWidget:: computeSelection(const bool view)
 {
     (void)view;
 }
