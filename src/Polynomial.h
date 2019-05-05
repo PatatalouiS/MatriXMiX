@@ -1,6 +1,4 @@
-//
-// Created by tarik on 09/03/19.
-//
+
 
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
@@ -35,7 +33,9 @@ public:
 
 
     const Polynomial division(const Polynomial & divisor, Polynomial & rest);
-    void equation2degre (unsigned int & nbsolution, double & x1, double & x2);
+    void equation2degre (unsigned int & nbsolution, double & x1, double & x2)const;
+
+    void testRegression()const;
 
 
 

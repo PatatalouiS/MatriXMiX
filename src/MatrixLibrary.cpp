@@ -184,7 +184,7 @@ bool MatrixLibrary:: isSpecialCaractere(const std::string &chaine) const
 }
 
 
-vector<string> MatrixLibrary:: decoupe (const string & expression)const
+vector<string> MatrixLibrary:: explode (const string & expression)const
 {
     vector<string> tab;
     string c, temp;
@@ -334,7 +334,7 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
 {
     stack<string> p;
     vector<string> expression;
-    copy_vector(expression,decoupe(chain));
+    copy_vector(expression,explode(chain));
 
     for (auto i : expression)
     {
@@ -384,8 +384,7 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
 
 string MatrixLibrary:: isCalculableExpression(const string & expression)const
 {
-
-   vector<string> result = decoupe(expression);
+   vector<string> result = explode(expression);
    unsigned long int i, s = result.size();
 
    string calculable = "calculable";
@@ -719,7 +718,7 @@ Matrix MatrixLibrary:: expressionCalcul(const std::string & chain)const
 }
 
 
-void MatrixLibrary:: saveFile (const string filename)const
+void MatrixLibrary:: saveFile (const string & filename)const
 {
     ofstream file (filename.c_str());
 
@@ -756,7 +755,7 @@ void MatrixLibrary:: saveFile (const string filename)const
 }
 
 
-void MatrixLibrary:: readFile (const string filename)
+void MatrixLibrary:: readFile (const string & filename)
 {
     string matrixname;
     unsigned int r,c;
