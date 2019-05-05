@@ -5,7 +5,9 @@
 #include "Matrix.h"
 #include <map>
 
-
+/**
+ * @class The MatrixLibrary class
+ */
 class MatrixLibrary
 {
     private:

@@ -7,6 +7,10 @@
 
 typedef std::vector<std::vector<double>>::iterator tab2D_iter ;
 
+
+/**
+ * @class The Gauss class
+ */
 class Gauss
 {
 

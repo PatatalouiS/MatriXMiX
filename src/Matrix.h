@@ -7,7 +7,9 @@
 #include "VectorX.h"
 #include "Polynomial.h"
 
-
+/**
+ * @class The Matrix class
+ */
 class Matrix
 {
 
