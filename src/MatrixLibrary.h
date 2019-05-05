@@ -1,4 +1,3 @@
-
 #ifndef MATRIX_LIBRARY
 #define MATRIX_LIBRARY
 

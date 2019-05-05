@@ -3,7 +3,7 @@
 
 
 #include <vector>
-#include <Dense>  // externe library eigen 3.3.7
+#include <Dense>  // extern library eigen 3.3.7
 #include "VectorX.h"
 #include "Polynomial.h"
 
