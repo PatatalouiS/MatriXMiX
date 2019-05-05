@@ -19,6 +19,8 @@ AbstractOperationWidget (lib, parent)
     subLayout1->setAlignment(Qt::AlignCenter);
 
     QLabel* titleExpr = new QLabel("Insérer votre expression : ");
+    QLabel* title2 = new QLabel("Pour calculer l'inverse d'une matrice utiliser: A~");
+    title2->setStyleSheet("color:grey;");
     titleExpr->setAlignment(Qt::AlignBottom |Qt::AlignCenter);
 
     expression = new QLineEdit();
@@ -32,6 +34,7 @@ AbstractOperationWidget (lib, parent)
     QVBoxLayout* subLayout2 = new QVBoxLayout;
     subLayout2->addWidget(titleExpr);
     subLayout2->addWidget(expression);
+    subLayout2->addWidget(title2);
     subLayout2->addLayout(buttonLayout);
 
     QHBoxLayout* subLayout3 = new QHBoxLayout;
