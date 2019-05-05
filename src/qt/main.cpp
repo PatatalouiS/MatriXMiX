@@ -1,7 +1,7 @@
 #include <QApplication>
-#include "MainWindow.h"
-#include "LibraryWindow.h"
-#include "MatrixLibrary.h"
+#include "../qt/MainWindow.h"
+#include "../qt/LibraryWindow.h"
+#include "../maths/MatrixLibrary.h"
 #include <stdlib.h>
 using namespace std;
 

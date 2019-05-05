@@ -4,7 +4,7 @@
 
 #include <QLabel>
 #include <QScrollArea>
-#include "Matrix.h"
+#include "../maths/Matrix.h"
 
 class ShowMatrixWidget : public QWidget
 {

@@ -6,7 +6,7 @@
 #include <QGridLayout>
 #include <QSpinBox>
 #include <QPushButton>
-#include "MatrixLibrary.h"
+#include "../maths/MatrixLibrary.h"
 
 
 

@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QVariant>
-#include "MatrixLibrary.h"
+#include "../maths/MatrixLibrary.h"
 
 
 using EigenResult = QPair<QString, std::vector<std::pair<double, VectorX>>>;

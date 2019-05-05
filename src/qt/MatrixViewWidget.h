@@ -6,7 +6,7 @@
 #include <QStandardItemModel>
 #include <QDialog>
 #include <QLabel>
-#include "MatrixLibrary.h"
+#include "../maths/MatrixLibrary.h"
 #include "ShowMatrixWidget.h"
 
 using MatrixPair = QPair<const QString&, const Matrix&>;
