@@ -90,7 +90,7 @@ class MainWindow : public QMainWindow
 
     signals :
         /**
-        * @brief
+        * @brief libraryChanged this signal is emitted when a modification on the library happen
         */
         void libraryChanged();
 };
