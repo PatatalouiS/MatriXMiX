@@ -19,6 +19,8 @@ AbstractOperationWidget (lib, parent)
     subLayout1->setAlignment(Qt::AlignCenter);
 
     QLabel* titleExpr = new QLabel("Insérer votre expression : ");
+    QLabel* title2 = new QLabel("Pour calculer l'inverse d'une matrice utiliser: A~");
+    title2->setStyleSheet("color:grey;");
     titleExpr->setAlignment(Qt::AlignBottom |Qt::AlignCenter);
 
     expression = new QLineEdit();
@@ -32,6 +34,7 @@ AbstractOperationWidget (lib, parent)
     QVBoxLayout* subLayout2 = new QVBoxLayout;
     subLayout2->addWidget(titleExpr);
     subLayout2->addWidget(expression);
+    subLayout2->addWidget(title2);
     subLayout2->addLayout(buttonLayout);
 
     QHBoxLayout* subLayout3 = new QHBoxLayout;
@@ -40,6 +43,8 @@ AbstractOperationWidget (lib, parent)
 
     QWidget* subWidget1 = new QWidget(this);
     subWidget1->setLayout(subLayout3);
+    subWidget1->setMaximumHeight(300);
+    subWidget1->setMaximumWidth(600);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
@@ -53,12 +58,12 @@ AbstractOperationWidget (lib, parent)
 
 void ExprEvalWidget:: updateViews()
 {
-
+    view->refresh();
 }
 
 void ExprEvalWidget:: computeOperation ()
 {
-    MatrixLibrary* temp = const_cast <MatrixLibrary*>(lib);
+    MatrixLibrary* temp = const_cast <MatrixLibrary*>(getLib());
 
     std::string testExpression = temp->isCalculableExpression(expression->text().toStdString());
 
@@ -83,7 +88,7 @@ void ExprEvalWidget:: computeOperation ()
 }
 
 
-void ExprEvalWidget:: computeSelection(bool view)
+void ExprEvalWidget:: computeSelection(const bool view)
 {
     (void)view;
 }

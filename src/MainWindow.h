@@ -1,10 +1,7 @@
 
 #include <QMainWindow>
-#include <QPushButton>
-#include <QList>
-#include <QMenuBar>
-#include <QLinearGradient>
-#include <QGroupBox>
+#include <QFileDialog>
+
 #include "MenuBar.h"
 #include "LibraryWindow.h"
 #include "AbstractOperationWidget.h"
@@ -20,9 +17,10 @@ class MainWindow : public QMainWindow
        
     private slots:
 
-          void show_library ();
+          void showLibraryWindow ();
+          void showFileTool (enum QFileDialog::AcceptMode type);
           void transferResult (const QVariant& res);
-          void compute_choice (const unsigned int choice);
+          void computeChoice (const unsigned int choice);
 
     private:
 
@@ -43,4 +41,10 @@ class MainWindow : public QMainWindow
         QGroupBox* initBinaryOp();
         QGroupBox* initUnaryOp();
         QGroupBox* initDiagonalisationOp();
+
+        void computeLoadOrRead(QFileDialog* fileTool, enum QFileDialog::AcceptMode type);
+
+    signals :
+
+        void libraryChanged();
 };

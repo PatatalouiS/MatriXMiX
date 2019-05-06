@@ -5,7 +5,9 @@
 #include "Matrix.h"
 #include <map>
 
-
+/**
+ * @class The MatrixLibrary class
+ */
 class MatrixLibrary
 {
     private:
@@ -31,7 +33,7 @@ class MatrixLibrary
 
 /**
  * @brief Returns the size of the library
- * @return \e unsigned int
+ * @return \e unsigned \e int
  */
     unsigned int long size () const;
 
@@ -42,9 +44,9 @@ class MatrixLibrary
     bool isEmpty () const;
 
 /**
- * @brief Empty the library
+ * @brief Clear the library
  */
-    void empty ();
+    void clear ();
 
 /**
  * @brief Returns the existance of a matrix in the library
@@ -99,7 +101,8 @@ public:
  * @param [out] expression (\e std::vector<std::string>)
  * @param [in] resultat (\e std::vector<std::string>)
  */
-    void copy_vector(std::vector<std::string>& expression,const std::vector<std::string>&resultat)const;
+    void copy_vector(std::vector<std::string>& expression,
+                     const std::vector<std::string>&resultat)const;
 
 /**
  * @brief Returns true if the name is authorized in the library
@@ -143,7 +146,8 @@ public:
  * @param [in] opg (\e string)
  * @return \e bool
  */
-    bool high_equal_priority (const std::string & opd,const std::string & opg) const;
+    bool high_equal_priority (const std::string & opd,
+                              const std::string & opg) const;
 
 /**
  * @brief Returns the results of a binary operation of matrices
@@ -152,7 +156,8 @@ public:
  * @param [in} b (\e string)
  * @return \e Matrix
  */
-    Matrix calculate (const std::string & op, const std::string & a, const std::string & b) const;
+    Matrix calculate (const std::string & op, const std::string & a,
+                      const std::string & b) const;
 
 /**
  * @brief Returns the results of a binary operation of doubles
@@ -161,7 +166,8 @@ public:
  * @param [in] b (\e string)
  * @return \e double
  */
-    double calculateFloat (const std::string & op, const std::string & a, const std::string & b)const;
+    double calculateFloat (const std::string & op, const std::string & a,
+                           const std::string & b)const;
 
 /**
  * @brief Returns the results of a binary operation between a matrix and a float
@@ -170,7 +176,8 @@ public:
  * @param [in] b (\e string)
  * @return \e Matrix
  */
-    Matrix calculateMatrixFloat (const std::string & op, const std::string & a, const float & b)const;
+    Matrix calculateMatrixFloat (const std::string & op, const std::string & a,
+                                 const float & b)const;
 
 /**
  * @brief Returns the results of a binary operation between a matrix and a float
@@ -179,7 +186,8 @@ public:
  * @param [in] b (\e string)
  * @return \e Matrix
  */
-    Matrix calculateFloatMatrix (const std::string & op, const std::string & a, const float & b)const;
+    Matrix calculateFloatMatrix (const std::string & op, const std::string & a,
+                                 const float & b)const;
 
 /**
  * @brief Write a string in a Polish notation
@@ -197,14 +205,14 @@ public:
  * @brief Tests if the expression is computable
  * @details Returns "computable" if the expression is computable, otherwise returns a string to guide the user
  * @param [in] expression (\e string)
- * @return string
+ * @return \e std::string
  */
     std::string isCalculableExpression(const std::string & expression)const;
 
 /**
  * @brief Evaluates the result of a matrix expression
  * @param [in] chain (\e string)
- * @return Matrix
+ * @return \e Matrix
  */
     Matrix calculateExpression(const std::string & chain) const;
 
@@ -230,19 +238,3 @@ public:
 
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

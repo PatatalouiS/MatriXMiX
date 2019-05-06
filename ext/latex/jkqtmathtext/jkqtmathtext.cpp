@@ -3194,7 +3194,7 @@ QString JKQTMathText::MTsymbolNode::getSymbolFontName() const {
         case MTSFintegrals: return "integrals["+getFontName(font, f).family()+"]";
         case MTSFcaligraphic: return "caligraphic["+getFontName(font, f).family()+"]";
         case MTSFblackboard: return "blackboard["+getFontName(font, f).family()+"]";
-        case MTSFdefault:
+        default:
             return "default["+getFontName(font, f).family()+"]";
     }
 }

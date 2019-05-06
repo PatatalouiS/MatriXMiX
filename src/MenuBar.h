@@ -8,7 +8,13 @@
 #include <QToolTip>
 #include "LibraryWindow.h"
 #include "HelpWindow.h"
+#include "HelpWindowQt.h"
 
+/**
+@class MenuBar The class MenuBar generate the menu of the application
+MatriXMiX which give the access to the library, help pages, to safeguard
+and loading a file.
+*/
 class MenuBar : public QMenuBar
 {
     Q_OBJECT
@@ -20,25 +26,47 @@ class MenuBar : public QMenuBar
         QAction *actionLoad;
         QMenu *menuMatrix;
         QAction *libraryMatrix;
-        QAction *showMatrix;
         QMenu *menuHelp;
-        QAction* actionHelp;
+        QAction* actionHelpMatrix;
+        QAction* actionHelpQt;
         QMenu *menuQuit;
         QAction *actionQuit;
 
-
     public:
-
+        /**
+         * @brief Default constructor
+         * @param [in] parent (\e pointer of QWidget)
+         */
         MenuBar(QWidget* parent = nullptr);
+        /**
+         * @brief Default destructor
+         */
         ~MenuBar ();
 
     signals:
-
-        void openLibrary();
+        /**
+         * @brief Open the library window
+         */
+        void openLibraryWindow();
+        /**
+         * @brief Open the save tool
+         */
+        void openSaveTool();
+        /**
+         * @brief Open the save tool
+         */
+        void openLoadTool();
 
     private slots:
-        void showPage();
 
+        /**
+         * @brief Open the help page of MatriXMiX
+         */
+        void showPageMatrix();
+        /**
+         * @brief Open the help page of Qt
+         */
+        void showPageQt();
 };
 
 #endif

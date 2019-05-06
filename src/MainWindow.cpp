@@ -1,15 +1,13 @@
 
-#include <QLabel>
-#include <QGridLayout>
-#include <QVBoxLayout>
-#include <QDebug>
 #include <QScrollBar>
+
 #include "MainWindow.h"
 #include "BinaryOpMatrixMatrixWidget.h"
 #include "BinaryOpMatrixNumberWidget.h"
 #include "UnaryOpWidget.h"
 #include "DiagonalisationWidget.h"
 #include "ExprEvalWidget.h"
+
 
 MainWindow:: MainWindow() : QMainWindow()
 {
@@ -18,16 +16,16 @@ MainWindow:: MainWindow() : QMainWindow()
     Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
     Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
     Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
-    Matrix e (10,10, {1465.875412448474,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,1,});
+    Matrix e (9,9, {1465.875412448474,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+              1,1,1,1,1,1,1,1,1,
+       });
 
     library.addMatrix("A", a);
     library.addMatrix("B", b);
@@ -72,14 +70,14 @@ MainWindow:: MainWindow() : QMainWindow()
     headerWidget->setStyleSheet("QWidget {background-color: qlineargradient"
                                 "(x1 : 0 , y1 : 0 , x2: 0 , y2:1 , "
                                 "stop : 0 white , stop : 1 lightBlue);"
-                                "border: 2px solid silver;"
-                                "border-radius: 6px;}");
+                                "border: 1px solid silver;"
+                                "border-radius: 3px;}");
     headerSubLayout->addWidget(logo);
     headerSubLayout->addWidget(title);
     headerSubLayout->setAlignment(Qt::AlignHCenter);
 
     headerWidget->setLayout(headerSubLayout);
-    headerWidget->setFixedWidth(300);
+    headerWidget->setFixedWidth(240);
 
     headerLayout->addWidget(headerWidget);
     headerLayout->setAlignment(Qt::AlignHCenter);
@@ -88,11 +86,10 @@ MainWindow:: MainWindow() : QMainWindow()
     opChoiceLayout->addWidget(initUnaryOp());
     opChoiceLayout->addWidget(initDiagonalisationOp());
     opBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid silver;"
+                "QGroupBox { border: 1px solid grey;"
                 "background-color:white;"
                 "margin-top: 32px;"
-                "margin-left:30px; margin-right:30px;"
-                "border-radius:6px;}"
+                "border-radius:3px;}"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
                 "font: bold ; color:white; }");
@@ -100,25 +97,25 @@ MainWindow:: MainWindow() : QMainWindow()
     opBox->setFont(font);
     opBox->setLayout(opChoiceLayout);
     opShowBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid silver;"
-                "background-color:white;"
+                "QGroupBox { border: 1px solid grey;"
+                "background-color: white;"
                 "margin-top: 32px;"
-                "border-radius:6px;}"
+                "border-radius:3px;}"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
                 "font: bold ;color:white; }");
-    opShowBox->setFont(fontTitle);
+    opShowBox->setFont(font);
     opShowBox->setLayout(currentOpLayout);
     currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
     currentOpLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     imgResult = new ShowMatrixWidget;
     imgResult->setStyleSheet("background-color: white;");
-
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(imgResult);
-    scrollArea->setStyleSheet("background-color:white ; border-radius:6px;");
+    scrollArea->setStyleSheet("background-color:white ; "
+                              "border-radius: 3px;");
     scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical "
                "{border: 1px solid #999999; background:white;"
                "width:15px; margin: 0px 0px 0px 0px;}"
@@ -143,18 +140,28 @@ MainWindow:: MainWindow() : QMainWindow()
     subLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->setContentsMargins(0,0,20,0);
 
-    mainLayout->setContentsMargins(0, 10, 0, 15);
+    mainLayout->setContentsMargins(30, 10, 12, 30);
     mainLayout->addLayout(headerLayout);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
-    mainWidget->setStyleSheet("QWidget {background-color : qlineargradient(x1 : 0 , y1 : 0  "
-                              ", x2: 0 , y2:1 , "
-                              "stop : 0 #283676 , stop : 1 #000066)}");
-    connect(menuBar, &MenuBar::openLibrary, this, &MainWindow::show_library);
-    compute_choice(0);
+
+    connect(menuBar, &MenuBar::openLibraryWindow, this, &MainWindow::showLibraryWindow);
+    connect(menuBar, &MenuBar::openSaveTool,
+            [this]() -> void
+            {
+                showFileTool(QFileDialog::AcceptSave);
+            });
+    connect(menuBar, &MenuBar::openLoadTool,
+            [this]() -> void
+            {
+                showFileTool(QFileDialog::AcceptOpen);
+            });
     imgResult->show();
+    setStyleSheet("MainWindow{border-image:url(:/img/background.png) 0 0 0 0 stretch stretch;}");
     setCentralWidget(mainWidget);
+    computeChoice(0);
 }
+
 
 void MainWindow::setFunctorTab()
 {
@@ -237,8 +244,9 @@ void MainWindow::setFunctorTab()
 }
 
 
-void MainWindow:: compute_choice (const unsigned int choice)
+void MainWindow:: computeChoice (const unsigned int choice)
 {
+    imgResult->clear();
     if(currentOpWidget != nullptr)
     {
         currentOpLayout->removeWidget(currentOpWidget);
@@ -255,7 +263,6 @@ void MainWindow:: compute_choice (const unsigned int choice)
                 currentOpWidget, &AbstractOperationWidget::updateViews);
     }
 
-    imgResult->hide();
     currentOpWidget->show();
     currentChoice = choice;
 }
@@ -302,8 +309,6 @@ void MainWindow:: transferResult (const QVariant& res)
     {
         assert(false);
     }
-
-    imgResult->show();
 }
 
 
@@ -323,8 +328,8 @@ QGroupBox* MainWindow::initBinaryOp ()
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ; color:black;}");
-    BinaryOpBox->setMinimumSize(300,200);
+                "font: bold ; color: black;}");
+    BinaryOpBox->setMinimumSize(300,180);
 
     BinaryOpBox->setFont(font);
 
@@ -344,7 +349,6 @@ QGroupBox* MainWindow::initBinaryOp ()
     {
         BinaryOpButtons = new QPushButton(tabBinaryOp[i]);
         BinaryOpButtons->setCursor(Qt::PointingHandCursor);
-        //Ajout du style pour les boutons
         BinaryOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
                                        "QPushButton:hover{ background-color: lightBlue }");
         BinaryOpButtons->setMinimumSize(100,20);
@@ -353,11 +357,10 @@ QGroupBox* MainWindow::initBinaryOp ()
         connect(BinaryOpButtons, &QPushButton::clicked,
                 [i, this] () -> void
                 {
-                    this->compute_choice(i);
+                    this->computeChoice(i);
                 });
 
         BinaryOpLayout -> addWidget(BinaryOpButtons);
-
     }
 
     BinaryOpBox->setLayout(BinaryOpLayout);
@@ -374,12 +377,13 @@ QGroupBox* MainWindow::initUnaryOp ()
 
     UnaryOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
-                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, "
+                "y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
                 "border-radius: 6px;"
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ; color:back;}");
+                "font: bold ; color: black;}");
     UnaryOpBox->setMinimumSize(300,180);
 
     UnaryOpBox->setFont(font);
@@ -409,7 +413,7 @@ QGroupBox* MainWindow::initUnaryOp ()
         connect(UnaryOpButtons, &QPushButton::clicked,
                 [i, this] () -> void
                 {
-                    this->compute_choice(i);
+                    this->computeChoice(i);
                 });
 
     }
@@ -428,13 +432,13 @@ QGroupBox* MainWindow::initDiagonalisationOp()
 
     DiaOpBox -> setStyleSheet(
                 "QGroupBox { border: 1px solid silver;"
-                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
+                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                " stop: 0 lightBlue, stop: 1 Blue);"
                 "border-radius: 6px;"
                 "margin-top: 25px; }"
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
-                "font: bold ; color:black;"
-                "}");
+                "font: bold ; color:black;}");
     DiaOpBox->setMinimumSize(300,130);
     DiaOpBox->setFont(font);
 
@@ -458,13 +462,11 @@ QGroupBox* MainWindow::initDiagonalisationOp()
         DiaOpButtons->setMinimumSize(100,20);
         DiaOpButtons->setMaximumSize(600,80);
 
-        //DiaOpBox->setToolTip("Matrice de Passage/Matrice Diagonale");
-
         DiaOpVBox -> addWidget(DiaOpButtons);
           connect(DiaOpButtons, &QPushButton::clicked,
                 [i, this] () -> void
                 {
-                    this->compute_choice(i);
+                    this->computeChoice(i);
                 });
     }
 
@@ -474,14 +476,73 @@ QGroupBox* MainWindow::initDiagonalisationOp()
 }
 
 
-void MainWindow:: show_library()
+void MainWindow:: showLibraryWindow()
 {
-    libraryWindow = new LibraryWindow(this, &library);
-    connect(libraryWindow, &LibraryWindow::libraryChanged,
-            currentOpWidget,&AbstractOperationWidget::updateViews);
-    connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
-    libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
-    libraryWindow->show();
+    if(libraryWindow == nullptr)
+    {
+        libraryWindow = new LibraryWindow(nullptr, &library);
+        connect(libraryWindow, &LibraryWindow::libraryChanged,
+                currentOpWidget,&AbstractOperationWidget::updateViews);
+        connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
+        connect(this, &MainWindow::libraryChanged, libraryWindow, &LibraryWindow::update);
+        libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
+        libraryWindow->setWindowModality(Qt::NonModal);
+        libraryWindow->show();
+    }
+}
+
+
+
+void MainWindow:: showFileTool(enum QFileDialog::AcceptMode type)
+{
+    QUrl savePath;
+    menuBar->setEnabled(false);
+    QFileDialog* fileTool = new QFileDialog(this, Qt::Dialog);
+    fileTool->setDefaultSuffix("mtmx");
+    fileTool->setNameFilter("*.mtmx");
+    fileTool->setWindowModality(Qt::ApplicationModal);
+    fileTool->setAcceptMode(QFileDialog::AcceptSave);
+    fileTool->setAttribute(Qt::WA_DeleteOnClose);
+    fileTool->setAcceptMode(type);
+
+    connect(fileTool, &QFileDialog::accepted,
+            [=]() -> void
+            {
+                computeLoadOrRead(fileTool, type);
+            });
+
+    connect(fileTool, &QFileDialog::rejected,
+            [=]() -> void
+            {
+                fileTool->close();
+                menuBar->setEnabled(true);
+            });
+
+    fileTool->open();
+}
+
+
+
+void MainWindow:: computeLoadOrRead (QFileDialog* fileTool, enum QFileDialog::AcceptMode type)
+{
+    QUrl selectedPath = fileTool->selectedUrls()[0];
+
+    if(selectedPath.isValid())
+    {
+        if(type == QFileDialog::AcceptSave)
+        {
+            library.saveFile(selectedPath.path().toStdString());
+        }
+        else
+        {
+            library.readFile(selectedPath.path().toStdString());
+            currentOpWidget->updateViews();
+            emit libraryChanged();
+        }
+    }
+
+    fileTool->close();
+    menuBar->setEnabled(true);
 }
 
 

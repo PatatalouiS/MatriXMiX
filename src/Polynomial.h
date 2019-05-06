@@ -5,6 +5,9 @@
 #include <vector>
 #include "VectorX.h"
 
+/**
+ * @class The Polynomial class
+ */
 class Polynomial
 {
 

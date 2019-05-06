@@ -33,6 +33,7 @@ class ShowMatrixWidget : public QWidget
                          const QString& name, const QColor& col = QColor(0,0,0,0));
     void computeImgDet(const double scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
     void computeImgTrace(const double scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
+    void clear();
 
 };
 

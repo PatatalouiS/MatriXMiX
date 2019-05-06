@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cassert>
+#include <QDebug>
 using namespace std;
 
 const string PATH = "../data/sauvegarde.txt";
@@ -43,12 +44,9 @@ bool MatrixLibrary:: isEmpty () const
 }
 
 
-void MatrixLibrary:: empty ()
+void MatrixLibrary:: clear ()
 {
-    for (auto it = tab.begin(); it != tab.end(); it++ )
-    {
-        erase(it->first);
-    }
+    tab.clear();
 }
 
 
@@ -113,7 +111,8 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 }
 
 
-void MatrixLibrary::copy_vector(std::vector<std::string>& expression,const std::vector<std::string>& result)const
+void MatrixLibrary::copy_vector(std::vector<std::string>& expression,
+                                const std::vector<std::string>& result)const
 {
     for (auto i :result)
     {
@@ -216,7 +215,8 @@ vector<string> MatrixLibrary:: explode (const string & expression)const
 }
 
 
-bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg) const
+bool MatrixLibrary:: high_equal_priority (const string & opd,
+                                          const string & opg) const
 {
     switch (opd[0])
     {
@@ -243,7 +243,8 @@ bool MatrixLibrary:: high_equal_priority (const string & opd,const string & opg)
 }
 
 
-Matrix MatrixLibrary:: calculate (const string & op, const string & a, const string & b) const
+Matrix MatrixLibrary:: calculate (const string & op, const string & a,
+                                  const string & b) const
 {
     const Matrix* m_a;
     const Matrix* m_b;
@@ -267,7 +268,8 @@ Matrix MatrixLibrary:: calculate (const string & op, const string & a, const str
 }
 
 
-double MatrixLibrary:: calculateFloat (const std::string & op, const std::string & a, const std::string & b) const
+double MatrixLibrary:: calculateFloat (const std::string & op, const std::string & a,
+                                       const std::string & b) const
 {
     if(op == "+")
         return atof(a.c_str()) + atof(b.c_str());
@@ -285,7 +287,8 @@ double MatrixLibrary:: calculateFloat (const std::string & op, const std::string
 }
 
 
-Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::string & a, const float & b)const
+Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::string & a,
+                                             const float & b)const
 {
     const Matrix* m_a;
     m_a=find(a);
@@ -313,7 +316,8 @@ Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::
 }
 
 
-Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::string &a, const float &b)const
+Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::string &a,
+                                            const float &b)const
 {
     const Matrix* m_a;
     m_a = find(a);
@@ -332,7 +336,8 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 }
 
 
-void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string> & polish_notation)const
+void MatrixLibrary:: polish(const std::string & chain ,
+                            std::vector<std::string> & polish_notation)const
 {
     stack<string> p;
     vector<string> expression;
@@ -468,7 +473,6 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 
     s = no_parenthesis.size();
 
-
     string error1 = "Expression vide" ;
 
     if (s == 0)
@@ -492,6 +496,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 
     for(i = 0; i < s; i++)
     {
+        cout << i << endl;
         if (no_parenthesis[i] == "^")
         {
             if (i == 0)
@@ -589,12 +594,16 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
                     return (error3a + no_parenthesis[i-1] + no_parenthesis[i] + error3b);
                 if (atof(no_parenthesis[i].c_str()) < 0.0)
                     return (error3a + no_parenthesis[i-2] + no_parenthesis[i-1]
-                            + no_parenthesis[i] + error3b + "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M");
-                if (atof(no_parenthesis[i].c_str()) - atoi(no_parenthesis[i].c_str()) != 0.0)
-                    return ("Calcul d'une puissance réelle impossible, veuillez saisir un entier");
+                            + no_parenthesis[i] + error3b
+                            + "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M");
+                if (atof(no_parenthesis[i].c_str())
+                        - atoi(no_parenthesis[i].c_str()) != 0.0)
+                    return ("Calcul d'une puissance réelle impossible, "
+                            "veuillez saisir un entier");
             }
             else if ( (i < s - 1) && isName(no_parenthesis[i+1]) )
-                return "L'opération " + no_parenthesis[i] + no_parenthesis[i+1] + " n'est pas définie" ;
+                return "L'opération " + no_parenthesis[i] + no_parenthesis[i+1]
+                        + " n'est pas définie" ;
 
         }
 
@@ -603,7 +612,6 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
     if (!matrix_result)
         return "Le résultat de sortie n'est pas une matrice!" ;
 
-    //cout << "Calculable" << endl << endl;
     return calculable;
 }
 
@@ -612,7 +620,7 @@ Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
 {
     MatrixLibrary copy(*this);
     vector<string> polish_not;
-    copy.polish(chain,polish_not);        //I write my expression in Polish notation
+    copy.polish(chain,polish_not);      //I write my expression in Polish notation
 
     stack<string> pile;
     Matrix temp;
@@ -646,7 +654,9 @@ Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
 
             /* depending on the type of the two operands I calculate the result */
 
-            if ((copy.isName(b) && copy.isName(a)) || (copy.isFloat(a) && copy.isName(b)) || (copy.isFloat(b) && copy.isName(a)) )
+            if ((copy.isName(b) && copy.isName(a))
+                    || (copy.isFloat(a) && copy.isName(b))
+                    || (copy.isFloat(b) && copy.isName(a)) )
             {
                 if ((copy.isName(b) && copy.isName(a)))
                 {
@@ -771,7 +781,7 @@ void MatrixLibrary:: readFile (const string & filename)
     unsigned int r,c;
     ifstream file (filename.c_str());
 
-    empty();
+    clear();
 
     if(!file.is_open())
     {
@@ -937,37 +947,32 @@ void MatrixLibrary:: regressionTest() const
 
 
     cout << "! Test isCalculable" << endl << endl;
-    {
-        cout << "Expressions non calculable..." << endl << endl;
-        cout << exp1 << "  :  " << isCalculableExpression(exp1) << endl;
-        cout << exp2 << "  :  " << isCalculableExpression(exp2) << endl;
-        cout << exp3 << "  :  " << isCalculableExpression(exp3) << endl;
-        cout << exp4 << "  :  " << isCalculableExpression(exp4) << endl;
-        cout << exp5 << "  :  " << isCalculableExpression(exp5) << endl;
-        cout << exp6 << "  :  " << isCalculableExpression(exp6) << endl;
-        cout << exp7 << "  :  " << isCalculableExpression(exp7) << endl;
-        cout << exp8 << "  :  " << isCalculableExpression(exp8) << endl;
-        cout << exp9 << "  :  " << isCalculableExpression(exp9) << endl;
-        cout << exp10 << "  :  " << isCalculableExpression(exp10) << endl;
-        cout << exp11 << "  :  " << isCalculableExpression(exp11) << endl;
-        cout << exp12 << "  :  " << isCalculableExpression(exp12) << endl;
-        cout << exp13 << "  :  " << isCalculableExpression(exp13) << endl << endl << endl;
-        cout << "Expressions calculable" << endl << endl;
-        cout << exp14 << "  :  " << isCalculableExpression(exp14) << endl;
-        cout << exp15 << "  :  " << isCalculableExpression(exp15) << endl;
-        cout << exp16 << "  :  " << isCalculableExpression(exp16) << endl;
-        cout << exp17 << "  :  " << isCalculableExpression(exp17) << endl;
-        cout << exp18 << "  :  " << isCalculableExpression(exp18) << endl;
-        cout << exp19 << "  :  " << isCalculableExpression(exp19) << endl;
-        cout << exp20 << "  :  " << isCalculableExpression(exp20) << endl;
-        cout << exp21 << "  :  " << isCalculableExpression(exp21) << endl;
-        cout << exp22 << "  :  " << isCalculableExpression(exp22) << endl;
-        cout << exp23 << "  :  " << isCalculableExpression(exp23) << endl;
 
-    }
-
-
-
+    cout << "Expressions non calculable..." << endl << endl;
+    cout << exp1 << "  :  " << isCalculableExpression(exp1) << endl;
+    cout << exp2 << "  :  " << isCalculableExpression(exp2) << endl;
+    cout << exp3 << "  :  " << isCalculableExpression(exp3) << endl;
+    cout << exp4 << "  :  " << isCalculableExpression(exp4) << endl;
+    cout << exp5 << "  :  " << isCalculableExpression(exp5) << endl;
+    cout << exp6 << "  :  " << isCalculableExpression(exp6) << endl;
+    cout << exp7 << "  :  " << isCalculableExpression(exp7) << endl;
+    cout << exp8 << "  :  " << isCalculableExpression(exp8) << endl;
+    cout << exp9 << "  :  " << isCalculableExpression(exp9) << endl;
+    cout << exp10 << "  :  " << isCalculableExpression(exp10) << endl;
+    cout << exp11 << "  :  " << isCalculableExpression(exp11) << endl;
+    cout << exp12 << "  :  " << isCalculableExpression(exp12) << endl;
+    cout << exp13 << "  :  " << isCalculableExpression(exp13) << endl << endl << endl;
+    cout << "Expressions calculable" << endl << endl;
+    cout << exp14 << "  :  " << isCalculableExpression(exp14) << endl;
+    cout << exp15 << "  :  " << isCalculableExpression(exp15) << endl;
+    cout << exp16 << "  :  " << isCalculableExpression(exp16) << endl;
+    cout << exp17 << "  :  " << isCalculableExpression(exp17) << endl;
+    cout << exp18 << "  :  " << isCalculableExpression(exp18) << endl;
+    cout << exp19 << "  :  " << isCalculableExpression(exp19) << endl;
+    cout << exp20 << "  :  " << isCalculableExpression(exp20) << endl;
+    cout << exp21 << "  :  " << isCalculableExpression(exp21) << endl;
+    cout << exp22 << "  :  " << isCalculableExpression(exp22) << endl;
+    cout << exp23 << "  :  " << isCalculableExpression(exp23) << endl;
 
     cout << endl << endl << endl << "****** FIN DU TEST DE REGRESSION ******" << endl << endl ;
 }

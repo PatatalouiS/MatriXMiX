@@ -4,7 +4,8 @@
 #include "MatrixViewWidget.h"
 #include "Error.h"
 
-
+#include <QDebug>
+#include <iostream>
 
 UnaryOpWidget::UnaryOpWidget(const type& t, const MatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget(lib, parent)
@@ -12,10 +13,6 @@ AbstractOperationWidget(lib, parent)
     result.setValue(nullptr);
     op.first = "_";
     op.second = nullptr;
-    sortFunction = [](const Matrix* a)->bool
-    {
-        return a->isSQMatrix();
-    };
 
     constructType(t);
 
@@ -72,7 +69,6 @@ AbstractOperationWidget(lib, parent)
 
 void UnaryOpWidget:: updateViews()
 {
-    view->refresh();
     view->refresh(sortFunction);
 }
 
@@ -92,12 +88,12 @@ void UnaryOpWidget:: computeOperation()
 
 
 
-void UnaryOpWidget:: computeSelection(bool viewId)
+void UnaryOpWidget:: computeSelection(const bool viewId)
 {
     (void)viewId;
     op.first = view->nameOfSelectedMatrix();
-    assert(lib->exist(op.first.toStdString()));
-    op.second = lib->find(op.first.toStdString());
+    assert(getLib()->exist(op.first.toStdString()));
+    op.second = getLib()->find(op.first.toStdString());
     description->setText(op.first);
 }
 
@@ -108,6 +104,10 @@ void UnaryOpWidget:: constructType(const type &t)
     {
         case DETERMINANT:
         {
+            sortFunction = [](const Matrix* a) -> bool
+            {
+                return a->isSQMatrix();
+            };
             setTitle("Determinant");
             operation = [](MatrixPair a) -> QVariant
             {
@@ -122,6 +122,10 @@ void UnaryOpWidget:: constructType(const type &t)
 
         case TRACE:
         {
+            sortFunction = [](const Matrix* a) -> bool
+            {
+                return a->isSQMatrix();
+            };
             setTitle("Trace");
             operation = [](MatrixPair a) -> QVariant
             {
@@ -166,6 +170,10 @@ void UnaryOpWidget:: constructType(const type &t)
 
         case EIGEN_PROPERTIES:
         {
+            sortFunction = [](const Matrix* a) -> bool
+            {
+                return a->isSQMatrix() && a->isDiagonalisable();
+            };
             setTitle("Valeurs / Vecteurs Propres");
             operation = [](MatrixPair a) -> QVariant
             {
@@ -179,6 +187,10 @@ void UnaryOpWidget:: constructType(const type &t)
 
         case CARACTERISTIC_POLYNOMIAL:
         {
+            sortFunction = [](const Matrix* a) -> bool
+            {
+                return a->isSQMatrix() && a->isDiagonalisable();
+            };
             setTitle("PolynomeCaractéristique");
             operation = [](MatrixPair a) -> QVariant
             {

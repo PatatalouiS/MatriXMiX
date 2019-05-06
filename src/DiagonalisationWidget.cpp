@@ -115,19 +115,19 @@ void DiagonalisationWidget:: emitResultChoice(const ResultChoice& c)
 
 void DiagonalisationWidget::updateViews()
 {
-
+    view->refresh(sortFunction);
 }
 
 
 
-void DiagonalisationWidget:: computeSelection(bool viewID)
+void DiagonalisationWidget:: computeSelection(const bool viewID)
 {
     (void)viewID;
 
     choiceWidget->hide();
     op.first = view->nameOfSelectedMatrix();
-    assert(lib->exist(op.first.toStdString()));
-    op.second = lib->find(op.first.toStdString());
+    assert(getLib()->exist(op.first.toStdString()));
+    op.second = getLib()->find(op.first.toStdString());
     description->setText(op.first);
 }
 

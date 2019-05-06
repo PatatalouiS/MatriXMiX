@@ -40,6 +40,8 @@ AbstractOperationWidget(lib, parent)
     QHBoxLayout* formLayout = new QHBoxLayout;
     formLayout->addLayout(op1ChoiceLayout);
     formLayout->addLayout(op2ChoiceLayout);
+    formLayout->setAlignment(Qt::AlignCenter);
+    formLayout->setContentsMargins(0,0,20,0);
 
     description->setText(op1.first + logo + QString::number(op2));
     description->setStyleSheet("font-size: 40px");
@@ -63,7 +65,8 @@ AbstractOperationWidget(lib, parent)
 
     QWidget* subWidget1 = new QWidget(this);
     subWidget1->setLayout(subLayout3);
-    subWidget1->setFixedHeight(300);
+    subWidget1->setMaximumHeight(300);
+    subWidget1->setMaximumWidth(800);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
@@ -91,6 +94,7 @@ AbstractOperationWidget(lib, parent)
 
 void BinaryOpMatrixNumberWidget:: updateViews()
 {
+    view->refresh(sortFunction);
 }
 
 
@@ -113,13 +117,13 @@ void BinaryOpMatrixNumberWidget:: computeOperation()
 }
 
 
-void BinaryOpMatrixNumberWidget:: computeSelection(bool viewId)
+void BinaryOpMatrixNumberWidget:: computeSelection(const bool viewId)
 {
     if(!viewId)
     {
         op1.first = view->nameOfSelectedMatrix();
-        assert(lib->exist(op1.first.toStdString()));
-        op1.second = lib->find(op1.first.toStdString());
+        assert(getLib()->exist(op1.first.toStdString()));
+        op1.second = getLib()->find(op1.first.toStdString());
     }
     else
     {

@@ -20,40 +20,86 @@ Q_DECLARE_METATYPE(PolynomialResult);
 Q_DECLARE_METATYPE(KerImgDimResult);
 
 
+/**
+@class AbstractOperationWidget the base class for all the Operation classes defined in MatriXMIX. \n
+        It's an abstract class, you CAN'T instantiate it in your code .
+*/
 
 class AbstractOperationWidget : public QWidget
 {
 
     Q_OBJECT
 
-    using SortFunction = std::function<bool(const Matrix*)>;
-
-
     public :
 
-        using MatrixPair = QPair<QString, const Matrix*>;
+        /**
+         * @brief Unique constructor of the class. he is used in the child classes constructor.
+         * @param [in] lib a pointer on a MatrixLibrary class
+         * @param [in, out] parent a pointer on a potential parent Qwidget, mainly for ensure good deletion.
+         */
+
         AbstractOperationWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
 
     public slots:
+
+
+        /**
+         * @brief Pure Virtual Function. In charge to update the different MatrixViewWidget of Matrix in child classes.
+         */
 
         virtual void updateViews() = 0;
 
     protected slots:
 
-        virtual void computeSelection(bool view = 0) = 0;
+        /**
+         * @brief Pure Virtual Function. In charge to compute the user choices, when he select a Matrix in a MatrixViewWidget.
+         * @param [in] viewId the Id of the MatrixViewWidget 's selected by the user. \n
+         *      Only two values are possible because the child classes can contains only 2 views . (Unary or Binary operations).
+         */
+
+        virtual void computeSelection(const bool viewId = 0) = 0;
+
+        /**
+         * @brief Pure Virtual Function. In charge to compute the result of a Matrix operation. The operands are selected by the user.\n
+         *      the signal newResult(const QVariant res) is emitted if the result is valid.
+         */
+
         virtual void computeOperation() = 0;
 
     protected :
 
-        const MatrixLibrary* lib;
+        using SortFunction = std::function<bool(const Matrix*)>;
+        using MatrixPair = QPair<QString, const Matrix*>;
+
         SortFunction sortFunction;
         QLabel* description;
         QLabel* title;
         QPushButton* calculer;
 
-        void setLib(const MatrixLibrary* lib);
+        /**
+         *  @brief getter function, return a pointer on the const MatrixLibrary lib member
+         *  @return const MatrixLibrary*
+         */
+
+        const MatrixLibrary* getLib () const;
+
+        /**
+         * @brief set the Title of the OperationWidget.
+         * @param [in] str the title of the Operation
+         */
+
         void setTitle(const QString& str);
-        void setSortFunction(const SortFunction& s);
+
+        /**
+         * @brief set the SortFunction of the OperationWidget, in charge to order the availables Matrices for an operation.
+         * @param [in] sort the lambda SortFunction
+         */
+
+        void setSortFunction(const SortFunction& sort);
+
+    private :
+
+        const MatrixLibrary* lib;
 
     signals:
 

@@ -1,9 +1,14 @@
 <RCC>
     <qresource prefix="/img">
-        <file>Logo_maths.jpg</file>
         <file>logo.png</file>
         <file>plus.png</file>
         <file>minus.png</file>
-        <file>bg.jpg</file>
+        <file>qt.png</file>
+        <file>library.png</file>
+        <file>save.png</file>
+        <file>create.png</file>
+        <file>trash.png</file>
+        <file>background.png</file>
+        <file>quit.png</file>
     </qresource>
 </RCC>

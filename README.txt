@@ -37,7 +37,7 @@ Elle possède également des fonctionnalités plus poussées telles que l'étude
 			MatriXMiX_txt (version texte)
 			MatriXMiX_test (exécute des tests de non régression)	
 	L'application peut être utilisée par des étudiants ou des enseignants pour résoudre des exercices basiques.
-	Le module Matrix (accompagné du module Gauss, Fraction et Polynomial) peut quant à lui être réutilisé par d'autres développeurs ayant recourts à des calculs matriciels poussés.
+	Le module Matrix (accompagné du module Gauss, Fraction et Polynomial) peut quant à lui être réutilisé par d'autres développeurs ayant recourt à des calculs matriciels poussés.
 
 
 ******** ARBORESCENCE GÉNÉRALE ******** :
@@ -49,7 +49,6 @@ Elle possède également des fonctionnalités plus poussées telles que l'étude
 		README.txt
 
 		src/
-			main.cpp
 			maths/
 				Matrix.h
 				Matrix.cpp
@@ -61,8 +60,53 @@ Elle possède également des fonctionnalités plus poussées telles que l'étude
 				Fraction.cpp
 				Polynome.h
 				Polynome.cpp
-					
-
+				VectorX.h
+				VectorX.cpp
+			test/
+				main_test.cpp			
+			txt/
+				MatriXMiXTXT.h
+				MatriXMiXTXT.cpp
+				main_txt.cpp
+			graph/
+				main.cpp
+				AbstractOperationWidget.h
+				AbstractOperationWidget.cpp
+				BinaryOpMatrixMatrixWidget.h
+				BinaryOpMatrixMatrixWidget.cpp
+				BinaryOpMatrixNumberWidget.h
+				BinaryOpMatrixNumberWidget.cpp
+				DeterminantWindow.cpp
+				DiagonalisationWidget.h
+				DiagonalisationWidget.cpp
+				DivisionWindow.cpp
+				Error.h
+				Error.cpp
+				ExprEvalWidget.h
+				ExprEvalWidget.cpp
+				HelpWindow.h
+				HelpWindow.cpp
+				HelpWindowQt.h
+				HelpWindowQt.cpp
+				LibraryWindow.h	
+				LibraryWindow.cpp
+				MainWindow.h
+				MainWindow.cpp
+				MatrixViewWidget.h
+				MatrixViewWidget.cpp
+				MenuBar.h
+				MenuBar.cpp
+				MultiplicationWindow.cpp
+				PowerWindow.h
+				PowerWindow.cpp
+				ScalarMultiplicationWindow.cpp
+				SetMatrixWidget.h
+				SetMatrixWidget.cpp	
+				ShowMatrixWidget.h
+				ShowMatrixWidget.cpp
+				SoustractionWindow.cpp
+				UnaryOpWidget.h
+				UnaryOpWidget.cpp
 		
 		ext/
 			Eigen/
@@ -105,17 +149,17 @@ Note : La Compilation est CROSS-OS, vous pouvez compiler autant sur un systeme
 			bin/MatriXMiX_test
 
 	Autres Cibles du Makefile :
-		-> Commande "make clean" supprimera TOUS les exécutables dans bin/ et fichiers objets dans obj/
-		-> Commande "make documentation" génerera la documentation du module.
+	-> Commande "make clean" supprimera TOUS les exécutables dans bin/ et fichiers objets dans obj/
+	-> Commande "make documentation" génerera la documentation du module.
 
 
 ________________________________________________________________________________
 
 ******** LIBRAIRIES EXTERNES ********
-
-	- L'application MatriXMiX requiert l'utilisation de deux librairies externes: 
-		- eigen 3.3.7 : pour réaliser des calculs poussés de diagonalisation
-		- latex : pour un affichage plus conventionnel des résultats mathématiques
+ 
+L'application MatriXMiX requiert l'utilisation de deux librairies externes: 
+	- eigen 3.3.7 : pour réaliser des calculs poussés de diagonalisation
+	- latex : pour un affichage plus conventionnel des résultats mathématiques
 
 
 ________________________________________________________________________________

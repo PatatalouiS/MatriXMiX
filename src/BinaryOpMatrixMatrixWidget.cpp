@@ -16,6 +16,8 @@ BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const Mat
     op1.second = nullptr;
     op2.second = nullptr;
 
+    description->setText(op1.first + logo + op2.first);
+
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
     op1Title -> setAlignment(Qt::AlignCenter);
@@ -88,7 +90,7 @@ void BinaryOpMatrixMatrixWidget:: updateViews()
 {
     view1->refresh();
     view2->refresh();
-    if(op1.second != nullptr)
+    if(op1.second != nullptr) // si op1 is selected, refresh view2 with the good closure.
     {
         view2->refresh(sortViewFunction(op1.second));
     }
@@ -112,7 +114,7 @@ void BinaryOpMatrixMatrixWidget:: computeOperation()
 }
 
 
-void BinaryOpMatrixMatrixWidget:: computeSelection(bool view)
+void BinaryOpMatrixMatrixWidget:: computeSelection(const bool view)
 {
     if(!view)
     {
@@ -120,24 +122,17 @@ void BinaryOpMatrixMatrixWidget:: computeSelection(bool view)
         op2.first = "_";
 
         op1.first = view1->nameOfSelectedMatrix();
-        assert(lib->exist(op1.first.toStdString()));
-        op1.second = lib->find(op1.first.toStdString());
+        assert(getLib()->exist(op1.first.toStdString()));
+        op1.second = getLib()->find(op1.first.toStdString());
         view2->refresh(sortViewFunction(op1.second));
     }
     else
     {
         op2.first = view2->nameOfSelectedMatrix();
-        assert(lib->exist(op2.first.toStdString()));
-        op2.second = lib->find(op2.first.toStdString());
+        assert(getLib()->exist(op2.first.toStdString()));
+        op2.second = getLib()->find(op2.first.toStdString());
     }
 
-    description->setText(op1.first + logo + op2.first);
-}
-
-
-void BinaryOpMatrixMatrixWidget:: setLogo (const QString& logo)
-{
-    this->logo = logo;
     description->setText(op1.first + logo + op2.first);
 }
 
@@ -163,7 +158,7 @@ void BinaryOpMatrixMatrixWidget:: constructType(const type& t)
             };
 
             setTitle("Addition");
-            setLogo(" + ");
+            logo =  " + " ;
 
             break;
         }
@@ -183,7 +178,7 @@ void BinaryOpMatrixMatrixWidget:: constructType(const type& t)
             };
 
             setTitle("Soustraction");
-            setLogo(" - ");
+            logo = " - ";
 
             break;
         }
@@ -203,7 +198,7 @@ void BinaryOpMatrixMatrixWidget:: constructType(const type& t)
             };
 
             setTitle("Multiplication");
-            setLogo(" * ");
+            logo = " * ";
 
             break;
         }
@@ -223,7 +218,7 @@ void BinaryOpMatrixMatrixWidget:: constructType(const type& t)
             };
 
             setTitle("Division");
-            setLogo(" / ");
+            logo = " / ";
         }
     }
 }

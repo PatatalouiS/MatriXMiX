@@ -11,7 +11,7 @@
 
 using MatrixViewItem = QPair<const int, const QString>;
 
-class LibraryWindow : public QDialog
+class LibraryWindow : public QWidget
 {
     Q_OBJECT
 
@@ -31,6 +31,10 @@ class LibraryWindow : public QDialog
 
         LibraryWindow (QWidget* main, MatrixLibrary* lib);
         ~LibraryWindow ();
+
+    public slots:
+
+         void update();
 
     private slots:
 
