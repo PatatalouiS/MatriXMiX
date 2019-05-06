@@ -137,6 +137,7 @@ void DiagonalisationWidget:: computeOperation()
     if(op.second == nullptr)
     {
         Error::showError("opérande Manquante !", "Veuillez bien sélectionner votre matrice !", this);
+        return;
     }
 
     op.second->allMatrix(result[0], result[1], result[2]);

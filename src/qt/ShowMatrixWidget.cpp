@@ -129,19 +129,22 @@ const QString& name, const QColor& col)
             power = QString ("");
         else
             power = QString::number(i);
+        double temp = res1.tab[i];
 
-        if (res1.tab[i] != 0.0)
+        if (abs(temp - 0.0) < 0.0001)
+            temp = 0.0;
+        if (temp != 0.0)
         {
-            if (res1.tab[i] == 1.0)
+            if (temp == 1.0)
                 developpedForm += x + power +  QString("}") ;
-            else if (-res1.tab[i] == 1.0)
+            else if (-temp == 1.0)
                 developpedForm += QString("-")
                         + QString("X^{") + power +  QString("}") ;
-                else if (res1.tab[i] > 0.0)
-                    developpedForm += QString("+") + QString::number(res1.tab[i])
+                else if (temp > 0.0)
+                    developpedForm += QString("+") + QString::number(temp)
                             + QString("X^{") + power +  QString("}") ;
                     else
-                        developpedForm += QString::number(res1.tab[i])
+                        developpedForm += QString::number(temp)
                                 + QString("X^{") + power +  QString("}") ;
         }
     }

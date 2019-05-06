@@ -82,6 +82,7 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
 
     QPalette p;
     p = palette();
+    QPixmap background(":/img/background.png");
     p.setBrush(QPalette::Window, QBrush(QPixmap(":/img/background.png")));
     setPalette(p);
 

@@ -56,13 +56,14 @@ void MatrixViewWidget:: showMatrixPreview () const
     assert(lib->exist(currentSelectedName.toStdString()));
     const Matrix* currentMatrix = lib->find(currentSelectedName.toStdString());
     matrixPreview = new ShowMatrixWidget(nullptr);
+    matrixPreview->setWindowFlag(Qt::Tool);
     connect(matrixPreview, &ShowMatrixWidget::destroyed,
             [this]()
             {
                 this->matrixPreview = nullptr;
             });
     matrixPreview->setAttribute(Qt::WA_DeleteOnClose);
-    matrixPreview->setWindowFlag(Qt::WindowStaysOnTopHint);
+    matrixPreview->setWindowFlag(Qt::WindowStaysOnBottomHint);
     matrixPreview->computeImgMatrix(*currentMatrix, 15);
     matrixPreview->move(matrixPreview->parentWidget()->mapFromGlobal(QCursor::pos()));
     matrixPreview->show();
