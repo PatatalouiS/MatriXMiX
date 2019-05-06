@@ -90,17 +90,14 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
                "QGroupBox::title { subcontrol-origin:margin;"
                "subcontrol-position:top left;"
                "font-weight:75; color: #283676;}");
-   QLabel* defMaths = new QLabel("Théorie sur le calcul matriciel: ");
-   QLabel* linkOpBinaires = new QLabel;
-   linkOpBinaires->setOpenExternalLinks(true);
-   linkOpBinaires->setText("<a href = \"https://www.unilim.fr/pages_perso/jean.debord/math"
-                           "/matrices/matrices.htm\"> Opérations sur"
-                           " les matrices </a>");
-   QLabel* linkEspVect = new QLabel;
-   linkEspVect->setOpenExternalLinks(true);
-   linkEspVect->setText("<a href = \"http://uel.unisciel.fr/mathematiques"
-                        "/calculmat1/calculmat1/co/calculmat1.html\"> "
-                        "Matrice et espaces vectoriels</a>");
+   QLabel* defMaths = new QLabel("Théorie sur le calcul matriciel: "
+                                 "<a href = \"https://www.unilim.fr/pages_perso/jean.debord/math"
+                                 "/matrices/matrices.htm\"> Opérations sur"
+                                 " les matrices </a>"
+                                 ", <a href = \"http://uel.unisciel.fr/mathematiques"
+                                 "/calculmat1/calculmat1/co/calculmat1.html\"> "
+                                 "Matrice et espaces vectoriels</a>");
+   defMaths->setOpenExternalLinks(true);
    QLabel* linkDiago = new QLabel;
    linkDiago->setOpenExternalLinks(true);
    linkDiago->setText("<a href = \"http://www.math.univ-paris13.fr/~schwartz/L2/diag.pdf\"> "
@@ -126,18 +123,14 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
 
    QVBoxLayout* subLayout3 = new QVBoxLayout;
    subLayout3->addWidget(defMaths);
-   subLayout3->addWidget(linkOpBinaires);
-   subLayout3->addWidget(linkEspVect);
    subLayout3->addWidget(linkDiago);
    maths->setLayout(subLayout3);
 
    QLabel* matrix = new QLabel("@MatriXMiX 2019");
    matrix->setFont(font);
-   matrix->setMinimumHeight(20);
    matrix->setStyleSheet("font: bold; color: darkBlue;");
-   QLabel* matrixAuteurs = new QLabel("\n OLIVIE Maxime \n CERBULEAN Ana-Maria"
+   QLabel* matrixAuteurs = new QLabel("OLIVIE Maxime \n CERBULEAN Ana-Maria"
                                      "\n BOUMAZA Tarik \n SEBIA Hana");
-   matrixAuteurs->setMaximumHeight(100);
    QVBoxLayout* matrixLayout = new QVBoxLayout;
    matrixLayout->addWidget(matrix);
    matrixLayout->addWidget(matrixAuteurs);
@@ -151,6 +144,7 @@ HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
    mainLayout->addLayout(matrixLayout);
    mainLayout->setAlignment(Qt::AlignCenter);
    setLayout(mainLayout);
+   show();
 }
 
 HelpWindow::~HelpWindow()

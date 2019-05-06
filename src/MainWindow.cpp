@@ -330,7 +330,7 @@ QGroupBox* MainWindow::initBinaryOp ()
                 "QGroupBox::title { subcontrol-origin:margin;"
                 "subcontrol-position:top center;"
                 "font: bold ; color: black;}");
-    BinaryOpBox->setMinimumSize(300,200);
+    BinaryOpBox->setMinimumSize(300,180);
 
     BinaryOpBox->setFont(font);
 
