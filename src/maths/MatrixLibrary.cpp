@@ -109,7 +109,7 @@ const std::map<std::string, Matrix>& MatrixLibrary:: data () const
 }
 
 
-void MatrixLibrary::copy_vector(std::vector<std::string>& expression,
+void MatrixLibrary::copyVector(std::vector<std::string>& expression,
                                 const std::vector<std::string>& result)const
 {
     for (auto i :result)
@@ -213,7 +213,7 @@ vector<string> MatrixLibrary:: explode (const string & expression)const
 }
 
 
-bool MatrixLibrary:: high_equal_priority (const string & opd,
+bool MatrixLibrary:: highEqualPriority (const string & opd,
                                           const string & opg) const
 {
     switch (opd[0])
@@ -340,7 +340,7 @@ void MatrixLibrary:: polish(const std::string & chain ,
 
     stack<string> p;
     vector<string> expression;
-    copy_vector(expression,explode(chain));
+    copyVector(expression,explode(chain));
 
     for (auto i : expression)
     {
@@ -357,7 +357,7 @@ void MatrixLibrary:: polish(const std::string & chain ,
         {
             if (!p.empty())
             {
-                while ((!p.empty()) && high_equal_priority(i,p.top()))
+                while ((!p.empty()) && highEqualPriority(i,p.top()))
                 {
                     polish_notation.push_back(p.top());
                     p.pop();

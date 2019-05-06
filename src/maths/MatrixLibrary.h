@@ -94,14 +94,14 @@ class MatrixLibrary
     const std::map<std::string, Matrix>& data () const;
 
 
-public:
+private:
 
 /**
  * @brief Copy a vector of string in another
  * @param [out] expression (\e std::vector<std::string>)
  * @param [in] resultat (\e std::vector<std::string>)
  */
-    void copy_vector(std::vector<std::string>& expression,
+    void copyVector(std::vector<std::string>& expression,
                      const std::vector<std::string>&resultat)const;
 
 /**
@@ -146,7 +146,7 @@ public:
  * @param [in] opg (\e string)
  * @return \e bool
  */
-    bool high_equal_priority (const std::string & opd,
+    bool highEqualPriority (const std::string & opd,
                               const std::string & opg) const;
 
 /**
