@@ -1,14 +1,12 @@
 
 #include "MatrixLibrary.h"
-#include "Matrix.h"
 #include <stack>
 #include <iostream>
 #include <fstream>
 #include <cassert>
-#include <QDebug>
+
 using namespace std;
 
-const string PATH = "../data/sauvegarde.txt";
 
 
 MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
