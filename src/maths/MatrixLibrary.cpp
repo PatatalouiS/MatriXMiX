@@ -372,12 +372,16 @@ void MatrixLibrary:: polish(const std::string & chain ,
         {
            do
             {
-                if (p.top() != "(") polish_notation.push_back(p.top());
-                p.pop();
+                if (p.top() != "(")
+                {
+                    polish_notation.push_back(p.top());
+                    p.pop();
+                }
 
             }while ((p.top() !=  "(") && (!p.empty()));
 
-            if (p.top() != "") p.pop();
+            if (p.top() != "")
+                p.pop();
         }
 
     }
@@ -510,7 +514,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
             if (i == 0)
                 return ("L'expression ne peut pas commencer par '~'"
                         "\nVeuillez saisir 'M~' pour désigner l'inverse d'une matrice");
-            else if (!isName(no_parenthesis[i-1]))
+            else if (!isName(no_parenthesis[i-1]) && no_parenthesis[i-1] != "~")
                     return ("On ne peut calculer que l'inverse d'une matrice");
             if (i == s - 2)
                 return ("Calcul de " + no_parenthesis[i-1] + no_parenthesis[i]
