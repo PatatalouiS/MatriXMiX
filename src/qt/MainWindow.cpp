@@ -58,26 +58,16 @@ MainWindow:: MainWindow() : QMainWindow()
     QFont fontTitle ("Arial");
     fontTitle.setPointSize(20);
     QPixmap im(":/img/logo.png");
-    im = im.scaled(330, 70);
+    im = im.scaled(330, 60);
     QLabel* logo = new QLabel;
     logo->setPixmap(im);
     logo->setMaximumWidth(330);
-    //QLabel* title = new QLabel(" MatriXMiX");
-//    title->setStyleSheet("font-size: 20px; font:bold; background-color: "
-//                         "QColor(0,0,0,0); border:0px;");
-    //title->setAlignment(Qt::AlignCenter);
 
-//    headerWidget->setStyleSheet("QWidget {background-color: qlineargradient"
-//                                "(x1 : 0 , y1 : 0 , x2: 0 , y2:1 , "
-//                                "stop : 0 white , stop : 1 lightBlue);"
-//                                "border: 1px solid silver;"
-//                                "border-radius: 3px;}");
     headerSubLayout->addWidget(logo);
-   // headerSubLayout->addWidget(title);
     headerSubLayout->setAlignment(Qt::AlignHCenter);
 
     headerWidget->setLayout(headerSubLayout);
-    headerWidget->setFixedWidth(350);
+    headerWidget->setFixedWidth(340);
 
     headerLayout->addWidget(headerWidget);
     headerLayout->setAlignment(Qt::AlignHCenter);
