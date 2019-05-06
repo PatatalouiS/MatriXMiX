@@ -25,7 +25,6 @@ HEADERS += src/maths/Matrix.h \
         src/maths/Fraction.h \
         src/maths/Gauss.h \
         src/maths/MatrixLibrary.h \
-        src/txt/MatriXMiXTXT.h \
         src/qt/MainWindow.h \
         src/qt/LibraryWindow.h \
         src/qt/ShowMatrixWidget.h \
@@ -50,7 +49,6 @@ SOURCES += src/qt/main.cpp \
         src/maths/Fraction.cpp \
         src/maths/Gauss.cpp \
         src/maths/MatrixLibrary.cpp \
-        src/txt/MatriXMiXTXT.cpp \
         src/qt/MainWindow.cpp \
         src/qt/LibraryWindow.cpp \
         src/qt/MatrixViewWidget.cpp \
