@@ -35,7 +35,12 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
 
     menuHelp = addMenu("Aide");
     menuHelp->setCursor(Qt::PointingHandCursor);
+
+    QPixmap im5(":/img/icons/MatriXMiX.png");
+    im5 = im5.scaled(200, 200);
+
     actionHelpMatrix = new QAction("About MatriXMix",this);
+    actionHelpMatrix->setIcon(im5);
     menuHelp->addAction(actionHelpMatrix);
 
     menuHelp->addSeparator();

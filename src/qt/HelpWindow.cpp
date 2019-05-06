@@ -2,14 +2,13 @@
 
 HelpWindow::HelpWindow(QWidget* parent) : QDialog(parent)
 {
-   title = new QLabel("MatriXMiX Guide");
+   title = new QLabel("MatriXMix Guide");
 
-   QPixmap im(":/img/logo.png");
-   im = im.scaled(100, 56);
+   QPixmap im(":img/icons/MatriXMiX.png");
+   im = im.scaled(60, 60);
 
    logo = new QLabel;
    logo->setPixmap(im);
-   logo->setMaximumWidth(150);
 
    QFont fontTitle ("Arial");
    fontTitle.setPointSize(20);

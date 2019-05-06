@@ -68,5 +68,8 @@ SOURCES += src/qt/main.cpp \
 RESOURCES += \
     data/data.qrc
 
+DISTFILES += \
+    data/icons/MatriXMiX.png
+
 
 
