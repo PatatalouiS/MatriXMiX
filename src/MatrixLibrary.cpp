@@ -334,7 +334,6 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 
 void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string> & polish_notation)const
 {
-
     stack<string> p;
     vector<string> expression;
     copy_vector(expression,explode(chain));
@@ -363,21 +362,24 @@ void MatrixLibrary:: polish(const std::string & chain , std::vector<std::string>
 
             p.push(i);
 
-
         }
         else if (i == ")")
         {
            do
             {
-                if (p.top() != "(") polish_notation.push_back(p.top());
-                p.pop();
+                if (p.top() != "(")
+                {
+                    polish_notation.push_back(p.top());
+                    p.pop();
+                }
 
             }while ((p.top() !=  "(") && (!p.empty()));
-
-            if (p.top() != "") p.pop();
+            if (p.top() != "")
+                p.pop();
         }
 
     }
+
     if(polish_notation[polish_notation.size()-1]=="")
         polish_notation.pop_back();
 
@@ -507,7 +509,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
             if (i == 0)
                 return ("L'expression ne peut pas commencer par '~'"
                         "\nVeuillez saisir 'M~' pour désigner l'inverse d'une matrice");
-            else if (!isName(no_parenthesis[i-1]))
+            else if (!isName(no_parenthesis[i-1]) && no_parenthesis[i-1] != "~")
                     return ("On ne peut calculer que l'inverse d'une matrice");
             if (i == s - 2)
                 return ("Calcul de " + no_parenthesis[i-1] + no_parenthesis[i]
@@ -608,7 +610,6 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 
 Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
 {
-
     MatrixLibrary copy(*this);
     vector<string> polish_not;
     copy.polish(chain,polish_not);        //I write my expression in Polish notation

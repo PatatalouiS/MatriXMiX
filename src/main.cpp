@@ -9,14 +9,17 @@ using namespace std;
 int main (int argc, char* argv[])
 {
 
-   /* QApplication app(argc, argv);
+    QApplication app(argc, argv);
     MainWindow mainWindow;
     mainWindow.show();
-    return app.exec();*/
-    MatrixLibrary lib;
+    return app.exec();
+
+
+   /* MatrixLibrary lib;
     Matrix a(2,2,{1,2,3,4});
     lib.addMatrix("A",a);
-    cout<< lib.calculateExpression("((A+A))")<<endl ;
+    if(lib.isCalculableExpression("((A+A))") == "calculable")
+    cout<< lib.calculateExpression("((A+A))")<<endl ;*/
 
    /* vector<string> res;
     lib.polish("((A+A))",res);
@@ -26,6 +29,5 @@ int main (int argc, char* argv[])
          cout<< res[i] << endl;
     }*/
 
-    return 0;
 
 }
