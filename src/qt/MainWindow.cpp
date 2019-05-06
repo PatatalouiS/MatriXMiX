@@ -58,27 +58,26 @@ MainWindow:: MainWindow() : QMainWindow()
     QFont fontTitle ("Arial");
     fontTitle.setPointSize(20);
     QPixmap im(":/img/logo.png");
-    im = im.scaled(100, 56);
+    im = im.scaled(330, 70);
     QLabel* logo = new QLabel;
     logo->setPixmap(im);
-    logo->setMaximumWidth(150);
-    logo->setStyleSheet("background-color: QColor(0,0,0,0); border:0px;");
-    QLabel* title = new QLabel(" MatriXMiX");
-    title->setStyleSheet("font-size: 20px; font:bold; background-color: "
-                         "QColor(0,0,0,0); border:0px;");
-    title->setAlignment(Qt::AlignCenter);
+    logo->setMaximumWidth(330);
+    //QLabel* title = new QLabel(" MatriXMiX");
+//    title->setStyleSheet("font-size: 20px; font:bold; background-color: "
+//                         "QColor(0,0,0,0); border:0px;");
+    //title->setAlignment(Qt::AlignCenter);
 
-    headerWidget->setStyleSheet("QWidget {background-color: qlineargradient"
-                                "(x1 : 0 , y1 : 0 , x2: 0 , y2:1 , "
-                                "stop : 0 white , stop : 1 lightBlue);"
-                                "border: 1px solid silver;"
-                                "border-radius: 3px;}");
+//    headerWidget->setStyleSheet("QWidget {background-color: qlineargradient"
+//                                "(x1 : 0 , y1 : 0 , x2: 0 , y2:1 , "
+//                                "stop : 0 white , stop : 1 lightBlue);"
+//                                "border: 1px solid silver;"
+//                                "border-radius: 3px;}");
     headerSubLayout->addWidget(logo);
-    headerSubLayout->addWidget(title);
+   // headerSubLayout->addWidget(title);
     headerSubLayout->setAlignment(Qt::AlignHCenter);
 
     headerWidget->setLayout(headerSubLayout);
-    headerWidget->setFixedWidth(240);
+    headerWidget->setFixedWidth(350);
 
     headerLayout->addWidget(headerWidget);
     headerLayout->setAlignment(Qt::AlignHCenter);
