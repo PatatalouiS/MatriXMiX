@@ -2,7 +2,6 @@
 #include <iostream>
 #include <complex>
 #include <cstring>
-#include <cassert>
 #include <cmath>
 #include <utility>
 #include <Dense>
@@ -22,7 +21,7 @@ const Matrix Matrix:: matrix_null = Matrix();
 const double Matrix:: double_notExist = double();
 
 
-// ********* CONSTRUCTEURS / DESTRUCTEUR *********
+// ********* CONSTRUCTORS / DESTRUCTORS *********
 
 
 
@@ -118,7 +117,7 @@ Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<double>> (m.tab))
 
 
 
-// ******** FONCTIONS STATIQUES *********
+// ******** STATIC FUNCTION *********
 
 
 Matrix Matrix:: ID (const unsigned int size)
@@ -130,7 +129,7 @@ Matrix Matrix:: ID (const unsigned int size)
 
 
 
-// ******* FONCTIONS DE CALCUL ALGEBRIQUE ET OPERATEURS DE CALCUL ********
+// ******* ACCESSORS / MUTATORS & BASIC FUNCTIONS ********
 
 
 unsigned int Matrix:: getNbRows() const
@@ -607,7 +606,7 @@ unsigned int Matrix:: rank()const
 
 
 
-// ********   FONCTIONS PRIVEES   ***********
+// ********   PRIVATE FUNCTIONS   ***********
 
 Matrix Matrix:: checkCast() const
 {
@@ -779,7 +778,7 @@ const Matrix Matrix:: eigen2Class(const Eigen::MatrixXd & m) const
 
 
 
-// *********   FONCTIONS D'ETUDE DE MATRICES    *********
+// *********   ADVANCED MATRIX STUDY FUNCTIONS   *********
 
 
 const Matrix Matrix:: gaussReduction()const
@@ -1058,7 +1057,8 @@ const Matrix Matrix::transferMatrix()const
 }
 
 
-void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const
+void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal,
+                         Matrix & transferB2C) const
 {
    transferC2B = transferMatrix();
    diagonal = diagonalise();
@@ -1074,7 +1074,7 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal, Matrix & trans
 }
 
 
-void Matrix::testRegression() const
+void Matrix:: regressionTest() const
 {
 
     cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION ******" << endl << endl << endl;

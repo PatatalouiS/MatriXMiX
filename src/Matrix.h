@@ -3,11 +3,13 @@
 
 
 #include <vector>
-#include <Dense>  // externe library eigen 3.3.7
+#include <Dense>  // extern library eigen 3.3.7
 #include "VectorX.h"
 #include "Polynomial.h"
 
-
+/**
+ * @class The Matrix class
+ */
 class Matrix
 {
 
@@ -43,7 +45,7 @@ private:
 /**
  * @brief Recursive function which returns matrix determinant
  * @param [in] dim (\e unsigned \e int)
- * @return \e (double)
+ * @return \e double
  */
     double determinant(const unsigned int & dim) const;
 
@@ -94,6 +96,9 @@ public:
 
 
 
+ // Constructors
+
+
 /**
  * @brief Default constructor
  */
@@ -109,11 +114,12 @@ public:
 
 /**
  * @brief Constructor
- * @param [in] rows \e unsigned int
- * @param [in] cols \e unsigned int
- * @param [in] type \e enum type
+ * @param [in] rows (\e unsigned \e int)
+ * @param [in] cols (\e unsigned \e int)
+ * @param [in] type (\e enum \e type)
  */
-    Matrix (const unsigned int rows, const unsigned int cols, const enum initMatrix& type = Z);
+    Matrix (const unsigned int rows, const unsigned int cols,
+            const enum initMatrix& type = Z);
 
 /**
  * @brief Constructor
@@ -130,6 +136,9 @@ public:
     Matrix (const Matrix & m);
 
 
+
+
+// Accessors/Mutators & basic functions
 
 
 /**
@@ -186,16 +195,25 @@ public:
 
 /**
  * @brief Friend operator << : shows matrix
- * @param |in] flux \e std::ostream
+ * @param |in-out] flux \e std::ostream
  * @param [in] m (\e Matrix)
  * @return std::ostream&
  */
     friend std::ostream& operator << (std::ostream& flux, const Matrix & m);
 
-
+/**
+ * @brief Operator << : enter values into Matrix
+ * @param [in] values (\e std::string)
+ * @return \e Matrix
+ */
     Matrix operator << (const std::string& values);
 
-
+/**
+ * @brief Operator >> : enter values into Matrix
+ * @param [in-out] flux \e istream
+ * @param [in-out] m \e Matrix
+ * @return \e istream
+ */
     friend std::istream& operator >> (std::istream& flux, Matrix & m);
 
 /**
@@ -236,9 +254,13 @@ public:
  */
     const Matrix operator * (const double & lambda) const;
 
-
+ /**
+ * @brief Operator * : friend operator, multiplies a Matrix by a scale
+ * @param [in] lambda \e double
+ * @param [in] m \e Matrix
+ * @return Matrix
+ */
     friend const Matrix operator * (const double & lambda, const Matrix & m) ;
-
 
 /**
  * @brief Operator / : binary operation (division)
@@ -255,19 +277,18 @@ public:
     const Matrix operator ^ (const int & p) const;
 
 /**
- * @brief Operator == : test equality between 2 matrix
+ * @brief Operator == : test equality between 2 matrices
  * @param [in] m (\e Matrix)
  * @return \e bool
  */
     bool operator == (const Matrix & m) const;
 
 /**
- * @brief Operator != : test the non equality between 2 matrix
+ * @brief Operator != : test the non equality between 2 matrices
  * @param [in] m (\e Matrix)
  * @return \e bool
  */
     bool operator != (const Matrix & m) const;
-
 
 /**
  * @brief Test if the matrix is a square matrix
@@ -307,17 +328,19 @@ public:
 
 /**
  * @brief Returns the matrix rank
- * @return \e unsigned int
+ * @return \e unsigned \e int
  */
     unsigned int rank() const;
-
-    //Fonctions d'étude poussée des matrices et utilisation de la librairie externe eigen3
 
 /**
  * @brief Returns the staggered matrix
  * @return \e Matrix
  */
     const Matrix gaussReduction() const;
+
+
+
+ // Advanced matrix study functions
 
 /**
  * @brief Returns the kernel and image dimensions
@@ -345,13 +368,13 @@ public:
 
 /**
  * @brief Returns the matrix eigenvectors
- * @return std::vector<VectorX>
+ * @return \e std::vector<VectorX>
  */
     const std::vector<VectorX> eigenVectors() const;
 
 /**
  * @brief Returns the matrix eigenvalues and eigenvectors
- * @return std::vector<std::pair<double,VectorX>>
+ * @return \e std::vector<std::pair<double,VectorX>>
  */
     const std::vector<std::pair<double,VectorX>> allEigen() const;
 
@@ -382,12 +405,13 @@ public:
  * @param [in-out] diagonal \e Matrix
  * @param [in-out] transferB2C \e Matrix
  */
-    void allMatrix(Matrix & transferC2B, Matrix & diagonal, Matrix & transferB2C) const;
+    void allMatrix(Matrix & transferC2B, Matrix & diagonal,
+                   Matrix & transferB2C) const;
 
 /**
  * @brief Regression test
  */
-    void testRegression() const;
+    void regressionTest() const;
 
 
 };

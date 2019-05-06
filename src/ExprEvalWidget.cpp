@@ -71,7 +71,7 @@ void ExprEvalWidget:: computeOperation ()
         return;
     }
 
-    result = getLib()->expressionCalcul(expression->text().toStdString());
+    result = getLib()->calculateExpression(expression->text().toStdString());
 
     if(result == Matrix::matrix_null)
     {

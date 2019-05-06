@@ -4,6 +4,10 @@
 #include <iostream>
 #include <vector>
 
+
+/**
+ * @class The Fraction class
+ */
 class Fraction
 {
 
