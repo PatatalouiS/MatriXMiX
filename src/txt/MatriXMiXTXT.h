@@ -1,7 +1,7 @@
 #ifndef MATRIXMIX_TXT_H
 #define MATRIXMIX_TXT_H
 
-#include "MatrixLibrary.h"
+#include "../maths/MatrixLibrary.h"
 
 
 class MatriXMiXTXT

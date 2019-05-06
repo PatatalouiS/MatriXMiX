@@ -3,8 +3,10 @@
 #define SHOWMATRIXWIDGET_H
 
 
+
 #include <QLabel>
-#include "Matrix.h"
+#include "../maths/Matrix.h"
+
 
 
 /**

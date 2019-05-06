@@ -3,7 +3,7 @@
 #include <QHBoxLayout>
 #include "ShowMatrixWidget.h"
 #include "jkqtmathtext/jkqtmathtext.h"
-#include "Fraction.h"
+#include "../maths/Fraction.h"
 
 
 

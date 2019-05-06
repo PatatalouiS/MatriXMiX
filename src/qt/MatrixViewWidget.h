@@ -4,7 +4,7 @@
 
 #include <QTableView>
 #include <QStandardItemModel>
-#include "MatrixLibrary.h"
+#include "../maths/MatrixLibrary.h"
 #include "ShowMatrixWidget.h"
 
 
