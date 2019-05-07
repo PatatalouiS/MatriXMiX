@@ -45,7 +45,6 @@ AbstractOperationWidget(lib, parent)
 
     description->setText(op1.first + logo + QString::number(op2));
     description->setStyleSheet("font-size: 40px");
-    //description->setAlignment(Qt::AlignCenter);
 
     QVBoxLayout* buttonLayout = new QVBoxLayout;
     buttonLayout->addWidget(calculer);
