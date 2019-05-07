@@ -141,11 +141,19 @@ const QString& name, const QColor& col)
                 developpedForm += QString("-")
                         + QString("X^{") + power +  QString("}") ;
                 else if (temp > 0.0)
+            {
+                if (i == 0)
+                    developpedForm += QString::number(temp);
+                else
                     developpedForm += QString("+") + QString::number(temp)
-                            + QString("X^{") + power +  QString("}") ;
-                    else
-                        developpedForm += QString::number(temp)
-                                + QString("X^{") + power +  QString("}") ;
+                        + QString("X^{") + power +  QString("}") ;
+            }
+
+                    else if (i == 0)
+                        developpedForm += QString::number(temp) ;
+                       else
+                          developpedForm += QString::number(temp)
+                                        + QString("X^{") + power +  QString("}") ;
         }
     }
 

@@ -496,7 +496,6 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 
     for(i = 0; i < s; i++)
     {
-        cout << i << endl;
         if (no_parenthesis[i] == "^")
         {
             if (i == 0)

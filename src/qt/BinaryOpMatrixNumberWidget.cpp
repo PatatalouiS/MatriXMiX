@@ -70,7 +70,6 @@ AbstractOperationWidget(lib, parent)
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
-    //mainLayout->addWidget(calculer);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
     connect(view, &MatrixViewWidget::clicked,

@@ -80,7 +80,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(
     QWidget* mainWidget = new QWidget;
     mainWidget->setLayout(mainLayout);
 
-    //resize(300,300);
 
     QPalette p;
     p = palette();

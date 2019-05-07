@@ -242,7 +242,7 @@ const Fraction Fraction:: double2fraction(const double &d) const
         }
     }
 
-    Fraction f (1,tab[size-2]);
+    Fraction f (1,tab[size-1]);
 
     for (unsigned long int i = size - 2 ; i > 0 ; i--)
     {
