@@ -4,8 +4,6 @@
 #include "MatrixViewWidget.h"
 #include "Error.h"
 
-#include <QDebug>
-#include <iostream>
 
 UnaryOpWidget::UnaryOpWidget(const type& t, const MatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget(lib, parent)
