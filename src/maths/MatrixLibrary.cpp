@@ -337,6 +337,7 @@ Matrix MatrixLibrary:: calculateFloatMatrix(const std::string &op, const std::st
 void MatrixLibrary:: polish(const std::string & chain ,
                             std::vector<std::string> & polish_notation)const
 {
+
     stack<string> p;
     vector<string> expression;
     copyVector(expression,explode(chain));
@@ -365,6 +366,7 @@ void MatrixLibrary:: polish(const std::string & chain ,
 
             p.push(i);
 
+
         }
         else if (i == ")")
         {
@@ -383,7 +385,6 @@ void MatrixLibrary:: polish(const std::string & chain ,
         }
 
     }
-
     if(polish_notation[polish_notation.size()-1]=="")
         polish_notation.pop_back();
 
@@ -616,6 +617,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 
 Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
 {
+
     MatrixLibrary copy(*this);
     vector<string> polish_not;
     copy.polish(chain,polish_not);      //I write my expression in Polish notation
