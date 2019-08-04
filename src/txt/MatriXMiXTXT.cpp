@@ -126,12 +126,8 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
     case 8 : cout << op1->traceMatrix() << endl; break;
     case 9 : cout << op1->determinant() << endl; break;
     case 10 : cout << op1->inverse() << endl; break;
-    case 11 : cout << op1->gaussReduction() << endl; break;
-    case 12 : displayDimensionsStudy(op1,name); break;
-    case 13 : displayCharacteristicPolynomial(op1,name); break;
     case 14 : displayEigenValVect(op1); break;
     case 15 : displayStudyDiagonalise(op1); break;
-    case 16 : displayStudyMatrix(op1,name); break;
     default: break;
 	}
 	wait();
@@ -186,12 +182,7 @@ void MatriXMiXTXT:: mainMenu ()
 			case 8 : trace() ; break;
 			case 9 : determinant() ; break;
             case 10 : inverse() ; break;
-            case 11 : gaussReduction() ; break;
-            case 12 : dimensionsStudy(); break;
-            case 13 : characteristicPolynomial(); break;
             case 14 : eigenValVect() ; break;
-            case 15 : studyDiagonalise() ; break;
-            case 16 : studyMatrix() ; break;
             case 0 : quit = true; break;
             default: break;
         }
@@ -423,79 +414,7 @@ void MatriXMiXTXT:: inverse() const
 }
 
 
-void MatriXMiXTXT:: gaussReduction() const
-{
-    cl();
-    cout << "===================================================" << endl;
-    cout << "=================== ECHELONNAGE ===================" << endl;
-    cout << "===================================================" << endl << endl;
 
-    if (lib.isEmpty())
-    {
-        MsgEmptyLib();
-    }
-    else
-    {
-        unaryOperation(11);
-    }
-}
-
-
-void MatriXMiXTXT:: dimensionsStudy() const
-{
-    cl();
-    cout << "===================================================" << endl;
-    cout << "============== ETUDE DES DIMENSIONS ===============" << endl;
-    cout << "===================================================" << endl << endl;
-
-    if (lib.isEmpty())
-    {
-        MsgEmptyLib();
-    }
-    else
-    {
-        unaryOperation(12);
-    }
-}
-
-
-void MatriXMiXTXT:: displayDimensionsStudy(const Matrix * m, const string & name) const
-{
-   cout << "La dimension de l'image est dim(Im("
-        << name << ")) = " << m->dimensionsStudy().first
-        << "\nLa dimension du noyau est dim(Ker(" << name
-        << ")) = " << m->dimensionsStudy().second << endl << endl << endl;
-}
-
-
-void MatriXMiXTXT:: characteristicPolynomial() const
-{
-    cl();
-    cout << "===================================================" << endl;
-    cout << "============= POLYNÔME CARACTÉRISTIQUE ============" << endl;
-    cout << "===================================================" << endl << endl;
-
-    if (lib.isEmpty())
-    {
-        MsgEmptyLib();
-    }
-    else
-    {
-        unaryOperation(13);
-    }
-}
-
-
-void MatriXMiXTXT:: displayCharacteristicPolynomial(const Matrix * m, const string & name)const
-{
-    Polynomial p(m->characteristicPolynomial());
-    if (p == Polynomial:: polynomial_noEigen)
-        cout << "Valeur propre complexe détectée..."
-                "\nPas d'étude possible dans R" << endl << endl;
-    else
-        cout << "Le polynôme caractéristique de " << name << " est"
-                                                             "\nP(X) = " << p << endl << endl;
-}
 
 
 void MatriXMiXTXT:: eigenValVect() const
@@ -518,14 +437,9 @@ void MatriXMiXTXT:: eigenValVect() const
 
 void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
 {
-    vector<pair<double,VectorX>> tab;
+    vector<pair<complex<double>,VectorX>> tab;
     tab = m->allEigen();
 
-    if (tab == Matrix:: vector_pair_noEigen)
-        cout << "Valeur propre complexe détectée..."
-                "\nPas d'étude possible dans R" << endl << endl;
-    else
-    {
         unsigned long int i, j, l, s = tab.size();
         VectorX vect;
         cout << "Valeur propre et vecteur propre associé " << endl << endl;
@@ -542,7 +456,6 @@ void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
             cout << tab[i].second[l-1] << ") " << endl << endl;
         }
          cout << endl ;
-    }
 
 }
 
@@ -589,35 +502,4 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 }
 
 
-void MatriXMiXTXT:: studyMatrix() const
-{
-    cl();
-    cout << "===================================================" << endl;
-    cout << "================== TOUT ETUDIER ===================" << endl;
-    cout << "===================================================" << endl << endl;
-
-    if (lib.isEmpty())
-    {
-        MsgEmptyLib();
-    }
-    else
-    {
-        unaryOperation(16);
-    }
-}
-
-
-void MatriXMiXTXT:: displayStudyMatrix(const Matrix *m, const string & name) const
-{
-    cout << "La dimension du noyau dim(Im) = " << m->dimensionsStudy().first <<
-            "\nLa dimension de l'image est dim(Ker) = " << m->dimensionsStudy().second << endl << endl << endl << endl;
-
-    displayCharacteristicPolynomial(m,name);
-    cout << endl << endl;
-
-    displayEigenValVect(m);
-    cout << endl;
-
-    displayStudyDiagonalise(m);
-}
 

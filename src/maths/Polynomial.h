@@ -13,10 +13,9 @@ class Polynomial
 
 public:
     unsigned int degree;
-    std::vector<double> tab;
+    std::vector<std::complex<double>> tab;
 
     static const Polynomial polynomial_null;
-    static const Polynomial polynomial_noEigen ;
 
 public:
 

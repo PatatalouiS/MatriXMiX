@@ -3,10 +3,10 @@
 #define VECTOR_X
 
 #include <vector>
+#include <complex>
 
 
-
-typedef std::vector<double> VectorX;
+typedef std::vector<std::complex<double>> VectorX;
 
 
 

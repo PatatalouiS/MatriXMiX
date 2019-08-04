@@ -3,7 +3,7 @@
 
 
 #include <vector>
-#include <Dense>  // extern library eigen 3.3.7
+#include <../../ext/Eigen/Dense>  // extern library eigen 3.3.7
 #include "VectorX.h"
 #include "Polynomial.h"
 
@@ -16,14 +16,11 @@ class Matrix
 private:
     unsigned int rows;
     unsigned int cols;
-    std::vector<std::vector<double>> tab;
+    std::vector<std::vector<std::complex<double>>> tab;
 
 public:
-    static const std::vector<double> vector_noEigen;
-    static const std::vector<std::pair<double,VectorX>> vector_pair_noEigen;
-    static const Matrix matrix_noEigen;
     static const Matrix matrix_null;
-    static const double double_notExist;
+    static const std::complex<double> complex_null;
 
 
 private:
@@ -67,14 +64,14 @@ private:
  * @brief Convert Matrix type to eigen MatrixXd type
  * @return \e MatrixXd (eigen3)
  */
-    Eigen::MatrixXd class2Eigen() const;
+    Eigen::MatrixXcd class2Eigen() const;
 
 /**
  * @brief Convert eigen MatrixXd type to Matrix type
  * @param [in] m \e MatrixXd (eigen3)
  * @return \e Matrix
  */
-    const Matrix eigen2Class(const Eigen::MatrixXd & m) const;
+    const Matrix eigen2Class(const Eigen::MatrixXcd & m) const;
 
 
 public:
@@ -110,7 +107,7 @@ public:
  * @param [in] cols \e unsigned \e int)
  * @param [in] value (\e double)
  */
-    Matrix (const unsigned int rows, const unsigned int cols, const double value);
+    Matrix (const unsigned int rows, const unsigned int cols, const std::complex<double> value);
 
 /**
  * @brief Constructor
@@ -170,28 +167,28 @@ public:
  * @param [in] index (\e unsigned \e int)
  * @return \e double&
  */
-    double& getVal(const unsigned int index);
+    std::complex<double>& getVal(const unsigned int index);
 
 /**
  * @brief Gets index value
  * @param [in] index (\e unsigned \e int)
  * @return \e double
  */
-    double getVal(const unsigned int index) const;
+    std::complex<double> getVal(const unsigned int index) const;
 
 /**
  * @brief Operator [] which gets index value
  * @param [in] index (\e unsigned \e int)
  * @return \e std::vector<double>&
  */
-    std::vector<double>& operator [] (const unsigned int index);
+    std::vector<std::complex<double>>& operator [] (const unsigned int index);
 
 /**
  * @brief Operator [] which gets index value
  * @param [in] index (\e unsigned \e int)
  * @return \e std::vector<double>&
  */
-    const std::vector<double>& operator [] (const unsigned int index) const;
+    const std::vector<std::complex<double>>& operator [] (const unsigned int index) const;
 
 /**
  * @brief Friend operator << : shows matrix
@@ -300,13 +297,13 @@ public:
  * @brief Returns the matrix trace
  * @return \e double
  */
-    double traceMatrix() const;
+    std::complex<double> traceMatrix() const;
 
 /**
  * @brief Returns the matrix determinant
  * @return \e double
  */
-    double determinant() const;
+    std::complex<double> determinant() const;
 
 /**
  * @brief Returns the coMatrix
@@ -326,11 +323,6 @@ public:
  */
     Matrix inverse() const;
 
-/**
- * @brief Returns the matrix rank
- * @return \e unsigned \e int
- */
-    unsigned int rank() const;
 
 /**
  * @brief Returns the staggered matrix
@@ -338,7 +330,7 @@ public:
  */
     const Matrix gaussReduction() const;
 
-
+    unsigned int rank()const;
 
  // Advanced matrix study functions
 
@@ -352,31 +344,28 @@ public:
  * @brief Returns the matrix eigenvalues
  * @return \e std::vector
  */
-    const std::vector<double> eigenValues() const;
+    const VectorX eigenValues() const;
 
 /**
  * @brief Returns the matrix characteristic polynomial
  * @return \e Polynomial
  */
-    const Polynomial characteristicPolynomial() const;
-
-/**
- * @brief Returns the simplified characteristic polynomial
- * @return \e std::vector<Polynomial>
- */
-    const std::vector<Polynomial> splitCharacteristicPolynomial() const;
 
 /**
  * @brief Returns the matrix eigenvectors
  * @return \e std::vector<VectorX>
  */
-    const std::vector<VectorX> eigenVectors() const;
+    const Matrix  eigenVectors() const;
+
+    const Polynomial characteristicPolynomial()const;
+
+    const std::vector<Polynomial> splitCharacteristicPolynomial()const;
 
 /**
  * @brief Returns the matrix eigenvalues and eigenvectors
  * @return \e std::vector<std::pair<double,VectorX>>
  */
-    const std::vector<std::pair<double,VectorX>> allEigen() const;
+    const std::vector<std::pair<std::complex<double>,VectorX>> allEigen() const;
 
 /**
  * @brief Returns true if the matrix is diagonalizable in \e R set

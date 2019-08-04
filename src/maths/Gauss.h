@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Matrix.h"
 
-typedef std::vector<std::vector<double>>::iterator tab2D_iter ;
+typedef std::vector<std::vector<std::complex<double>>>::iterator tab2D_iter ;
 
 
 /**
@@ -35,19 +35,22 @@ public:
  */
     Gauss (const int & row, const int & col);
 
+    int getRow();
+    int getCol();
+
 /**
  * @brief Return the value of m[row][col]
  * @param [in] m (\e Matrix)
  * @return \e double
  */
-    double getVal (const Matrix & m) const;
+    std::complex<double> getVal (const Matrix & m) const;
 
 /**
  * @brief Multiplies a row by a scale
  * @param [in-out] row (\e vector \e iterator)
  * @param [in] ratio (\e double)
  */
-    void rowScale(tab2D_iter row, const double & ratio) const;
+    void rowScale(tab2D_iter row, const std::complex<double> & ratio) const;
 
 /**
  * @brief Replaces a row
@@ -55,7 +58,7 @@ public:
  * @param [in-out] op (\e vector \e iterator)
  * @param [in] ratio (\e double)
  */
-    void rowReplace(tab2D_iter base, tab2D_iter op, const double & ratio) const;
+    void rowReplace(tab2D_iter base, tab2D_iter op, const std::complex<double>& ratio) const;
 
 /**
  * @brief Exchanges two rows
