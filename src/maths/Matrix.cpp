@@ -426,7 +426,7 @@ const Matrix Matrix:: operator ^ (const int & p) const
     }
 
     Matrix temp (*this);
-    Matrix temp2 (*this);    
+    Matrix temp2 (*this);
 
     if ( p < -1 )
     {
@@ -577,6 +577,10 @@ unsigned int Matrix:: rank()const
     c = getNbCols();
     Matrix reduction(*this);
     reduction = reduction.gaussReduction();
+
+    Matrix id (r,I);
+    if (id == *this)
+      return r;
 
     for (i = 0; i < r; i++)
     {
@@ -1006,9 +1010,3 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal,
    }
 
 }
-
-
-
-
-
-

@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <QHBoxLayout>
+#include <complex>
 #include "ShowMatrixWidget.h"
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "../maths/Fraction.h"
@@ -27,56 +28,52 @@ const QPixmap& ShowMatrixWidget:: getCurrentPixmap() const
 }
 
 
+QString complexLatex (std::complex<double> coef)
+{
+    QString str;
+
+    if (coef.real() != 0.0)
+    {
+        if (coef.imag() > 0)
+            str = QString::number(coef.real()) + "+" + QString::number(coef.imag()) + "i";
+        else if (coef.imag() < 0)
+        {
+            str = QString::number(coef.real()) + QString::number(coef.imag()) + "i";
+        }
+        else
+        {
+            str = QString::number(coef.real());
+        }
+    }
+
+    else
+    {
+        if (coef.imag() != 0.0)
+            str = QString::number(coef.imag()) + "i";
+        else
+            str = QString::number(0);
+    }
+
+}
+
+
 void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt, const QColor& col)
 {
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
     QString latex = "\\begin{bmatrix}";
-    Fraction f;
+    
     for(unsigned int i = 0; i < rows; ++i)
     {
-        if (f.isFraction(mat[i][0]))
-        {
-            f = mat[i][0];
-            if (f.getDenominator() == 1)
-                latex += "\t" +  QString::number(f.getNumerator());
-            else
-            {
-                latex += "\t " + QString ("\\frac{")
-                        + QString::number(f.getNumerator())
-                        + QString ("}{")
-                        + QString::number(f.getDenominator())
-                        + QString ("}");
-            }
-        }
-        else
-        {
-            latex += "\t" +  QString::number(mat[i][0]);
-        }
+        latex += "\t" +  complexLatex(mat[i][0]);
 
         for(unsigned int j = 1; j < cols; ++j)
         {
-            if(j != cols) latex += " & ";
+            if(j != cols) 
+                latex += " & ";
             else latex += " &";
-            if (f.isFraction(mat[i][j]))
-            {
-                f = mat[i][j];
-                if (f.getDenominator() == 1)
-                    latex += "\t" +  QString::number(f.getNumerator());
-                else
-                {
-                    latex += "\t " + QString ("\\frac{")
-                            + QString::number(f.getNumerator())
-                            + QString ("}{")
-                            + QString::number(f.getDenominator())
-                            + QString ("}");
-                }
 
-            }
-            else
-            {
-                latex += "\t" +  QString::number(mat[i][j]);
-            }
+            latex += "\t" +  complexLatex(mat[i][j]);
             if((j == cols-1) && (i != rows-1)) latex += "\\\\";
         }
     }

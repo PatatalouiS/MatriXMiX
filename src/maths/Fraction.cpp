@@ -197,7 +197,7 @@ void Fraction:: recursived2f (vector<long int> &tab, const double &rest) const
 }
 
 
-const Fraction Fraction:: double2fraction(const double &d) const
+const Fraction Fraction:: double2fraction (const double & d) const
 {
     double abs_d = abs(d);
     vector <long int> tab;
