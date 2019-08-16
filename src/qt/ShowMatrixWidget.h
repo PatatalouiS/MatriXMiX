@@ -84,7 +84,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col the colour of the text
          */
 
-        void computeImgEigen(const std::vector<std::pair<double, VectorX>>& res,
+        void computeImgEigen(const std::vector<std::pair<std::complex<double>, VectorX>>& res,
                              const QString& name, const QColor& col = QColor(0,0,0,0));
 
         /**
@@ -103,7 +103,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col The colour of the text
          */
 
-        void computeImgTrace(const double scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
+        void computeImgTrace(const std::complex<double> scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
 
         /**
          * @brief clear clear the current Image

@@ -54,6 +54,8 @@ QString complexLatex (std::complex<double> coef)
             str = QString::number(0);
     }
 
+    return str;
+
 }
 
 
@@ -81,6 +83,7 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
    setPixmapToQLabel(col, latex, sizeTxt);
 }
 
+
 void ShowMatrixWidget:: computeImgDet(const double scalar, const QString& name, const QColor& col)
 {
     QString latex = "\\mathit{Det}\\(" + name + ") = " + QString::number(scalar);
@@ -88,15 +91,16 @@ void ShowMatrixWidget:: computeImgDet(const double scalar, const QString& name, 
 }
 
 
-void ShowMatrixWidget:: computeImgTrace(const double scalar, const QString& name, const QColor& col)
+void ShowMatrixWidget:: computeImgTrace(const std::complex<double> scalar, const QString& name,
+                                        const QColor& col)
 {
-    QString latex = "\\mathit{Tr}\\(" + name + ") = " + QString::number(scalar);
+    QString latex = "\\mathit{Tr}\\(" + name + ") = " + complexLatex(scalar);
     setPixmapToQLabel(col, latex, 40);
 }
 
 
 void ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, unsigned int>& res,
-const QString& name, const QColor& col)
+                                            const QString& name, const QColor& col)
 {
     QString latex = "\\begin{matrix}\\mathit{Rg}\\(" + name + ") = " + QString::number(res.first) +
                     "\\\\\\mathit{DimKer}\\(" + name + ") = " + QString::number(res.second) + "\\end{matrix}";
@@ -105,7 +109,8 @@ const QString& name, const QColor& col)
 }
 
 
- void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2, const QString& name, const QColor& col)
+ void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2,
+                                              const QString& name, const QColor& col)
 {
     std::ostringstream flux;
     QString developpedForm;
@@ -117,42 +122,50 @@ const QString& name, const QColor& col)
     {
         QString x;
         QString power;
+        std::complex<double> temp = res1.tab[i];
 
         if (i == 0)
             x = QString("");
         else
             x = QString("+X^{");
+
         if (i == 1)
             power = QString ("");
         else
             power = QString::number(i);
-        double temp = res1.tab[i];
 
-        if (abs(temp - 0.0) < 0.0001)
-            temp = 0.0;
-        if (temp != 0.0)
+
+        if(temp.real() == 0.0)
         {
-            if (temp == 1.0)
-                developpedForm += x + power +  QString("}") ;
-            else if (-temp == 1.0)
-                developpedForm += QString("-")
-                        + QString("X^{") + power +  QString("}") ;
-                else if (temp > 0.0)
-            {
-                if (i == 0)
-                    developpedForm += QString::number(temp);
-                else
-                    developpedForm += QString("+") + QString::number(temp)
-                        + QString("X^{") + power +  QString("}") ;
-            }
-
-                    else if (i == 0)
-                        developpedForm += QString::number(temp) ;
-                       else
-                          developpedForm += QString::number(temp)
-                                        + QString("X^{") + power +  QString("}") ;
+            if(temp.imag() != 0.0)
+                developpedForm += QString::number(temp.imag()) + "i";
         }
+
+        else if(temp.real() < 0.0)
+        {
+            if(temp.imag() == 0.0)
+                developpedForm += QString::number(temp.real());
+            else if (temp.imag() < 0.0)
+                developpedForm += " - (" + QString::number(abs(temp.real())) + QString::number(abs(temp.imag())) + "i)";
+            else
+                developpedForm += " + (" + QString::number(temp.real()) + "+" + QString::number(temp.imag()) + "i)";
+        }
+
+        else
+        {
+            if(temp.imag() == 0.0)
+                developpedForm += "+" + QString::number(temp.real());
+            else if (temp.imag() < 0.0)
+                developpedForm += "+ (" + QString::number(temp.real()) + QString::number(temp.imag()) + "i)";
+            else
+                developpedForm += "+ (" + QString::number(temp.real()) + "+" + QString::number(temp.imag()) + "i)";
+        }
+
+        if (x != "")
+            developpedForm += x + power + "}";
+
     }
+
 
     for(auto i : res2)
     {
@@ -168,13 +181,12 @@ const QString& name, const QColor& col)
 }
 
 
-void ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<double, VectorX>>& res,
-const QString& name, const QColor& col)
+void ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<std::complex<double>, VectorX>>& res,
+                                        const QString& name, const QColor& col)
 {
     QString spec;
     QList<QString> vectors;
     QVector<QString> tab;
-    Fraction f;
     QString temp, coef;
 
 
@@ -186,26 +198,15 @@ const QString& name, const QColor& col)
     for(auto i : res)
     {
         temp = "( ";
-        f = i.first;
-
-        if (f.getDenominator() == 1)
-            coef = QString::number(f.getNumerator());
-        else
-            coef = QString ("\\frac{") + QString::number(f.getNumerator())
-                + QString ("}{") + QString::number(f.getDenominator()) + QString ("}");
+        coef = complexLatex(i.first);
         tab.push_back(coef);
         spec += coef + ", ";
 
         for(auto j : i.second)
         {
-            f = f.double2fraction(j);
-            if (f.getDenominator() == 1)
-                temp += QString::number(f.getNumerator()) + ", ";
-            else
-                temp += QString ("\\frac{") + QString::number(f.getNumerator())
-                        + QString ("}{") + QString::number(f.getDenominator())
-                        + QString ("}") + ", ";
+            temp += complexLatex(j) + ", ";
         }
+
         temp.truncate(temp.size() - 2);
         temp += " )";
         vectors.append(temp);
