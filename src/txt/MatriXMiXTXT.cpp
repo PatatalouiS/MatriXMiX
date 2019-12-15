@@ -38,32 +38,32 @@ void MatriXMiXTXT:: binaryOperation (const char op) const
 {
 	string name1;
 	string name2;
-	
+
 	cout << "Entrez le nom de la Matrice 1 : ";
 	cin >> name1;
 	const Matrix* op1 = lib.find(name1);
-	
+
     if (op1 == nullptr)
 	{
 		cerr << "Erreur, Il n'existe pas de matrice nommée " << name1 << "!" << endl;
 		wait();
 		return;
 	}
-	
+
 	cout << "Entrez le nom de la Matrice 2 : ";
 	cin >> name2;
 	const Matrix* op2 = lib.find(name2);
-	
+
     if (op2 == nullptr)
 	{
 		cerr << "Erreur, Il n'existe pas de matrice nommée " << name2 << "!" << endl;
 		wait();
 		return;
 	}
-	
+
 	cout << endl << "Résultat de " << name1 << " " << op << " " << name2 << " est : ";
 	cout << endl <<endl;
-	
+
 	switch(op)
 	{
 		case '+' : cout << *op1 + *op2; break;
@@ -91,7 +91,7 @@ void MatriXMiXTXT:: binaryOperationPow() const
 		cerr << "Erreur, Il n'existe pas de matrice nommée " << name << "!" << endl;
 		wait();
 		return;
-	}	
+	}
 
 	cout << "Entrez la puissance : ";
 	cin >> pow;
@@ -128,6 +128,7 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
     case 10 : cout << op1->inverse() << endl; break;
     case 14 : displayEigenValVect(op1); break;
     case 15 : displayStudyDiagonalise(op1); break;
+    case 16 : displayStudyMatrix(op1,name); break;
     default: break;
 	}
 	wait();
@@ -141,16 +142,16 @@ void MatriXMiXTXT:: mainMenu ()
 {
     bool quit = false;
     int choice;
-	
+
     do
     {
         cl();
         cout << "===================================================" << endl;
         cout << "==================== MatriXMiX ====================" << endl;
         cout << "===================================================" << endl << endl;
-        
+
         cout << "Saisissez votre choix et pressez ENTREE" << endl << endl;
-        
+
         cout << "1 -  Ajouter une Matrice " << endl;
         cout << "2 -  Afficher les Matrices " << endl;
         cout << "3 -  Addition de Matrices (A+B) "<< endl;
@@ -169,20 +170,22 @@ void MatriXMiXTXT:: mainMenu ()
         cout << "16 - Etudier..." << endl ;
         cout << "\n0 -  Quitter " << endl << endl << "Votre choix : " ;
         cin >> choice;
-        
+
         switch (choice)
         {
             case 1 : addMatrixMenu(); break;
             case 2 : showLibrary(); break;
             case 3 : addition(); break;
-			case 4 : soustraction(); break;
-			case 5 : multiplication(); break;
-			case 6 : division(); break;
-			case 7 : puissance(); break;
-			case 8 : trace() ; break;
-			case 9 : determinant() ; break;
+			      case 4 : soustraction(); break;
+      			case 5 : multiplication(); break;
+      			case 6 : division(); break;
+      			case 7 : puissance(); break;
+      			case 8 : trace() ; break;
+      			case 9 : determinant() ; break;
             case 10 : inverse() ; break;
             case 14 : eigenValVect() ; break;
+            case 15 : studyDiagonalise() ; break;
+            case 16 : studyMatrix() ; break;
             case 0 : quit = true; break;
             default: break;
         }
@@ -196,7 +199,7 @@ void MatriXMiXTXT:: mainMenu ()
 void MatriXMiXTXT:: addMatrixMenu ()
 {
     unsigned int choice;
-    
+
     cl();
     cout << "===================================================" << endl;
     cout << "=================== AJOUT MATRICE =================" << endl;
@@ -205,15 +208,15 @@ void MatriXMiXTXT:: addMatrixMenu ()
     cout << "1 : Ajouter une matrice aléatoire" << endl;
     cout << "2 : Saisir une matrice au clavier" << endl << endl;
     cout << "0 : Retour au menu principal" << endl << endl;
-        
+
     cout << "Votre choix : ";
     cin >> choice;
-    
+
     cl();
     cout << "===================================================" << endl;
     cout << "=================== AJOUT MATRICE =================" << endl;
     cout << "===================================================" << endl << endl;
-        
+
     if (choice == 0)
     {
         return;
@@ -221,19 +224,19 @@ void MatriXMiXTXT:: addMatrixMenu ()
     else
     {
 		string name;
-		
+
         cout << "Entrez le nom de la matrice : ";
 		cin >> name;
-		
+
         if (lib.find(name) != nullptr)
 		{
 			cout << "Attention, il y a déja une matrice avec le nom " << name << " !" << endl;
 			wait();
 			return;
 		}
-		
+
 		Matrix m;
-			
+
         if (choice == 1)
         {
             m.setMatrixRA();
@@ -243,7 +246,7 @@ void MatriXMiXTXT:: addMatrixMenu ()
             m.setMatrixKB();
         }
         lib.addMatrix(name, m);
-        
+
         cout << endl << "Ajout effectué : voici votre matrice " << name << " : " << endl << endl;
         cout << m << endl;
         wait();
@@ -257,14 +260,14 @@ void MatriXMiXTXT:: showLibrary () const
     cout << "===================================================" << endl;
     cout << "================ AFFICHAGE MATRICES ===============" << endl;
     cout << "===================================================" << endl << endl;
-    
+
     if(lib.isEmpty())
     {
         MsgEmptyLib();
     }
     else
     {
-        lib.print(); 
+        lib.print();
         wait();
     }
 }
@@ -276,7 +279,7 @@ void MatriXMiXTXT:: addition() const
     cout << "===================================================" << endl;
     cout << "===================== ADDITION ====================" << endl;
     cout << "===================================================" << endl << endl;
-    
+
     if (lib.isEmpty())
     {
         MsgEmptyLib();
@@ -294,7 +297,7 @@ void MatriXMiXTXT:: soustraction() const
 	cout << "===================================================" << endl;
 	cout << "=================== SOUSTRACTION===================" << endl;
 	cout << "===================================================" << endl << endl;
-	
+
 	if (lib.isEmpty())
 	{
 		MsgEmptyLib();
@@ -312,7 +315,7 @@ void MatriXMiXTXT:: multiplication() const
 	cout << "===================================================" << endl;
 	cout << "================= MULTIPLICATION ==================" << endl;
 	cout << "===================================================" << endl << endl;
-	
+
 	if (lib.isEmpty())
 	{
 		MsgEmptyLib();
@@ -330,7 +333,7 @@ void MatriXMiXTXT:: division() const
 	cout << "===================================================" << endl;
 	cout << "==================== DIVISION =====================" << endl;
 	cout << "===================================================" << endl << endl;
-	
+
 	if (lib.isEmpty())
 	{
 		MsgEmptyLib();
@@ -502,4 +505,34 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 }
 
 
+void MatriXMiXTXT:: studyMatrix() const
+{
+    cl();
+    cout << "===================================================" << endl;
+    cout << "================== TOUT ETUDIER ===================" << endl;
+    cout << "===================================================" << endl << endl;
 
+    if (lib.isEmpty())
+    {
+        MsgEmptyLib();
+    }
+    else
+    {
+        unaryOperation(16);
+    }
+}
+
+
+void MatriXMiXTXT:: displayStudyMatrix(const Matrix *m, const string & name) const
+{
+    cout << "La dimension du noyau dim(Im) = " << m->dimensionsStudy().first <<
+            "\nLa dimension de l'image est dim(Ker) = " << m->dimensionsStudy().second << endl << endl << endl << endl;
+
+    //displayCharacteristicPolynomial(m,name);
+    //cout << endl << endl;
+
+    displayEigenValVect(m);
+    cout << endl;
+
+    displayStudyDiagonalise(m);
+}

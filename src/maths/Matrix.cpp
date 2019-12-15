@@ -272,12 +272,20 @@ void Matrix:: setMatrixKB ()
 
     tab.resize(rows, vector<complex<double>>(cols));
 
+    int re;
+    int im;
+
     for(unsigned int i = 1; i <= rows; ++i)
     {
         for(unsigned int j = 1; j <= cols; ++j)
         {
-            cout << endl << "Saisir coeff " << "(" << i << " , " << j << ")" << ": ";
-            cin >> tab[i-1][j-1];
+            re = 0;
+            im = 0;
+            cout << endl << "Saisir la partie réelle du coeff " << "(" << i << " , " << j << ")" << ": ";
+            cin >> re;
+            cout << endl << "Saisir la partie imaginaire du coeff " << "(" << i << " , " << j << ")" << ": ";
+            cin >> im;
+            tab[i-1][j-1] = complex<double>(re,im);
         }
     }
 }
