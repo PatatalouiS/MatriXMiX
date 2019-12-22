@@ -49,6 +49,10 @@ public:
  */
     Polynomial check () const;
 
+
+    void debugAffiche();
+
+
 /**
  * @brief Friend operator << : shows polynomial
  * @param |in-out] flux (\e std::ostream)

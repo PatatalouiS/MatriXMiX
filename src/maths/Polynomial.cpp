@@ -51,61 +51,104 @@ Polynomial::Polynomial(const Polynomial &p) : tab (vector<complex<double>>(p.tab
 }
 
 
-ostream& operator << (ostream& flux, const Polynomial & p)
+void Polynomial::debugAffiche()
 {
     unsigned int i;
+    cout << "Affichage du polynôme de degrée " << degree << endl << endl;
 
-    if (p.tab[0].imag() < 0.0)
-        flux << "(" << p.tab[0].real() << p.tab[0].imag() << "i)" ;
-    else if (p.tab[0].imag() != 0)
-        flux << "(" << p.tab[0].real() << "+" << p.tab[0].imag() << "i)" ;
-    else
-        flux << p.tab[0].real();
+    for (i = 0; i < degree + 1; i++)
+    {
+        cout << "degrée : " << i << "   " << tab[i].real() << " ; " << tab[i].imag() << endl;
+    }
 
-    for (i = 1; i <= p.degree; i++)
+}
+
+
+ostream& operator << (ostream& flux, const Polynomial & p)
+{
+
+    unsigned int i;
+
+    if (p.tab[0].real() == 0.0)
+    {
+        if (p.tab[0].imag() != 0.0)
+            {
+                if (p.tab[0].imag() == 1.0)
+                    flux << "i";
+                else if (p.tab[0].imag() == - 1.0)
+                    flux << "-i";
+                else
+                    flux << p.tab[0].imag() << "i";
+            }
+    }
+    else if (p.tab[0].real() > 0.0)
     {
 
-        if (p.tab[i].real() == 0.0)
-        {
-            if (p.tab[i].imag() != 0.0)
-            {
-                flux << " + " ;
-                flux << "(" << p.tab[0].imag() << " i) X^" << i ;
-            }
-        }
+        if (p.tab[0].imag() > 0.0)
+            flux << "(" << p.tab[0].real() << "+" << p.tab[0].imag() << "i)";
+        else if (p.tab[0].imag() < 0.0)
+            flux << "(" << p.tab[0].real() << p.tab[0].imag() << "i)";
+        else //p.tab[0].imag() == 0.0
+            flux << p.tab[0].real();
+    }
+    else //p.tab[0].real() < 0.0
+    {
+        if (p.tab[0].imag() == 0.0)
+            flux << p.tab[0].real();
+        else if (p.tab[0].imag() > 0.0)
+            flux << "(" << p.tab[0].real() << "+" << p.tab[0].imag() << "i)";
+        else //p.tab[0].imag() < 0.0
+            flux << "- (" << abs(p.tab[0].real()) << "+" << abs(p.tab[0].imag()) << "i)";
+    }
 
-        else if (p.tab[i].real() < 0.0)
-        {
-            if (p.tab[i].imag() == 0.0)
-            {
-                flux << " - ";
-                flux << p.tab[i].real() << "X^" << i ;
-            }
-            else if (p.tab[i].imag() < 0.0)
-            {
-                flux << " - " ;
-                flux << "(" << p.tab[i].real() << " + " << abs(p.tab[i].imag()) << "i)X^" << i ;
-            }
-            else
-            {
-                flux << " + ";
-                flux << "(-" << p.tab[i].real() << " + " << p.tab[i].imag() << " i)X^" << i ;
-            }
-        }
 
-        else {
-            if (p.tab[i].imag() == 0.0) {
-                flux << " + ";
-                flux << p.tab[i].real() << "X^" << i;
-            } else if (p.tab[i].imag() < 0.0) {
-                flux << " + ";
-                flux << "(" << p.tab[i].real() << " - " << abs(p.tab[i].imag()) << "i)X^" << i;
-            } else {
-                flux << " + ";
-                flux << "(" << p.tab[i].real() << " + " << p.tab[i].imag() << "i)X^" << i;
-            }
+    for (i = 1; i < p.degree + 1; i++  )
+    {
+        double re (p.tab[i].real());
+        double im (p.tab[i].imag());
+
+        if (re == 0.0)
+        {
+            if (im > 0.0)
+                {
+                    if (im == 1.0)
+                        flux << " + iX^" << i;
+                    else
+                        flux << " + " << im << "iX^" << i;
+                  }
+            else if (im < 0.0)
+                {
+                    if (im == -1.0)
+                        flux << " - iX^" << i;
+                    else
+                        flux << " - " << abs(im) << "iX^" << i;
+                }
+        }
+        else if (re > 0.0)
+        {
+
+                if (im > 0.0)
+                {
+                    flux << " + (" << re << "+" << im << "i)X^" << i;
+                }
+                else if (im < 0.0)
+                    flux << " + (" << re << im << "i)X^" << i;
+                else //im == 0.0
+                    flux << " + " << re << "X^" << i;
+
+        }
+        else //re < 0.0
+        {
+            if (im == 0.0)
+                flux << " + " << re << "X^" << i;
+            else if (im > 0.0)
+                flux << " + (" << re << "+" << im << "i)X^" << i;
+            else //im < 0.0
+                flux << "-(" << abs(re) << "+" << abs(im) << "i)X^" << i;
         }
     }
+
+
 
     return flux;
 }
@@ -298,3 +341,16 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
 
 
 
+void Polynomial::regressionTest() const
+{
+  VectorX v;
+  complex<double> c1(1,0);
+  v.push_back(c1);
+  complex<double> c2(0,0);
+  v.push_back(c2);
+  v.push_back(c1);
+  Polynomial p(2,v);
+  cout << "Affichage de p" << endl << p << endl << endl;
+  cout << "Affichage debug de p" << endl;
+  p.debugAffiche();
+}

@@ -126,6 +126,7 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
     case 8 : cout << op1->traceMatrix() << endl; break;
     case 9 : cout << op1->determinant() << endl; break;
     case 10 : cout << op1->inverse() << endl; break;
+    case 13 : displayCharacteristicPolynomial(op1,name); break;
     case 14 : displayEigenValVect(op1); break;
     case 15 : displayStudyDiagonalise(op1); break;
     case 16 : displayStudyMatrix(op1,name); break;
@@ -183,6 +184,7 @@ void MatriXMiXTXT:: mainMenu ()
       			case 8 : trace() ; break;
       			case 9 : determinant() ; break;
             case 10 : inverse() ; break;
+            case 13 : characteristicPolynomial(); break;
             case 14 : eigenValVect() ; break;
             case 15 : studyDiagonalise() ; break;
             case 16 : studyMatrix() ; break;
@@ -417,7 +419,39 @@ void MatriXMiXTXT:: inverse() const
 }
 
 
+void MatriXMiXTXT:: characteristicPolynomial() const
+{
+  cl();
+  cout << "===================================================" << endl;
+  cout << "============ POLYNÔME CARACTÉRISTIQUE =============" << endl;
+  cout << "===================================================" << endl << endl;
 
+  if (lib.isEmpty())
+  {
+      MsgEmptyLib();
+  }
+  else
+  {
+      unaryOperation(13);
+  }
+}
+
+
+void MatriXMiXTXT:: displayCharacteristicPolynomial(const Matrix * m, const string & name) const
+{
+    cout << endl << "Polynôme charactéristique développé..." << endl;
+    Polynomial p (m->characteristicPolynomial());
+    cout << "P" << name << "(X) = " << p << endl << endl;
+
+    vector<Polynomial> v (m->splitCharacteristicPolynomial());
+    cout << "Polynôme charactéristique décomposé... (produit de " << v.size() << " polynômes)" << endl;
+    cout << "(" << v[0] << ")";
+    for (unsigned int i = 1; i < v.size(); i++)
+    {
+        cout << " * (" << v[i] <<  ")" << endl;
+    }
+
+}
 
 
 void MatriXMiXTXT:: eigenValVect() const
@@ -483,12 +517,12 @@ void MatriXMiXTXT:: studyDiagonalise() const
 
 void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 {
-    if(!(m->isDiagonalisable()))
+    if(!(m->isDiagonalisableC()))
     {
-        cout << "La matrice n'est pas diagonalisable dans R"
+        cout << "La matrice n'est pas diagonalisable dans C"
                 "\ni.e il n'existe aucune base dans laquelle la matrice étudiée est diagonale" << endl << endl << endl;
     }
-    else
+    else if (m->isDiagonalisableR())
     {
         Matrix P1(m->getNbRows(),m->getNbCols());
         Matrix D(m->getNbRows(),m->getNbCols());
@@ -501,8 +535,46 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
         cout << "La matrice diagonale s'exprime alors comme suit: " << endl << D << endl;
         cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << P2 << endl << endl;
     }
+    else
+    {
+        Matrix P1(m->getNbRows(),m->getNbCols());
+        Matrix D(m->getNbRows(),m->getNbCols());
+        Matrix P2(m->getNbRows(),m->getNbCols());
+        m->allMatrix(P1,D,P2);
+
+        cout << "La matrice est diagonalisable dans C "
+                "\nie Il existe une base dans laquelle la matrice est diagonale " << endl << endl;
+        cout << "La matrice de passage P vers cette base est: " << endl << P1 << endl;
+        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << D << endl;
+        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << P2 << endl << endl;
+    }
 
 }
+
+/*
+void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
+{
+    vector<pair<complex<double>,VectorX>> tab;
+    tab = m->allEigen();
+
+        unsigned long int i, j, l, s = tab.size();
+        VectorX vect;
+        cout << "Valeur propre et vecteur propre associé " << endl << endl;
+
+        for (i = 0; i < s; i++)
+        {
+            cout << "Valeur propre : " << tab[i].first << endl ;
+            l = tab[i].second.size();
+            cout << "Vecteur propre: (" ;
+            for(j = 0; j < l-1 ; j++)
+            {
+                cout << tab[i].second[j] << " , " ;
+            }
+            cout << tab[i].second[l-1] << ") " << endl << endl;
+        }
+         cout << endl ;
+
+}*/
 
 
 void MatriXMiXTXT:: studyMatrix() const
@@ -528,8 +600,8 @@ void MatriXMiXTXT:: displayStudyMatrix(const Matrix *m, const string & name) con
     cout << "La dimension du noyau dim(Im) = " << m->dimensionsStudy().first <<
             "\nLa dimension de l'image est dim(Ker) = " << m->dimensionsStudy().second << endl << endl << endl << endl;
 
-    //displayCharacteristicPolynomial(m,name);
-    //cout << endl << endl;
+    displayCharacteristicPolynomial(m,name);
+    cout << endl << endl;
 
     displayEigenValVect(m);
     cout << endl;

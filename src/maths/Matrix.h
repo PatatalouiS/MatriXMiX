@@ -371,7 +371,13 @@ public:
  * @brief Returns true if the matrix is diagonalizable in \e R set
  * @return \e bool
  */
-    bool isDiagonalisable() const;
+    bool isDiagonalisableR() const;
+
+    /**
+     * @brief Returns true if the matrix is diagonalizable in \e C set
+     * @return \e bool
+     */
+    bool isDiagonalisableC() const;
 
 /**
  * @brief Returns the diagonal matrix

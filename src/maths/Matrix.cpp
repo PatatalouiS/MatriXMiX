@@ -864,7 +864,7 @@ const Polynomial Matrix:: characteristicPolynomial()const
     result.tab[0] = eigen_values[0];
     result.tab[1] = -1;
 
-    for(i = 2; i < r+1; i++)
+    for(i = 2; i < r + 1; i++)
     {
         result.tab[i] = 0;
     }
@@ -880,13 +880,14 @@ const Polynomial Matrix:: characteristicPolynomial()const
 }
 
 
+
 const vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
 {
-    vector<Polynomial> result;
-    Polynomial temp(1);
     unsigned int i,r;
     r = getNbRows();
-
+    Polynomial result(r);
+    Polynomial temp(1);
+    std::vector<Polynomial> v;
     vector<complex<double>> eigen_values;
     eigen_values = eigenValues();
 
@@ -894,10 +895,10 @@ const vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
     {
         temp.tab[0] = eigen_values[i];
         temp.tab[1] = -1;
-        result.push_back(temp);
+        v.push_back(temp);
     }
 
-    return result;
+    return v;
 }
 
 
@@ -936,7 +937,7 @@ const vector<pair<complex<double>,VectorX>> Matrix:: allEigen()const
 
     n = e_value.size();
 
-    for(i = 0; i < n; i++)
+    for (i = 0; i < n; i++)
     {
         temp_pair = make_pair(e_value[i],e_vector[i]);
         result.push_back(temp_pair) ;
@@ -946,7 +947,34 @@ const vector<pair<complex<double>,VectorX>> Matrix:: allEigen()const
 }
 
 
-bool Matrix:: isDiagonalisable()const
+bool isComplex(VectorX v)
+{
+  unsigned int i;
+  for (i = 0; i < v.size(); i++)
+  {
+    if (abs(v[i].imag()) > EPSILON)
+      return true;
+  }
+  return false;
+}
+
+
+bool Matrix::isDiagonalisableR() const
+{
+  if (!isDiagonalisableC())
+      return false;
+
+  Matrix d (diagonalise());
+  for (unsigned int i = 0; i < rows; i++)
+  {
+    if (isComplex(d[i]))
+        return false;
+  }
+  return true;
+}
+
+
+bool Matrix:: isDiagonalisableC()const
 {
     if (!isSQMatrix())
         return false;

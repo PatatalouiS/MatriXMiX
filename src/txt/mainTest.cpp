@@ -10,10 +10,10 @@ int main ()
 	Polynomial p;
 	Fraction f;
 
-	f.regressionTest();
+	//f.regressionTest();
 	p.regressionTest();
-	m.regressionTest();
-	lib.regressionTest();
+	//m.regressionTest();
+	//lib.regressionTest();
 
     return 0;
 
