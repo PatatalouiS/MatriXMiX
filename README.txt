@@ -49,6 +49,7 @@ Elle possède également des fonctionnalités plus poussées telles que l'étude
 		README.txt
 
 		src/
+							
 			maths/
 				Matrix.h
 				Matrix.cpp
@@ -58,17 +59,16 @@ Elle possède également des fonctionnalités plus poussées telles que l'étude
 				Gauss.cpp
 				Fraction.h
 				Fraction.cpp
-				Polynome.h
-				Polynome.cpp
+				Polynomial.h
+				Polynomial.cpp
 				VectorX.h
 				VectorX.cpp
-			test/
-				main_test.cpp			
 			txt/
 				MatriXMiXTXT.h
 				MatriXMiXTXT.cpp
-				main_txt.cpp
-			graph/
+				mainTxt.cpp
+				mainTest.cpp	
+			qt/
 				main.cpp
 				AbstractOperationWidget.h
 				AbstractOperationWidget.cpp
@@ -76,10 +76,8 @@ Elle possède également des fonctionnalités plus poussées telles que l'étude
 				BinaryOpMatrixMatrixWidget.cpp
 				BinaryOpMatrixNumberWidget.h
 				BinaryOpMatrixNumberWidget.cpp
-				DeterminantWindow.cpp
 				DiagonalisationWidget.h
 				DiagonalisationWidget.cpp
-				DivisionWindow.cpp
 				Error.h
 				Error.cpp
 				ExprEvalWidget.h
@@ -96,15 +94,10 @@ Elle possède également des fonctionnalités plus poussées telles que l'étude
 				MatrixViewWidget.cpp
 				MenuBar.h
 				MenuBar.cpp
-				MultiplicationWindow.cpp
-				PowerWindow.h
-				PowerWindow.cpp
-				ScalarMultiplicationWindow.cpp
 				SetMatrixWidget.h
 				SetMatrixWidget.cpp	
 				ShowMatrixWidget.h
 				ShowMatrixWidget.cpp
-				SoustractionWindow.cpp
 				UnaryOpWidget.h
 				UnaryOpWidget.cpp
 		
@@ -113,22 +106,31 @@ Elle possède également des fonctionnalités plus poussées telles que l'étude
 			latex/
 
 		obj/
-			Matrix.o
-			MatrixLibrary.o
-			Gauss.o
-			Fraction.o
-			Polynome.o
-
 
 		bin/
-			MatriXMiX
-			MatriXMiX_txt
-			MatriXMiX_test
 
 		data/
+			icons/
+				MatriXMiX.icns
+				MatriXMiX.png
+			start/
+				MatrixSet.mtmx
+			background.png
+			create.png
+			data.qrc
+			library.png
+			logo.png
+			minus.png
+			plus.png
+			qt.png
+			quit.png
+			save.png
+			trash.png
 
+		documentation.h		
 
 		doc/
+				
 
 	
 
@@ -145,11 +147,12 @@ Note : La Compilation est CROSS-OS, vous pouvez compiler autant sur un systeme
 	Compilation du projet : 
 		-> Commande "make" depuis ce répertoire courant génèrera les cibles suivantes :
 			bin/MatriXMiX
-			bin/MatriXMiX_txt
-			bin/MatriXMiX_test
+			bin/MatriXMiX_TXT
+			bin/MatriXMiX_Test
 
-	Autres Cibles du Makefile :
-	-> Commande "make clean" supprimera TOUS les exécutables dans bin/ et fichiers objets dans obj/
+	Autres Cibles du Makefile :	
+	-> Commande "make clean" supprimera les exécutables dans bin/ , les fichiers objets dans obj/, les fichiers resources dans resources/ et les fichiers moc dans moc/
+	-> Commande "make veryclean" supprimera TOUS fichiers générés par la commande "make"		
 	-> Commande "make documentation" génerera la documentation du module.
 
 
@@ -167,8 +170,8 @@ ________________________________________________________________________________
 ******** EXECUTION ET DESCRIPTION ********
 
 	"./bin/MatriXMiX" -> Execute MatriXMiX en version graphique
-	"./bin/MatriXMiX_txt" -> Execute MatriXMiX en version texte 
-	"./bin/MatriXMiX_test" -> Execute l'ensemble des tests de non régression de MatriXMiX en version texte
+	"./bin/MatriXMiX_TXT" -> Execute MatriXMiX en version texte 
+	"./bin/MatriXMiX_Test" -> Execute l'ensemble des tests de non régression de MatriXMiX en version texte
 
 Après l'ajout de matrices dans l'application, celle-ci propose les fonctionnalités suivantes:
 
@@ -194,10 +197,14 @@ Diagonalisation
 Evaluation d'expression
 
 
-*** MatriXMiX version graphique ***
-Sauvegarde de la librairie de matrices dans un fichier au format ".mtmx"
-Lecture de matrices à partir d'un fichier ".mtmx"
+******* MatriXMiX version graphique *******
+- Sauvegarde de la librairie de matrices dans un fichier au format ".mtmx"
+- Lecture de matrices à partir d'un fichier ".mtmx"
 
+
+**** NB ****
+Un jeu de matrices est fourni dans le répertoire data/start/MatrixSet.mtmx
+Vous pouvez l'ouvrir depuis l'onglet fichier->ouvrir de l'application
 
 ________________________________________________________________________________
 
@@ -220,7 +227,7 @@ ________________________________________________________________________________
 Pour Linux, il faudra installer (sudo apt install g++ doxygen apt-get install qtcreator qt5-default)
 - g++ (sudo apt install g++)
 - doxygen (sudo apt install doxygen)
-- Qt creator (sudo apt-get install qtcreator qt5-default) pour le mode graphique
+- qmake (sudo apt-get install qmake qt5-default OU brew install qt) pour le mode graphique sous
 
 
 

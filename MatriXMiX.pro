@@ -8,8 +8,9 @@ CONFIG += release
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
 MOC_DIR = ./moc
+RCC_DIR = ./resources
 TARGET = MatriXMiX
-ICON = MatriXMiX.icns
+macx:ICON = data/icons/MatriXMiX.icns
 
 include(ext/latex/jkqtmathtext.pri);
 INCLUDEPATH += ext/Eigen/
@@ -18,56 +19,57 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 
-HEADERS += src/Matrix.h \
-	src/VectorX.h \
-	src/Polynomial.h \
-	src/Fraction.h \
-	src/MatriXMiXTXT.h \
-	src/MatrixLibrary.h \
-	src/MainWindow.h \
-    src/LibraryWindow.h \
-    src/ShowMatrixWidget.h \
-    src/Error.h \
-    src/MatrixViewWidget.h \
-    src/MenuBar.h \
-    src/Gauss.h \
-    src/AbstractOperationWidget.h \
-    src/BinaryOpMatrixMatrixWidget.h \
-    src/BinaryOpMatrixNumberWidget.h \
-    src/UnaryOpWidget.h \
-    src/DiagonalisationWidget.h \
-    src/ExprEvalWidget.h \
-    src/SetMatrixWidget.h \
-    src/HelpWindow.h \
-    src/HelpWindowQt.h
+HEADERS += src/maths/Matrix.h \
+        src/maths/VectorX.h \
+        src/maths/Polynomial.h \
+        src/maths/Fraction.h \
+        src/maths/Gauss.h \
+        src/maths/MatrixLibrary.h \
+        src/qt/MainWindow.h \
+        src/qt/LibraryWindow.h \
+        src/qt/ShowMatrixWidget.h \
+        src/qt/Error.h \
+        src/qt/MatrixViewWidget.h \
+        src/qt/MenuBar.h \
+        src/qt/AbstractOperationWidget.h \
+        src/qt/BinaryOpMatrixMatrixWidget.h \
+        src/qt/BinaryOpMatrixNumberWidget.h \
+        src/qt/UnaryOpWidget.h \
+        src/qt/DiagonalisationWidget.h \
+        src/qt/ExprEvalWidget.h \
+        src/qt/SetMatrixWidget.h \
+        src/qt/HelpWindow.h \
+        src/qt/HelpWindowQt.h
 
 
-SOURCES += src/main.cpp \
-	src/Matrix.cpp \
-	src/VectorX.cpp \ 
-	src/Polynomial.cpp \
-	src/Fraction.cpp \
-	src/MatriXMiXTXT.cpp \
-	src/MatrixLibrary.cpp \
-	src/MainWindow.cpp \
-    src/LibraryWindow.cpp \
-    src/MatrixViewWidget.cpp \
-    src/Error.cpp \
-    src/MenuBar.cpp \
-    src/Gauss.cpp \
-    src/AbstractOperationWidget.cpp \
-    src/BinaryOpMatrixMatrixWidget.cpp \
-    src/BinaryOpMatrixNumberWidget.cpp \
-    src/UnaryOpWidget.cpp \
-    src/DiagonalisationWidget.cpp \
-    src/ExprEvalWidget.cpp \
-    src/SetMatrixWidget.cpp \
-	src/ShowMatrixWidget.cpp \
-    src/HelpWindow.cpp \
-    src/HelpWindowQt.cpp
+SOURCES += src/qt/main.cpp \
+        src/maths/Matrix.cpp \
+        src/maths/VectorX.cpp \
+        src/maths/Polynomial.cpp \
+        src/maths/Fraction.cpp \
+        src/maths/Gauss.cpp \
+        src/maths/MatrixLibrary.cpp \
+        src/qt/MainWindow.cpp \
+        src/qt/LibraryWindow.cpp \
+        src/qt/MatrixViewWidget.cpp \
+        src/qt/Error.cpp \
+        src/qt/MenuBar.cpp \
+        src/qt/AbstractOperationWidget.cpp \
+        src/qt/BinaryOpMatrixMatrixWidget.cpp \
+        src/qt/BinaryOpMatrixNumberWidget.cpp \
+        src/qt/UnaryOpWidget.cpp \
+        src/qt/DiagonalisationWidget.cpp \
+        src/qt/ExprEvalWidget.cpp \
+        src/qt/SetMatrixWidget.cpp \
+        src/qt/ShowMatrixWidget.cpp \
+        src/qt/HelpWindow.cpp \
+        src/qt/HelpWindowQt.cpp
 
 RESOURCES += \
     data/data.qrc
+
+DISTFILES += \
+    data/icons/MatriXMiX.png
 
 
 

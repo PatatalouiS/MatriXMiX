@@ -10,5 +10,7 @@
         <file>trash.png</file>
         <file>background.png</file>
         <file>quit.png</file>
+        <file>icons/MatriXMiX.png</file>
+        <file>icons/MatriXMiX.icns</file>
     </qresource>
 </RCC>
