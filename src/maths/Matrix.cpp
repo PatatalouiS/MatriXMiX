@@ -12,7 +12,7 @@
 
 using namespace std;
 
-const double EPSILON = 0.0001;
+const double EPSILON = 0.00001;
 
 
 const Matrix Matrix:: matrix_null = Matrix();
@@ -378,16 +378,16 @@ const Matrix Matrix:: operator * (const Matrix & m) const
 const Matrix Matrix:: operator * (const double & lambda) const
 {
     unsigned int i,j;
-    Matrix copy(*this);
+    Matrix res(*this);
 
     for (i = 0; i < rows; i++)
     {
         for (j = 0; j < cols; j++)
         {
-            copy[i][j] = lambda * copy[i][j];
+            res[i][j] *= lambda;
         }
     }
-    return copy;
+    return res;
 }
 
 
@@ -631,11 +631,11 @@ Matrix Matrix:: checkCast() const
             {
                 if ( abs(tab[i][j].real() - l) < EPSILON )
                 {
-                    result[i][j] = l;
+                    //result[i][j].real() = l;
                 }
                 if ( abs(tab[i][j].imag() - l) < EPSILON )
                 {
-                    result[i][j] = l;
+                    //result[i][j].imag() = l;
                 }
 
             }
@@ -703,6 +703,26 @@ vector<string> Matrix:: explode (const string & expression) const
 }
 
 
+VectorX Matrix:: normaliseVectorX (const VectorX & v) const
+{
+    VectorX res;
+    unsigned int i;
+    double norme = 0;
+
+    for (i = 0; i < rows; i++)
+    {
+        norme += ( (v[i].real() * v[i].real()) + (v[i].imag() * v[i].imag()) );
+    }
+
+    for (i = 0; i < rows; i++)
+    {
+        res.push_back(v[i] / sqrt(norme));
+    }
+
+    return res;
+}
+
+
 Eigen::MatrixXcd Matrix:: class2Eigen () const
 {
     unsigned int i, j, r, c;
@@ -757,7 +777,6 @@ const Matrix Matrix:: gaussReduction()const
     int col;
     int r = static_cast<int>(res.getNbRows()) ;
     int c = static_cast<int>(res.getNbCols()) ;
-    complex<double> inverse(1,0);
 
 
     int nonzero_row_id, next_row_id = 0;
@@ -799,24 +818,27 @@ const Matrix Matrix:: gaussReduction()const
     for (vector<Gauss>::iterator pos = pivot_gauss.end() - 1;
          pos >= pivot_gauss.begin(); pos--)
     {
-        if (pos->getVal(res) != 1.0)
+        if (pos->getVal(res).real() != 1.0)
         {
-            g.rowScale(res.tab.begin() + pos->row, inverse
-                       / res.tab[static_cast<unsigned int>(pos->row)]
-                                   [static_cast<unsigned int>(pos->col)]);
-        }
+            complex<double> inverse (1./res.tab[static_cast<unsigned int>(pos->row)]
+                        [static_cast<unsigned int>(pos->col)]);
 
+            res.tab[pos->row] = res.normaliseVectorX(res.tab[pos->row]);
+        }
         for (int row = 0; row < r; row++)
         {
             if (res.tab[static_cast<unsigned int>(row)]
-                        [static_cast<unsigned int>(pos->col)] != 0.0
-                        && row != pos->row)
+                        [static_cast<unsigned int>(pos->col)].real() != 0.0
+                    && res.tab[static_cast<unsigned int>(row)]
+                                [static_cast<unsigned int>(pos->col)].imag() != 0.0
+                    && row != pos->row)
             {
                 g.rowReplace(res.tab.begin() + row, res.tab.begin() + pos->row,
                             -res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(pos->col)]
                         / res.tab[static_cast<unsigned int>(pos->row)][static_cast<unsigned int>(pos->col)]);
             }
         }
+
     }
 
     return res;

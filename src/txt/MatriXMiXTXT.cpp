@@ -126,6 +126,7 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
     case 8 : cout << op1->traceMatrix() << endl; break;
     case 9 : cout << op1->determinant() << endl; break;
     case 10 : cout << op1->inverse() << endl; break;
+    case 11 : cout << op1->gaussReduction() << endl; break;
     case 13 : displayCharacteristicPolynomial(op1,name); break;
     case 14 : displayEigenValVect(op1); break;
     case 15 : displayStudyDiagonalise(op1); break;
@@ -184,6 +185,7 @@ void MatriXMiXTXT:: mainMenu ()
       			case 8 : trace() ; break;
       			case 9 : determinant() ; break;
             case 10 : inverse() ; break;
+            case 11 : gaussReduction() ; break;
             case 13 : characteristicPolynomial(); break;
             case 14 : eigenValVect() ; break;
             case 15 : studyDiagonalise() ; break;
@@ -415,6 +417,24 @@ void MatriXMiXTXT:: inverse() const
 	else
 	{
         unaryOperation(10);
+	}
+}
+
+
+void MatriXMiXTXT:: gaussReduction() const
+{
+  cl();
+	cout << "===================================================" << endl;
+	cout << "=================== ÉCHELONNAGE ===================" << endl;
+	cout << "===================================================" << endl << endl;
+
+	if (lib.isEmpty())
+	{
+		MsgEmptyLib();
+	}
+	else
+	{
+        unaryOperation(11);
 	}
 }
 

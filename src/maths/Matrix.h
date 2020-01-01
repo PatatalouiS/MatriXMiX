@@ -60,6 +60,9 @@ private:
  */
     std::vector<std::string> explode (const std::string & expression) const;
 
+
+    VectorX normaliseVectorX(const VectorX & v) const;
+
 /**
  * @brief Convert Matrix type to eigen MatrixXd type
  * @return \e MatrixXd (eigen3)
