@@ -4,6 +4,10 @@
 
 using namespace std;
 
+
+static const double EPSILON = 0.000001;
+
+
 // Simplifications des appels systeme POSIX
 // NON PORTABLE, UNIX UNIQUEMENT
 
@@ -127,6 +131,7 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
     case 9 : cout << op1->determinant() << endl; break;
     case 10 : cout << op1->inverse() << endl; break;
     case 11 : cout << op1->gaussReduction() << endl; break;
+    case 12 : displayDimensionsStudy(op1,name); break;
     case 13 : displayCharacteristicPolynomial(op1,name); break;
     case 14 : displayEigenValVect(op1); break;
     case 15 : displayStudyDiagonalise(op1); break;
@@ -186,6 +191,7 @@ void MatriXMiXTXT:: mainMenu ()
       			case 9 : determinant() ; break;
             case 10 : inverse() ; break;
             case 11 : gaussReduction() ; break;
+            case 12 : dimensionsStudy(); break;
             case 13 : characteristicPolynomial(); break;
             case 14 : eigenValVect() ; break;
             case 15 : studyDiagonalise() ; break;
@@ -274,6 +280,52 @@ void MatriXMiXTXT:: showLibrary () const
         lib.print();
         wait();
     }
+}
+
+
+complex<double> MatriXMiXTXT:: checkCast(const complex<double> & c) const
+{
+    int l;
+    double re, im;
+
+    l = -150;
+    re = c.real();
+    while (l < 151)
+    {
+        if ( abs(c.real() - l) < EPSILON )
+            {
+                re = l;
+                break;
+            }
+        l++;
+    }
+
+    l = -150;
+    im = c.imag();
+    while (l < 151)
+    {
+        if ( abs(c.imag() - l) < EPSILON )
+            {
+                im = l;
+                break;
+            }
+        l++;
+    }
+
+
+    return (complex<double>(re,im));
+
+}
+
+
+VectorX MatriXMiXTXT:: checkCast(const VectorX & v) const
+{
+    VectorX res;
+    for (unsigned int i = 0; i < v.size(); i++)
+    {
+        res.push_back(checkCast(v[i]));
+    }
+    return res;
 }
 
 
@@ -439,6 +491,33 @@ void MatriXMiXTXT:: gaussReduction() const
 }
 
 
+void MatriXMiXTXT:: dimensionsStudy() const
+{
+    cl();
+    cout << "===================================================" << endl;
+    cout << "============== ETUDE DES DIMENSIONS ===============" << endl;
+    cout << "===================================================" << endl << endl;
+
+    if (lib.isEmpty())
+    {
+        MsgEmptyLib();
+    }
+    else
+    {
+        unaryOperation(12);
+    }
+}
+
+
+void MatriXMiXTXT:: displayDimensionsStudy(const Matrix * m, const string & name) const
+{
+   cout << "La dimension de l'image est dim(Im("
+        << name << ")) = " << m->dimensionsStudy().first
+        << "\nLa dimension du noyau est dim(Ker(" << name
+        << ")) = " << m->dimensionsStudy().second << endl << endl << endl;
+}
+
+
 void MatriXMiXTXT:: characteristicPolynomial() const
 {
   cl();
@@ -503,14 +582,14 @@ void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
 
         for (i = 0; i < s; i++)
         {
-            cout << "Valeur propre : " << tab[i].first << endl ;
+            cout << "Valeur propre : " << checkCast(tab[i].first) << endl ;
             l = tab[i].second.size();
-            cout << "Vecteur propre: (" ;
+            cout << "Vecteur propre: ( " ;
             for(j = 0; j < l-1 ; j++)
             {
-                cout << tab[i].second[j] << " , " ;
+                cout << checkCast(tab[i].second[j]) << " , " ;
             }
-            cout << tab[i].second[l-1] << ") " << endl << endl;
+            cout << checkCast(tab[i].second[l-1]) << " ) " << endl << endl;
         }
          cout << endl ;
 
@@ -570,31 +649,6 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
     }
 
 }
-
-/*
-void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
-{
-    vector<pair<complex<double>,VectorX>> tab;
-    tab = m->allEigen();
-
-        unsigned long int i, j, l, s = tab.size();
-        VectorX vect;
-        cout << "Valeur propre et vecteur propre associé " << endl << endl;
-
-        for (i = 0; i < s; i++)
-        {
-            cout << "Valeur propre : " << tab[i].first << endl ;
-            l = tab[i].second.size();
-            cout << "Vecteur propre: (" ;
-            for(j = 0; j < l-1 ; j++)
-            {
-                cout << tab[i].second[j] << " , " ;
-            }
-            cout << tab[i].second[l-1] << ") " << endl << endl;
-        }
-         cout << endl ;
-
-}*/
 
 
 void MatriXMiXTXT:: studyMatrix() const

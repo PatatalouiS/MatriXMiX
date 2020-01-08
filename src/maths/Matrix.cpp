@@ -670,12 +670,6 @@ Matrix Matrix:: checkCast() const
     for (unsigned int i = 0; i < r; i++)
     {
         result[i] = checkCast(tab[i]);
-        /*
-        for (unsigned int j = 0; j < getNbCols(); j++)
-        {
-            result[i][j] = checkCast(tab[i][j]);
-        }*/
-
     }
 
     return result;

@@ -2,6 +2,7 @@
 #define MATRIXMIX_TXT_H
 
 #include "../maths/MatrixLibrary.h"
+#include <complex>
 
 
 class MatriXMiXTXT
@@ -32,8 +33,6 @@ class MatriXMiXTXT
  */
     void MsgEmptyLib () const;
 
-
-
 /**
  * @brief Shows the add matrix menu
  */
@@ -43,6 +42,12 @@ class MatriXMiXTXT
  * @brief Shows matrix library
  */
     void showLibrary () const;
+
+
+    std::complex<double> checkCast(const std::complex<double> & c) const;
+
+
+    VectorX checkCast(const VectorX & v) const;
 
 /**
  * @brief Shows addition menu and calls its function
