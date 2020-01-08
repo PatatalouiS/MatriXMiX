@@ -615,32 +615,69 @@ unsigned int Matrix:: rank()const
 
 // ********   PRIVATE FUNCTIONS   ***********
 
+complex<double> Matrix::checkCast(const complex<double> & c) const
+{
+    int l;
+    double re, im;
+
+    l = -150;
+    re = c.real();
+    while (l < 151)
+    {
+        if ( abs(c.real() - l) < EPSILON )
+            {
+                re = l;
+                break;
+            }
+        l++;
+    }
+
+    l = -150;
+    im = c.imag();
+    while (l < 151)
+    {
+        if ( abs(c.imag() - l) < EPSILON )
+            {
+                im = l;
+                break;
+            }
+        l++;
+    }
+
+
+    return (complex<double>(re,im));
+
+}
+
+
+VectorX Matrix:: checkCast(const VectorX & v) const
+{
+    VectorX res;
+    for (unsigned int i = 0; i < v.size(); i++)
+    {
+        res.push_back(checkCast(v[i]));
+    }
+    return res;
+}
+
+
+
 Matrix Matrix:: checkCast() const
 {
-    unsigned int i, j, r, c;
-    r = getNbRows();
-    c = getNbCols();
-    int l;
+    unsigned int r = getNbRows();
     Matrix result(*this);
 
-    for (i =0; i < r; i++)
+    for (unsigned int i = 0; i < r; i++)
     {
-        for (j = 0; j < c; j++)
+        result[i] = checkCast(tab[i]);
+        /*
+        for (unsigned int j = 0; j < getNbCols(); j++)
         {
-            for (l = -150 ; l < 150; l++)
-            {
-                if ( abs(tab[i][j].real() - l) < EPSILON )
-                {
-                    //result[i][j].real() = l;
-                }
-                if ( abs(tab[i][j].imag() - l) < EPSILON )
-                {
-                    //result[i][j].imag() = l;
-                }
+            result[i][j] = checkCast(tab[i][j]);
+        }*/
 
-            }
-        }
     }
+
     return result;
 }
 

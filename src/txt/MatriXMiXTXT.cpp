@@ -551,9 +551,9 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 
         cout << "La matrice est diagonalisable dans R "
                 "\nie Il existe une base dans laquelle la matrice est diagonale " << endl << endl;
-        cout << "La matrice de passage P vers cette base est: " << endl << P1 << endl;
-        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << D << endl;
-        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << P2 << endl << endl;
+        cout << "La matrice de passage P vers cette base est: " << endl << P1.checkCast() << endl;
+        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << D.checkCast() << endl;
+        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << P2.checkCast() << endl << endl;
     }
     else
     {
@@ -564,9 +564,9 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 
         cout << "La matrice est diagonalisable dans C "
                 "\nie Il existe une base dans laquelle la matrice est diagonale " << endl << endl;
-        cout << "La matrice de passage P vers cette base est: " << endl << P1 << endl;
-        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << D << endl;
-        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << P2 << endl << endl;
+        cout << "La matrice de passage P vers cette base est: " << endl << P1.checkCast() << endl;
+        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << D.checkCast() << endl;
+        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << P2.checkCast() << endl << endl;
     }
 
 }

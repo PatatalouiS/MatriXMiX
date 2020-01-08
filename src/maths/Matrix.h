@@ -34,12 +34,6 @@ private:
     Matrix subMatrix(const unsigned int & a, const unsigned int & b ) const;
 
 /**
- * @brief Private function which rounds up real coefficients
- * @return \e Matrix
- */
-    Matrix checkCast () const;
-
-/**
  * @brief Recursive function which returns matrix determinant
  * @param [in] dim (\e unsigned \e int)
  * @return \e double
@@ -295,6 +289,19 @@ public:
  * @return \e bool
  */
     bool isSQMatrix() const;
+
+
+    std::complex<double> checkCast (const std::complex<double> & c) const;
+
+
+    VectorX checkCast (const VectorX & v) const;
+
+
+/**
+ * @brief Private function which rounds up real coefficients
+ * @return \e Matrix
+ */
+    Matrix checkCast () const;
 
 /**
  * @brief Returns the matrix trace
