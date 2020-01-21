@@ -28,11 +28,110 @@ void wait()
 
 
 
+// Fonctions d'AFFICHAGE
+
+complex<double> MatriXMiXTXT:: checkCast(const complex<double> & c) const
+{
+    int l;
+    double re, im;
+
+    l = -150;
+    re = c.real();
+    while (l < 151)
+    {
+        if ( abs(c.real() - l) < EPSILON )
+            {
+                re = l;
+                break;
+            }
+        l++;
+    }
+
+    l = -150;
+    im = c.imag();
+    while (l < 151)
+    {
+        if ( abs(c.imag() - l) < EPSILON )
+            {
+                im = l;
+                break;
+            }
+        l++;
+    }
+
+    return (complex<double>(re,im));
+
+}
+
+
+VectorX MatriXMiXTXT:: checkCast(const VectorX & v) const
+{
+    VectorX res;
+    for (unsigned int i = 0; i < v.size(); i++)
+    {
+        res.push_back(checkCast(v[i]));
+    }
+    return res;
+}
+
+
+ostringstream MatriXMiXTXT::print(const complex<double> & z) const
+{
+    ostringstream ss;
+    complex<double> c (checkCast(z));
+    double re = c.real();
+    double im = c.imag();
+
+    if (re > 0.0)
+    {
+        if (im > 0.0)
+            ss << "(" << re << "+" << im << "i)";
+        else if (im == 0.0)
+            ss << re;
+        else
+            ss << "(" << re << im << "i)";
+    }
+    else if (re == 0.0)
+    {
+        if (im != 0.0)
+            ss << im << "i";
+    }
+    else
+    {
+        if (im > 0.0)
+            ss << "(" << re << "+" << im << "i)";
+        else if (im == 0.0)
+            ss << re;
+        else
+            ss << "-(" << abs(re) << "+" << abs(im) << "i)";
+    }
+
+    return ss;
+}
+
+
+ostringstream MatriXMiXTXT::print(const VectorX & vx) const
+{
+    ostringstream ss;
+    VectorX v (checkCast(vx));
+
+    for (unsigned int i = 0; i < vx.size(); i++)
+    {
+        ss << "{ " << v[i] << " }";
+    }
+
+    return ss;
+}
+
+
+
+
+
 // Sous fonctions pour faciliter l'écriture du menu
 
 void MatriXMiXTXT:: MsgEmptyLib () const
 {
-    cout << "Aucune Matrice n'est rentrée !" << endl;
+    cout << "Aucune Matrice n'a été entrée !" << endl;
     cout << "Vous pouvez en ajouter via sur le menu principal " << endl;
     wait();
 }
@@ -280,52 +379,6 @@ void MatriXMiXTXT:: showLibrary () const
         lib.print();
         wait();
     }
-}
-
-
-complex<double> MatriXMiXTXT:: checkCast(const complex<double> & c) const
-{
-    int l;
-    double re, im;
-
-    l = -150;
-    re = c.real();
-    while (l < 151)
-    {
-        if ( abs(c.real() - l) < EPSILON )
-            {
-                re = l;
-                break;
-            }
-        l++;
-    }
-
-    l = -150;
-    im = c.imag();
-    while (l < 151)
-    {
-        if ( abs(c.imag() - l) < EPSILON )
-            {
-                im = l;
-                break;
-            }
-        l++;
-    }
-
-
-    return (complex<double>(re,im));
-
-}
-
-
-VectorX MatriXMiXTXT:: checkCast(const VectorX & v) const
-{
-    VectorX res;
-    for (unsigned int i = 0; i < v.size(); i++)
-    {
-        res.push_back(checkCast(v[i]));
-    }
-    return res;
 }
 
 
@@ -582,14 +635,14 @@ void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
 
         for (i = 0; i < s; i++)
         {
-            cout << "Valeur propre : " << checkCast(tab[i].first) << endl ;
+            cout << "Valeur propre : " << print(tab[i].first).str() << endl ;
             l = tab[i].second.size();
             cout << "Vecteur propre: ( " ;
             for(j = 0; j < l-1 ; j++)
             {
-                cout << checkCast(tab[i].second[j]) << " , " ;
+                cout << print(tab[i].second[j]).str() << " , " ;
             }
-            cout << checkCast(tab[i].second[l-1]) << " ) " << endl << endl;
+            cout << print(tab[i].second[l-1]).str() << " ) " << endl << endl;
         }
          cout << endl ;
 

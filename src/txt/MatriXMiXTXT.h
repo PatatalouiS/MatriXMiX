@@ -1,15 +1,30 @@
 #ifndef MATRIXMIX_TXT_H
 #define MATRIXMIX_TXT_H
 
-#include "../maths/MatrixLibrary.h"
 #include <complex>
-
+#include <sstream>
+#include "../maths/MatrixLibrary.h"
 
 class MatriXMiXTXT
 {
     private:
 
     MatrixLibrary lib;
+
+
+    //Fonctions d'AFFICHAGE
+
+    std::complex<double> checkCast(const std::complex<double> & c) const;
+
+
+    VectorX checkCast(const VectorX & v) const;
+
+
+    std::ostringstream print(const std::complex<double> & z) const;
+
+    std::ostringstream print(const VectorX & v) const;
+
+
 
 /**
  * @brief Shows result of binary operation called
@@ -42,12 +57,6 @@ class MatriXMiXTXT
  * @brief Shows matrix library
  */
     void showLibrary () const;
-
-
-    std::complex<double> checkCast(const std::complex<double> & c) const;
-
-
-    VectorX checkCast(const VectorX & v) const;
 
 /**
  * @brief Shows addition menu and calls its function

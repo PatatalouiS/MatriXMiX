@@ -14,7 +14,7 @@ typedef std::vector<std::vector<std::complex<double>>>::iterator tab2D_iter ;
 class Gauss
 {
 
-public:
+private:
 
     int row;
     int col;
@@ -36,6 +36,8 @@ public:
     Gauss (const int & row, const int & col);
 
     int getRow();
+
+
     int getCol();
 
 /**

@@ -193,7 +193,6 @@ void Fraction:: recursived2f (vector<long int> &tab, const double &rest) const
         tab.push_back(integer);
         recursived2f(tab,rest2);
     }
-
 }
 
 
@@ -402,4 +401,3 @@ void Fraction:: regressionTest() const
             << endl << endl ;
 
 }
-
