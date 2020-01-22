@@ -851,22 +851,22 @@ const Matrix Matrix:: gaussReduction()const
     {
         if (pos->getVal(res).real() != 1.0)
         {
-            complex<double> inverse (1./res.tab[static_cast<unsigned int>(pos->row)]
-                        [static_cast<unsigned int>(pos->col)]);
+            complex<double> inverse (1./res.tab[static_cast<unsigned int>(pos->getRow())]
+                        [static_cast<unsigned int>(pos->getCol())]);
 
-            res.tab[pos->row] = res.normaliseVectorX(res.tab[pos->row]);
+            res.tab[pos->getRow()] = res.normaliseVectorX(res.tab[pos->getRow()]);
         }
         for (int row = 0; row < r; row++)
         {
             if (res.tab[static_cast<unsigned int>(row)]
-                        [static_cast<unsigned int>(pos->col)].real() != 0.0
+                        [static_cast<unsigned int>(pos->getCol())].real() != 0.0
                     && res.tab[static_cast<unsigned int>(row)]
-                                [static_cast<unsigned int>(pos->col)].imag() != 0.0
-                    && row != pos->row)
+                                [static_cast<unsigned int>(pos->getCol())].imag() != 0.0
+                    && row != pos->getRow())
             {
-                g.rowReplace(res.tab.begin() + row, res.tab.begin() + pos->row,
-                            -res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(pos->col)]
-                        / res.tab[static_cast<unsigned int>(pos->row)][static_cast<unsigned int>(pos->col)]);
+                g.rowReplace(res.tab.begin() + row, res.tab.begin() + pos->getRow(),
+                            -res.tab[static_cast<unsigned int>(row)][static_cast<unsigned int>(pos->getCol())]
+                        / res.tab[static_cast<unsigned int>(pos->getRow())][static_cast<unsigned int>(pos->getCol())]);
             }
         }
 

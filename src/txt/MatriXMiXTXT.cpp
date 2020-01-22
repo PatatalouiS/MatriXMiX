@@ -647,14 +647,13 @@ void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
     vector<pair<complex<double>,VectorX>> tab;
     tab = m->allEigen();
 
-        unsigned long int i, j, l, s = tab.size();
+        unsigned long int i, s = tab.size();
         VectorX vect;
         cout << "Valeur propre et vecteur propre associé " << endl << endl;
 
         for (i = 0; i < s; i++)
         {
             cout << "Valeur propre : " << print(tab[i].first).str() << endl ;
-            l = tab[i].second.size();
             cout << "Vecteur propre: " ;
             cout << endl << print(tab[i].second).str() << endl;
 
