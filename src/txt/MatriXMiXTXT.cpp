@@ -95,6 +95,8 @@ ostringstream MatriXMiXTXT::print(const complex<double> & z) const
     {
         if (im != 0.0)
             ss << im << "i";
+        else
+            ss << "0";
     }
     else
     {
@@ -117,9 +119,17 @@ ostringstream MatriXMiXTXT::print(const VectorX & vx) const
 
     for (unsigned int i = 0; i < vx.size(); i++)
     {
-        ss << "{ " << v[i] << " }";
+        ss << "{ " << print(v[i]).str() << " }" << endl;
     }
 
+    return ss;
+}
+
+
+ostringstream MatriXMiXTXT::print(const Matrix & m) const
+{
+    ostringstream ss;
+    ss << m.checkCast();
     return ss;
 }
 
@@ -332,33 +342,41 @@ void MatriXMiXTXT:: addMatrixMenu ()
     }
     else
     {
-		string name;
+  		string name;
+      char char_array[1];
+      do
+      {
+          cout << "Entrez le nom de la matrice : ";
+  		    cin >> name;
 
-        cout << "Entrez le nom de la matrice : ";
-		cin >> name;
+          strcpy(char_array,name.c_str());
+          if (char_array[0] >= '0' && char_array[0] <= '9')
+          {
+              cout << "Le nom de la matrice doit débuter par une lettre (A-Z,a-z)" << endl;
+          }
+      } while (char_array[0] >= '0' && char_array[0] <= '9');
 
-        if (lib.find(name) != nullptr)
-		{
-			cout << "Attention, il y a déja une matrice avec le nom " << name << " !" << endl;
-			wait();
-			return;
-		}
+      if (lib.find(name) != nullptr)
+  		{
+  			cout << "Attention, il y a déja une matrice avec le nom " << name << " !" << endl;
+  			wait();
+  			return;
+  		}
 
-		Matrix m;
+  		Matrix m;
+      if (choice == 1)
+      {
+          m.setMatrixRA();
+      }
+      else
+      {
+          m.setMatrixKB();
+      }
+      lib.addMatrix(name, m);
 
-        if (choice == 1)
-        {
-            m.setMatrixRA();
-        }
-        else
-        {
-            m.setMatrixKB();
-        }
-        lib.addMatrix(name, m);
-
-        cout << endl << "Ajout effectué : voici votre matrice " << name << " : " << endl << endl;
-        cout << m << endl;
-        wait();
+      cout << endl << "Ajout effectué : voici votre matrice " << name << " : " << endl << endl;
+      cout << m << endl;
+      wait();
     }
 }
 
@@ -637,12 +655,16 @@ void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
         {
             cout << "Valeur propre : " << print(tab[i].first).str() << endl ;
             l = tab[i].second.size();
-            cout << "Vecteur propre: ( " ;
-            for(j = 0; j < l-1 ; j++)
+            cout << "Vecteur propre: " ;
+            cout << endl << print(tab[i].second).str() << endl;
+
+            /*for(j = 0; j < l-1 ; j++)
             {
-                cout << print(tab[i].second[j]).str() << " , " ;
-            }
-            cout << print(tab[i].second[l-1]).str() << " ) " << endl << endl;
+                 << " , " ;
+            }*/
+
+
+            //cout << print(tab[i].second[l-1]).str() << " ) " << endl << endl;
         }
          cout << endl ;
 
@@ -683,9 +705,9 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 
         cout << "La matrice est diagonalisable dans R "
                 "\nie Il existe une base dans laquelle la matrice est diagonale " << endl << endl;
-        cout << "La matrice de passage P vers cette base est: " << endl << P1.checkCast() << endl;
-        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << D.checkCast() << endl;
-        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << P2.checkCast() << endl << endl;
+        cout << "La matrice de passage P vers cette base est: " << endl << print(P1).str() << endl;
+        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D).str() << endl;
+        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2).str() << endl << endl;
     }
     else
     {
@@ -696,9 +718,9 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 
         cout << "La matrice est diagonalisable dans C "
                 "\nie Il existe une base dans laquelle la matrice est diagonale " << endl << endl;
-        cout << "La matrice de passage P vers cette base est: " << endl << P1.checkCast() << endl;
-        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << D.checkCast() << endl;
-        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << P2.checkCast() << endl << endl;
+        cout << "La matrice de passage P vers cette base est: " << endl << print(P1).str() << endl;
+        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D).str() << endl;
+        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2).str() << endl << endl;
     }
 
 }

@@ -24,6 +24,8 @@ class MatriXMiXTXT
 
     std::ostringstream print(const VectorX & v) const;
 
+    std::ostringstream print(const Matrix & m) const;
+
 
 
 /**
