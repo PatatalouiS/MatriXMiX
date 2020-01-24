@@ -690,38 +690,36 @@ void MatriXMiXTXT:: studyDiagonalise() const
 
 void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 {
+    ostringstream ss;
     if(!(m->isDiagonalisableC()))
     {
-        cout << "La matrice n'est pas diagonalisable dans C"
-                "\ni.e il n'existe aucune base dans laquelle la matrice étudiée est diagonale" << endl << endl << endl;
-    }
-    else if (m->isDiagonalisableR())
-    {
-        Matrix P1(m->getNbRows(),m->getNbCols());
-        Matrix D(m->getNbRows(),m->getNbCols());
-        Matrix P2(m->getNbRows(),m->getNbCols());
-        m->allMatrix(P1,D,P2);
-
-        cout << "La matrice est diagonalisable dans R "
-                "\nie Il existe une base dans laquelle la matrice est diagonale " << endl << endl;
-        cout << "La matrice de passage P vers cette base est: " << endl << print(P1).str() << endl;
-        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D).str() << endl;
-        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2).str() << endl << endl;
+        ss << "La matrice n'est pas diagonalisable dans C"
+                "\ni.e il n'existe aucune base dans laquelle la matrice étudiée est diagonale"
+                << endl << endl << endl;
     }
     else
-    {
-        Matrix P1(m->getNbRows(),m->getNbCols());
-        Matrix D(m->getNbRows(),m->getNbCols());
-        Matrix P2(m->getNbRows(),m->getNbCols());
-        m->allMatrix(P1,D,P2);
-
-        cout << "La matrice est diagonalisable dans C "
-                "\nie Il existe une base dans laquelle la matrice est diagonale " << endl << endl;
-        cout << "La matrice de passage P vers cette base est: " << endl << print(P1).str() << endl;
-        cout << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D).str() << endl;
-        cout << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2).str() << endl << endl;
+        {
+            Matrix P1(m->getNbRows(),m->getNbCols());
+            Matrix D(m->getNbRows(),m->getNbCols());
+            Matrix P2(m->getNbRows(),m->getNbCols());
+            m->allMatrix(P1,D,P2);
+            if (m->isDiagonalisableR())
+            {
+                ss << "La matrice est diagonalisable dans R "
+                        "\nie Il existe une base dans laquelle la matrice est diagonale "
+                        << endl << endl;
+            }
+            else
+            {
+                ss << "La matrice est diagonalisable dans C "
+                        "\nie Il existe une base dans laquelle la matrice est diagonale "
+                         << endl << endl;
+            }
+        ss << "La matrice de passage P vers cette base est: " << endl << print(P1).str() << endl;
+        ss << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D).str() << endl;
+        ss << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2).str() << endl << endl;
     }
-
+    cout << ss.str();
 }
 
 

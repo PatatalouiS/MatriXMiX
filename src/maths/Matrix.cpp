@@ -365,7 +365,7 @@ const Matrix Matrix:: operator * (const Matrix & m) const
         {
             sum = 0;
             for (k = 0; k < cols; k++)
-            {
+            {cout << ss.str();
                 sum += tab[i][k] * (m[k][j]);
             }
             res[i][j] = sum;
@@ -493,7 +493,7 @@ complex<double> Matrix:: traceMatrix() const
         return complex_null;
     }
 
-    complex<double> s = 0;
+    complex<double> s(0.0,0.0);
     for ( unsigned int i = 0; i < rows; i++)
     {
         s += tab[i][i];
@@ -510,7 +510,7 @@ complex<double> Matrix:: determinant() const
         return complex_null;
     }
 
-    Eigen:: MatrixXcd m = class2Eigen(), inverse;
+    Eigen:: MatrixXcd m = class2Eigen();
     return m.determinant();
 }
 
