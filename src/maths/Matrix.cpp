@@ -365,7 +365,7 @@ const Matrix Matrix:: operator * (const Matrix & m) const
         {
             sum = 0;
             for (k = 0; k < cols; k++)
-            {cout << ss.str();
+            {
                 sum += tab[i][k] * (m[k][j]);
             }
             res[i][j] = sum;
@@ -399,7 +399,7 @@ const Matrix operator * (const double & lambda, const Matrix & m)    // friend o
 
 const Matrix Matrix:: operator / (const Matrix & m) const
 {
-    if ( !m.isSQMatrix() )
+    if (!m.isSQMatrix())
     {
         cerr << "Division est impossible, la matrice diviseure n'est pas une matrice carrée !" << endl;
         return matrix_null;
@@ -569,11 +569,9 @@ Matrix Matrix:: inverse() const
         return matrix_null;
     }
 
-    Matrix result;
     Eigen::MatrixXcd m = class2Eigen(), inverse;
-    result = eigen2Class(m.inverse());
 
-    return result;
+    return eigen2Class(m.inverse());
 }
 
 
@@ -982,7 +980,6 @@ const vector<pair<complex<double>,VectorX>> Matrix:: allEigen()const
     unsigned long int n;
     Matrix e_vector;
     VectorX e_value;
-    pair<complex<double>,VectorX> temp_pair;
     vector<pair<complex<double>,VectorX>> result;
 
     e_value = eigenValues();
@@ -992,8 +989,7 @@ const vector<pair<complex<double>,VectorX>> Matrix:: allEigen()const
 
     for (i = 0; i < n; i++)
     {
-        temp_pair = make_pair(e_value[i],e_vector[i]);
-        result.push_back(temp_pair) ;
+        result.push_back(make_pair(e_value[i],e_vector[i])) ;
 
     }
     return result;
@@ -1020,8 +1016,8 @@ bool Matrix::isDiagonalisableR() const
   Matrix d (diagonalise());
   for (unsigned int i = 0; i < rows; i++)
   {
-    if (isComplex(d[i]))
-        return false;
+      if (isComplex(d[i]))
+          return false;
   }
   return true;
 }
@@ -1049,7 +1045,7 @@ bool Matrix:: isDiagonalisableC()const
     {
         for(j = 0; j < c; j++)
         {
-            if (i!=j && copy[i][j]!=0.0)
+            if (i != j && copy[i][j] != 0.0)
                 return false;
         }
     }
