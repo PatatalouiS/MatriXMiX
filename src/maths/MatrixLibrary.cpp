@@ -9,7 +9,7 @@ using namespace std;
 
 
 
-MatrixLibrary:: MatrixLibrary () : tab (map<string, Matrix>())
+MatrixLibrary:: MatrixLibrary () : tab (map<string, pair<Matrix,complex<double>>>())
 {
 }
 
@@ -18,7 +18,7 @@ MatrixLibrary::  MatrixLibrary (const MatrixLibrary & lib)
 {
     for (auto it = lib.tab.begin(); it != lib.tab.end(); it++ )
     {
-        addMatrix(it->first,it->second);
+        addMatrix(it->first,it->second.first);
     }
 }
 
@@ -38,7 +38,7 @@ unsigned long int MatrixLibrary:: size () const
 
 bool MatrixLibrary:: isEmpty () const
 {
-    return size() == 0;
+    return (size() == 0);
 }
 
 
@@ -57,9 +57,9 @@ bool MatrixLibrary:: exist (const string& name) const
 void MatrixLibrary:: print () const
 {
     for(const auto& Mat: tab)
-    { 
+    {
         cout << "Matrice " << Mat.first << " : ";
-        cout << endl << endl << Mat.second << endl;;
+        cout << endl << endl << Mat.second.first << endl;;
     }
     cout << endl;
 }
@@ -87,10 +87,10 @@ bool MatrixLibrary:: isName(const string & chain) const
 
 
 
-void MatrixLibrary:: addMatrix (const string& name, const Matrix& m)
+void MatrixLibrary:: addMatrix (const string& name, const Matrix & m)
 {
     if (isName(name))
-        tab.insert({name, m});
+        tab.insert({name, pair<Matrix,complex<double>> (m,m.determinant())});
     else cout<<"Nom de matrice non autorisé, veuillez choisir un autre..."<<endl;
 }
 
@@ -101,7 +101,7 @@ const Matrix* MatrixLibrary:: find (const string& name) const
     {
         return nullptr;
     }
-    return &tab.at(name);
+    return &((tab.at(name)).first);
 }
 
 
@@ -111,7 +111,7 @@ Matrix* MatrixLibrary:: find (const string& name)
     {
         return nullptr;
     }
-    return &tab.at(name);
+    return &((tab.at(name)).first);
 }
 
 
@@ -125,7 +125,7 @@ void MatrixLibrary:: erase (const string & name)
 }
 
 
-const std::map<std::string, Matrix>& MatrixLibrary:: data () const
+const map<string, pair<Matrix,complex<double>>>& MatrixLibrary:: data () const
 {
     return tab;
 }

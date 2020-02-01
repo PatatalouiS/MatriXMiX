@@ -4,6 +4,7 @@
 
 #include "Matrix.h"
 #include <map>
+#include <complex>
 
 /**
  * @class The MatrixLibrary class
@@ -12,7 +13,7 @@ class MatrixLibrary
 {
     private:
 
-    std::map<std::string, Matrix> tab;
+    std::map<std::string, std::pair<Matrix,std::complex<double>>> tab;
 
     public:
 /**
@@ -60,7 +61,10 @@ class MatrixLibrary
  */
     void print () const;
 
-
+/**
+ * @brief Returns if the chain can be accepted as name
+ * @return \e bool
+ */
     bool isName(const std::string & chain) const;
 
 
@@ -95,13 +99,15 @@ class MatrixLibrary
  * @brief Return the map of matrices
  * @return \e std::map<std::string, Matrix>
  */
-    const std::map<std::string, Matrix>& data () const;
+    const std::map<std::string, std::pair<Matrix,std::complex<double>>> & data () const;
 
-
+/**
+ * @brief Saves the matrix library in \e mtmx format
+ */
     void saveFile (const std::string & filename)const;
 
 /**
- * @brief Reads a matrix file
+ * @brief Reads a mtmx file to load the matrix library
  * @details The string contains the path of the file
  * @param [in] filename (\e string)
  */
