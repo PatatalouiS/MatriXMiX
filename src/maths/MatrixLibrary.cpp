@@ -95,7 +95,7 @@ void MatrixLibrary:: addMatrix (const string& name, const Matrix & m)
 }
 
 
-const Matrix* MatrixLibrary:: find (const string& name) const
+const Matrix* MatrixLibrary:: find_matrix (const string& name) const
 {
     if(tab.count(name) == 0)
     {
@@ -105,7 +105,7 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 }
 
 
-Matrix* MatrixLibrary:: find (const string& name)
+Matrix* MatrixLibrary:: find_matrix (const string& name)
 {
     if(tab.count(name) == 0)
     {
@@ -113,6 +113,27 @@ Matrix* MatrixLibrary:: find (const string& name)
     }
     return &((tab.at(name)).first);
 }
+
+
+const complex<double>* MatrixLibrary:: find_determinant (const string& name) const
+{
+    if(tab.count(name) == 0)
+    {
+        return nullptr;
+    }
+    return &((tab.at(name)).second);
+}
+
+
+complex<double>* MatrixLibrary:: find_determinant (const string& name)
+{
+    if(tab.count(name) == 0)
+    {
+        return nullptr;
+    }
+    return &((tab.at(name)).second);
+}
+
 
 
 void MatrixLibrary:: erase (const string & name)
@@ -149,7 +170,7 @@ void MatrixLibrary:: saveFile (const string & filename) const
     for (auto it = tab.begin(); it != tab.end(); it++ )
     {
        string matrixname = it->first;
-       Matrix m(*find(matrixname));
+       Matrix m(*find_matrix(matrixname));
 
        file << endl << matrixname << endl;
        file << m.getNbRows() << " " << m.getNbCols() << endl;

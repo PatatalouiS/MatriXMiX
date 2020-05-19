@@ -1,9 +1,9 @@
 #include <iostream>
 #include "MatriXMiXTXT.h"
+#include "../maths/Fraction.h"
 
 
-int main ()
-{
+int main() {
 
     MatriXMiXTXT m;
     m.mainMenu();

@@ -44,6 +44,8 @@ public:
 */
     Fraction(const long int & n, const long int & d);
 
+    Fraction(const double & d);
+
 
 /**
  * @brief Accessor
@@ -159,6 +161,10 @@ public:
  * @brief regressionTest
  */
     void regressionTest() const;
+
+
+
+
 };
 
 

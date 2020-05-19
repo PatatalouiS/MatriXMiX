@@ -17,7 +17,7 @@ CLEAN_FLAGS = -v -r -f
 EIGEN = -I ext/Eigen
 
 
-all : doc Qt TXT Test
+all : TXT
 
 
 
@@ -73,7 +73,7 @@ obj/Gauss.o : src/maths/Gauss.cpp src/maths/Gauss.h src/maths/Matrix.h
 
 
 
-clean : 
+clean :
 	rm $(CLEAN_FLAGS) $(MOC_DIR)/* $(OBJ_DIR)/* $(RESOURCES_DIR)/* .qmake.stash*
 
 
@@ -83,8 +83,3 @@ veryclean : clean
 
 docs :
 	doxygen doc/MatriXMiX.doxy
-
-
-
-
-

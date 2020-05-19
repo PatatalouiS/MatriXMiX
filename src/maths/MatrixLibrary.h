@@ -80,14 +80,29 @@ class MatrixLibrary
  * @param [in] name (\e string)
  * @return \e Matrix*
  */
-    const Matrix* find (const std::string& name) const;
+    const Matrix* find_matrix (const std::string& name) const;
 
 /**
  * @brief Find a matrix in the library using its name
  * @param [in] name (\e string)
  * @return \e Matrix*
  */
-    Matrix* find (const std::string& name);
+    Matrix* find_matrix (const std::string& name);
+
+
+    /**
+     * @brief Find a matrix determiant in the library using its name
+     * @param [in] name (\e string)
+     * @return \e std::complex<double>*
+     */
+        const std::complex<double>* find_determinant (const std::string& name) const;
+
+    /**
+     * @brief Find the matrix determinant in the library using its name
+     * @param [in] name (\e string)
+     * @return \e std::complex<double>*
+     */
+        std::complex<double>* find_determinant (const std::string& name);
 
 /**
  * @brief Erase a matrix from the library
