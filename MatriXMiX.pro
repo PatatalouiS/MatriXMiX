@@ -5,6 +5,7 @@
 TEMPLATE = app
 CONFIG += release
 
+MAKEFILE= MakefileQt
 DESTDIR = ./bin
 OBJECTS_DIR = ./obj/
 MOC_DIR = ./moc

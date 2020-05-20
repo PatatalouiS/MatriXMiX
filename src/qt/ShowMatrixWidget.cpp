@@ -84,9 +84,9 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
 }
 
 
-void ShowMatrixWidget:: computeImgDet(const double scalar, const QString& name, const QColor& col)
+void ShowMatrixWidget:: computeImgDet(const std::complex<double> det, const QString& name, const QColor& col)
 {
-    QString latex = "\\mathit{Det}\\(" + name + ") = " + QString::number(scalar);
+    QString latex = "\\mathit{Det}\\(" + name + ") = " + QString::number(det.real());
     setPixmapToQLabel(col, latex, 40);
 }
 
@@ -116,7 +116,7 @@ void ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, unsign
     QString developpedForm;
     QString factorizedForm;
 
-    flux << res1.check();
+    //flux << res1.check();
 
     for(unsigned int i = 0; i < res1.tab.size(); i++)
     {
@@ -170,7 +170,7 @@ void ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, unsign
     for(auto i : res2)
     {
         flux.str("");
-        flux << i.check();
+        //flux << i.check();
         factorizedForm += QString::fromStdString( "(" + flux.str() + ") ");
     }
 

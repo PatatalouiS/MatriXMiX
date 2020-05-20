@@ -17,7 +17,7 @@ AbstractOperationWidget (lib, parent)
 
     setSortFunction([](const Matrix* a) -> bool
     {
-        return a->isDiagonalisable();
+        return a->isDiagonalisableR();
     });
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
@@ -127,7 +127,7 @@ void DiagonalisationWidget:: computeSelection(const bool viewID)
     choiceWidget->hide();
     op.first = view->nameOfSelectedMatrix();
     assert(getLib()->exist(op.first.toStdString()));
-    op.second = getLib()->find(op.first.toStdString());
+    op.second = getLib()->find_matrix(op.first.toStdString());
     description->setText(op.first);
 }
 

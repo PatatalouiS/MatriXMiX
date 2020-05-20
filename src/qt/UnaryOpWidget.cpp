@@ -91,7 +91,7 @@ void UnaryOpWidget:: computeSelection(const bool viewId)
     (void)viewId;
     op.first = view->nameOfSelectedMatrix();
     assert(getLib()->exist(op.first.toStdString()));
-    op.second = getLib()->find(op.first.toStdString());
+    op.second = getLib()->find_matrix(op.first.toStdString());
     description->setText(op.first);
 }
 
@@ -170,7 +170,7 @@ void UnaryOpWidget:: constructType(const type &t)
         {
             sortFunction = [](const Matrix* a) -> bool
             {
-                return a->isSQMatrix() && a->isDiagonalisable();
+                return a->isSQMatrix() && a->isDiagonalisableR();
             };
             setTitle("Valeurs / Vecteurs Propres");
             operation = [](MatrixPair a) -> QVariant
@@ -187,7 +187,7 @@ void UnaryOpWidget:: constructType(const type &t)
         {
             sortFunction = [](const Matrix* a) -> bool
             {
-                return a->isSQMatrix() && a->isDiagonalisable();
+                return a->isSQMatrix() && a->isDiagonalisableR();
             };
             setTitle("PolynomeCaractéristique");
             operation = [](MatrixPair a) -> QVariant

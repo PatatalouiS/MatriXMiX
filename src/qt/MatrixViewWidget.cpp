@@ -54,7 +54,7 @@ void MatrixViewWidget:: showMatrixPreview () const
     }
 
     assert(lib->exist(currentSelectedName.toStdString()));
-    const Matrix* currentMatrix = lib->find(currentSelectedName.toStdString());
+    const Matrix* currentMatrix = lib->find_matrix(currentSelectedName.toStdString());
     matrixPreview = new ShowMatrixWidget(nullptr);
     matrixPreview->setWindowFlag(Qt::Tool);
     connect(matrixPreview, &ShowMatrixWidget::destroyed,
@@ -92,11 +92,11 @@ void MatrixViewWidget::refresh(std::function<bool(Matrix*)> filter)
 
     for(auto i : lib->data())
     {
-        matrix = &(i.second);
+        matrix = &i.second.first;
 
         if(filter(matrix))
         {
-            addNewRow(MatrixPair(QString::fromStdString(i.first), i.second));
+            addNewRow(MatrixPair(QString::fromStdString(i.first), i.second.first));
         }
     }
     update();

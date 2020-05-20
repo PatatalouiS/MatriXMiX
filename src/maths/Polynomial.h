@@ -50,7 +50,7 @@ class Polynomial {
      * @brief Rounded to an anteger epsilon close
      * @return \e Polynomial
      */
-    Polynomial check() const;
+    //Polynomial check() const;
 
     void debugAffiche();
 

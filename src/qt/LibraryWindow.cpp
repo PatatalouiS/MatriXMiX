@@ -115,7 +115,7 @@ void LibraryWindow:: computeViewSelection ()
 {
     QString selectedName = matrixView->nameOfSelectedMatrix();
     assert(lib->exist(selectedName.toStdString()));
-    const Matrix* selectedMatrix = lib->find(selectedName.toStdString());
+    const Matrix* selectedMatrix = lib->find_matrix(selectedName.toStdString());
     showMatrixWidget->computeImgMatrix(*selectedMatrix);
     editMatrix->chargeMatrix(selectedName);
 }

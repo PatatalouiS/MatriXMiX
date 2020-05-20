@@ -94,7 +94,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col the colour of the text
          */
 
-        void computeImgDet(const double scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
+        void computeImgDet(const std::complex<double> scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
 
         /**
          * @brief computeImgTrace Compute an Image wich represents the Trace of a Matrix

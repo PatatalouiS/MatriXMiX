@@ -9,8 +9,8 @@
 #include "../maths/MatrixLibrary.h"
 
 
-using EigenResult = QPair<QString, std::vector<std::pair<double, VectorX>>>;
-using DoubleResult = QPair<QString, double>;
+using EigenResult = QPair<QString, std::vector<std::pair<std::complex<double>, VectorX>>>;
+using DoubleResult = QPair<QString, std::complex<double>>;
 using PolynomialResult = std::tuple<QString, Polynomial, std::vector<Polynomial>>;
 using KerImgDimResult = QPair<QString, std::pair<unsigned int, unsigned int>>;
 Q_DECLARE_METATYPE(Matrix);

@@ -63,26 +63,26 @@ void ExprEvalWidget:: updateViews()
 
 void ExprEvalWidget:: computeOperation ()
 {
-    std::string testExpression = getLib()->isCalculableExpression(expression->text().toStdString());
+//    std::string testExpression = getLib()->isCalculableExpression(expression->text().toStdString());
 
-    if(testExpression != "calculable")
-    {
-        Error::showError("Calcul d'expression impossible", QString::fromStdString(testExpression), this);
-        return;
-    }
+//    if(testExpression != "calculable")
+//    {
+//        Error::showError("Calcul d'expression impossible", QString::fromStdString(testExpression), this);
+//        return;
+//    }
 
-    result = getLib()->calculateExpression(expression->text().toStdString());
+//    result = getLib()->calculateExpression(expression->text().toStdString());
 
-    if(result == Matrix::matrix_null)
-    {
-        Error::showError("Calcul impossible", "Veuillez vérifier que le calcul demandé est réalisable", this);
-        return ;
-    }
+//    if(result == Matrix::matrix_null)
+//    {
+//        Error::showError("Calcul impossible", "Veuillez vérifier que le calcul demandé est réalisable", this);
+//        return ;
+//    }
 
-    QVariant genericResult;
-    genericResult.setValue(result);
+//    QVariant genericResult;
+//    genericResult.setValue(result);
 
-    emit newResult(genericResult);
+//    emit newResult(genericResult);
 }
 
 

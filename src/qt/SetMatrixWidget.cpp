@@ -161,7 +161,7 @@ bool SetMatrixWidget:: controlKeyboardInput() const
 
     if(type == ADD)
     {
-        if(library->find(name.toStdString()))
+        if(library->find_matrix(name.toStdString()))
         {
             Error::showError("La Matrice " + name + " existe déjà !",
                        "Veuillez changer de nom.");
@@ -203,30 +203,52 @@ void SetMatrixWidget:: chargeMatrix(const QString& name)
 {
     assert(library->exist(name.toStdString()));
     selectedMatrix.first = name;
-    selectedMatrix.second = library->find(name.toStdString());
+    selectedMatrix.second = library->find_matrix(name.toStdString());
     Matrix temp = *selectedMatrix.second;
 
     unsigned int nbRows = temp.getNbRows();
     unsigned int nbCols = temp.getNbCols();
     nameMatrix->setText(name);
-    nbRowsSelector->setValue(int(nbRows));
-    nbColsSelector->setValue(int(nbCols));
+    nbRowsSelector->setValue(static_cast<int>(nbRows));
+    nbColsSelector->setValue(static_cast<int>(nbCols));
 
-    QString valueToString;
-    double val;
+
     for(unsigned int i = 0; i < nbRows*nbCols; ++i)
     {
-        val = temp[i/nbCols][i%nbCols];
-        if(floor(val) == val)
+        std::complex<double> val = temp[i/nbCols][i%nbCols];
+        QString valueToString;
+
+        // convert to lineEdit visualization
+        // real part
+        if(floor(val.real()) == val.real())
         {
-            valueToString.setNum(val, 'f', 0);
+            valueToString.setNum(val.real(), 'f', 0);
         }
         else
         {
-            valueToString.setNum(val, 'f', 10)
+            valueToString.setNum(val.real(), 'f', 10)
                     .replace('.', ',');
         }
-        lineEditsTab[int(i)]->setText(valueToString);
+
+        // imaginary part exists
+        if(val.imag() != 0) {
+            if(val.imag() > 0) {
+                valueToString.append('+');
+            }
+            else if(val.imag() < 0) {
+                valueToString.append('-');
+            }
+
+            if(floor(val.imag()) == val.imag()) {
+                valueToString.setNum(val.imag(), 'f', 0);
+            }
+            else {
+                valueToString.setNum(val.imag(), 'f', 10)
+                        .replace('.', ',');
+            }
+        }
+
+        lineEditsTab[i]->setText(valueToString);
     }
 }
 
