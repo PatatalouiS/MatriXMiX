@@ -6,6 +6,8 @@
 #include <QGridLayout>
 #include <QSpinBox>
 #include <QPushButton>
+#include <mpParser.h>
+#include "ExprLineEdit.hpp"
 #include "../maths/MatrixLibrary.h"
 
 
@@ -64,13 +66,15 @@ class SetMatrixWidget : public QWidget
         QLineEdit* nameMatrix;
         QSpinBox* nbRowsSelector;
         QSpinBox* nbColsSelector;
-        QList<QLineEdit*> lineEditsTab;
+        QList<ExprLineEdit*> lineEditsTab;
         QGridLayout* lineEditsLayout;
         QPushButton* compute;
         QPair<QString, Matrix*> selectedMatrix;
         type type;
         unsigned int lrows;
         unsigned int lcols;
+
+        static mup::ParserX parser;
 
         /**
          * @brief controlKeyboardInput This function control the user entries when the button "calculate" is pressed.\n

@@ -35,10 +35,10 @@ QString complexLatex (std::complex<double> coef)
     if (coef.real() != 0.0)
     {
         if (coef.imag() > 0)
-            str = QString::number(coef.real()) + "+" + QString::number(coef.imag()) + "i";
+            str = QString::number(coef.real()) + " + " + QString::number(coef.imag()) + "$i$";
         else if (coef.imag() < 0)
         {
-            str = QString::number(coef.real()) + QString::number(coef.imag()) + "i";
+            str = QString::number(coef.real()) + " - " + QString::number(abs(coef.imag())) + "$i$";
         }
         else
         {
@@ -49,13 +49,12 @@ QString complexLatex (std::complex<double> coef)
     else
     {
         if (coef.imag() != 0.0)
-            str = QString::number(coef.imag()) + "i";
+            str = QString::number(coef.imag()) + "$i$";
         else
             str = QString::number(0);
     }
 
     return str;
-
 }
 
 

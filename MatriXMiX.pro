@@ -14,7 +14,9 @@ TARGET = MatriXMiX
 macx:ICON = data/icons/MatriXMiX.icns
 
 include(ext/latex/jkqtmathtext.pri);
-INCLUDEPATH += ext/Eigen/
+
+INCLUDEPATH += ext/Eigen/ ext/muparserx/parser
+LIBS += -Lext/muparserx/lib -lm -lmuparserx
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
@@ -26,6 +28,7 @@ HEADERS += src/maths/Matrix.h \
         src/maths/Fraction.h \
         src/maths/Gauss.h \
         src/maths/MatrixLibrary.h \
+        src/qt/ExprLineEdit.hpp \
         src/qt/MainWindow.h \
         src/qt/LibraryWindow.h \
         src/qt/ShowMatrixWidget.h \
@@ -50,6 +53,7 @@ SOURCES += src/qt/main.cpp \
         src/maths/Fraction.cpp \
         src/maths/Gauss.cpp \
         src/maths/MatrixLibrary.cpp \
+        src/qt/ExprLineEdit.cpp \
         src/qt/MainWindow.cpp \
         src/qt/LibraryWindow.cpp \
         src/qt/MatrixViewWidget.cpp \

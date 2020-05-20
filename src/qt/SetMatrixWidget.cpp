@@ -3,7 +3,9 @@
 #include <cmath>
 #include "SetMatrixWidget.h"
 #include "Error.h"
+#include <QDebug>
 
+mup::ParserX SetMatrixWidget::parser = mup::ParserX();
 
 SetMatrixWidget::SetMatrixWidget(const enum type& t, MatrixLibrary* library, QWidget* parent)
 : QWidget(parent)
@@ -53,14 +55,10 @@ SetMatrixWidget::SetMatrixWidget(const enum type& t, MatrixLibrary* library, QWi
     lineEditsLayout->setVerticalSpacing(15);
     lineEditsLayout->setAlignment( Qt::AlignCenter | Qt::AlignVCenter);
 
-    QLineEdit* temp = nullptr;
+    ExprLineEdit* temp = nullptr;
     for(unsigned int i = 0; i < 9; ++i)
     {
-        temp = new QLineEdit();
-        temp->setMinimumWidth(30);
-        temp->setMaximumWidth(50);
-        temp->setMaxLength(8);
-        temp->setValidator(new QDoubleValidator(temp));
+        temp = new ExprLineEdit();
         lineEditsTab.append(temp);
         lineEditsLayout->addWidget(temp, i/3, i%3);
     }
@@ -125,15 +123,12 @@ void SetMatrixWidget:: computeMatrix ()
     }
 
     VectorX values;
-    QString currentValue;
     QString name = nameMatrix->text();
     unsigned int nbL = unsigned(nbRowsSelector->value());
     unsigned int nbC = unsigned(nbColsSelector->value());
 
-    for(auto& i : lineEditsTab)
-    {
-        currentValue = i->text().replace(QLatin1Char(','), QLatin1Char('.'));
-        values.push_back(currentValue.toDouble());
+    for(auto& i : lineEditsTab) {
+        values.emplace_back(i->getComplex());
     }
 
     Matrix newMatrix (nbL, nbC, values);
@@ -187,10 +182,9 @@ bool SetMatrixWidget:: controlKeyboardInput() const
 
     for(const auto& i : lineEditsTab)
     {
-        if (!i->hasAcceptableInput())
-        {
+        if(!i->isValidExpr()) {
             Error::showError("Les valeurs de votre Matrice " + name + " sont incorrectes !",
-                       "Vérifiez votre saisie. Chaque coefficient doit être un nombre Réel.");
+                                   "Vérifiez votre saisie. Chaque coefficient doit être un nombre Réel.");
             return false;
         }
     }
@@ -284,7 +278,7 @@ void SetMatrixWidget:: updateLineEdits ()
     int diffRows = static_cast<int>(newNbRows - lrows);
     int diffCols = static_cast<int>(newNbCols - lcols);
 
-    QLineEdit* temp;
+    ExprLineEdit* temp;
 
     if(diffRows > 0)
     {
@@ -292,11 +286,7 @@ void SetMatrixWidget:: updateLineEdits ()
         {
             for(unsigned int i = 0; i < lcols; ++i )
             {
-                temp = new QLineEdit;
-                temp->setMinimumWidth(30);
-                temp->setMaximumWidth(50);
-                temp->setMaxLength(8);
-                temp->setValidator(new QDoubleValidator(temp));
+                temp = new ExprLineEdit();
                 lineEditsTab.append(temp);
                 lineEditsLayout->addWidget(temp, int(lrows), int(i));
             }
@@ -309,12 +299,8 @@ void SetMatrixWidget:: updateLineEdits ()
         {
             for(unsigned int i = 0; i < lrows; ++i )
             {
-                temp = new QLineEdit;
-                temp->setMinimumWidth(30);
-                temp->setMaximumWidth(50);
+                temp = new ExprLineEdit();
                 lineEditsTab.insert(int(lcols+1)*int(i)+int(lcols), temp);
-                temp->setMaxLength(8);
-                temp->setValidator(new QDoubleValidator(temp));
                 lineEditsLayout->addWidget(temp, int(i), int(lcols));
                 setTabOrder(lineEditsLayout->itemAtPosition(int(i), int(lcols-1))->widget(), temp);
             }
@@ -327,7 +313,7 @@ void SetMatrixWidget:: updateLineEdits ()
         {
             for(unsigned int i = 0; i < lcols; ++i)
             {
-                temp = dynamic_cast<QLineEdit*>(lineEditsLayout->itemAtPosition(int(lrows-1), int(i))->widget());
+                temp = dynamic_cast<ExprLineEdit*>(lineEditsLayout->itemAtPosition(int(lrows-1), int(i))->widget());
                 lineEditsLayout->removeWidget(temp);
                 lineEditsTab.removeOne(temp);
                 temp->deleteLater();
@@ -341,7 +327,7 @@ void SetMatrixWidget:: updateLineEdits ()
         {
             for(unsigned int i = 0; i < lrows; ++i)
             {
-                temp = dynamic_cast<QLineEdit*>(lineEditsLayout->itemAtPosition(int(i), int(lcols-1))->widget());
+                temp = dynamic_cast<ExprLineEdit*>(lineEditsLayout->itemAtPosition(int(i), int(lcols-1))->widget());
                 lineEditsLayout->removeWidget(temp);
                 lineEditsTab.removeOne(temp);
                 temp->deleteLater();
