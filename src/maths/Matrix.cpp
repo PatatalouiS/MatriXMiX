@@ -3,6 +3,7 @@
 #include <complex>
 #include <cstring>
 #include <cmath>
+#include <random>
 #include <utility>
 #include <../../ext/Eigen/Dense>
 #include "Matrix.h"
@@ -45,16 +46,33 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const enum in
 
     switch (type)
     {
-        case Z: break;
+        case Z: {
+            unsigned int i, j;
+            std::complex<double> z (0.0,0.0);
+            for (i = 0; i < rows; i++) {
+                for (j = 0; j < cols; j++) {
+                    tab[i][j] = z;
+                }
+            }
+            break;
+        }
         case R:
         {
-            srand(static_cast<unsigned>(time(nullptr)));
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(-10000,10000);
+            float random1 = dis(gen);
+            float random2 = dis(gen);
 
+            std::complex<double> z;
             for (auto& i : tab)
             {
                 for (auto& j : i)
                 {
-                    j = (rand()% 20000) + 10000;
+                    random1 = dis(gen);
+                    random2 = dis(gen);
+                    z = std::complex<double>(random1, random2);
+                    j = z;
                 }
             }
             break;
@@ -69,7 +87,7 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const enum in
 
             for (unsigned int i = 0; i < rows; ++i)
             {
-                tab[i][i] = 1;
+                tab[i][i] = std::complex<double>(1,0);
             }
             break;
         }
@@ -159,7 +177,7 @@ complex<double>& Matrix:: getVal (const unsigned int indice)
 {
     if ( indice >= (rows * cols))
     {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        cerr << "L'indice " << indice <<" n'existe pas dans cette matrice" << endl;
         exit ( EXIT_FAILURE );
     }
 
@@ -171,7 +189,7 @@ complex<double> Matrix:: getVal (const unsigned int indice) const
 {
     if ( indice >= (rows * cols))
     {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        cerr << "L'indice " << indice <<" n'existe pas dans cette matrice" << endl;
         return complex_null;
     }
 
@@ -183,7 +201,7 @@ vector<complex<double>>&  Matrix:: operator [] (const unsigned int indice)
 {
     if ( indice >= rows)
     {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        cerr << "L'indice " << indice <<" n'existe pas dans cette matrice" << endl;
         exit ( EXIT_FAILURE );
     }
     return tab[indice];
@@ -194,7 +212,7 @@ const std::vector<complex<double>>& Matrix:: operator [] (const unsigned int ind
 {
     if ( indice >= rows)
     {
-        cerr << "L'indice" << indice <<" n'existe pas dans cette matrice" << endl;
+        cerr << "L'indice " << indice <<" n'existe pas dans cette matrice" << endl;
         exit ( EXIT_FAILURE );
     }
     return tab[indice];
@@ -375,7 +393,7 @@ const Matrix Matrix:: operator * (const Matrix & m) const
 }
 
 
-const Matrix Matrix:: operator * (const double & lambda) const
+const Matrix Matrix:: operator * (const std::complex<double> & lambda) const
 {
     unsigned int i,j;
     Matrix res(*this);
@@ -460,7 +478,8 @@ bool Matrix:: operator == (const Matrix & m ) const
         {
             for (j = 0; j < cols; j++)
             {
-                if (tab[i][j] - m.tab[i][j] != 0.0 )
+                if ( (abs(tab[i][j].real() - m.tab[i][j].real()) > EPSILON)
+                    || (abs(tab[i][j].imag() - m.tab[i][j].imag()) > EPSILON)) //!\\ MODIFICATION A DISCUTER
                 {
                     return false;
                 }
@@ -542,7 +561,7 @@ Matrix Matrix::coMatrix() const
 Matrix Matrix:: transposeMatrix() const
 {
     unsigned int i, j;
-    Matrix copy(*this);
+    Matrix copy(cols,rows);
 
     for (i = 0; i < copy.rows; i++)
     {
@@ -1093,5 +1112,261 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal,
    {
        transferB2C = (transferC2B.inverse());
    }
+
+}
+
+
+Matrix Matrix::matrixCol(const unsigned int & j) const {
+    unsigned int i;
+    Matrix vect(rows,1);
+
+    for (i = 0; i < rows; i++) {
+        vect[i][0] = tab[i][j];
+    } 
+
+    return vect;
+}
+
+
+Matrix Matrix::matrixRow(const unsigned int & i) const {
+    unsigned int j;
+    Matrix vect(1,cols);
+
+    for (j = 0; j < cols; j++) {
+        vect[i][0] = tab[i][j];
+    } 
+
+    return vect;
+}
+
+
+Matrix Matrix::normaliseMatrix() const {
+    unsigned int i, j;
+    Matrix res(*this);
+    std::complex<double> norme;
+
+    for (j = 0; j < cols; j++) {
+        norme = std::complex<double> (0.0,0.0);
+        for (i = 0; i < rows; i++) {
+            norme += (res[i][j] * res[i][j]);
+        }
+        norme = sqrt(norme);
+        if (norme != std::complex<double>(0.0,0.0)) {
+            for (i = 0; i < rows; i++) {
+                res[i][j] /= norme;
+            }
+        }
+        
+    }
+    return res;
+}
+
+
+std::pair<Matrix,Matrix> Matrix::LUDecomposition() const {
+    
+    unsigned int n = rows;
+
+    if (!isSQMatrix()) {
+        std::cerr << "La décomposition LU ne s'effectue pour que pour des matrices carrées"
+                    << std::endl;
+        return std::pair<Matrix,Matrix>(matrix_null,matrix_null);
+    }
+    if (determinant() == 0.0) {
+        std::cerr << "La décomposition LU ne s'effectue que pour des matrices inversibles"
+                    << std::endl;
+        return std::pair<Matrix,Matrix>(matrix_null,matrix_null);
+    }
+
+    Matrix l(n,n,Matrix::I);
+    Matrix u(n,n,Matrix::Z);
+    Matrix t(*this);
+
+    unsigned int i, j, k;
+
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n ; j++) {
+            l[j][i] = t[j][i] / t[i][i];
+        }
+        for (j = i; j < n; j++) {
+            u[i][j] = t[i][j];
+        }
+        for (j = i + 1; j < n; j++) {
+            for (k = i + 1; k < n; k++) {
+                t[j][k] = t[j][k] - l[j][i] * u[i][k];
+            }
+        }
+    }
+    u[n - 1][n - 1] = t[n - 1][n - 1];
+    
+    return std::pair<Matrix,Matrix>(l,u);
+}
+
+
+Matrix Matrix::solveAx_LU(const Matrix & b) const {
+
+    if (!isSQMatrix() 
+        || determinant() == std::complex<double>(0.0,0.0)) {
+        std::cout << "Compliqué..." << std::endl;
+        return matrix_null;
+    }
+
+    unsigned int i, j, n = rows;
+    Matrix l = LUDecomposition().first;
+    Matrix u = LUDecomposition().second;
+    Matrix x(n,1,Matrix::Z);
+    Matrix y(n,1,Matrix::Z);
+
+    y[0][0] = b[0][0];
+
+    for (i = 1; i < n; i++) {
+        y[i][0] = b[i][0];
+        for (j = 0; j < i; j++) {
+            y[i][0] -= (l[i][j] * y[j][0]);
+        }
+    }
+
+    x[n - 1][0] = y[n - 1][0] / u[n - 1][n - 1];
+
+    for(i = n - 2; i < n; i--) {
+        x[i][0] = y[i][0];
+        for(j = i + 1; j < n; j++) {
+            x[i][0] -= (u[i][j] * x[j][0]);
+        }
+        if (u[i][i] == 0.0)
+            x[i][0] = 0.0;
+        else {
+            x[i][0] /= u[i][i];
+        }
+    }
+
+    return x;
+
+}
+
+
+Matrix Matrix::gramSchmidt() const {
+
+    Matrix a(*this);
+    Matrix q(rows,cols,Matrix::Z);
+    
+    Matrix temp_matrix (1,rows,Matrix::Z);
+    unsigned int i, j, k;
+    std::complex<double> coef, temp_coef;
+    VectorX temp_vect;
+
+    for(i = 0; i < rows; i++) {
+        q[i][0] = a[i][0];
+    }
+
+    q = q.normaliseMatrix(); 
+
+    for (i = 1; i < cols; i++) {
+        coef = std::complex<double>(0.0, 0.0);
+        temp_matrix = matrixCol(i);
+        for (j = 0; j < i; j++) {
+            coef = (q.matrixCol(j).transposeMatrix() * a.matrixCol(i))[0][0];
+            coef /= (q.matrixCol(j).transposeMatrix() * q.matrixCol(j))[0][0];
+            temp_matrix = temp_matrix - (q.matrixCol(j) * coef);
+        }
+        temp_matrix = temp_matrix.normaliseMatrix();
+
+        for(k = 0; k < rows; k++) {
+            q[k][i] = temp_matrix[k][0];
+        }
+    }
+
+    return q;
+}
+
+
+std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
+
+    Matrix a(*this);
+    Matrix q(rows,cols,Matrix::Z);
+    Matrix r(cols,cols,Matrix::Z);
+    
+    Matrix temp_matrix (1,rows,Matrix::Z);
+    unsigned int i, j, k;
+    std::complex<double> coef, temp_coef;
+    VectorX temp_vect;
+
+    for(i = 0; i < rows; i++) {
+        q[i][0] = a[i][0];
+    }
+    q = q.normaliseMatrix(); 
+    r[0][0] = (a.matrixCol(0).transposeMatrix() * q.matrixCol(0))[0][0];
+
+    for (i = 1; i < cols; i++) {
+        coef = std::complex<double>(0.0, 0.0);
+        temp_matrix = matrixCol(i);
+        for (j = 0; j < i; j++) {
+            coef = (q.matrixCol(j).transposeMatrix() * a.matrixCol(i))[0][0];
+            r[j][i] = coef;
+            coef /= (q.matrixCol(j).transposeMatrix() * q.matrixCol(j))[0][0];
+            temp_matrix = temp_matrix - (q.matrixCol(j) * coef);
+        }
+        temp_matrix = temp_matrix.normaliseMatrix();
+
+        for(k = 0; k < rows; k++) {
+            q[k][i] = temp_matrix[k][0];
+        }
+
+        r[i][i] = (a.matrixCol(i).transposeMatrix() * q.matrixCol(i))[0][0];
+    }
+
+    return (std::pair<Matrix,Matrix> (q,r));
+}
+
+
+std::pair<Matrix,Matrix> Matrix::QR_Householder() const {
+
+    unsigned int n = rows;
+    unsigned int m = cols;
+    Matrix h(m,m,Matrix::I);
+    Matrix a(*this);
+    VectorX v(n);
+    unsigned int i, j, k;
+    std::complex<double> alpha (0.0,0.0);
+    std::complex<double> beta (0.0,0.0);
+    std::complex<double> c (0.0,0.0);
+
+    for (k = 0; k < n - 1; k++) { 
+        alpha = 0.0;
+        beta = 0.0;
+        c = 0.0;
+
+        for (i = k; i < m; i++) {
+            alpha = alpha + (a[i][k] * a[i][k]);
+        }
+        
+        alpha = sqrt(alpha);
+
+        beta = alpha * (alpha - a[k][k]);
+        v[k] = a[k][k] - alpha;
+        for (i = k + 1; i < m; i++) {    // vecteur v
+            v[i] = a[i][k];
+        }
+        
+    
+        for (j = k; j < n; j++) {      // A^k+1
+            for (i = k; i < m; i++) {
+                c += (v[i] * a[i][j] / beta);
+            }
+            for (i = k; i < m; i++) {
+                a[i][j] -= (c * v[i]);
+            }
+        }
+        
+        for (j = 0; j < m; j++) {    // H = Hk ... H1
+            for (i = k; i < m; i++) {
+                c = (v[i] * h[i][j] / beta);
+            }
+            for (i = k; i < m; i++) {
+                h[i][j] -= (c * v[i]);
+            }
+        }
+    }
+
+    return std::pair<Matrix,Matrix> (h.transposeMatrix(),a);
 
 }

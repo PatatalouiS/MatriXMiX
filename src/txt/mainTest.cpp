@@ -6,48 +6,22 @@
 static const int EPSILON = 0.000001;
 
 
-static std::string double2sqrt(const double & d) {
-
-    double res = abs(d);
-    std::string s;
-
-    s += "sqrt(";
-
-    if (res < 1) // cas 1/sqrt(x)
-        res = 1 / res;
-
-    int n = round(res * res);
-
-    if (res * res < 2.0) {
-        std::cout << res * res << std::endl;
-    }
-
-    if (abs((res * res) - n) < EPSILON)
-        s += std::to_string(n);
-    else if (abs((res * res) - n - 1) < EPSILON)
-        s += std::to_string(n);
-    else if (abs((res * res) - n + 1) < EPSILON)
-        s += std::to_string(9);
-    else {
-        s += "nada";
-    }
-
-    s += ")";
-
-    if (abs(d) < 1)
-        s = "1/" + s;
-    if (d < 0.0)
-        s = "-" + s;
-
-    return s;
-
-}
-
 
 int main ()
 {
 
-	std::cout << double2sqrt(0.70710678118) << std::endl;
+    Matrix m (3,3,{12,-51,4,6,167,-68,-4,24,-41});
+
+    std::pair<Matrix,Matrix> qr (m.QR_Householder());
+   
+    std::cout << qr.first << std::endl
+                << qr.second << std::endl << std::endl
+                << qr.first * qr.second << std::endl;
+                
+
+
+
+	//std::cout << double2sqrt(0.70710678118) << std::endl;
 
     /*Fraction f(0.79012187654);
     double t = 9/8;

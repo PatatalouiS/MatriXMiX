@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 
 /**
@@ -13,6 +14,12 @@ class Fraction
 
 private:
     long int numerator, denominator;
+
+    double d;
+
+    std::string num, den;
+
+    bool isInteger, isFrct, isSqrt, isSqrtFraction;
 
 
 private:

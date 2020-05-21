@@ -246,7 +246,7 @@ public:
  * @param [in] lambda (\e double)
  * @return \e Matrix
  */
-    const Matrix operator * (const double & lambda) const;
+    const Matrix operator * (const std::complex<double> & lambda) const;
 
  /**
  * @brief Operator * : friend operator, multiplies a Matrix by a scale
@@ -413,10 +413,39 @@ public:
     void allMatrix(Matrix & transferC2B, Matrix & diagonal,
                    Matrix & transferB2C) const;
 
+
+   Matrix matrixCol(const unsigned int & j) const;
+
+   Matrix matrixRow(const unsigned int & j) const;
+
+   Matrix normaliseMatrix() const;
+
+   std::pair<Matrix,Matrix> LUDecomposition() const;
+
+   Matrix solveAx_LU(const Matrix & b) const;
+
+   Matrix gramSchmidt() const ;
+
+   std::pair<Matrix,Matrix> QR_GramSchmidt() const ;
+
+   std::pair<Matrix,Matrix> QR_Householder() const;
+
+
+
+
+
+
+
+
+
+
+
 /**
  * @brief Regression test
  */
     void regressionTest() const;
+
+
 
 
 };
