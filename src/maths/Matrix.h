@@ -327,6 +327,8 @@ public:
  */
     Matrix transposeMatrix() const;
 
+   bool isSymetric() const;
+
 /**
  * @brief Returns the matrix inverse
  * @return \e Matrix
@@ -388,6 +390,8 @@ public:
      * @return \e bool
      */
     bool isDiagonalisableC() const;
+
+    bool isPositiveDefinite() const;
 
 /**
  * @brief Returns the diagonal matrix

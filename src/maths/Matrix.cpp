@@ -574,6 +574,11 @@ Matrix Matrix:: transposeMatrix() const
 }
 
 
+bool Matrix::isSymetric() const {
+    return (*this == transposeMatrix());
+}
+
+
 Matrix Matrix:: inverse() const
 {
     if (!isSQMatrix())
@@ -1073,6 +1078,19 @@ bool Matrix:: isDiagonalisableC()const
 }
 
 
+bool Matrix::isPositiveDefinite() const {
+    if (!isSQMatrix())
+        return false;
+    VectorX eigen_values(eigenValues());
+    for (unsigned int i = 0; i < eigen_values.size(); i++) {
+        if (eigen_values[i].real() < 0.0
+            || eigen_values[i].imag() < 0.0)
+            return false;
+    }
+    return true;
+}
+
+
 const Matrix Matrix:: diagonalise()const
 {
     Matrix res(getNbRows(),getNbCols());
@@ -1163,25 +1181,22 @@ Matrix Matrix::normaliseMatrix() const {
 
 
 std::pair<Matrix,Matrix> Matrix::LUDecomposition() const {
-    
-    unsigned int n = rows;
 
     if (!isSQMatrix()) {
         std::cerr << "La décomposition LU ne s'effectue pour que pour des matrices carrées"
                     << std::endl;
         return std::pair<Matrix,Matrix>(matrix_null,matrix_null);
     }
-    if (determinant() == 0.0) {
-        std::cerr << "La décomposition LU ne s'effectue que pour des matrices inversibles"
+    if (!isPositiveDefinite()) {
+        std::cerr << "La décomposition LU ne s'effectue que pour des matrices définies positives"
                     << std::endl;
         return std::pair<Matrix,Matrix>(matrix_null,matrix_null);
     }
 
+    unsigned int i, j, k, n = rows;
     Matrix l(n,n,Matrix::I);
     Matrix u(n,n,Matrix::Z);
     Matrix t(*this);
-
-    unsigned int i, j, k;
 
     for (i = 0; i < n - 1; i++) {
         for (j = i + 1; j < n ; j++) {
@@ -1204,8 +1219,7 @@ std::pair<Matrix,Matrix> Matrix::LUDecomposition() const {
 
 Matrix Matrix::solveAx_LU(const Matrix & b) const {
 
-    if (!isSQMatrix() 
-        || determinant() == std::complex<double>(0.0,0.0)) {
+    if (!isPositiveDefinite()) {
         std::cout << "Compliqué..." << std::endl;
         return matrix_null;
     }
