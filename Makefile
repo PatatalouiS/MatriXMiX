@@ -17,22 +17,20 @@ CLEAN_FLAGS = -v -r -f
 EIGEN = -I ext/Eigen
 
 
-all : TXT
-
+all : TXT Qt Test
 
 
 Qt : MatriXMiX.make
 	make -f MatriXMiX.make
 
 TXT : bin/MatriXMiX_TXT
+
 Test : bin/MatriXMiX_Test
 
 
 
 MatriXMiX.make : MatriXMiX.pro
-	qmake -config release -o $@
-
-
+	qmake -config release -o $@ $<
 
 bin/MatriXMiX_TXT : obj/mainTXT.o obj/Matrix.o obj/MatrixLibrary.o obj/Polynomial.o obj/Fraction.o obj/MatriXMiXTXT.o obj/VectorX.o obj/Gauss.o
 	$(LD) $^ -o $@
