@@ -16,7 +16,14 @@ macx:ICON = data/icons/MatriXMiX.icns
 include(ext/latex/jkqtmathtext.pri);
 
 INCLUDEPATH += ext/Eigen/ ext/muparserx/parser
-LIBS += -Lext/muparserx/lib -lm -lmuparserx
+
+unix:!macx {
+    LIBS += -Lext/muparserx/lib/unix -lm -lmuparserx
+}
+
+macx: {
+    LIBS += -Lext/muparserx/lib/macos -lm -lmuparserx
+}
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
