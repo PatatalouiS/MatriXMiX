@@ -212,11 +212,11 @@ const QMap<QString, UserMatrix>& QMatrixLibrary:: data () const {
 }
 
 
-QMap<QString, UserMatrix>::const_key_value_iterator QMatrixLibrary::begin() const {
+const QMap<QString, UserMatrix>::const_key_value_iterator QMatrixLibrary::begin() const {
     return tab.keyValueBegin();
 }
 
-QMap<QString, UserMatrix>::const_key_value_iterator QMatrixLibrary::end() const {
+const QMap<QString, UserMatrix>::const_key_value_iterator QMatrixLibrary::end() const {
     return tab.keyValueEnd();
 }
 

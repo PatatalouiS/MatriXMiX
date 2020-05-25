@@ -121,9 +121,9 @@ class QMatrixLibrary
  */
     const QMap<QString, UserMatrix>& data () const;
 
-    QMap<QString, UserMatrix>::const_key_value_iterator begin() const;
+    const QMap<QString, UserMatrix>::const_key_value_iterator begin() const;
 
-    QMap<QString, UserMatrix>::const_key_value_iterator end() const;
+    const QMap<QString, UserMatrix>::const_key_value_iterator end() const;
 
 
 /**

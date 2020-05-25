@@ -94,7 +94,7 @@ class AbstractOperationWidget : public QWidget
          * @param [in] sort the lambda SortFunction
          */
 
-        void setSortFunction(const SortFunction& sort);
+        void setSortFunction(SortFunction&& sort);
 
     private :
 

@@ -95,10 +95,6 @@ void MatrixViewWidget::refresh(std::function<bool(Matrix*)> filter)
     {
         matrix = const_cast<Matrix*>(&userMtx.matrix);
 
-        qDebug() << "coucou" ;
-
-        qDebug() << userMtx.determinant.imag();
-
         if(filter(matrix))
         {
             addNewRow(MatrixPair(name, userMtx.matrix));

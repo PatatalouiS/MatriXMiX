@@ -35,7 +35,7 @@ void AbstractOperationWidget:: setTitle (const QString& str)
 }
 
 
-void AbstractOperationWidget:: setSortFunction(const SortFunction& s)
+void AbstractOperationWidget:: setSortFunction(SortFunction&& s)
 {
     this->sortFunction = s;
 }
