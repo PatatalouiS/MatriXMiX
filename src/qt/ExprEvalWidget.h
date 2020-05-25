@@ -21,11 +21,11 @@ class ExprEvalWidget : public AbstractOperationWidget
     public:
 
         /** @brief Unique constructor of the class.
-         * @param [in] library a pointer on a MatrixLibrary .
+         * @param [in] library a pointer on a QMatrixLibrary .
          * @param [in,out] parent a pointer on a potential parent QWidget, mainly for ensure good deletion.
          */
 
-        ExprEvalWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
+        ExprEvalWidget(const QMatrixLibrary* lib, QWidget* parent = nullptr);
 
     public slots:
 

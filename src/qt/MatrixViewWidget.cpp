@@ -7,7 +7,7 @@
 ShowMatrixWidget* MatrixViewWidget::matrixPreview = nullptr;
 
 
-MatrixViewWidget::MatrixViewWidget (const MatrixLibrary* lib, QWidget* parent) : QTableView (parent)
+MatrixViewWidget::MatrixViewWidget (const QMatrixLibrary* lib, QWidget* parent) : QTableView (parent)
 {
     this->lib = lib;
     matrixModel = new QStandardItemModel(0,3, this);
@@ -92,11 +92,11 @@ void MatrixViewWidget::refresh(std::function<bool(Matrix*)> filter)
 
     for(auto i : lib->data())
     {
-        matrix = &i.second.first;
+        matrix = &i.second.matrix;
 
         if(filter(matrix))
         {
-            addNewRow(MatrixPair(QString::fromStdString(i.first), i.second.first));
+            addNewRow(MatrixPair(QString::fromStdString(i.first), i.second.matrix));
         }
     }
     update();

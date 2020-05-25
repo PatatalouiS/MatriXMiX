@@ -53,7 +53,7 @@ class MainWindow : public QMainWindow
         // members
     
         MenuBar* menuBar;
-        MatrixLibrary library;
+        QMatrixLibrary library;
         LibraryWindow* libraryWindow;
         AbstractOperationWidget* currentOpWidget;
         QVBoxLayout* currentOpLayout;

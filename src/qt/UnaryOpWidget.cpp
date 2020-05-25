@@ -5,7 +5,7 @@
 #include "Error.h"
 
 
-UnaryOpWidget::UnaryOpWidget(const type& t, const MatrixLibrary* lib, QWidget* parent) :
+UnaryOpWidget::UnaryOpWidget(const type& t, const QMatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget(lib, parent)
 {
     result.setValue(nullptr);

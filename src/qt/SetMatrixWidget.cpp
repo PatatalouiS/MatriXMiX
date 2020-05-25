@@ -7,7 +7,7 @@
 
 mup::ParserX SetMatrixWidget::parser = mup::ParserX();
 
-SetMatrixWidget::SetMatrixWidget(const enum type& t, MatrixLibrary* library, QWidget* parent)
+SetMatrixWidget::SetMatrixWidget(const enum type& t, QMatrixLibrary* library, QWidget* parent)
 : QWidget(parent)
 {
     this->library = library;

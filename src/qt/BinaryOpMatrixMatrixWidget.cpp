@@ -6,7 +6,7 @@
 
 
 
-BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const MatrixLibrary* lib, QWidget* parent) : AbstractOperationWidget(lib,parent)
+BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const QMatrixLibrary* lib, QWidget* parent) : AbstractOperationWidget(lib,parent)
 {    
     constructType(t);
     result = Matrix();

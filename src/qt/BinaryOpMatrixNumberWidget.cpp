@@ -5,7 +5,7 @@
 
 
 
-BinaryOpMatrixNumberWidget::BinaryOpMatrixNumberWidget(const type& t, const MatrixLibrary* lib, QWidget* parent) :
+BinaryOpMatrixNumberWidget::BinaryOpMatrixNumberWidget(const type& t, const QMatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget(lib, parent)
 {
     op1.first = "_";

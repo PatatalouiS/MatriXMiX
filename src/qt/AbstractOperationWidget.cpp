@@ -3,7 +3,7 @@
 #include "AbstractOperationWidget.h"
 
 
-AbstractOperationWidget:: AbstractOperationWidget(const MatrixLibrary* lib, QWidget* parent): QWidget (parent)
+AbstractOperationWidget:: AbstractOperationWidget(const QMatrixLibrary* lib, QWidget* parent): QWidget (parent)
 {
     this->lib = lib;
     sortFunction = [](const Matrix*){return true;};
@@ -41,7 +41,7 @@ void AbstractOperationWidget:: setSortFunction(const SortFunction& s)
 }
 
 
-const MatrixLibrary* AbstractOperationWidget:: getLib() const
+const QMatrixLibrary* AbstractOperationWidget:: getLib() const
 {
     return lib;
 }

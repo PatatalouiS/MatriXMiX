@@ -4,7 +4,7 @@
 
 #include <QTableView>
 #include <QStandardItemModel>
-#include "../maths/MatrixLibrary.h"
+#include "QMatrixLibrary.hpp"
 #include "ShowMatrixWidget.h"
 
 
@@ -27,7 +27,7 @@ class MatrixViewWidget : public QTableView
          * @param [in,out] parent a pointer to a parent QWidget, to ensure good deletion
          */
 
-        MatrixViewWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
+        MatrixViewWidget(const QMatrixLibrary* lib, QWidget* parent = nullptr);
 
         /**
          * @brief the default Constructor
@@ -75,7 +75,7 @@ class MatrixViewWidget : public QTableView
 
     private:
 
-        const MatrixLibrary* lib;
+        const QMatrixLibrary* lib;
         QStandardItemModel* matrixModel;
         static ShowMatrixWidget* matrixPreview;
 

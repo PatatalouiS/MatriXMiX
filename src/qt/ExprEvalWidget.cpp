@@ -5,7 +5,7 @@
 
 
 
-ExprEvalWidget::ExprEvalWidget(const MatrixLibrary* lib, QWidget* parent) :
+ExprEvalWidget::ExprEvalWidget(const QMatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget (lib, parent)
 {
     result = Matrix();

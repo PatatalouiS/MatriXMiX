@@ -8,7 +8,7 @@
 #include <QPushButton>
 #include <mpParser.h>
 #include "ExprLineEdit.hpp"
-#include "../maths/MatrixLibrary.h"
+#include "QMatrixLibrary.hpp"
 
 
 
@@ -32,11 +32,11 @@ class SetMatrixWidget : public QWidget
         /**
          * @brief SetMatrixWidget The Unique constructor of the class
          * @param [in] type the type of the SetMatrixWidget ( for Add a Matrix or Edit a Matrix ) . see SetMatrixWidget::type.
-         * @param [in] library a pointer on a MatrixLibrary, for add Matrices or edit Matrices.
+         * @param [in] library a pointer on a QMatrixLibrary, for add Matrices or edit Matrices.
          * @param [in,out] parent a pointer on a potential parent QWidget, mainly for ensure good deletion.
          */
 
-        SetMatrixWidget(const enum type& type, MatrixLibrary* library, QWidget* parent = nullptr);
+        SetMatrixWidget(const enum type& type, QMatrixLibrary* library, QWidget* parent = nullptr);
 
         /**
         *  @brief The destructor of the class
@@ -62,7 +62,7 @@ class SetMatrixWidget : public QWidget
 
     private:
 
-        MatrixLibrary* library;
+        QMatrixLibrary* library;
         QLineEdit* nameMatrix;
         QSpinBox* nbRowsSelector;
         QSpinBox* nbColsSelector;

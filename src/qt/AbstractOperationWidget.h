@@ -6,8 +6,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QVariant>
-#include "../maths/MatrixLibrary.h"
-
+#include "QMatrixLibrary.hpp"
 
 using EigenResult = QPair<QString, std::vector<std::pair<std::complex<double>, VectorX>>>;
 using DoubleResult = QPair<QString, std::complex<double>>;
@@ -38,7 +37,7 @@ class AbstractOperationWidget : public QWidget
          * @param [in, out] parent a pointer on a potential parent Qwidget, mainly for ensure good deletion.
          */
 
-        AbstractOperationWidget(const MatrixLibrary* lib, QWidget* parent = nullptr);
+        AbstractOperationWidget(const QMatrixLibrary* lib, QWidget* parent = nullptr);
 
     public slots:
 
@@ -81,7 +80,7 @@ class AbstractOperationWidget : public QWidget
          *  @return const MatrixLibrary*
          */
 
-        const MatrixLibrary* getLib () const;
+        const QMatrixLibrary* getLib () const;
 
         /**
          * @brief set the Title of the OperationWidget.
@@ -99,7 +98,7 @@ class AbstractOperationWidget : public QWidget
 
     private :
 
-        const MatrixLibrary* lib;
+        const QMatrixLibrary* lib;
 
     signals:
 

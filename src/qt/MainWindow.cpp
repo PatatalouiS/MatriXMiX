@@ -13,26 +13,15 @@
 MainWindow:: MainWindow() : QMainWindow()
 {
    //Aide pour le Debug
-    Matrix a (3,3, Matrix::I);
-    Matrix b (3,3, {1,1,1,1,1,1,1,1,1});
-    Matrix c (3,4, {1,2,3,4,5,6,7,8,9,10,11,12});
-    Matrix d (3,4, {1,1,1,1,0,0,0,0,0,0,0,0});
-    Matrix e (9,9, {1465.875412448474,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,
-              1,1,1,1,1,1,1,1,1,
-       });
+    Matrix a (3,3,
+    {
+        {1, 2}, 2, 3,
+        4, {5, -3}, 6,
+        7, 8, {9, 4}
+
+                            });
 
     library.addMatrix("A", a);
-    library.addMatrix("B", b);
-    library.addMatrix("C", c);
-    library.addMatrix("D", d);
-   library.addMatrix("E", e);
   // Nouvelles matrices
 
     setFunctorTab();

@@ -5,7 +5,7 @@
 
 # Config QMAKE
 TEMPLATE = app
-CONFIG += release
+CONFIG += release c++17
 
 
 # names and dirnames
@@ -47,6 +47,7 @@ HEADERS += src/maths/Matrix.h \
         src/qt/ExprLineEdit.hpp \
         src/qt/MainWindow.h \
         src/qt/LibraryWindow.h \
+        src/qt/QMatrixLibrary.hpp \
         src/qt/ShowMatrixWidget.h \
         src/qt/Error.h \
         src/qt/MatrixViewWidget.h \
@@ -59,7 +60,9 @@ HEADERS += src/maths/Matrix.h \
         src/qt/ExprEvalWidget.h \
         src/qt/SetMatrixWidget.h \
         src/qt/HelpWindow.h \
-        src/qt/HelpWindowQt.h
+        src/qt/HelpWindowQt.h \
+        src/qt/UserInputs.hpp \
+        src/qt/UserMatrix.hpp
 
 
 SOURCES += src/qt/main.cpp \
@@ -78,13 +81,16 @@ SOURCES += src/qt/main.cpp \
         src/qt/AbstractOperationWidget.cpp \
         src/qt/BinaryOpMatrixMatrixWidget.cpp \
         src/qt/BinaryOpMatrixNumberWidget.cpp \
+        src/qt/QMatrixLibrary.cpp \
         src/qt/UnaryOpWidget.cpp \
         src/qt/DiagonalisationWidget.cpp \
         src/qt/ExprEvalWidget.cpp \
         src/qt/SetMatrixWidget.cpp \
         src/qt/ShowMatrixWidget.cpp \
         src/qt/HelpWindow.cpp \
-        src/qt/HelpWindowQt.cpp
+        src/qt/HelpWindowQt.cpp \
+        src/qt/UserInputs.cpp \
+        src/qt/UserMatrix.cpp
 
 RESOURCES += \
     data/data.qrc

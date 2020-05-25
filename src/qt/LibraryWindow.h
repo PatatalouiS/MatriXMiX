@@ -5,7 +5,7 @@
 #include "MatrixViewWidget.h"
 #include "ShowMatrixWidget.h"
 #include "SetMatrixWidget.h"
-
+#include "QMatrixLibrary.hpp"
 
 /**
 @class LibraryWindow none none  This class show to user a Window in wich he can Add Matrices, Remove Matrices, Or Edit Matrices.
@@ -18,7 +18,7 @@ class LibraryWindow : public QWidget
 
     private:
 
-        MatrixLibrary* lib;
+        QMatrixLibrary* lib;
         QTabWidget* choice;
         MatrixViewWidget* matrixView;
         SetMatrixWidget* addMatrix;
@@ -47,10 +47,10 @@ class LibraryWindow : public QWidget
         /**
          * @brief LibraryWindow
          * @param [in,out] parent a pointer on a potential parent QWidget, mainly for ensure good deletion.
-         * @param [in,out] lib a pointer on a MatrixLibrary, for read on the MatrixLibrary and write too.
+         * @param [in,out] lib a pointer on a QMatrixLibrary, for read on the QMatrixLibrary and write too.
          */
 
-        LibraryWindow (QWidget* parent, MatrixLibrary* lib);
+        LibraryWindow (QWidget* parent, QMatrixLibrary* lib);
 
         /**
          * @brief destructor of the class

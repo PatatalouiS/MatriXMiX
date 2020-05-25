@@ -8,7 +8,7 @@
 using namespace std;
 
 
-LibraryWindow:: LibraryWindow (QWidget* main, MatrixLibrary* library) : QWidget(main)
+LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget(main)
 {
     lib = library;
     matrixView = new MatrixViewWidget(lib, this);

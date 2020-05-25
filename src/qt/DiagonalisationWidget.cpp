@@ -6,7 +6,7 @@
 
 
 
-DiagonalisationWidget::DiagonalisationWidget(const MatrixLibrary* lib, QWidget* parent):
+DiagonalisationWidget::DiagonalisationWidget(const QMatrixLibrary* lib, QWidget* parent):
 AbstractOperationWidget (lib, parent)
 {
     result = std::array<Matrix,3>();

@@ -32,11 +32,11 @@ class UnaryOpWidget : public AbstractOperationWidget
 
         /** @brief Unique constructor of the class.
          * @param [in] type type of the Unary Operation. The enum is BinaryOpWidget::type .
-         * @param [in] library a pointer on a MatrixLibrary .
+         * @param [in] library a pointer on a QMatrixLibrary .
          * @param [in,out] parent a pointer on a potential parent QWidget, mainly for ensure good deletion.
          */
 
-        UnaryOpWidget(const type& t, const MatrixLibrary* lib, QWidget* parent = nullptr);
+        UnaryOpWidget(const type& t, const QMatrixLibrary* lib, QWidget* parent = nullptr);
 
     public slots:
 

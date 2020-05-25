@@ -20,7 +20,7 @@ class MenuBar : public QMenuBar
     Q_OBJECT
 
     private:
-        MatrixLibrary lib;
+        QMatrixLibrary lib;
         QMenu *menuFile;
         QAction *actionSave;
         QAction *actionLoad;

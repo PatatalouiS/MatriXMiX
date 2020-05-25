@@ -30,11 +30,11 @@ class BinaryOpMatrixMatrixWidget : public AbstractOperationWidget
 
         /** @brief Unique constructor of the class.
          * @param [in] type type of the Binary Matrix Operation. The enum is BinaryOpMatrixMatrixWidget::type .
-         * @param [in] library a pointer on a MatrixLibrary .
+         * @param [in] library a pointer on a QMatrixLibrary .
          * @param [in,out] parent a pointer on a potential parent QWidget, mainly for ensure good deletion.
          */
 
-        BinaryOpMatrixMatrixWidget(const type& type, const MatrixLibrary* library, QWidget* parent = nullptr);
+        BinaryOpMatrixMatrixWidget(const type& type, const QMatrixLibrary* library, QWidget* parent = nullptr);
 
     public slots:
 
