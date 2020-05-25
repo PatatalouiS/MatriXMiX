@@ -1,8 +1,8 @@
 #ifndef USERINPUTS_HPP
 #define USERINPUTS_HPP
 
-#include <vector>
-#include <string>
+#include <QVector>
+#include <QString>
 
 class UserInputs {
 
@@ -15,9 +15,13 @@ class UserInputs {
 
     unsigned int getCols() const;
 
-    std::vector<std::string>::const_iterator begin() const;
+    QVector<QString>::const_iterator begin() const;
 
-    std::vector<std::string>::const_iterator end() const;
+    QVector<QString>::const_iterator end() const;
+
+    const QString& put(const QString& input);
+
+    const QString& operator[] (const unsigned int ind) const;
 
 
     private :
@@ -27,7 +31,7 @@ class UserInputs {
 
     unsigned int cols;
 
-    std::vector<std::string> inputs;
+    QVector<QString> inputs;
 };
 
 

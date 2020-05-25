@@ -120,8 +120,8 @@ void BinaryOpMatrixNumberWidget:: computeSelection(const bool viewId)
     if(!viewId)
     {
         op1.first = view->nameOfSelectedMatrix();
-        assert(getLib()->exist(op1.first.toStdString()));
-        op1.second = getLib()->find_matrix(op1.first.toStdString());
+        assert(getLib()->exist(op1.first));
+        op1.second = getLib()->find_matrix(op1.first);
     }
     else
     {

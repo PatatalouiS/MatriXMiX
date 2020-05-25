@@ -74,8 +74,6 @@ class SetMatrixWidget : public QWidget
         unsigned int lrows;
         unsigned int lcols;
 
-        static mup::ParserX parser;
-
         /**
          * @brief controlKeyboardInput This function control the user entries when the button "calculate" is pressed.\n
          *          the user is notified if his entries are invalid by a QMessageBox, ( see the Error Class ).

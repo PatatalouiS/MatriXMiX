@@ -15,9 +15,9 @@ MainWindow:: MainWindow() : QMainWindow()
    //Aide pour le Debug
     Matrix a (3,3,
     {
-        {1, 2}, 2, 3,
-        4, {5, -3}, 6,
-        7, 8, {9, 4}
+        {1, 2}, 2, 0,
+        4, {0, -3}, {0, 1},
+        {0, -1}, 8, {2, 0}
 
                             });
 

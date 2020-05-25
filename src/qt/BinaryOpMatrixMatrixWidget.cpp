@@ -122,15 +122,15 @@ void BinaryOpMatrixMatrixWidget:: computeSelection(const bool view)
         op2.first = "_";
 
         op1.first = view1->nameOfSelectedMatrix();
-        assert(getLib()->exist(op1.first.toStdString()));
-        op1.second = getLib()->find_matrix(op1.first.toStdString());
+        assert(getLib()->exist(op1.first));
+        op1.second = getLib()->find_matrix(op1.first);
         view2->refresh(sortViewFunction(op1.second));
     }
     else
     {
         op2.first = view2->nameOfSelectedMatrix();
-        assert(getLib()->exist(op2.first.toStdString()));
-        op2.second = getLib()->find_matrix(op2.first.toStdString());
+        assert(getLib()->exist(op2.first));
+        op2.second = getLib()->find_matrix(op2.first);
     }
 
     description->setText(op1.first + logo + op2.first);

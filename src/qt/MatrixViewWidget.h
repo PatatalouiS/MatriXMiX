@@ -49,7 +49,7 @@ class MatrixViewWidget : public QTableView
         * @param [in] filter a comparison lambda function
         */
 
-        void refresh(const std::function<bool(Matrix*)> filter =
+        void refresh(std::function<bool(Matrix*)> filter =
             [](const Matrix*) -> bool {return true;});
 
         /**

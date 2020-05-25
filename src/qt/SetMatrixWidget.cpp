@@ -4,8 +4,8 @@
 #include "SetMatrixWidget.h"
 #include "Error.h"
 #include <QDebug>
+#include <sstream>
 
-mup::ParserX SetMatrixWidget::parser = mup::ParserX();
 
 SetMatrixWidget::SetMatrixWidget(const enum type& t, QMatrixLibrary* library, QWidget* parent)
 : QWidget(parent)
@@ -117,30 +117,27 @@ void SetMatrixWidget::constructType(const enum type &t)
 
 void SetMatrixWidget:: computeMatrix ()
 {
-    if(!controlKeyboardInput())
-    {
+    if(!controlKeyboardInput()) {
         return;
     }
 
-    VectorX values;
+    UserInputs inputs(nbRowsSelector->value(), nbColsSelector->value());
     QString name = nameMatrix->text();
-    unsigned int nbL = unsigned(nbRowsSelector->value());
-    unsigned int nbC = unsigned(nbColsSelector->value());
+    Matrix newMatrix;
 
     for(auto& i : lineEditsTab) {
-        values.emplace_back(i->getComplex());
+        inputs.put(i->text());
     }
 
-    Matrix newMatrix (nbL, nbC, values);
-
-    if(type == ADD)
-    {
-        library->addMatrix(name.toStdString(), newMatrix);
+    if(type == ADD) {
+        newMatrix = library->addMatrix(name, inputs);
         emit newMatrixAdded(QPair<QString, Matrix&>(name, newMatrix));
     }
     else
     {
-        *selectedMatrix.second = newMatrix;
+        library->erase(selectedMatrix.first);
+        newMatrix = library->addMatrix(name, inputs);
+//        *selectedMatrix.second = newMatrix;
         emit matrixEdited(QPair<QString, Matrix&>(name, newMatrix));
         nameMatrix->setText("");
         selectedMatrix.first = "";
@@ -156,7 +153,7 @@ bool SetMatrixWidget:: controlKeyboardInput() const
 
     if(type == ADD)
     {
-        if(library->find_matrix(name.toStdString()))
+        if(library->find_matrix(name))
         {
             Error::showError("La Matrice " + name + " existe déjà !",
                        "Veuillez changer de nom.");
@@ -195,62 +192,29 @@ bool SetMatrixWidget:: controlKeyboardInput() const
 
 void SetMatrixWidget:: chargeMatrix(const QString& name)
 {
-    assert(library->exist(name.toStdString()));
+    assert(library->exist(name));
+
     selectedMatrix.first = name;
-    selectedMatrix.second = library->find_matrix(name.toStdString());
+    UserMatrix* userMtx = library->find_all(name);
+    selectedMatrix.second = &(userMtx->matrix);
+
     Matrix temp = *selectedMatrix.second;
 
     unsigned int nbRows = temp.getNbRows();
     unsigned int nbCols = temp.getNbCols();
+
     nameMatrix->setText(name);
     nbRowsSelector->setValue(static_cast<int>(nbRows));
     nbColsSelector->setValue(static_cast<int>(nbCols));
 
-
-    for(unsigned int i = 0; i < nbRows*nbCols; ++i)
-    {
-        std::complex<double> val = temp[i/nbCols][i%nbCols];
-        QString valueToString;
-
-        // convert to lineEdit visualization
-        // real part
-        if(floor(val.real()) == val.real())
-        {
-            valueToString.setNum(val.real(), 'f', 0);
-        }
-        else
-        {
-            valueToString.setNum(val.real(), 'f', 10)
-                    .replace('.', ',');
-        }
-
-        // imaginary part exists
-        if(val.imag() != 0) {
-            if(val.imag() > 0) {
-                valueToString.append('+');
-            }
-            else if(val.imag() < 0) {
-                valueToString.append('-');
-            }
-
-            if(floor(val.imag()) == val.imag()) {
-                valueToString.setNum(val.imag(), 'f', 0);
-            }
-            else {
-                valueToString.setNum(val.imag(), 'f', 10)
-                        .replace('.', ',');
-            }
-        }
-
-        lineEditsTab[i]->setText(valueToString);
+    for(unsigned int i = 0; i < nbRows*nbCols; ++i) {
+        lineEditsTab[i]->setText(userMtx->entries[i]);
     }
 }
 
-
-
 void SetMatrixWidget:: updateSelectedMatrix()
 {
-    if(!library->exist(selectedMatrix.first.toStdString()))
+    if(!library->exist(selectedMatrix.first))
     {
         selectedMatrix.first = "";
         selectedMatrix.second = nullptr;

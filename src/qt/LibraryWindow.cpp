@@ -114,8 +114,8 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
 void LibraryWindow:: computeViewSelection ()
 {
     QString selectedName = matrixView->nameOfSelectedMatrix();
-    assert(lib->exist(selectedName.toStdString()));
-    const Matrix* selectedMatrix = lib->find_matrix(selectedName.toStdString());
+    assert(lib->exist(selectedName));
+    const Matrix* selectedMatrix = lib->find_matrix(selectedName);
     showMatrixWidget->computeImgMatrix(*selectedMatrix);
     editMatrix->chargeMatrix(selectedName);
 }
@@ -133,8 +133,8 @@ void LibraryWindow:: removeSelectedMatrix ()
     }
 
     matrixView->removeRow(matrixView->currentIndex().row());
-    assert(lib->exist(selectedName.toStdString()));
-    lib->erase(selectedName.toStdString());
+    assert(lib->exist(selectedName));
+    lib->erase(selectedName);
     editMatrix->updateSelectedMatrix();
     showMatrixWidget->clear();
     emit libraryChanged();

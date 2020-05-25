@@ -2,6 +2,7 @@
 
 #include "MatrixViewWidget.h"
 #include <QHeaderView>
+#include <QDebug>
 
 
 ShowMatrixWidget* MatrixViewWidget::matrixPreview = nullptr;
@@ -53,8 +54,8 @@ void MatrixViewWidget:: showMatrixPreview () const
         delete matrixPreview;
     }
 
-    assert(lib->exist(currentSelectedName.toStdString()));
-    const Matrix* currentMatrix = lib->find_matrix(currentSelectedName.toStdString());
+    assert(lib->exist(currentSelectedName));
+    const Matrix* currentMatrix = lib->find_matrix(currentSelectedName);
     matrixPreview = new ShowMatrixWidget(nullptr);
     matrixPreview->setWindowFlag(Qt::Tool);
     connect(matrixPreview, &ShowMatrixWidget::destroyed,
@@ -90,13 +91,17 @@ void MatrixViewWidget::refresh(std::function<bool(Matrix*)> filter)
 
     Matrix* matrix;
 
-    for(auto i : lib->data())
+    for(const auto& [ name, userMtx ] : *lib)
     {
-        matrix = &i.second.matrix;
+        matrix = const_cast<Matrix*>(&userMtx.matrix);
+
+        qDebug() << "coucou" ;
+
+        qDebug() << userMtx.determinant.imag();
 
         if(filter(matrix))
         {
-            addNewRow(MatrixPair(QString::fromStdString(i.first), i.second.matrix));
+            addNewRow(MatrixPair(name, userMtx.matrix));
         }
     }
     update();

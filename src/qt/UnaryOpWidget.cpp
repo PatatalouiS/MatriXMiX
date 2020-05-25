@@ -90,8 +90,8 @@ void UnaryOpWidget:: computeSelection(const bool viewId)
 {
     (void)viewId;
     op.first = view->nameOfSelectedMatrix();
-    assert(getLib()->exist(op.first.toStdString()));
-    op.second = getLib()->find_matrix(op.first.toStdString());
+    assert(getLib()->exist(op.first));
+    op.second = getLib()->find_matrix(op.first);
     description->setText(op.first);
 }
 

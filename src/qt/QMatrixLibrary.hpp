@@ -3,7 +3,7 @@
 #define MATRIX_LIBRARY
 
 #include "../maths/Matrix.h"
-#include <map>
+#include <QMap>
 #include <complex>
 #include <mpParser.h>
 #include "UserMatrix.hpp"
@@ -18,7 +18,7 @@ class QMatrixLibrary
 
     static mup::ParserX parser;
 
-    std::map<std::string, UserMatrix> tab;
+    QMap<QString, UserMatrix> tab;
 
     public:
 /**
@@ -54,18 +54,13 @@ class QMatrixLibrary
  * @param [in] name (\e string)
  * @return \e bool
  */
-    bool exist (const std::string& name) const;
-
-/**
- * @brief Print all the matrices of the library
- */
-    void print () const;
+    bool exist (const QString& name) const;
 
 /**
  * @brief Returns if the chain can be accepted as name
  * @return \e bool
  */
-    bool isName(const std::string & chain) const;
+    bool isName(const QString & chain) const;
 
 
 /**
@@ -73,51 +68,63 @@ class QMatrixLibrary
  * @param [in] name (\e string)
  * @param [in] m (\e Matrix)
  */
-    void addMatrix (const std::string& name, const UserInputs& m);
+    const Matrix& addMatrix (const QString& name, const UserInputs& m);
 
 
-    void addMatrix(const std::string& name, const Matrix& m);
-
-/**
- * @brief Find a matrix in the library using its name
- * @param [in] name (\e string)
- * @return \e Matrix*
- */
-    const Matrix* find_matrix (const std::string& name) const;
+    void addMatrix(const QString& name, const Matrix& m);
 
 /**
  * @brief Find a matrix in the library using its name
  * @param [in] name (\e string)
  * @return \e Matrix*
  */
-    Matrix* find_matrix (const std::string& name);
+    const Matrix* find_matrix (const QString& name) const;
 
+/**
+ * @brief Find a matrix in the library using its name
+ * @param [in] name (\e string)
+ * @return \e Matrix*
+ */
+    Matrix* find_matrix (const QString& name);
 
 /**
  * @brief Find a matrix determiant in the library using its name
  * @param [in] name (\e string)
  * @return \e std::complex<double>*
  */
-    const Value* find_determinant (const std::string& name) const;
+    const Value* find_determinant (const QString& name) const;
 
 /**
  * @brief Find the matrix determinant in the library using its name
  * @param [in] name (\e string)
  * @return \e std::complex<double>*
  */
-    Value* find_determinant (const std::string& name);
+    Value* find_determinant (const QString& name);
+
+    const UserInputs* find_inputs(const QString& name) const;
+
+    UserInputs* find_inputs(const QString& name);
+
+    const UserMatrix* find_all(const QString& name) const;
+
+    UserMatrix* find_all(const QString& name);
 
 /**
  * @brief Erase a matrix from the library
  * @param [in] name (\e string)
  */
-    void erase (const std:: string & name);
+    void erase (const QString & name);
 
 /**
  * @brief Return the map of matrices
  * @return \e std::map<std::string, Matrix>
  */
-    const std::map<std::string, UserMatrix>& data () const;
+    const QMap<QString, UserMatrix>& data () const;
+
+    QMap<QString, UserMatrix>::const_key_value_iterator begin() const;
+
+    QMap<QString, UserMatrix>::const_key_value_iterator end() const;
+
 
 /**
  * @brief Saves the matrix library in \e mtmx format
