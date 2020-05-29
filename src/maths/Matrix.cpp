@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const double EPSILON = 0.00001;
+const double EPSILON = 0.000001;
 
 
 const Matrix Matrix:: matrix_null = Matrix();
@@ -64,15 +64,13 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const enum in
             float random1 = dis(gen);
             float random2 = dis(gen);
 
-            std::complex<double> z;
             for (auto& i : tab)
             {
                 for (auto& j : i)
                 {
                     random1 = dis(gen);
                     random2 = dis(gen);
-                    z = std::complex<double>(random1, random2);
-                    j = z;
+                    j = std::complex<double>(random1 / 100, random2 / 100);
                 }
             }
             break;
@@ -240,8 +238,7 @@ Matrix Matrix:: operator << (const string& values)
     vector<string> table;
     table = explode(values);
 
-    if (table.size() != rows*cols)
-    {
+    if (table.size() != rows*cols) {
         cerr <<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice" << endl;
         return matrix_null;
     }
@@ -756,6 +753,26 @@ vector<string> Matrix:: explode (const string & expression) const
 }
 
 
+std::complex<double> Matrix::normeCol() const {
+    unsigned int i;
+    std::complex<double> z (0.0,0.0);
+    for (i = 0; i < cols; i++) {
+        z += tab[0][i];
+    }
+    return sqrt(z);
+}
+
+
+std::complex<double> Matrix::normeRow() const {
+    unsigned int i;
+    std::complex<double> z (0.0,0.0);
+    for (i = 0; i < rows ; i++) {
+        z += tab[i][0];
+    }
+    return sqrt(z);
+}
+
+
 VectorX Matrix:: normaliseVectorX (const VectorX & v) const
 {
     VectorX res;
@@ -774,6 +791,7 @@ VectorX Matrix:: normaliseVectorX (const VectorX & v) const
 
     return res;
 }
+
 
 
 Eigen::MatrixXcd Matrix:: class2Eigen () const
@@ -1295,6 +1313,12 @@ Matrix Matrix::gramSchmidt() const {
 
 std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
 
+    if (cols > rows) {
+        std::cerr << "Nombre de lignes inférieur au nombre de colonnes..."
+                    << std::endl << "Décomposition QR impossible" << std::endl;
+        return std::pair<Matrix,Matrix>(matrix_null,matrix_null);
+    }
+
     Matrix a(*this);
     Matrix q(rows,cols,Matrix::Z);
     Matrix r(cols,cols,Matrix::Z);
@@ -1334,25 +1358,30 @@ std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
 
 std::pair<Matrix,Matrix> Matrix::QR_Householder() const {
 
-    unsigned int n = rows;
-    unsigned int m = cols;
+    if (cols > rows) {
+        std::cout << rows <<  " VS " << cols << std::endl; 
+        std::cerr << "Nombre de lignes inférieur au nombre de colonnes..."
+                    << std::endl << "Décomposition QR impossible" << std::endl;
+        return std::pair<Matrix,Matrix>(matrix_null,matrix_null);
+    }
+
+    unsigned int m = rows;
+    unsigned int n = cols;
     Matrix h(m,m,Matrix::I);
     Matrix a(*this);
-    VectorX v(n);
+    VectorX v(m);
     unsigned int i, j, k;
     std::complex<double> alpha (0.0,0.0);
     std::complex<double> beta (0.0,0.0);
     std::complex<double> c (0.0,0.0);
 
     for (k = 0; k < n - 1; k++) { 
-        alpha = 0.0;
-        beta = 0.0;
-        c = 0.0;
+        alpha = std::complex<double> (0.0,0.0);
+        beta = std::complex<double> (0.0,0.0);
 
         for (i = k; i < m; i++) {
             alpha = alpha + (a[i][k] * a[i][k]);
         }
-        
         alpha = sqrt(alpha);
 
         beta = alpha * (alpha - a[k][k]);
@@ -1360,9 +1389,9 @@ std::pair<Matrix,Matrix> Matrix::QR_Householder() const {
         for (i = k + 1; i < m; i++) {    // vecteur v
             v[i] = a[i][k];
         }
-        
-    
+
         for (j = k; j < n; j++) {      // A^k+1
+            c = std::complex<double> (0.0,0.0);
             for (i = k; i < m; i++) {
                 c += (v[i] * a[i][j] / beta);
             }
@@ -1370,17 +1399,70 @@ std::pair<Matrix,Matrix> Matrix::QR_Householder() const {
                 a[i][j] -= (c * v[i]);
             }
         }
-        
+
         for (j = 0; j < m; j++) {    // H = Hk ... H1
+            c = std::complex<double> (0.0,0.0);
             for (i = k; i < m; i++) {
-                c = (v[i] * h[i][j] / beta);
+                c += (v[i] * h[i][j] / beta);
             }
             for (i = k; i < m; i++) {
                 h[i][j] -= (c * v[i]);
             }
         }
+
     }
 
     return std::pair<Matrix,Matrix> (h.transposeMatrix(),a);
+
+}
+
+
+std::pair<Matrix,Matrix> Matrix::choleskyDecomposition() const {
+    
+    if (!isSQMatrix()) {
+        std::cerr << "Matrice non carrée" << std::endl
+                << "Décomposition de Cholesky impossible" << std::endl;
+        return std::pair<Matrix,Matrix> (matrix_null,matrix_null);
+    } 
+    if (*this != transposeMatrix()){
+        std::cerr << "Matrice non symétrique" << std::endl
+                << "Décomposition de Cholesky impossible" << std::endl;
+        return std::pair<Matrix,Matrix> (matrix_null,matrix_null);
+    }
+    if (!isPositiveDefinite()) {
+        std::cerr << "Matrice non définie positive" << std::endl
+                << "Décomposition de Cholesky impossible" << std::endl;
+        return std::pair<Matrix,Matrix> (matrix_null,matrix_null);
+    }
+
+    Matrix d (rows,rows,Matrix::Z);
+    Matrix l (rows,rows,Matrix::Z);
+    Matrix lt (rows,rows,Matrix::Z);
+    unsigned int i, j, k;
+    std::complex<double> temp;
+
+    l[0][0] = sqrt(tab[0][0]);
+
+    for (j = 1; j < rows; j++) {
+        l[j][0] = tab[0][j] / l[0][0];
+    }
+
+    for (i = 1; i < rows; i++) {
+        temp = std::complex<double> (0.0,0.0);
+        for (k = 0; k < i; k++) {
+            temp += l[i][k] * l[i][k];
+        }
+        l[i][i] = sqrt(tab[i][i] - temp);
+
+        for (j = i + 1; j < rows; j++) {
+            temp = std::complex<double> (0.0,0.0);
+            for (k = 0; k < i; k++) {
+                temp += l[i][k] * l[j][k];
+            }
+            l[j][i] = (tab[i][j] - temp) / l[i][i];
+        }
+    }
+
+    return std::pair<Matrix,Matrix> (l,l.transposeMatrix());    
 
 }

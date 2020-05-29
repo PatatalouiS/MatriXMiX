@@ -9,16 +9,22 @@ static const int EPSILON = 0.000001;
 
 int main ()
 {
-
-    Matrix m (3,3,{12,-51,4,6,167,-68,-4,24,-41});
-
-    std::pair<Matrix,Matrix> qr (m.QR_Householder());
    
-    std::cout << qr.first << std::endl
-                << qr.second << std::endl << std::endl
-                << qr.first * qr.second << std::endl;
-                
+    Matrix m;                
 
+    for (unsigned long int i = 0; i < ULONG_MAX; i++) {
+        m = Matrix (10,10,Matrix::R);
+        if (m == m.transposeMatrix() && m.isPositiveDefinite()) {
+            std::cout << i << std::endl;
+            std::pair<Matrix,Matrix> qr (m.choleskyDecomposition());
+            if (m != (qr.first * qr.second)) {
+            std::cout << "ERROR " << std::endl << m
+                        << std::endl << std::endl;
+        }
+        }
+        
+            
+    }
 
 
 	//std::cout << double2sqrt(0.70710678118) << std::endl;

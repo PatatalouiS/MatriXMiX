@@ -422,6 +422,10 @@ public:
 
    Matrix matrixRow(const unsigned int & j) const;
 
+   std::complex<double> normeCol () const;
+
+   std::complex<double> normeRow () const;
+
    Matrix normaliseMatrix() const;
 
    std::pair<Matrix,Matrix> LUDecomposition() const;
@@ -430,9 +434,11 @@ public:
 
    Matrix gramSchmidt() const ;
 
-   std::pair<Matrix,Matrix> QR_GramSchmidt() const ;
+   std::pair<Matrix,Matrix> QR_GramSchmidt() const;
 
    std::pair<Matrix,Matrix> QR_Householder() const;
+
+   std::pair<Matrix,Matrix> choleskyDecomposition() const;
 
 
 
