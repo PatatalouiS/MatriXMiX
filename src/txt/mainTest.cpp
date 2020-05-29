@@ -9,23 +9,38 @@ static const int EPSILON = 0.000001;
 
 int main ()
 {
-   
-    Matrix m;                
+    
+    double temps;
+    clock_t t1 = clock(), t2;
 
-    for (unsigned long int i = 0; i < ULONG_MAX; i++) {
-        m = Matrix (10,10,Matrix::R);
-        if (m == m.transposeMatrix() && m.isPositiveDefinite()) {
-            std::cout << i << std::endl;
-            std::pair<Matrix,Matrix> qr (m.choleskyDecomposition());
-            if (m != (qr.first * qr.second)) {
-            std::cout << "ERROR " << std::endl << m
-                        << std::endl << std::endl;
-        }
-        }
-        
-            
+
+    Matrix m;
+    Matrix b;
+    Matrix x;
+
+    unsigned int i = 0, nb_tests = 1000, nb_corrects = 0;
+
+    while(i < nb_tests) {
+        m = Matrix(100,100,Matrix::R);
+        b = Matrix(100,1,Matrix::R);
+        x = m.solveAx(b);
+        if (m * x != b)
+            std::cout << "ERROR" << std::endl << std::endl
+                       << ((m * x) - b).transposeMatrix().checkCast()  << std::endl << std::endl;
+        else
+           nb_corrects++;
+    
+        i++;
     }
 
+    std::cout << std::endl << std::endl << (nb_corrects*100)/nb_tests 
+                << " % de tests validés" << std::endl;
+
+
+    t2 = clock();
+    temps = (double)(t2-t1)/CLOCKS_PER_SEC;
+
+    std::cout << "Temps d'exécution : " << temps << std::endl; 
 
 	//std::cout << double2sqrt(0.70710678118) << std::endl;
 

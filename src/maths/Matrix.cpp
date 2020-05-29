@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const double EPSILON = 0.000001;
+const double EPSILON = 0.00001;
 
 
 const Matrix Matrix:: matrix_null = Matrix();
@@ -217,6 +217,30 @@ const std::vector<complex<double>>& Matrix:: operator [] (const unsigned int ind
 }
 
 
+Matrix Matrix::matrixCol(const unsigned int & j) const {
+    unsigned int i;
+    Matrix vect(rows,1);
+
+    for (i = 0; i < rows; i++) {
+        vect[i][0] = tab[i][j];
+    }
+
+    return vect;
+}
+
+
+Matrix Matrix::matrixRow(const unsigned int & i) const {
+    unsigned int j;
+    Matrix vect(1,cols);
+
+    for (j = 0; j < cols; j++) {
+        vect[i][0] = tab[i][j];
+    }
+
+    return vect;
+}
+
+
 ostream& operator << (ostream& flux, const Matrix & m)
 {
     for (auto i : m.tab)
@@ -227,7 +251,37 @@ ostream& operator << (ostream& flux, const Matrix & m)
         }
         flux << endl;
     }
+    flux << endl;
     return flux;
+}
+
+
+vector<string> Matrix:: explode (const string & expression) const
+{
+    unsigned int i;
+    unsigned  long l = expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
+    for (i = 0; i < l; i++)
+    {
+        c = expression[i];
+
+        if (c == ",")
+        {
+            if (temp.length()!=0) tab.push_back(temp);
+            temp="";
+        }
+        else if (!c.empty())
+        {
+            temp += c;
+        }
+
+    }
+    if (temp != "")
+    tab.push_back(temp);
+
+    return tab;
 }
 
 
@@ -235,8 +289,7 @@ Matrix Matrix:: operator << (const string& values)
 {
     unsigned int i,j;
     string c;
-    vector<string> table;
-    table = explode(values);
+    vector<string> table (explode(values));
 
     if (table.size() != rows*cols) {
         cerr <<"Le nombre des valeurs rentrées ne correspond pas à la taille de la matrice" << endl;
@@ -501,7 +554,7 @@ bool Matrix:: isSQMatrix() const
 }
 
 
-complex<double> Matrix:: traceMatrix() const
+complex<double> Matrix:: trace() const
 {
     if ( !isSQMatrix() )
     {
@@ -526,7 +579,7 @@ complex<double> Matrix:: determinant() const
         return complex_null;
     }
 
-    Eigen:: MatrixXcd m = class2Eigen();
+    Eigen::MatrixXcd m = class2Eigen();
     return m.determinant();
 }
 
@@ -571,8 +624,29 @@ Matrix Matrix:: transposeMatrix() const
 }
 
 
+Matrix Matrix:: conjugateTranspose() const
+{
+    unsigned int i, j;
+    Matrix copy(cols,rows);
+
+    for (i = 0; i < copy.rows; i++)
+    {
+        for (j = 0; j < copy.cols; j++)
+        {
+            copy[i][j] = std::conj(tab[j][i]);
+        }
+    }
+    return copy;
+}
+
+
 bool Matrix::isSymetric() const {
     return (*this == transposeMatrix());
+}
+
+
+bool Matrix::isSelfAdjoint() const {
+    return (*this == conjugateTranspose());
 }
 
 
@@ -636,36 +710,18 @@ unsigned int Matrix:: rank()const
 
 complex<double> Matrix::checkCast(const complex<double> & c) const
 {
-    int l;
-    double re, im;
+    double re = c.real(), im = c.imag();
+    int temp;
 
-    l = -150;
-    re = c.real();
-    while (l < 151)
-    {
-        if ( abs(c.real() - l) < EPSILON )
-            {
-                re = l;
-                break;
-            }
-        l++;
-    }
+    temp = round(c.real());
+    if (abs(temp - re) < EPSILON)
+        re = static_cast<double>(temp);
 
-    l = -150;
-    im = c.imag();
-    while (l < 151)
-    {
-        if ( abs(c.imag() - l) < EPSILON )
-            {
-                im = l;
-                break;
-            }
-        l++;
-    }
-
+    temp = round(c.imag());
+    if (abs(temp - im) < EPSILON)
+        im = static_cast<double>(temp);
 
     return (complex<double>(re,im));
-
 }
 
 
@@ -721,35 +777,6 @@ Matrix Matrix :: subMatrix(const unsigned int & a, const unsigned int & b) const
         }
     }
     return sub;
-}
-
-
-vector<string> Matrix:: explode (const string & expression) const
-{
-    unsigned int i;
-    unsigned  long l = expression.length();
-    vector<string> tab;
-    string c, temp;
-    temp="";
-    for (i = 0; i < l; i++)
-    {
-        c = expression[i];
-
-        if (c == ",")
-        {
-            if (temp.length()!=0) tab.push_back(temp);
-            temp="";
-        }
-        else if (!c.empty())
-        {
-            temp += c;
-        }
-
-    }
-    if (temp != "")
-    tab.push_back(temp);
-
-    return tab;
 }
 
 
@@ -1050,48 +1077,35 @@ bool isComplex(VectorX v)
 }
 
 
-bool Matrix::isDiagonalisableR() const
-{
-  if (!isDiagonalisableC())
-      return false;
-
-  Matrix d (diagonalise());
-  for (unsigned int i = 0; i < rows; i++)
-  {
-      if (isComplex(d[i]))
-          return false;
-  }
-  return true;
-}
-
-
 bool Matrix:: isDiagonalisableC()const
 {
     if (!isSQMatrix())
         return false;
 
-    Matrix copy(*this);
-    Matrix p1(*this);
-    Matrix p2(*this);
+    Matrix diag(*this);
+    Matrix p1(rows,rows,Matrix::Z);
+    Matrix p2(rows,rows,Matrix::Z);
 
-    allMatrix(p1,copy,p2);
-    if (p2 == matrix_null)
-    {
+    allMatrix(p1,diag,p2);
+    if (p2 == matrix_null) {
         return false;
     }
 
-    unsigned int i, j, r, c;
-    r = copy.getNbRows();
-    c = copy.getNbCols();
-    for(i = 0; i < r; i++)
-    {
-        for(j = 0; j < c; j++)
-        {
-            if (i != j && copy[i][j] != 0.0)
-                return false;
-        }
-    }
+    return (*this == (p2 * (*this) * p1));
 
+}
+
+
+bool Matrix::isDiagonalisableR() const
+{
+    if (!isDiagonalisableC())
+        return false;
+
+    VectorX vect (eigenValues());
+    for (unsigned int i = 0; i < vect.size(); i++) {
+        if (vect[i].imag() != 0.0)
+            return false;
+    }
     return true;
 }
 
@@ -1152,30 +1166,6 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal,
 }
 
 
-Matrix Matrix::matrixCol(const unsigned int & j) const {
-    unsigned int i;
-    Matrix vect(rows,1);
-
-    for (i = 0; i < rows; i++) {
-        vect[i][0] = tab[i][j];
-    } 
-
-    return vect;
-}
-
-
-Matrix Matrix::matrixRow(const unsigned int & i) const {
-    unsigned int j;
-    Matrix vect(1,cols);
-
-    for (j = 0; j < cols; j++) {
-        vect[i][0] = tab[i][j];
-    } 
-
-    return vect;
-}
-
-
 Matrix Matrix::normaliseMatrix() const {
     unsigned int i, j;
     Matrix res(*this);
@@ -1192,7 +1182,7 @@ Matrix Matrix::normaliseMatrix() const {
                 res[i][j] /= norme;
             }
         }
-        
+
     }
     return res;
 }
@@ -1230,15 +1220,21 @@ std::pair<Matrix,Matrix> Matrix::LUDecomposition() const {
         }
     }
     u[n - 1][n - 1] = t[n - 1][n - 1];
-    
+
     return std::pair<Matrix,Matrix>(l,u);
 }
 
 
 Matrix Matrix::solveAx_LU(const Matrix & b) const {
 
+    if (!isSQMatrix()) {
+        std::cerr << "La matrice n'est pas carrée..." << std::endl
+                    << "Décomposition LU impossible" << std::endl;
+        return matrix_null;
+    }
     if (!isPositiveDefinite()) {
-        std::cout << "Compliqué..." << std::endl;
+        std::cerr << "La matrice n'est pas  définie positive..." << std::endl
+                    << "Décomposition LU impossible" << std::endl;
         return matrix_null;
     }
 
@@ -1280,7 +1276,7 @@ Matrix Matrix::gramSchmidt() const {
 
     Matrix a(*this);
     Matrix q(rows,cols,Matrix::Z);
-    
+
     Matrix temp_matrix (1,rows,Matrix::Z);
     unsigned int i, j, k;
     std::complex<double> coef, temp_coef;
@@ -1290,7 +1286,7 @@ Matrix Matrix::gramSchmidt() const {
         q[i][0] = a[i][0];
     }
 
-    q = q.normaliseMatrix(); 
+    q = q.normaliseMatrix();
 
     for (i = 1; i < cols; i++) {
         coef = std::complex<double>(0.0, 0.0);
@@ -1322,7 +1318,7 @@ std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
     Matrix a(*this);
     Matrix q(rows,cols,Matrix::Z);
     Matrix r(cols,cols,Matrix::Z);
-    
+
     Matrix temp_matrix (1,rows,Matrix::Z);
     unsigned int i, j, k;
     std::complex<double> coef, temp_coef;
@@ -1331,7 +1327,7 @@ std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
     for(i = 0; i < rows; i++) {
         q[i][0] = a[i][0];
     }
-    q = q.normaliseMatrix(); 
+    q = q.normaliseMatrix();
     r[0][0] = (a.matrixCol(0).transposeMatrix() * q.matrixCol(0))[0][0];
 
     for (i = 1; i < cols; i++) {
@@ -1359,7 +1355,6 @@ std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
 std::pair<Matrix,Matrix> Matrix::QR_Householder() const {
 
     if (cols > rows) {
-        std::cout << rows <<  " VS " << cols << std::endl; 
         std::cerr << "Nombre de lignes inférieur au nombre de colonnes..."
                     << std::endl << "Décomposition QR impossible" << std::endl;
         return std::pair<Matrix,Matrix>(matrix_null,matrix_null);
@@ -1375,7 +1370,7 @@ std::pair<Matrix,Matrix> Matrix::QR_Householder() const {
     std::complex<double> beta (0.0,0.0);
     std::complex<double> c (0.0,0.0);
 
-    for (k = 0; k < n - 1; k++) { 
+    for (k = 0; k < n - 1; k++) {
         alpha = std::complex<double> (0.0,0.0);
         beta = std::complex<double> (0.0,0.0);
 
@@ -1412,19 +1407,69 @@ std::pair<Matrix,Matrix> Matrix::QR_Householder() const {
 
     }
 
+    for (i = 0; i < a.getNbCols(); i++) {
+        for (j = 0; j < i; j++) {
+            a[i][j] = 0.0;
+        }
+    }
+    for (i = a.getNbCols() - 1; i < a.getNbRows(); i++) {
+        for (j = 0; j < a.getNbCols() - 1; j++) {
+            a[i][j] = 0.0;
+        }
+    }
+
     return std::pair<Matrix,Matrix> (h.transposeMatrix(),a);
 
 }
 
 
-std::pair<Matrix,Matrix> Matrix::choleskyDecomposition() const {
-    
+
+Matrix Matrix::solveAx(const Matrix & b) const {
+
+    if (!isSQMatrix()) {
+        std::cerr << "Matrice non carrée..."
+                    << std::endl << "Résolution impossible" << std::endl;
+        return matrix_null;
+    }
+    if (rows != b.getNbRows() || b.getNbCols() != 1) {
+        std::cerr << "Le vecteur b n'a pas la bonne dimension..."
+                << std::endl << "Résolution impossible" << std::endl;
+    }
+
+    std::pair<Matrix,Matrix> qr (QR_Householder());
+    Matrix q (qr.first.transposeMatrix() * b);
+    Matrix r (qr.second);
+    Matrix x (cols,1);
+    unsigned int i, j;
+    std::complex<double> temp (0.0,0.0);
+
+    x[cols - 1][0] = q[cols - 1][0] / r[cols - 1][cols - 1];
+
+    for (i = cols - 2; i < cols; i--) {
+        x[i][0] = q[i][0];
+        for(j = i + 1; j < cols; j++) {
+            x[i][0] -= (r[i][j] * x[j][0]);
+        }
+        if (r[i][i] == 0.0)
+            x[i][0] = 0.0;
+        else {
+            x[i][0] /= r[i][i];
+        }
+    }
+
+    return x;
+}
+
+
+
+std::pair<Matrix,Matrix> Matrix::cholesky() const {
+
     if (!isSQMatrix()) {
         std::cerr << "Matrice non carrée" << std::endl
                 << "Décomposition de Cholesky impossible" << std::endl;
         return std::pair<Matrix,Matrix> (matrix_null,matrix_null);
-    } 
-    if (*this != transposeMatrix()){
+    }
+    if (!isSymetric()){
         std::cerr << "Matrice non symétrique" << std::endl
                 << "Décomposition de Cholesky impossible" << std::endl;
         return std::pair<Matrix,Matrix> (matrix_null,matrix_null);
@@ -1437,7 +1482,6 @@ std::pair<Matrix,Matrix> Matrix::choleskyDecomposition() const {
 
     Matrix d (rows,rows,Matrix::Z);
     Matrix l (rows,rows,Matrix::Z);
-    Matrix lt (rows,rows,Matrix::Z);
     unsigned int i, j, k;
     std::complex<double> temp;
 
@@ -1463,6 +1507,6 @@ std::pair<Matrix,Matrix> Matrix::choleskyDecomposition() const {
         }
     }
 
-    return std::pair<Matrix,Matrix> (l,l.transposeMatrix());    
+    return std::pair<Matrix,Matrix> (l,l.conjugateTranspose());
 
 }

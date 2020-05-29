@@ -23,7 +23,12 @@ public:
     static const std::complex<double> complex_null;
 
 
+
 private:
+
+   std::complex<double> checkCast (const std::complex<double> & c) const;
+
+   VectorX checkCast (const VectorX & v) const;
 
 /**
  * @brief Returns the submatrix (eliminates row a and column b)
@@ -31,31 +36,8 @@ private:
  * @param [in] b (\e unsigned \e int)
  * @return \e Matrix
  */
-    Matrix subMatrix(const unsigned int & a, const unsigned int & b ) const;
+   Matrix subMatrix(const unsigned int & a, const unsigned int & b ) const;
 
-/**
- * @brief Recursive function which returns matrix determinant
- * @param [in] dim (\e unsigned \e int)
- * @return \e double
- */
-    double determinant(const unsigned int & dim) const;
-
-/**
- * @brief Tests if the determinant is null
- * @details Returns true if determinant is equal to 0
- * @return \e bool
- */
-    bool isNulDeterminant() const;
-
-/**
- * @brief
- * @param expression
- * @return
- */
-    std::vector<std::string> explode (const std::string & expression) const;
-
-
-    VectorX normaliseVectorX(const VectorX & v) const;
 
 /**
  * @brief Convert Matrix type to eigen MatrixXd type
@@ -195,6 +177,8 @@ public:
  */
     friend std::ostream& operator << (std::ostream& flux, const Matrix & m);
 
+   std::vector<std::string> explode (const std::string & expression) const;
+
 /**
  * @brief Operator << : enter values into Matrix
  * @param [in] values (\e std::string)
@@ -291,23 +275,21 @@ public:
     bool isSQMatrix() const;
 
 
-    std::complex<double> checkCast (const std::complex<double> & c) const;
-
-
-    VectorX checkCast (const VectorX & v) const;
-
-
 /**
  * @brief Private function which rounds up real coefficients
  * @return \e Matrix
  */
     Matrix checkCast () const;
 
+
+     VectorX normaliseVectorX(const VectorX & v) const;
+
+
 /**
  * @brief Returns the matrix trace
  * @return \e double
  */
-    std::complex<double> traceMatrix() const;
+    std::complex<double> trace() const;
 
 /**
  * @brief Returns the matrix determinant
@@ -327,7 +309,11 @@ public:
  */
     Matrix transposeMatrix() const;
 
-   bool isSymetric() const;
+    Matrix conjugateTranspose() const;
+
+    bool isSymetric() const;
+
+    bool isSelfAdjoint() const;
 
 /**
  * @brief Returns the matrix inverse
@@ -438,7 +424,9 @@ public:
 
    std::pair<Matrix,Matrix> QR_Householder() const;
 
-   std::pair<Matrix,Matrix> choleskyDecomposition() const;
+   std::pair<Matrix,Matrix> cholesky() const;
+
+   Matrix solveAx(const Matrix & b) const;
 
 
 
