@@ -17,11 +17,11 @@ class MatriXMiXTXT
 
     VectorX checkCast(const VectorX & v) const;
 
-    std::ostringstream print(const std::complex<double> & z) const;
+    std::string print(const std::complex<double> & z) const;
 
-    std::ostringstream print(const VectorX & v) const;
+    std::string print(const VectorX & v) const;
 
-    std::ostringstream print(const Matrix & m) const;
+    std::string print(const Matrix & m) const;
 
 
 /**

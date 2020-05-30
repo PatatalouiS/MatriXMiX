@@ -75,7 +75,7 @@ VectorX MatriXMiXTXT:: checkCast(const VectorX & v) const
 }
 
 
-ostringstream MatriXMiXTXT::print(const complex<double> & z) const
+string MatriXMiXTXT::print(const complex<double> & z) const
 {
     ostringstream ss;
     complex<double> c (checkCast(z));
@@ -108,29 +108,29 @@ ostringstream MatriXMiXTXT::print(const complex<double> & z) const
             ss << "-(" << abs(re) << "+" << abs(im) << "i)";
     }
 
-    return ss;
+    return ss.str();
 }
 
 
-ostringstream MatriXMiXTXT::print(const VectorX & vx) const
+std::string MatriXMiXTXT::print(const VectorX & vx) const
 {
-    ostringstream ss;
+    std::ostringstream ss;
     VectorX v (checkCast(vx));
 
     for (unsigned int i = 0; i < vx.size(); i++)
     {
-        ss << "{ " << print(v[i]).str() << " }" << endl;
+        ss << "{ " << print(v[i]) << " }" << endl;
     }
 
-    return ss;
+    return ss.str();
 }
 
 
-ostringstream MatriXMiXTXT::print(const Matrix & m) const
+string MatriXMiXTXT::print(const Matrix & m) const
 {
     ostringstream ss;
     ss << m.checkCast();
-    return ss;
+    return ss.str();
 }
 
 
@@ -238,8 +238,8 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
 	{
     case 8 : cout << op1->trace() << endl; break;
     case 9 : cout << op1->determinant() << endl; break;
-    case 10 : cout << op1->inverse() << endl; break;
-    case 11 : cout << op1->gaussReduction() << endl; break;
+    case 10 : cout << print(op1->inverse()) << endl; break;
+    case 11 : cout << print(op1->gaussReduction()) << endl; break;
     case 12 : displayDimensionsStudy(op1,name); break;
     case 13 : displayCharacteristicPolynomial(op1,name); break;
     case 14 : displayEigenValVect(op1); break;
@@ -622,7 +622,7 @@ void MatriXMiXTXT:: displayCharacteristicPolynomial(const Matrix * m, const stri
 {
     cout << endl << "Polynôme charactéristique développé..." << endl;
     Polynomial p (m->characteristicPolynomial());
-    cout << "P" << name << "(X) = " << p << endl << endl;
+    cout << "P" << name << "(X) = " << p.check() << endl << endl;
 
     vector<Polynomial> v (m->splitCharacteristicPolynomial());
     cout << "Polynôme charactéristique décomposé... (produit de " << v.size() << " polynômes)" << endl;
@@ -664,9 +664,9 @@ void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
 
         for (i = 0; i < s; i++)
         {
-            cout << "Valeur propre : " << print(tab[i].first).str() << endl ;
+            cout << "Valeur propre : " << print(tab[i].first) << endl ;
             cout << "Vecteur propre: " ;
-            cout << endl << print(tab[i].second).str() << endl;
+            cout << endl << print(tab[i].second) << endl;
         }
          cout << endl ;
 
@@ -693,7 +693,7 @@ void MatriXMiXTXT:: studyDiagonalise() const
 
 void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 {
-    ostringstream ss;
+    std::ostringstream ss;
     if(!(m->isDiagonalisableC()))
     {
         ss << "La matrice n'est pas diagonalisable dans C"
@@ -718,9 +718,9 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
                         "\nie Il existe une base dans laquelle la matrice est diagonale "
                          << endl << endl;
             }
-        ss << "La matrice de passage P vers cette base est: " << endl << print(P1).str() << endl;
-        ss << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D).str() << endl;
-        ss << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2).str() << endl << endl;
+        ss << "La matrice de passage P vers cette base est: " << endl << print(P1) << endl;
+        ss << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D) << endl;
+        ss << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2) << endl << endl;
     }
     cout << ss.str();
 }
@@ -749,8 +749,9 @@ void MatriXMiXTXT:: displayLUDecomposition(const Matrix * m) const {
         && m->isSymetric()
         && m->isPositiveDefinite()) {
             cout << "La matrice admet la décomposition LU suivante : " << endl
-                << endl << "L = " << endl << m->LUDecomposition().first << endl
-                << "U = " << endl << m->LUDecomposition().second << endl;
+                << endl << "L = " << endl << m->LUDecomposition().first.checkCast() 
+                << endl << "U = " << endl << m->LUDecomposition().second.checkCast() 
+                << endl;
         }
     else {
 
@@ -792,9 +793,10 @@ void MatriXMiXTXT:: qrHouseholder() const
 
 void MatriXMiXTXT:: displayQRHouseholder(const Matrix * m) const {
     if (m->getNbRows() >= m->getNbCols()) {
-            cout << "La matrice admet la décomposition QR suivante : " << endl
-                << endl << "Q = " << endl << m->QR_Householder().first << endl
-                << "R = " << endl << m->QR_Householder().second << endl;
+        cout << "La matrice admet la décomposition QR suivante : " << endl
+            << endl << "Q = " << endl << m->QR_Householder().first.checkCast()
+            << endl << "R = " << endl << m->QR_Householder().second.checkCast() 
+            << endl;
         }
     else {
 
@@ -828,8 +830,9 @@ void MatriXMiXTXT:: displayCholesky(const Matrix * m) const {
         && m->isSymetric()
         && m->isPositiveDefinite()) {
             cout << "La matrice admet la décomposition de Cholesky suivante : "
-                << endl << endl << "C = " << endl << m->cholesky().first
-                << endl << "C* = " << endl << m->cholesky().second << endl;
+                << endl << endl << "C = " << endl << m->cholesky().first.checkCast()
+                << endl << "C* = " << endl << m->cholesky().second.checkCast() 
+                << endl;
         }
     else {
 
@@ -901,7 +904,7 @@ void MatriXMiXTXT:: calculateExpression() const {
     std::cout << "Saisir l'expression à évaluer " << std::endl;
     std::cin >> expr;
     std::cout << endl << endl << "Résultat... " << endl << endl
-            << lib.calculateExpression(expr) << endl << endl;
+            << lib.calculateExpression(expr).checkCast() << endl << endl;
 
     wait();
 }
