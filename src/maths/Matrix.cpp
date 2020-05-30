@@ -1073,7 +1073,7 @@ bool Matrix:: isDiagonalisableC()const
         return false;
     }
 
-    return (*this == (p2 * (*this) * p1));
+    return (p1.determinant() != std::complex<double>(0.0,0.0));
 
 }
 
