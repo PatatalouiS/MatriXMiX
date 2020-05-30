@@ -18,7 +18,7 @@ int main ()
     Matrix b;
     Matrix x;
 
-    unsigned int i = 0, nb_tests = 1000, nb_corrects = 0;
+    unsigned int i = 0, nb_tests = 10, nb_corrects = 0;
 
     while(i < nb_tests) {
         m = Matrix(100,100,Matrix::R);

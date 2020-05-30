@@ -19,8 +19,9 @@ const double EPSILON = 0.00001;
 const Matrix Matrix:: matrix_null = Matrix();
 const complex<double> Matrix:: complex_null = complex<double>();
 
-// ********* CONSTRUCTORS / DESTRUCTORS *********
 
+
+// ********* CONSTRUCTORS / DESTRUCTORS *********
 
 
 Matrix:: Matrix () : tab ( vector<vector<complex<double>>> ())
@@ -127,9 +128,6 @@ Matrix:: Matrix (const Matrix & m) : tab ( vector<vector<complex<double>>> (m.ta
 
 
 
-
-
-
 // ******** STATIC FUNCTION *********
 
 
@@ -142,7 +140,216 @@ Matrix Matrix:: ID (const unsigned int size)
 
 
 
-// ******* ACCESSORS / MUTATORS & BASIC FUNCTIONS ********
+/*************** PRIVATE FUNCTIONS ***************/
+
+
+vector<string> Matrix:: explode (const string & expression) const
+{
+    unsigned int i;
+    unsigned  long l = expression.length();
+    vector<string> tab;
+    string c, temp;
+    temp="";
+    for (i = 0; i < l; i++)
+    {
+        c = expression[i];
+
+        if (c == ",")
+        {
+            if (temp.length()!=0) tab.push_back(temp);
+            temp="";
+        }
+        else if (!c.empty())
+        {
+            temp += c;
+        }
+
+    }
+    if (temp != "")
+    tab.push_back(temp);
+
+    return tab;
+}
+
+
+complex<double> Matrix::checkCast(const complex<double> & c) const
+{
+    double re = c.real(), im = c.imag();
+    int temp;
+
+    temp = round(c.real());
+    if (abs(temp - re) < EPSILON)
+        re = static_cast<double>(temp);
+
+    temp = round(c.imag());
+    if (abs(temp - im) < EPSILON)
+        im = static_cast<double>(temp);
+
+    return (complex<double>(re,im));
+}
+
+
+VectorX Matrix:: checkCast(const VectorX & v) const
+{
+    VectorX res;
+    for (unsigned int i = 0; i < v.size(); i++)
+    {
+        res.push_back(checkCast(v[i]));
+    }
+    return res;
+}
+
+
+
+Matrix Matrix:: checkCast() const
+{
+    unsigned int r = getNbRows();
+    Matrix result(*this);
+
+    for (unsigned int i = 0; i < r; i++)
+    {
+        result[i] = checkCast(tab[i]);
+    }
+
+    return result;
+}
+
+
+Matrix Matrix :: subMatrix(const unsigned int & a, const unsigned int & b) const
+{
+    unsigned int i, j;
+    unsigned int ii = 0, jj = 0;
+    unsigned int r = rows;
+    unsigned int c = cols;
+
+    Matrix sub(r-1,c-1);
+
+    for(i = 0; i < r; i++)
+    {
+        jj = 0;
+        if(i != a)
+        {
+            for (j = 0; j < c; j++)
+            {
+                if (j != b)
+                {
+                    sub[ii][jj] = tab[i][j];
+                    jj++;
+                }
+            }
+            ii++;
+        }
+    }
+    return sub;
+}
+
+
+Matrix Matrix::matrixCol(const unsigned int & j) const {
+    unsigned int i;
+    Matrix vect(rows,1);
+
+    for (i = 0; i < rows; i++) {
+        vect[i][0] = tab[i][j];
+    }
+
+    return vect;
+}
+
+
+Matrix Matrix::matrixRow(const unsigned int & i) const {
+    unsigned int j;
+    Matrix vect(1,cols);
+
+    for (j = 0; j < cols; j++) {
+        vect[i][0] = tab[i][j];
+    }
+
+    return vect;
+}
+
+
+std::complex<double> Matrix::normeCol() const {
+    unsigned int i;
+    std::complex<double> z (0.0,0.0);
+    for (i = 0; i < cols; i++) {
+        z += tab[0][i];
+    }
+    return sqrt(z);
+}
+
+
+std::complex<double> Matrix::normeRow() const {
+    unsigned int i;
+    std::complex<double> z (0.0,0.0);
+    for (i = 0; i < rows ; i++) {
+        z += tab[i][0];
+    }
+    return sqrt(z);
+}
+
+
+VectorX Matrix:: normaliseVectorX (const VectorX & v) const
+{
+    VectorX res;
+    unsigned int i;
+    double norme = 0;
+
+    for (i = 0; i < rows; i++)
+    {
+        norme += ( (v[i].real() * v[i].real()) + (v[i].imag() * v[i].imag()) );
+    }
+
+    for (i = 0; i < rows; i++)
+    {
+        res.push_back(v[i] / sqrt(norme));
+    }
+
+    return res;
+}
+
+
+
+Eigen::MatrixXcd Matrix:: class2Eigen () const
+{
+    unsigned int i, j, r, c;
+    r = getNbRows();
+    c = getNbCols();
+    Eigen:: MatrixXcd m(r,c);
+
+    for(i = 0 ; i < r ; i++)
+    {
+        for(j = 0 ; j < c ; j++)
+        {
+            m(i,j) = tab[i][j] ;
+        }
+    }
+
+    return m;
+}
+
+
+const Matrix Matrix:: eigen2Class(const Eigen::MatrixXcd & m) const
+{
+    unsigned int i, j, r, c ;
+    r = static_cast<unsigned int>(m.rows());
+    c = static_cast<unsigned int>(m.cols());
+    Matrix a(r,c);
+
+    for(i = 0 ; i < r ; i++)
+    {
+        for(j = 0 ; j < c ; j++)
+        {
+            a.tab[i][j] = m(i,j) ;
+        }
+    }
+
+    return a;
+}
+
+
+
+
+/*************** ACCESSORS / MUTATORS / BASIC FUNCTIONS ***************/
 
 
 unsigned int Matrix:: getNbRows() const
@@ -217,30 +424,6 @@ const std::vector<complex<double>>& Matrix:: operator [] (const unsigned int ind
 }
 
 
-Matrix Matrix::matrixCol(const unsigned int & j) const {
-    unsigned int i;
-    Matrix vect(rows,1);
-
-    for (i = 0; i < rows; i++) {
-        vect[i][0] = tab[i][j];
-    }
-
-    return vect;
-}
-
-
-Matrix Matrix::matrixRow(const unsigned int & i) const {
-    unsigned int j;
-    Matrix vect(1,cols);
-
-    for (j = 0; j < cols; j++) {
-        vect[i][0] = tab[i][j];
-    }
-
-    return vect;
-}
-
-
 ostream& operator << (ostream& flux, const Matrix & m)
 {
     for (auto i : m.tab)
@@ -253,35 +436,6 @@ ostream& operator << (ostream& flux, const Matrix & m)
     }
     flux << endl;
     return flux;
-}
-
-
-vector<string> Matrix:: explode (const string & expression) const
-{
-    unsigned int i;
-    unsigned  long l = expression.length();
-    vector<string> tab;
-    string c, temp;
-    temp="";
-    for (i = 0; i < l; i++)
-    {
-        c = expression[i];
-
-        if (c == ",")
-        {
-            if (temp.length()!=0) tab.push_back(temp);
-            temp="";
-        }
-        else if (!c.empty())
-        {
-            temp += c;
-        }
-
-    }
-    if (temp != "")
-    tab.push_back(temp);
-
-    return tab;
 }
 
 
@@ -670,203 +824,6 @@ Matrix Matrix:: inverse() const
 }
 
 
-unsigned int Matrix:: rank()const
-{
-    unsigned int i, j, r, c, rg = 0;
-    bool non_zero = false;
-    r = getNbRows();
-    c = getNbCols();
-    Matrix reduction(*this);
-    reduction = reduction.gaussReduction();
-
-    Matrix id (r,I);
-    if (id == *this)
-      return r;
-
-    for (i = 0; i < r; i++)
-    {
-        non_zero = false;
-        for (j = 0; j < c; j++)
-        {
-            if (reduction[i][j]!=0.0)
-            {
-                non_zero = true;    // rank is the number of non zero lines after gaussReduction
-            }
-        }
-        if (non_zero)
-        {
-            rg++;
-        }
-    }
-
-    return rg;
-}
-
-
-
-
-
-// ********   PRIVATE FUNCTIONS   ***********
-
-complex<double> Matrix::checkCast(const complex<double> & c) const
-{
-    double re = c.real(), im = c.imag();
-    int temp;
-
-    temp = round(c.real());
-    if (abs(temp - re) < EPSILON)
-        re = static_cast<double>(temp);
-
-    temp = round(c.imag());
-    if (abs(temp - im) < EPSILON)
-        im = static_cast<double>(temp);
-
-    return (complex<double>(re,im));
-}
-
-
-VectorX Matrix:: checkCast(const VectorX & v) const
-{
-    VectorX res;
-    for (unsigned int i = 0; i < v.size(); i++)
-    {
-        res.push_back(checkCast(v[i]));
-    }
-    return res;
-}
-
-
-
-Matrix Matrix:: checkCast() const
-{
-    unsigned int r = getNbRows();
-    Matrix result(*this);
-
-    for (unsigned int i = 0; i < r; i++)
-    {
-        result[i] = checkCast(tab[i]);
-    }
-
-    return result;
-}
-
-
-Matrix Matrix :: subMatrix(const unsigned int & a, const unsigned int & b) const
-{
-    unsigned int i, j;
-    unsigned int ii = 0, jj = 0;
-    unsigned int r = rows;
-    unsigned int c = cols;
-
-    Matrix sub(r-1,c-1);
-
-    for(i = 0; i < r; i++)
-    {
-        jj = 0;
-        if(i != a)
-        {
-            for (j = 0; j < c; j++)
-            {
-                if (j != b)
-                {
-                    sub[ii][jj] = tab[i][j];
-                    jj++;
-                }
-            }
-            ii++;
-        }
-    }
-    return sub;
-}
-
-
-std::complex<double> Matrix::normeCol() const {
-    unsigned int i;
-    std::complex<double> z (0.0,0.0);
-    for (i = 0; i < cols; i++) {
-        z += tab[0][i];
-    }
-    return sqrt(z);
-}
-
-
-std::complex<double> Matrix::normeRow() const {
-    unsigned int i;
-    std::complex<double> z (0.0,0.0);
-    for (i = 0; i < rows ; i++) {
-        z += tab[i][0];
-    }
-    return sqrt(z);
-}
-
-
-VectorX Matrix:: normaliseVectorX (const VectorX & v) const
-{
-    VectorX res;
-    unsigned int i;
-    double norme = 0;
-
-    for (i = 0; i < rows; i++)
-    {
-        norme += ( (v[i].real() * v[i].real()) + (v[i].imag() * v[i].imag()) );
-    }
-
-    for (i = 0; i < rows; i++)
-    {
-        res.push_back(v[i] / sqrt(norme));
-    }
-
-    return res;
-}
-
-
-
-Eigen::MatrixXcd Matrix:: class2Eigen () const
-{
-    unsigned int i, j, r, c;
-    r = getNbRows();
-    c = getNbCols();
-    Eigen:: MatrixXcd m(r,c);
-
-    for(i = 0 ; i < r ; i++)
-    {
-        for(j = 0 ; j < c ; j++)
-        {
-            m(i,j) = tab[i][j] ;
-        }
-    }
-
-    return m;
-}
-
-
-const Matrix Matrix:: eigen2Class(const Eigen::MatrixXcd & m) const
-{
-    unsigned int i, j, r, c ;
-    r = static_cast<unsigned int>(m.rows());
-    c = static_cast<unsigned int>(m.cols());
-    Matrix a(r,c);
-
-    for(i = 0 ; i < r ; i++)
-    {
-        for(j = 0 ; j < c ; j++)
-        {
-            a.tab[i][j] = m(i,j) ;
-        }
-    }
-
-    return a;
-}
-
-
-
-
-
-
-
-// *********   ADVANCED MATRIX STUDY FUNCTIONS   *********
-
-
 const Matrix Matrix:: gaussReduction()const
 {
     Gauss g;
@@ -943,6 +900,38 @@ const Matrix Matrix:: gaussReduction()const
 }
 
 
+unsigned int Matrix:: rank()const
+{
+    unsigned int i, j, r, c, rg = 0;
+    bool non_zero = false;
+    r = getNbRows();
+    c = getNbCols();
+    Matrix reduction(*this);
+    reduction = reduction.gaussReduction();
+
+    Matrix id (r,I);
+    if (id == *this)
+      return r;
+
+    for (i = 0; i < r; i++)
+    {
+        non_zero = false;
+        for (j = 0; j < c; j++)
+        {
+            if (reduction[i][j]!=0.0)
+            {
+                non_zero = true;    // rank is the number of non zero lines after gaussReduction
+            }
+        }
+        if (non_zero)
+        {
+            rg++;
+        }
+    }
+
+    return rg;
+}
+
 
 const pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
 {
@@ -952,6 +941,11 @@ const pair<unsigned int, unsigned int> Matrix:: dimensionsStudy()const
 
     return make_pair(dim_im,dim_ker);
 }
+
+
+
+
+// *********   ADVANCED MATRIX STUDY FUNCTIONS   *********
 
 
 const VectorX Matrix:: eigenValues() const
@@ -1062,18 +1056,6 @@ const vector<pair<complex<double>,VectorX>> Matrix:: allEigen()const
 
     }
     return result;
-}
-
-
-bool isComplex(VectorX v)
-{
-  unsigned int i;
-  for (i = 0; i < v.size(); i++)
-  {
-    if (abs(v[i].imag()) > EPSILON)
-      return true;
-  }
-  return false;
 }
 
 
@@ -1423,7 +1405,6 @@ std::pair<Matrix,Matrix> Matrix::QR_Householder() const {
 }
 
 
-
 Matrix Matrix::solveAx(const Matrix & b) const {
 
     if (!isSQMatrix()) {
@@ -1459,7 +1440,6 @@ Matrix Matrix::solveAx(const Matrix & b) const {
 
     return x;
 }
-
 
 
 std::pair<Matrix,Matrix> Matrix::cholesky() const {

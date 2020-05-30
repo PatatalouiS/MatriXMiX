@@ -236,7 +236,7 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
 
 	switch(op)
 	{
-    case 8 : cout << op1->traceMatrix() << endl; break;
+    case 8 : cout << op1->trace() << endl; break;
     case 9 : cout << op1->determinant() << endl; break;
     case 10 : cout << op1->inverse() << endl; break;
     case 11 : cout << op1->gaussReduction() << endl; break;

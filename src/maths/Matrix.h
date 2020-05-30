@@ -7,9 +7,11 @@
 #include "VectorX.h"
 #include "Polynomial.h"
 
+
 /**
  * @class The Matrix class
  */
+
 class Matrix
 {
 
@@ -18,62 +20,18 @@ private:
     unsigned int cols;
     std::vector<std::vector<std::complex<double>>> tab;
 
-public:
-    static const Matrix matrix_null;
-    static const std::complex<double> complex_null;
-
-
-
-private:
-
-   std::complex<double> checkCast (const std::complex<double> & c) const;
-
-   VectorX checkCast (const VectorX & v) const;
-
-/**
- * @brief Returns the submatrix (eliminates row a and column b)
- * @param [in] a (\e unsigned \e int)
- * @param [in] b (\e unsigned \e int)
- * @return \e Matrix
- */
-   Matrix subMatrix(const unsigned int & a, const unsigned int & b ) const;
-
-
-/**
- * @brief Convert Matrix type to eigen MatrixXd type
- * @return \e MatrixXd (eigen3)
- */
-    Eigen::MatrixXcd class2Eigen() const;
-
-/**
- * @brief Convert eigen MatrixXd type to Matrix type
- * @param [in] m \e MatrixXd (eigen3)
- * @return \e Matrix
- */
-    const Matrix eigen2Class(const Eigen::MatrixXcd & m) const;
-
 
 public:
-
-
-/**
- * @brief Returns Identity matrix
- * @param [in] size (\e unsigned \e int)
- * @return \e Matrix
- */
-    static Matrix ID ( const unsigned int size );
+   enum initMatrix { Z, I, R }; /*< enum type */
+   static const Matrix matrix_null;
+   static const std::complex<double> complex_null;
 
 
 
-/**
- * @brief enum type
- */
-    enum initMatrix { Z, I, R };
 
+/*************** CONSTRUCTORS ***************/
 
-
- // Constructors
-
+public:
 
 /**
  * @brief Default constructor
@@ -113,8 +71,68 @@ public:
 
 
 
+// ******** STATIC FUNCTION *********
 
-// Accessors/Mutators & basic functions
+/**
+ * @brief Returns Identity matrix
+ * @param [in] size (\e unsigned \e int)
+ * @return \e Matrix
+ */
+    static Matrix ID ( const unsigned int size );
+
+
+
+
+
+/*************** PRIVATE FUNCTIONS ***************/
+
+
+private:
+
+    std::vector<std::string> explode (const std::string & expression) const;
+
+    std::complex<double> checkCast (const std::complex<double> & c) const;
+
+    VectorX checkCast (const VectorX & v) const;
+
+/**
+ * @brief Returns the submatrix (eliminates row a and column b)
+ * @param [in] a (\e unsigned \e int)
+ * @param [in] b (\e unsigned \e int)
+ * @return \e Matrix
+ */
+    Matrix subMatrix(const unsigned int & a, const unsigned int & b ) const;
+
+    Matrix matrixCol(const unsigned int & j) const;
+
+    Matrix matrixRow(const unsigned int & j) const;
+
+    std::complex<double> normeCol () const;
+
+    std::complex<double> normeRow () const;
+
+    VectorX normaliseVectorX(const VectorX & v) const;
+
+/**
+ * @brief Convert Matrix type to eigen MatrixXd type
+ * @return \e MatrixXd (eigen3)
+ */
+    Eigen::MatrixXcd class2Eigen() const;
+
+/**
+ * @brief Convert eigen MatrixXd type to Matrix type
+ * @param [in] m \e MatrixXd (eigen3)
+ * @return \e Matrix
+ */
+    const Matrix eigen2Class(const Eigen::MatrixXcd & m) const;
+
+
+
+
+
+/*************** ACCESSORS / MUTATORS / BASIC FUNCTIONS ***************/
+
+public:
 
 
 /**
@@ -176,8 +194,6 @@ public:
  * @return std::ostream&
  */
     friend std::ostream& operator << (std::ostream& flux, const Matrix & m);
-
-   std::vector<std::string> explode (const std::string & expression) const;
 
 /**
  * @brief Operator << : enter values into Matrix
@@ -274,16 +290,13 @@ public:
  */
     bool isSQMatrix() const;
 
-
 /**
  * @brief Private function which rounds up real coefficients
  * @return \e Matrix
  */
     Matrix checkCast () const;
 
-
-     VectorX normaliseVectorX(const VectorX & v) const;
-
+    Matrix normaliseMatrix() const;
 
 /**
  * @brief Returns the matrix trace
@@ -330,13 +343,18 @@ public:
 
     unsigned int rank()const;
 
- // Advanced matrix study functions
-
-/**
+    /**
  * @brief Returns the kernel and image dimensions
  * @return \e std::pair <dim(im),dim(ker)>
  */
     const std::pair<unsigned int, unsigned int> dimensionsStudy() const;
+
+
+
+
+
+/*************** ADVANCED MATRIX FUNCTIONS ***************/
+
 
 /**
  * @brief Returns the matrix eigenvalues
@@ -348,16 +366,15 @@ public:
  * @brief Returns the matrix characteristic polynomial
  * @return \e Polynomial
  */
+    const Polynomial characteristicPolynomial()const;
+
+    const std::vector<Polynomial> splitCharacteristicPolynomial()const;
 
 /**
  * @brief Returns the matrix eigenvectors
  * @return \e std::vector<VectorX>
  */
     const Matrix  eigenVectors() const;
-
-    const Polynomial characteristicPolynomial()const;
-
-    const std::vector<Polynomial> splitCharacteristicPolynomial()const;
 
 /**
  * @brief Returns the matrix eigenvalues and eigenvectors
@@ -366,16 +383,16 @@ public:
     const std::vector<std::pair<std::complex<double>,VectorX>> allEigen() const;
 
 /**
+* @brief Returns true if the matrix is diagonalizable in \e C set
+* @return \e bool
+*/
+   bool isDiagonalisableC() const;
+
+/**
  * @brief Returns true if the matrix is diagonalizable in \e R set
  * @return \e bool
  */
     bool isDiagonalisableR() const;
-
-    /**
-     * @brief Returns true if the matrix is diagonalizable in \e C set
-     * @return \e bool
-     */
-    bool isDiagonalisableC() const;
 
     bool isPositiveDefinite() const;
 
@@ -403,16 +420,6 @@ public:
     void allMatrix(Matrix & transferC2B, Matrix & diagonal,
                    Matrix & transferB2C) const;
 
-
-   Matrix matrixCol(const unsigned int & j) const;
-
-   Matrix matrixRow(const unsigned int & j) const;
-
-   std::complex<double> normeCol () const;
-
-   std::complex<double> normeRow () const;
-
-   Matrix normaliseMatrix() const;
 
    std::pair<Matrix,Matrix> LUDecomposition() const;
 
