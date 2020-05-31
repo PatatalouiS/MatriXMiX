@@ -28,7 +28,87 @@ Fraction::Fraction(const long int & n,
     numerator = n;
 }
 
+
+static std::string double2sqrt(const double & d,
+                                bool & isStr,
+                                bool & den) {
+
+    double res = abs(d);
+    std::string s;
+    isStr = true;
+    den = true;
+    s += "sqrt(";
+
+    if (res < 1) // cas 1/sqrt(x)
+        res = 1 / res;
+
+    int n = round(res * res);
+
+    if (res * res < 2.0) {
+        std::cout << res * res << std::endl;
+    }
+
+    if (abs((res * res) - n) < EPSILON)
+        s += std::to_string(n);
+    else if (abs((res * res) - n - 1) < EPSILON)
+        s += std::to_string(n);
+    else if (abs((res * res) - n + 1) < EPSILON)
+        s += std::to_string(9);
+    else {
+        s += "nada";
+        isStr = false;
+    }
+
+    s += ")";
+
+    if (abs(d) < 1) {
+      s = "1/" + s;
+      den = true;
+    }
+    if (d < 0.0)
+        s = "-" + s;
+
+    return s;
+
+}
+
+
 Fraction::Fraction(const double & d) {
+
+ /*   isInteger = false;
+    isFraction = false;
+    isSqrt = false;
+    isSqrtFraction = false;
+
+    int n = round(d);
+
+    if (abs(n - d) < EPSILON) {    // d correspond à un entier
+      isInteger = true;
+      numerator = n;
+      denominator = 1;
+    }
+
+    bool isStr = true;
+    bool den = false;
+    std::string s = double2sqrt(d,isStr,den);
+
+    else if (isStr) {      // d correspond à une écriture avec sqrt
+        if (!den) {    // pas une fraction
+
+        }
+        else {    // fraction
+
+        }
+    }
+
+
+    else {
+
+    }
+
+
+*/
+
     numerator = double2fraction(d).numerator;
     denominator = double2fraction(d).denominator;
 }

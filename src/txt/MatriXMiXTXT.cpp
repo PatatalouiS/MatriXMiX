@@ -75,7 +75,7 @@ VectorX MatriXMiXTXT:: checkCast(const VectorX & v) const
 }
 
 
-ostringstream MatriXMiXTXT::print(const complex<double> & z) const
+string MatriXMiXTXT::print(const complex<double> & z) const
 {
     ostringstream ss;
     complex<double> c (checkCast(z));
@@ -108,29 +108,29 @@ ostringstream MatriXMiXTXT::print(const complex<double> & z) const
             ss << "-(" << abs(re) << "+" << abs(im) << "i)";
     }
 
-    return ss;
+    return ss.str();
 }
 
 
-ostringstream MatriXMiXTXT::print(const VectorX & vx) const
+std::string MatriXMiXTXT::print(const VectorX & vx) const
 {
-    ostringstream ss;
+    std::ostringstream ss;
     VectorX v (checkCast(vx));
 
     for (unsigned int i = 0; i < vx.size(); i++)
     {
-        ss << "{ " << print(v[i]).str() << " }" << endl;
+        ss << "{ " << print(v[i]) << " }" << endl;
     }
 
-    return ss;
+    return ss.str();
 }
 
 
-ostringstream MatriXMiXTXT::print(const Matrix & m) const
+string MatriXMiXTXT::print(const Matrix & m) const
 {
     ostringstream ss;
     ss << m.checkCast();
-    return ss;
+    return ss.str();
 }
 
 
@@ -154,7 +154,7 @@ void MatriXMiXTXT:: binaryOperation (const char op) const
 
 	cout << "Entrez le nom de la Matrice 1 : ";
 	cin >> name1;
-	const Matrix* op1 = lib.find_matrix(name1);
+	const Matrix* op1 = lib.find(name1);
 
     if (op1 == nullptr)
 	{
@@ -165,7 +165,7 @@ void MatriXMiXTXT:: binaryOperation (const char op) const
 
 	cout << "Entrez le nom de la Matrice 2 : ";
 	cin >> name2;
-	const Matrix* op2 = lib.find_matrix(name2);
+	const Matrix* op2 = lib.find(name2);
 
     if (op2 == nullptr)
 	{
@@ -197,7 +197,7 @@ void MatriXMiXTXT:: binaryOperationPow() const
 	cout << "Entrez le nom de la Matrice : ";
 	cin >> name;
 
-	const Matrix* op = lib.find_matrix(name);
+	const Matrix* op = lib.find(name);
 
     if (op == nullptr)
 	{
@@ -223,7 +223,7 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
 	cout << "Entrez le nom de la matrice : ";
 	cin >> name;
 
-	const Matrix* op1 = lib.find_matrix(name);
+	const Matrix* op1 = lib.find(name);
 
     if (op1 == nullptr)
 	{
@@ -236,15 +236,18 @@ void MatriXMiXTXT:: unaryOperation(const short int & op) const
 
 	switch(op)
 	{
-    case 8 : cout << op1->traceMatrix() << endl; break;
+    case 8 : cout << op1->trace() << endl; break;
     case 9 : cout << op1->determinant() << endl; break;
-    case 10 : cout << op1->inverse() << endl; break;
-    case 11 : cout << op1->gaussReduction() << endl; break;
+    case 10 : cout << print(op1->inverse()) << endl; break;
+    case 11 : cout << print(op1->gaussReduction()) << endl; break;
     case 12 : displayDimensionsStudy(op1,name); break;
     case 13 : displayCharacteristicPolynomial(op1,name); break;
     case 14 : displayEigenValVect(op1); break;
     case 15 : displayStudyDiagonalise(op1); break;
-    case 16 : displayStudyMatrix(op1,name); break;
+    case 16 : displayLUDecomposition(op1); break;
+    case 17 : displayQRHouseholder(op1) ; break;
+    case 18 : displayCholesky(op1) ; break;
+    case 19 : displayStudyMatrix(op1,name); break;
     default: break;
 	}
 	wait();
@@ -283,7 +286,11 @@ void MatriXMiXTXT:: mainMenu ()
         cout << "13 - Pôlynome caractéristique d'une Matrice" << endl ;
         cout << "14 - Valeurs & Vecteurs propres d'une Matrice" << endl ;
         cout << "15 - Diagonalisation" << endl ;
-        cout << "16 - Etudier..." << endl ;
+        cout << "16 - Décomposition LU" << endl;
+        cout << "17 - Décomposition QR" << endl;
+        cout << "18 - Décomposition Cholesky" << endl;
+        cout << "19 - Etudier..." << endl ;
+        cout << "20 - Calcul d'expression" << endl;
         cout << "\n0 -  Quitter " << endl << endl << "Votre choix : " ;
         cin >> choice;
 
@@ -292,19 +299,23 @@ void MatriXMiXTXT:: mainMenu ()
             case 1 : addMatrixMenu(); break;
             case 2 : showLibrary(); break;
             case 3 : addition(); break;
-			      case 4 : soustraction(); break;
-      			case 5 : multiplication(); break;
-      			case 6 : division(); break;
-      			case 7 : puissance(); break;
-      			case 8 : trace() ; break;
-      			case 9 : determinant() ; break;
+			case 4 : soustraction(); break;
+      		case 5 : multiplication(); break;
+      		case 6 : division(); break;
+      		case 7 : puissance(); break;
+      		case 8 : trace() ; break;
+      		case 9 : determinant() ; break;
             case 10 : inverse() ; break;
             case 11 : gaussReduction() ; break;
             case 12 : dimensionsStudy(); break;
             case 13 : characteristicPolynomial(); break;
             case 14 : eigenValVect() ; break;
             case 15 : studyDiagonalise() ; break;
-            case 16 : studyMatrix() ; break;
+            case 16 : luDecomposition(); break;
+            case 17 : qrHouseholder(); break;
+            case 18 : cholesky(); break;
+            case 19 : studyMatrix() ; break;
+            case 20 : calculateExpression(); break;
             case 0 : quit = true; break;
             default: break;
         }
@@ -356,7 +367,7 @@ void MatriXMiXTXT:: addMatrixMenu ()
           }
       } while (char_array[0] >= '0' && char_array[0] <= '9');
 
-      if (lib.find_matrix(name) != nullptr)
+      if (lib.find(name) != nullptr)
   		{
   			cout << "Attention, il y a déja une matrice avec le nom " << name << " !" << endl;
   			wait();
@@ -611,7 +622,7 @@ void MatriXMiXTXT:: displayCharacteristicPolynomial(const Matrix * m, const stri
 {
     cout << endl << "Polynôme charactéristique développé..." << endl;
     Polynomial p (m->characteristicPolynomial());
-    cout << "P" << name << "(X) = " << p << endl << endl;
+    cout << "P" << name << "(X) = " << p.check() << endl << endl;
 
     vector<Polynomial> v (m->splitCharacteristicPolynomial());
     cout << "Polynôme charactéristique décomposé... (produit de " << v.size() << " polynômes)" << endl;
@@ -653,17 +664,9 @@ void MatriXMiXTXT:: displayEigenValVect(const Matrix * m) const
 
         for (i = 0; i < s; i++)
         {
-            cout << "Valeur propre : " << print(tab[i].first).str() << endl ;
+            cout << "Valeur propre : " << print(tab[i].first) << endl ;
             cout << "Vecteur propre: " ;
-            cout << endl << print(tab[i].second).str() << endl;
-
-            /*for(j = 0; j < l-1 ; j++)
-            {
-                 << " , " ;
-            }*/
-
-
-            //cout << print(tab[i].second[l-1]).str() << " ) " << endl << endl;
+            cout << endl << print(tab[i].second) << endl;
         }
          cout << endl ;
 
@@ -690,7 +693,7 @@ void MatriXMiXTXT:: studyDiagonalise() const
 
 void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
 {
-    ostringstream ss;
+    std::ostringstream ss;
     if(!(m->isDiagonalisableC()))
     {
         ss << "La matrice n'est pas diagonalisable dans C"
@@ -715,11 +718,139 @@ void MatriXMiXTXT:: displayStudyDiagonalise(const Matrix *m) const
                         "\nie Il existe une base dans laquelle la matrice est diagonale "
                          << endl << endl;
             }
-        ss << "La matrice de passage P vers cette base est: " << endl << print(P1).str() << endl;
-        ss << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D).str() << endl;
-        ss << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2).str() << endl << endl;
+        ss << "La matrice de passage P vers cette base est: " << endl << print(P1) << endl;
+        ss << "La matrice diagonale s'exprime alors comme suit: " << endl << print(D) << endl;
+        ss << "La matrice de passage P^-1 vers la base canonique est: " << endl << print(P2) << endl << endl;
     }
     cout << ss.str();
+}
+
+
+void MatriXMiXTXT:: luDecomposition() const
+{
+    cl();
+    cout << "===================================================" << endl;
+    cout << "======================= LU ======================== " << endl;
+    cout << "===================================================" << endl << endl;
+
+    if (lib.isEmpty())
+    {
+        MsgEmptyLib();
+    }
+    else
+    {
+        unaryOperation(16);
+    }
+}
+
+
+void MatriXMiXTXT:: displayLUDecomposition(const Matrix * m) const {
+    if (m->isSQMatrix()
+        && m->isSymetric()
+        && m->isPositiveDefinite()) {
+            cout << "La matrice admet la décomposition LU suivante : " << endl
+                << endl << "L = " << endl << m->LUDecomposition().first.checkCast() 
+                << endl << "U = " << endl << m->LUDecomposition().second.checkCast() 
+                << endl;
+        }
+    else {
+
+        if (!m->isSQMatrix()) {
+            cout << "Cette matrice n'est pas carrée!" << endl;
+        }
+        if (!m->isSymetric()) {
+            cout << "Cette matrice n'est pas symétrique!" << endl;
+        }
+        if (!m->isPositiveDefinite()) {
+            cout << "Cette matrice n'est pas définie positive!" << endl;
+        }
+
+        cout << "Elle n'admet pas de décomposition LU..." << endl << endl
+            << "RAPPEL : Une matrice A admet une décomposition LU SSI elle est:"
+            << endl << "    - carrée" << endl << "    - symétrique" << endl
+            << "    - définie positive" << endl << endl << endl;
+    }
+}
+
+
+void MatriXMiXTXT:: qrHouseholder() const
+{
+    cl();
+    cout << "===================================================" << endl;
+    cout << "======================= QR ======================== " << endl;
+    cout << "===================================================" << endl << endl;
+
+    if (lib.isEmpty())
+    {
+        MsgEmptyLib();
+    }
+    else
+    {
+        unaryOperation(17);
+    }
+}
+
+
+void MatriXMiXTXT:: displayQRHouseholder(const Matrix * m) const {
+    if (m->getNbRows() >= m->getNbCols()) {
+        cout << "La matrice admet la décomposition QR suivante : " << endl
+            << endl << "Q = " << endl << m->QR_Householder().first.checkCast()
+            << endl << "R = " << endl << m->QR_Householder().second.checkCast() 
+            << endl;
+        }
+    else {
+
+        cout << "Le nombre de colonnes est plus grand que le nombre de lignes..."
+            << endl << "RAPPEL : Une matrice A(n lignes, m colonnes) admet une"
+            << "décomposition QR SSI n >= m" << endl << endl << endl;
+    }
+}
+
+
+void MatriXMiXTXT:: cholesky() const
+{
+    cl();
+    cout << "===================================================" << endl;
+    cout << "==================== CHOLESKY ===================== " << endl;
+    cout << "===================================================" << endl << endl;
+
+    if (lib.isEmpty())
+    {
+        MsgEmptyLib();
+    }
+    else
+    {
+        unaryOperation(18);
+    }
+}
+
+
+void MatriXMiXTXT:: displayCholesky(const Matrix * m) const {
+    if (m->isSQMatrix()
+        && m->isSymetric()
+        && m->isPositiveDefinite()) {
+            cout << "La matrice admet la décomposition de Cholesky suivante : "
+                << endl << endl << "C = " << endl << m->cholesky().first.checkCast()
+                << endl << "C* = " << endl << m->cholesky().second.checkCast() 
+                << endl;
+        }
+    else {
+
+        if (!m->isSQMatrix()) {
+            cout << "Cette matrice n'est pas carrée!" << endl;
+        }
+        if (!m->isSymetric()) {
+            cout << "Cette matrice n'est pas symétrique!" << endl;
+        }
+        if (!m->isPositiveDefinite()) {
+            cout << "Cette matrice n'est pas définie positive!" << endl;
+        }
+
+        cout << "Elle n'admet pas de décomposition de Cholesky..." << endl << endl
+            << "RAPPEL : Une matrice A admet une décomposition de Cholesky SSI elle est:"
+            << endl << "    - carrée" << endl << "    - symétrique" << endl
+            << "    - définie positive" << endl << endl << endl;
+    }
 }
 
 
@@ -736,7 +867,7 @@ void MatriXMiXTXT:: studyMatrix() const
     }
     else
     {
-        unaryOperation(16);
+        unaryOperation(19);
     }
 }
 
@@ -753,4 +884,27 @@ void MatriXMiXTXT:: displayStudyMatrix(const Matrix *m, const string & name) con
     cout << endl;
 
     displayStudyDiagonalise(m);
+
+    displayLUDecomposition(m);
+
+    displayQRHouseholder(m);
+
+    displayCholesky(m);
+}
+
+
+void MatriXMiXTXT:: calculateExpression() const {
+    cl();
+    cout << "===================================================" << endl;
+    cout << "=============== CALCUL D'EXPRESSION ===============" << endl;
+    cout << "===================================================" << endl << endl;
+
+    std::string expr;
+
+    std::cout << "Saisir l'expression à évaluer " << std::endl;
+    std::cin >> expr;
+    std::cout << endl << endl << "Résultat... " << endl << endl
+            << lib.calculateExpression(expr).checkCast() << endl << endl;
+
+    wait();
 }

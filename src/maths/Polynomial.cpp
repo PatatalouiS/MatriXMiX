@@ -51,6 +51,25 @@ Polynomial::Polynomial(const Polynomial &p) : tab (vector<complex<double>>(p.tab
 }
 
 
+Polynomial Polynomial::check() const {
+    VectorX vect;
+    double re, im;
+    for (unsigned int i = 0 ; i <= degree ; i++) {
+        if (abs(tab[i].real() - std::round(tab[i].real())) < 0.0)
+            re = std::round(tab[i].real());
+        else
+            re = tab[i].real();
+        if (abs(tab[i].imag() - std::round(tab[i].imag())) < 0.0)
+            im = std::round(tab[i].imag());
+        else
+            im = tab[i].imag();
+        vect.push_back(std::complex<double>(re,im));
+    }
+
+    return (Polynomial(degree,vect));
+}
+
+
 void Polynomial::debugAffiche()
 {
     unsigned int i;

@@ -9,8 +9,8 @@ DOC_DIR = doc
 CC = g++
 LD = g++
 
-CC_FLAGS = -std=c++11 -Wall -c
-LD_FLAGS = -std=c++11 -Wall
+CC_FLAGS = -g -std=c++11 -Wall -c
+LD_FLAGS = -g -std=c++11 -Wall
 
 CLEAN_FLAGS = -v -r -f
 

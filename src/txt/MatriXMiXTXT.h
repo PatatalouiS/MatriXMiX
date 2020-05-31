@@ -11,21 +11,17 @@ class MatriXMiXTXT
 
     MatrixLibrary lib;
 
-
     //Fonctions d'AFFICHAGE
 
     std::complex<double> checkCast(const std::complex<double> & c) const;
 
-
     VectorX checkCast(const VectorX & v) const;
 
+    std::string print(const std::complex<double> & z) const;
 
-    std::ostringstream print(const std::complex<double> & z) const;
+    std::string print(const VectorX & v) const;
 
-    std::ostringstream print(const VectorX & v) const;
-
-    std::ostringstream print(const Matrix & m) const;
-
+    std::string print(const Matrix & m) const;
 
 
 /**
@@ -145,6 +141,18 @@ class MatriXMiXTXT
  */
     void displayStudyDiagonalise(const Matrix * m) const;
 
+    void luDecomposition() const;
+
+    void displayLUDecomposition(const Matrix * m) const;
+
+    void qrHouseholder() const;
+
+    void displayQRHouseholder(const Matrix * m) const;
+
+    void cholesky() const;
+
+    void displayCholesky(const Matrix * m) const;
+
 /**
  * @brief Calls all functions
  */
@@ -155,6 +163,7 @@ class MatriXMiXTXT
  */
     void displayStudyMatrix(const Matrix * m, const std::string & name) const;
 
+    void calculateExpression() const;
 
 
     public:
