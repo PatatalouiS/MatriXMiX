@@ -74,6 +74,8 @@ class LibraryWindow : public QWidget
          */
 
         void libraryChanged() const;
+
+        void showMatrixmixWindow();
 };
 
 #endif

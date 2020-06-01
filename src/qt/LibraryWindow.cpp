@@ -53,7 +53,14 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
     QHBoxLayout* viewFooterLayout = new QHBoxLayout;
     viewFooterLayout->addWidget(remove);
 
+    QPushButton* showMatrixmixButton = new QPushButton("Retour au Menu", this);
+
+    connect(showMatrixmixButton, &QPushButton::clicked, [this]() -> void {
+                emit showMatrixmixWindow();
+            });
+
     QVBoxLayout* matrixViewLayout = new QVBoxLayout;
+
     matrixViewLayout->addWidget(matrixView);
     matrixViewLayout->addLayout(viewFooterLayout);
 
@@ -73,10 +80,12 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
         "QTabWidget::pane{border-radius:6px; border: 1px solid silver;"
         "background-color:white;}");
 
-    QHBoxLayout* mainLayout = new QHBoxLayout;
-    mainLayout->addLayout(matrixViewLayout);
-    mainLayout->addWidget(choice);
-    mainLayout->setContentsMargins(30,10,30,30);
+    QGridLayout* mainLayout = new QGridLayout;
+
+    mainLayout->addWidget(showMatrixmixButton, 0, 0);
+    mainLayout->addLayout(matrixViewLayout, 1, 0);
+    mainLayout->addWidget(choice, 1, 1);
+    mainLayout->setContentsMargins(30,30,30,30);
 
     QWidget* mainWidget = new QWidget;
     mainWidget->setLayout(mainLayout);
@@ -95,11 +104,11 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
     connect(addMatrix, &SetMatrixWidget::newMatrixAdded,
             matrixView, &MatrixViewWidget::addNewRow);
     connect(addMatrix, &SetMatrixWidget::newMatrixAdded,
-            this,&LibraryWindow::libraryChanged);
+            this,&LibraryWindow::update);
     connect(editMatrix, &SetMatrixWidget::matrixEdited,
             matrixView, &MatrixViewWidget::editRow);
     connect(editMatrix, &SetMatrixWidget::matrixEdited,
-            this, &LibraryWindow::libraryChanged);
+            this, &LibraryWindow::update);
     connect(editMatrix, &SetMatrixWidget::matrixEdited,
             [this]() -> void
             {
@@ -138,6 +147,7 @@ void LibraryWindow:: removeSelectedMatrix ()
     lib->erase(selectedName);
     editMatrix->updateSelectedMatrix();
     showMatrixWidget->clear();
+    update();
     emit libraryChanged();
 }
 

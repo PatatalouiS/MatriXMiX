@@ -1,5 +1,4 @@
 
-#include <QMainWindow>
 #include <QFileDialog>
 
 #include "MenuBar.h"
@@ -12,8 +11,12 @@ MatriXMiX. This window contains all the operation buttons grouped in QGroupBox,
 the view of consulting operation and the view of result.
 */
 
+namespace app  {
+    class MatriXMiXWindow;
+}
 
-class MatriXMiXWindow : public QMainWindow
+
+class MatriXMiXWindow : public QWidget
 {
     Q_OBJECT
     
@@ -21,18 +24,13 @@ class MatriXMiXWindow : public QMainWindow
         /**
         * @brief Default constructor
         */
-        MatriXMiXWindow ();
+        MatriXMiXWindow (QWidget* parent, const QMatrixLibrary* lib);
+
+    public slots:
+
+        void updateCurrentOperationWidget();
        
     private slots:
-          /**
-          *@brief Show the library window and all the updates generated for MatriXMiXWindow
-          */
-          void showLibraryWindow ();
-          /**
-          * @brief Show the load and save tool
-          * @param [in] type (\e enum \e QFileDialog::AcceptMode)
-          */
-          void showFileTool (enum QFileDialog::AcceptMode type);
           /**
           * @brief Verify if the result of the operation have a good format
           * @param [in] res (\e QVariant)
@@ -44,13 +42,11 @@ class MatriXMiXWindow : public QMainWindow
           */
           void computeChoice (const unsigned int choice);
 
+
     private:
 
         // members
-    
-        MenuBar* menuBar;
-        QMatrixLibrary library;
-        LibraryWindow* libraryWindow;
+        const QMatrixLibrary* library;
         AbstractOperationWidget* currentOpWidget;
         QVBoxLayout* currentOpLayout;
         unsigned int currentChoice;
@@ -77,16 +73,8 @@ class MatriXMiXWindow : public QMainWindow
         * @return QGroupBox*
         */
         QGroupBox* initDiagonalisationOp();
-        /**
-        * @brief Differentiate which tool is selected: save or load
-        * @param [in] fileTool ( \e QFileDialog)
-        * @param [in] type (\e enum \e QFileDialog::AcceptMode)
-        */
-        void computeLoadOrRead(QFileDialog* fileTool, enum QFileDialog::AcceptMode type);
 
     signals :
-        /**
-        * @brief libraryChanged this signal is emitted when a modification on the library happen
-        */
-        void libraryChanged();
+
+        void showLibraryWindow();
 };

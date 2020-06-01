@@ -4,6 +4,11 @@
 
 MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
 {
+
+    QFont font ("Arial");
+    font.setPointSize(16);
+    setFont(font);
+
     menuFile = addMenu("Fichier");
     menuFile->setCursor(Qt::PointingHandCursor);
 

@@ -9,33 +9,15 @@
 #include "DiagonalisationWidget.h"
 #include "ExprEvalWidget.h"
 
-
-MatriXMiXWindow:: MatriXMiXWindow() : QMainWindow()
+MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : QWidget(parent)
 {
-   //Aide pour le Debug
-    Matrix a (3,3,
-    {
-        {1, 2}, 2, 0,
-        4, {0, -3}, {0, 1},
-        {0, -1}, 8, {2, 0}
-
-                            });
-
-    library.addMatrix("A", a);
-  // Nouvelles matrices
-
+    library = lib;
     setFunctorTab();
     currentOpLayout = new QVBoxLayout;
     currentOpWidget = nullptr;
-    libraryWindow = nullptr;
 
-//    QVBoxLayout* leftLayout = new QVBoxLayout;
-//    QVBoxLayout* rightLayout = new QVBoxLayout;
-//    QHBoxLayout* main2 = new QHBoxLayout;
-
-
-
-
+    QFont font ("Arial");
+    font.setPointSize(16);
 
     QWidget* mainWidget = new QWidget(this);
     QWidget* headerWidget = new QWidget;
@@ -46,14 +28,6 @@ MatriXMiXWindow:: MatriXMiXWindow() : QMainWindow()
     QGroupBox* opBox = new QGroupBox(tr("Choisissez l'opération à effectuer : "));
     QGroupBox* opShowBox = new QGroupBox(tr("Vous avez choisi:"));
 
-    QFont font ("Arial");
-    font.setPointSize(16);
-
-    menuBar = new MenuBar(this);
-    setMenuBar(menuBar);
-    menuBar -> setFont(font);
-    QFont fontTitle ("Arial");
-    fontTitle.setPointSize(20);
     QPixmap im(":/img/logo.png");
     im = im.scaled(330, 60);
     QLabel* logo = new QLabel;
@@ -80,16 +54,10 @@ MatriXMiXWindow:: MatriXMiXWindow() : QMainWindow()
     libraryButton->setToolTip("Accéder à la librarie de matrices pour édition, "
                               "suppression...");
 
-    libraryWindow = new LibraryWindow(nullptr, &library);
-    connect(libraryWindow, &LibraryWindow::libraryChanged,
-            currentOpWidget,&AbstractOperationWidget::updateViews);
-    connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
-    connect(this, &MatriXMiXWindow::libraryChanged, libraryWindow, &LibraryWindow::update);
-    libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
-    libraryWindow->setWindowModality(Qt::NonModal);
+    connect(libraryButton, &QPushButton::clicked, this, [this]() -> void {
+                emit showLibraryWindow();
+            });
 
-
-    connect(libraryButton, &QPushButton::clicked, this, &MatriXMiXWindow::showLibraryWindow);
 
     headerSubLayout->addWidget(logo);
     headerSubLayout->setAlignment(Qt::AlignHCenter);
@@ -158,43 +126,13 @@ MatriXMiXWindow:: MatriXMiXWindow() : QMainWindow()
     subLayout->addWidget(opBox, 1, 0, 2, 1);
     subLayout->addWidget(opShowBox, 1, 1);
     subLayout->addWidget(scrollArea, 2, 1);
-
-//    subLayout->addWidget(opBox, 0, 0, 2, 1);
-//    subLayout->addWidget(opShowBox, 0, 1);
-
-//    subLayout->addWidget(scrollArea, 1, 1);
-//    subLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-//    subLayout->setContentsMargins(0,0,20,0);
-
-//    leftLayout->addWidget(switchViewWidget);
-//    leftLayout->addWidget(opBox);
-//    rightLayout->addLayout(headerLayout);
-//    rightLayout->addWidget(opShowBox);
-//    rightLayout->addWidget(scrollArea);
-//    main2->addLayout(leftLayout);
-//    main2->addLayout(rightLayout);
-//    mainWidget->setLayout(main2);
-
-    mainLayout->setContentsMargins(30, 10, 12, 30);
-    //mainLayout->addLayout(headerLayout);
-
+    mainLayout->setContentsMargins(30, 10, 25, 30);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
-
-    connect(menuBar, &MenuBar::openLibraryWindow, this, &MatriXMiXWindow::showLibraryWindow);
-    connect(menuBar, &MenuBar::openSaveTool,
-            [this]() -> void
-            {
-                showFileTool(QFileDialog::AcceptSave);
-            });
-    connect(menuBar, &MenuBar::openLoadTool,
-            [this]() -> void
-            {
-                showFileTool(QFileDialog::AcceptOpen);
-            });
     imgResult->show();
-    setStyleSheet("MatriXMiXWindow{border-image:url(:/img/background.png) 0 0 0 0 stretch stretch;}");
-    setCentralWidget(mainWidget);
+
+    setLayout(mainLayout);
+
     computeChoice(0);
 }
 
@@ -204,77 +142,77 @@ void MatriXMiXWindow::setFunctorTab()
     createWindow[0] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::ADDITION, &library);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::ADDITION, library);
     };
     createWindow[1] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::SOUSTRACTION, &library);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::SOUSTRACTION, library);
     };
     createWindow[2] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::MULTIPLICATION, &library);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::MULTIPLICATION, library);
     };
     createWindow[3] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::DIVISION, &library);
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::DIVISION, library);
     };
     createWindow[4] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::SCALAR_MULTIPLICATION, &library);
+         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::SCALAR_MULTIPLICATION, library);
     };
     createWindow[5] =
     [this] () -> AbstractOperationWidget*
     {
-         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::POWER, &library);
+         return new BinaryOpMatrixNumberWidget(BinaryOpMatrixNumberWidget::POWER, library);
     };
     createWindow[6] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::DETERMINANT, &library);
+         return new UnaryOpWidget(UnaryOpWidget::DETERMINANT, library);
     };
     createWindow[7] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::TRACE, &library);
+         return new UnaryOpWidget(UnaryOpWidget::TRACE, library);
     };
     createWindow[8] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::INVERSE, &library);
+         return new UnaryOpWidget(UnaryOpWidget::INVERSE, library);
     };
     createWindow[9] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::ROW_REDUCED_FORM, &library);
+         return new UnaryOpWidget(UnaryOpWidget::ROW_REDUCED_FORM, library);
     };
     createWindow[10] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, &library);
+         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, library);
     };
     createWindow[11] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::CARACTERISTIC_POLYNOMIAL, &library);
+         return new UnaryOpWidget(UnaryOpWidget::CARACTERISTIC_POLYNOMIAL, library);
     };
     createWindow[12] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, &library);
+         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, library);
     };
     createWindow[13] =
     [this] () -> AbstractOperationWidget*
     {
-         return new DiagonalisationWidget(&library);
+         return new DiagonalisationWidget(library);
     };
     createWindow[14] =
     [this] () -> AbstractOperationWidget*
     {
-         return new ExprEvalWidget(&library);
+         return new ExprEvalWidget(library);
     };
 
 }
@@ -293,11 +231,11 @@ void MatriXMiXWindow:: computeChoice (const unsigned int choice)
     currentOpLayout->addWidget(currentOpWidget);
     connect(currentOpWidget, &AbstractOperationWidget::newResult, this, &MatriXMiXWindow::transferResult);
 
-    if(libraryWindow != nullptr)
-    {
-        connect(libraryWindow, &LibraryWindow::libraryChanged,
-                currentOpWidget, &AbstractOperationWidget::updateViews);
-    }
+//    if(libraryWindow != nullptr)
+//    {
+//        connect(libraryWindow, &LibraryWindow::libraryChanged,
+//                currentOpWidget, &AbstractOperationWidget::updateViews);
+//    }
 
     currentOpWidget->show();
     currentChoice = choice;
@@ -511,73 +449,7 @@ QGroupBox* MatriXMiXWindow::initDiagonalisationOp()
     return DiaOpBox;
 }
 
-
-void MatriXMiXWindow:: showLibraryWindow()
-{
-//    if(libraryWindow == nullptr)
-//    {
-//        libraryWindow = new LibraryWindow(nullptr, &library);
-//        connect(libraryWindow, &LibraryWindow::libraryChanged,
-//                currentOpWidget,&AbstractOperationWidget::updateViews);
-//        connect(libraryWindow, &LibraryWindow::destroyed, [this](){libraryWindow = nullptr;});
-//        connect(this, &MatriXMiXWindow::libraryChanged, libraryWindow, &LibraryWindow::update);
-//        libraryWindow->setAttribute(Qt::WA_DeleteOnClose);
-//        libraryWindow->setWindowModality(Qt::NonModal);
-//        libraryWindow->show();
-        libraryWindow->show();
-//    }
+void MatriXMiXWindow::updateCurrentOperationWidget() {
+    currentOpWidget->updateViews();
 }
 
-
-
-void MatriXMiXWindow:: showFileTool(enum QFileDialog::AcceptMode type)
-{
-    QUrl savePath;
-    menuBar->setEnabled(false);
-    QFileDialog* fileTool = new QFileDialog(this, Qt::Dialog);
-    fileTool->setDefaultSuffix("mtmx");
-    fileTool->setNameFilter("*.mtmx");
-    fileTool->setWindowModality(Qt::ApplicationModal);
-    fileTool->setAcceptMode(QFileDialog::AcceptSave);
-    fileTool->setAttribute(Qt::WA_DeleteOnClose);
-    fileTool->setAcceptMode(type);
-
-    connect(fileTool, &QFileDialog::accepted,
-            [=]() -> void
-            {
-                computeLoadOrRead(fileTool, type);
-            });
-
-    connect(fileTool, &QFileDialog::rejected,
-            [=]() -> void
-            {
-                fileTool->close();
-                menuBar->setEnabled(true);
-            });
-
-    fileTool->open();
-}
-
-
-
-void MatriXMiXWindow:: computeLoadOrRead (QFileDialog* fileTool, enum QFileDialog::AcceptMode type)
-{
-    QUrl selectedPath = fileTool->selectedUrls()[0];
-
-    if(selectedPath.isValid())
-    {
-        if(type == QFileDialog::AcceptSave)
-        {
-            library.saveFile(selectedPath.path().toStdString());
-        }
-        else
-        {
-            library.readFile(selectedPath.path().toStdString());
-            currentOpWidget->updateViews();
-            emit libraryChanged();
-        }
-    }
-
-    fileTool->close();
-    menuBar->setEnabled(true);
-}
