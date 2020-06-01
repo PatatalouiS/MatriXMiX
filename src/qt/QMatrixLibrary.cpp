@@ -119,9 +119,7 @@ const Matrix& QMatrixLibrary:: addMatrix (const QString& name, const  UserInputs
 
         Matrix newMatrix(entries.getRows(), entries.getCols(), values);
 
-        auto inserted = tab.insert( name, {  newMatrix,
-                              newMatrix.determinant(),
-                              entries                   });
+        auto inserted = tab.insert(name, { newMatrix, entries });
 
         return inserted.value().matrix;
     }
@@ -142,9 +140,7 @@ void QMatrixLibrary:: addMatrix (const QString& name, const Matrix& m) {
             defaults.put(complexToExpr(m.getVal(i)));
         }
 
-        tab.insert( name, { m,
-                            m.determinant(),
-                            defaults });
+        tab.insert( name, { m, defaults });
     }
     else {
         cout << "Nom de matrice non autorisé, "
@@ -163,19 +159,6 @@ const Matrix* QMatrixLibrary:: find_matrix (const QString& name) const {
 Matrix* QMatrixLibrary:: find_matrix (const QString& name) {
     return const_cast<Matrix*>(static_cast<const QMatrixLibrary&>(*this).find_matrix(name));
 }
-
-
-const Value* QMatrixLibrary:: find_determinant (const QString& name) const {
-    return exist(name)
-        ? &const_cast<QMatrixLibrary&>(*this).tab[name].determinant
-        : nullptr;
-}
-
-
-Value* QMatrixLibrary:: find_determinant (const QString& name) {
-    return const_cast<Value*>(static_cast<const QMatrixLibrary&>(*this).find_determinant(name));
-}
-
 
 const UserInputs* QMatrixLibrary::find_inputs(const QString& name) const {
     return exist(name)

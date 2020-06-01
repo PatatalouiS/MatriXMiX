@@ -6,8 +6,6 @@
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "../maths/Fraction.h"
 
-
-
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
 {
     QHBoxLayout* showMatrixLayout = new QHBoxLayout;
@@ -26,7 +24,6 @@ const QPixmap& ShowMatrixWidget:: getCurrentPixmap() const
     const QPixmap* temp = imgSelected->pixmap();
     return *temp;
 }
-
 
 QString complexLatex (std::complex<double> coef)
 {
@@ -85,7 +82,7 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
 
 void ShowMatrixWidget:: computeImgDet(const std::complex<double> det, const QString& name, const QColor& col)
 {
-    QString latex = "\\mathit{Det}\\(" + name + ") = " + QString::number(det.real());
+    QString latex = "\\mathit{Det}\\(" + name + ") = " + complexLatex(det);
     setPixmapToQLabel(col, latex, 40);
 }
 

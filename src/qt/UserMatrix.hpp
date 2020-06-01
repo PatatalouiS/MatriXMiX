@@ -9,7 +9,6 @@ using Value = std::complex<double>;
 
 struct UserMatrix {
     Matrix matrix;
-    Value determinant;
     UserInputs entries;
 };
 

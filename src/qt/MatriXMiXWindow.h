@@ -11,11 +11,6 @@ MatriXMiX. This window contains all the operation buttons grouped in QGroupBox,
 the view of consulting operation and the view of result.
 */
 
-namespace app  {
-    class MatriXMiXWindow;
-}
-
-
 class MatriXMiXWindow : public QWidget
 {
     Q_OBJECT
@@ -28,7 +23,7 @@ class MatriXMiXWindow : public QWidget
 
     public slots:
 
-        void updateCurrentOperationWidget();
+          void updateCurrentOperationWidget();
        
     private slots:
           /**
@@ -58,21 +53,6 @@ class MatriXMiXWindow : public QWidget
         * @brief Fill the table of createWindow with the good function
         */
         void setFunctorTab ();
-        /**
-        * @brief Initialize the GroupBox of binary operation buttons
-        * @return QGroupBox*
-        */
-        QGroupBox* initBinaryOp();
-        /**
-        * @brief Initialize the GroupBox of unary operation buttons
-        * @return QGroupBox*
-        */
-        QGroupBox* initUnaryOp();
-        /**
-        * @brief Initialize the GroupBox of operation buttons for the diagonalisation
-        * @return QGroupBox*
-        */
-        QGroupBox* initDiagonalisationOp();
 
     signals :
 

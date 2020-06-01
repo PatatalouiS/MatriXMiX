@@ -12,5 +12,6 @@
         <file>quit.png</file>
         <file>icons/MatriXMiX.png</file>
         <file>icons/MatriXMiX.icns</file>
+        <file>back.png</file>
     </qresource>
 </RCC>

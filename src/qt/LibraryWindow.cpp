@@ -16,13 +16,10 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
     editMatrix = new SetMatrixWidget(SetMatrixWidget::EDIT, lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
 
-
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(showMatrixWidget);
-
-    scrollArea->setStyleSheet("border: none;"
-                              "background:transparent;");
+    scrollArea->setStyleSheet("border : none; background : transparent;");
     scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical "
                "{border: 1px solid #999999; background:white;"
                "width:15px; margin: 0px 0px 0px 0px;}"
@@ -40,56 +37,72 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
                "QScrollBar::add-line:horizontal {height: 0px;}"
                "QScrollBar::sub-line:horizontal {height: 0 px;}");
 
-    remove = new QPushButton("  Supprimer");
-
-    QPixmap im(":/img/trash.png");
-    im = im.scaled(30, 30);
-    remove->setIcon(im);
-    remove->setMinimumSize(100,30);
-    remove->setIconSize(im.rect().size());
+    remove = new QPushButton("  Supprimer", this);
+    QPixmap imTrash(":/img/trash.png");
+    remove->setIcon(imTrash);
+    remove->setIconSize(QSize(25, 25));
     remove->setCursor(Qt::PointingHandCursor);
-    remove->setStyleSheet("QPushButton:hover{ background-color: red;}");
     remove->setToolTip("Sélectionner une matrice et supprimer");
+
+    remove->setStyleSheet("QPushButton {"
+                                     "height: 50px;"
+                                     "width : 100px;"
+                                     "border-style: solid;"
+                                     "border-radius : 3px;"
+                                     "background-color:rgb(210, 210, 210);"
+                                 "}"
+                                 "QPushButton:pressed{ background-color : grey; }"
+                                "QPushButton:hover{background-color:rgb(150,0,0); }");
+
+
+
     QHBoxLayout* viewFooterLayout = new QHBoxLayout;
     viewFooterLayout->addWidget(remove);
 
-    QPushButton* showMatrixmixButton = new QPushButton("Retour au Menu", this);
+    QPushButton* showMatrixmixButton = new QPushButton("Menu principal", this);
+    QPixmap imButton(":/img/back.png");
+    imButton = imButton.scaled(30, 30);
+    showMatrixmixButton->setIcon(QIcon(imButton));
+    showMatrixmixButton->setIconSize(QSize(25, 25));
+    showMatrixmixButton->setCursor(Qt::PointingHandCursor);
 
-    connect(showMatrixmixButton, &QPushButton::clicked, [this]() -> void {
-                emit showMatrixmixWindow();
-            });
+    showMatrixmixButton->setStyleSheet("QPushButton {"
+                                     "height: 50px;"
+                                     "width : 100px;"
+                                     "border-style: solid;"
+                                     "border-radius : 3px;"
+                                     "background-color:rgb(210, 210, 210);"
+                                 "}"
+                                 "QPushButton:pressed{ background-color : grey; }");
+    showMatrixmixButton->setToolTip("Retour au menu principal...");
 
-    QVBoxLayout* matrixViewLayout = new QVBoxLayout;
 
-    matrixViewLayout->addWidget(matrixView);
-    matrixViewLayout->addLayout(viewFooterLayout);
+    QVBoxLayout* leftLayout = new QVBoxLayout;
+    leftLayout->setContentsMargins(0, 5, 0, 0);
+    leftLayout->addWidget(showMatrixmixButton);
+    leftLayout->addWidget(matrixView);
+    leftLayout->addLayout(viewFooterLayout);
 
-    matrixViewLayout->setContentsMargins(0,38,0,0);
-
-    choice = new QTabWidget;
+    choice = new QTabWidget(this);
     choice->addTab(scrollArea, "Visualiser");
     choice->addTab(addMatrix, "Ajouter");
     choice->addTab(editMatrix, "Modifier");
-    choice->setStyleSheet(
-        "QTabBar::tab { background:"
-        "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 white, stop: 1 darkGrey);"
-        "padding: 10px; border-radius: 6px; border:1px solid darkGrey ;} "
-        "QTabBar::tab:selected { background: "
-        "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue); color:white } "
-        "QTabWidget::tab-bar { alignment : center;}"
-        "QTabWidget::pane{border-radius:6px; border: 1px solid silver;"
-        "background-color:white;}");
+    choice->setStyleSheet("QTabWidget::pane {"
+                            "background-color : white;"
+                            "border : 1px;"
+                            "border-radius: 3px;"
+                            "top : -10px;"
+                          "}"
 
-    QGridLayout* mainLayout = new QGridLayout;
+                           );
 
-    mainLayout->addWidget(showMatrixmixButton, 0, 0);
-    mainLayout->addLayout(matrixViewLayout, 1, 0);
-    mainLayout->addWidget(choice, 1, 1);
-    mainLayout->setContentsMargins(30,30,30,30);
+    QHBoxLayout* mainLayout = new QHBoxLayout;
+    mainLayout->addLayout(leftLayout);
+    mainLayout->addWidget(choice);
+    mainLayout->setContentsMargins(18,18,18,18);
 
     QWidget* mainWidget = new QWidget;
     mainWidget->setLayout(mainLayout);
-
 
     QPalette p;
     p = palette();
@@ -99,26 +112,46 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
 
     setLayout(mainLayout);
 
+    // select the matrix to draw in the view tab
     connect(matrixView, &MatrixViewWidget::clicked,
             this, &LibraryWindow::computeViewSelection);
+
+    // When a matrix is addedd
     connect(addMatrix, &SetMatrixWidget::newMatrixAdded,
             matrixView, &MatrixViewWidget::addNewRow);
+
     connect(addMatrix, &SetMatrixWidget::newMatrixAdded,
             this,&LibraryWindow::update);
+
+    connect(addMatrix, &SetMatrixWidget::newMatrixAdded,
+            this,&LibraryWindow::libraryChanged);
+
+
+    // When a matrix is edited
     connect(editMatrix, &SetMatrixWidget::matrixEdited,
             matrixView, &MatrixViewWidget::editRow);
+
     connect(editMatrix, &SetMatrixWidget::matrixEdited,
             this, &LibraryWindow::update);
+
     connect(editMatrix, &SetMatrixWidget::matrixEdited,
             [this]() -> void
             {
                 computeViewSelection();
                 choice->setCurrentIndex(0);
             });
+
+    connect(editMatrix, &SetMatrixWidget::matrixEdited,
+            this, &LibraryWindow::libraryChanged);
+
+    // When a matrix is removed
     connect(remove, &QPushButton::clicked,
             this, &LibraryWindow::removeSelectedMatrix);
-}
 
+    connect(showMatrixmixButton, &QPushButton::clicked, [this]() -> void {
+                emit showMatrixmixWindow();
+            });
+}
 
 
 void LibraryWindow:: computeViewSelection ()
@@ -129,8 +162,6 @@ void LibraryWindow:: computeViewSelection ()
     showMatrixWidget->computeImgMatrix(*selectedMatrix);
     editMatrix->chargeMatrix(selectedName);
 }
-
-
 
 void LibraryWindow:: removeSelectedMatrix ()
 {
@@ -151,14 +182,11 @@ void LibraryWindow:: removeSelectedMatrix ()
     emit libraryChanged();
 }
 
-
 void LibraryWindow:: update()
 {
     matrixView->refresh();
     editMatrix->updateSelectedMatrix();
 }
-
-
 
 LibraryWindow:: ~LibraryWindow()
 {   

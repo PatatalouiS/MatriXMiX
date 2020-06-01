@@ -19,9 +19,6 @@ MainWindow::MainWindow() : QMainWindow()
     libraryWindow = new LibraryWindow(this, &library);
     matrixmixWindow = new MatriXMiXWindow(this, &library);
 
-//    connect(libraryWindow, &LibraryWindow::libraryChanged,
-//            matrixmixWindow, &MatriXMiXWindow::updateCurrentOperationWidget);
-
     menuBar = new MenuBar(this);
     setMenuBar(menuBar);
     QFont fontTitle ("Arial");
@@ -35,10 +32,6 @@ MainWindow::MainWindow() : QMainWindow()
     QStackedWidget* windowSwitcher = new QStackedWidget(this);
     windowSwitcher->addWidget(matrixmixWindow);
     windowSwitcher->addWidget(libraryWindow);
-
-//    connect(menuBar, &MenuBar::openLibraryWindow, [this]() -> void {
-//               setCentralWidget(new LibraryWindow(this, &library));
-//            });
 
     connect(menuBar, &MenuBar::openSaveTool,
             [this]() -> void
@@ -59,6 +52,9 @@ MainWindow::MainWindow() : QMainWindow()
     connect(libraryWindow, &LibraryWindow::showMatrixmixWindow, [=] () -> void {
                 windowSwitcher->setCurrentWidget(matrixmixWindow);
         });
+
+    connect(libraryWindow, &LibraryWindow::libraryChanged,
+                   matrixmixWindow, &MatriXMiXWindow::updateCurrentOperationWidget);
 
     setStyleSheet(".QMainWindow {border-image:url(:/img/background.png) 0 0 0 0 stretch stretch;}");
 

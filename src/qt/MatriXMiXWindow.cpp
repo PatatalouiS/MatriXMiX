@@ -8,6 +8,7 @@
 #include "UnaryOpWidget.h"
 #include "DiagonalisationWidget.h"
 #include "ExprEvalWidget.h"
+#include "OpChoiceWidget.h"
 
 MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : QWidget(parent)
 {
@@ -20,13 +21,10 @@ MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : 
     font.setPointSize(16);
 
     QWidget* mainWidget = new QWidget(this);
-    QWidget* headerWidget = new QWidget;
     QVBoxLayout* mainLayout = new QVBoxLayout;
-    QHBoxLayout* headerSubLayout = new QHBoxLayout;
-    QVBoxLayout* headerLayout = new QVBoxLayout;
-    QVBoxLayout* opChoiceLayout = new QVBoxLayout;
-    QGroupBox* opBox = new QGroupBox(tr("Choisissez l'opération à effectuer : "));
-    QGroupBox* opShowBox = new QGroupBox(tr("Vous avez choisi:"));
+    QHBoxLayout* headerLayout = new QHBoxLayout;
+    OpChoiceWidget* opChoice = new OpChoiceWidget(this);
+    QWidget* currentOpWrapper = new QWidget(this);
 
     QPixmap im(":/img/logo.png");
     im = im.scaled(330, 60);
@@ -54,54 +52,29 @@ MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : 
     libraryButton->setToolTip("Accéder à la librarie de matrices pour édition, "
                               "suppression...");
 
-    connect(libraryButton, &QPushButton::clicked, this, [this]() -> void {
-                emit showLibraryWindow();
-            });
-
-
-    headerSubLayout->addWidget(logo);
-    headerSubLayout->setAlignment(Qt::AlignHCenter);
-
-    headerWidget->setLayout(headerSubLayout);
-    //headerWidget->setFixedWidth();  //340
-
-    headerLayout->addWidget(headerWidget);
+    headerLayout->addWidget(logo);
     headerLayout->setAlignment(Qt::AlignHCenter);
 
-    opChoiceLayout->addWidget(initBinaryOp());
-    opChoiceLayout->addWidget(initUnaryOp());
-    opChoiceLayout->addWidget(initDiagonalisationOp());
-    opBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid grey;"
-                "background-color:white;"
-                "margin-top: 32px;"
-                "border-radius:3px;}"
-                "QGroupBox::title { subcontrol-origin:margin;"
-                "subcontrol-position:top center;"
-                "font: bold ; color:white; }");
-    opBox->setContentsMargins(10,10,10,10);
-    opBox->setFont(font);
-    opBox->setLayout(opChoiceLayout);
-    opShowBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid grey;"
-                "background-color: white;"
-                "margin-top: 32px;"
-                "border-radius:3px;}"
-                "QGroupBox::title { subcontrol-origin:margin;"
-                "subcontrol-position:top center;"
-                "font: bold ;color:white; }");
-    opShowBox->setFont(font);
-    opShowBox->setLayout(currentOpLayout);
     currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
     currentOpLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
+    currentOpWrapper->setLayout(currentOpLayout);
+    currentOpLayout->setContentsMargins(0,0,0,0);
+    currentOpWrapper->setStyleSheet(".QWidget{"
+                                        "background-color : white;"
+                                        "border-radius : 5px;"
+                                        "border : 1px solid grey;"
+                                    "}");
+
 
     imgResult = new ShowMatrixWidget;
     imgResult->setStyleSheet("background-color: white;");
+
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidgetResizable(true);
     scrollArea->setWidget(imgResult);
-    scrollArea->setStyleSheet("background-color:white ; "
-                              "border-radius: 3px;");
+    scrollArea->setStyleSheet(".QScrollArea{background-color:white ; "
+                              "border-radius: 5px;"
+                              "border : 1px solid grey}");
     scrollArea->verticalScrollBar()->setStyleSheet("QScrollBar:vertical "
                "{border: 1px solid #999999; background:white;"
                "width:15px; margin: 0px 0px 0px 0px;}"
@@ -123,16 +96,23 @@ MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : 
 
     subLayout->addWidget(libraryButton, 0, 0);
     subLayout->addLayout(headerLayout, 0, 1);
-    subLayout->addWidget(opBox, 1, 0, 2, 1);
-    subLayout->addWidget(opShowBox, 1, 1);
+    subLayout->addWidget(opChoice, 1, 0, 2, 1);
+    subLayout->addWidget(currentOpWrapper, 1, 1);
     subLayout->addWidget(scrollArea, 2, 1);
-    mainLayout->setContentsMargins(30, 10, 25, 30);
+
+    mainLayout->setContentsMargins(18, 13, 18, 18);
     mainLayout->addLayout(subLayout);
     mainWidget->setLayout(mainLayout);
+
+    connect(libraryButton, &QPushButton::clicked, this, [this]() -> void {
+                emit showLibraryWindow();
+            });
+
+    connect(opChoice, &OpChoiceWidget::opSelected, this, &MatriXMiXWindow::computeChoice);
+
     imgResult->show();
 
     setLayout(mainLayout);
-
     computeChoice(0);
 }
 
@@ -214,7 +194,6 @@ void MatriXMiXWindow::setFunctorTab()
     {
          return new ExprEvalWidget(library);
     };
-
 }
 
 
@@ -228,14 +207,10 @@ void MatriXMiXWindow:: computeChoice (const unsigned int choice)
     }
 
     currentOpWidget = createWindow[choice]();
+    currentOpWidget->setStyleSheet("border : none;");
     currentOpLayout->addWidget(currentOpWidget);
-    connect(currentOpWidget, &AbstractOperationWidget::newResult, this, &MatriXMiXWindow::transferResult);
 
-//    if(libraryWindow != nullptr)
-//    {
-//        connect(libraryWindow, &LibraryWindow::libraryChanged,
-//                currentOpWidget, &AbstractOperationWidget::updateViews);
-//    }
+    connect(currentOpWidget, &AbstractOperationWidget::newResult, this, &MatriXMiXWindow::transferResult);
 
     currentOpWidget->show();
     currentChoice = choice;
@@ -283,170 +258,6 @@ void MatriXMiXWindow:: transferResult (const QVariant& res)
     {
         assert(false);
     }
-}
-
-
-QGroupBox* MatriXMiXWindow::initBinaryOp ()
-{
-    QFont font ("Arial");
-    font.setPointSize(13);
-
-    QGroupBox *BinaryOpBox = new QGroupBox(tr("Opérations binaires (AxB)"));
-    QVBoxLayout *BinaryOpLayout = new QVBoxLayout;
-
-    BinaryOpBox->setStyleSheet("background-color:white");
-    BinaryOpBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid silver;"
-                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
-                "border-radius: 6px;"
-                "margin-top: 25px; }"
-                "QGroupBox::title { subcontrol-origin:margin;"
-                "subcontrol-position:top center;"
-                "font: bold ; color: black;}");
-    BinaryOpBox->setMinimumSize(300,180);
-
-    BinaryOpBox->setFont(font);
-
-    const QString tabBinaryOp [6] =
-    {
-        "Addition (A+B)",
-        "Soustraction (A-B)",
-        "Multiplication (A*B)",
-        "Division (A/B)",
-        "Multiplication (A*lambda)",
-        "Puissance (A^n)"
-    };
-
-    QPushButton* BinaryOpButtons;
-
-    for(unsigned int i = 0; i < 6; ++i)
-    {
-        BinaryOpButtons = new QPushButton(tabBinaryOp[i]);
-        BinaryOpButtons->setCursor(Qt::PointingHandCursor);
-        BinaryOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
-                                       "QPushButton:hover{ background-color: lightBlue }");
-        BinaryOpButtons->setMinimumSize(100,20);
-        BinaryOpButtons->setMaximumSize(600,80);
-
-        connect(BinaryOpButtons, &QPushButton::clicked,
-                [i, this] () -> void
-                {
-                    this->computeChoice(i);
-                });
-
-        BinaryOpLayout -> addWidget(BinaryOpButtons);
-    }
-
-    BinaryOpBox->setLayout(BinaryOpLayout);
-
-    return BinaryOpBox;
-}
-
-QGroupBox* MatriXMiXWindow::initUnaryOp ()
-{
-    QGroupBox *UnaryOpBox = new QGroupBox(tr("Opérations unaires (A)"));
-    QVBoxLayout *UnaryOpVBox = new QVBoxLayout;
-    QFont font ("Arial");
-    font.setPointSize(13);
-
-    UnaryOpBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid silver;"
-                "background: qlineargradient(x1: 0, y1: 0, x2: 0, "
-                "y2: 1, stop: 0 lightBlue, stop: 1 Blue);"
-                "border-radius: 6px;"
-                "margin-top: 25px; }"
-                "QGroupBox::title { subcontrol-origin:margin;"
-                "subcontrol-position:top center;"
-                "font: bold ; color: black;}");
-    UnaryOpBox->setMinimumSize(300,180);
-
-    UnaryOpBox->setFont(font);
-
-    const QString tabUnaryOp [5] =
-    {
-        "Déterminant",
-        "Trace",
-        "Inverse",
-        "Echelonnage",
-        "Etudes des dimensions",
-    };
-
-    QPushButton* UnaryOpButtons;
-
-    for(unsigned int i = 6; i < 11; ++i)
-    {
-        UnaryOpButtons = new QPushButton(tabUnaryOp[i-6]);
-        UnaryOpButtons->setCursor(Qt::PointingHandCursor);
-        UnaryOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
-                                      "QPushButton:hover{ background-color: lightBlue }");
-        UnaryOpButtons->setMinimumSize(100,20);
-        UnaryOpButtons->setMaximumSize(600,80);
-
-        UnaryOpVBox -> addWidget(UnaryOpButtons);
-
-        connect(UnaryOpButtons, &QPushButton::clicked,
-                [i, this] () -> void
-                {
-                    this->computeChoice(i);
-                });
-
-    }
-    UnaryOpBox->setLayout(UnaryOpVBox);
-
-    return UnaryOpBox;
-}
-
-QGroupBox* MatriXMiXWindow::initDiagonalisationOp()
-{
-    QGroupBox *DiaOpBox = new QGroupBox(tr("Opérations pour la diagonalisation"));
-    QVBoxLayout *DiaOpVBox = new QVBoxLayout;
-
-    QFont font ("Arial");
-    font.setPointSize(13);
-
-    DiaOpBox -> setStyleSheet(
-                "QGroupBox { border: 1px solid silver;"
-                "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                " stop: 0 lightBlue, stop: 1 Blue);"
-                "border-radius: 6px;"
-                "margin-top: 25px; }"
-                "QGroupBox::title { subcontrol-origin:margin;"
-                "subcontrol-position:top center;"
-                "font: bold ; color:black;}");
-    DiaOpBox->setMinimumSize(300,130);
-    DiaOpBox->setFont(font);
-
-    const QString tabDiaOp [4] =
-    {
-        "Polynôme caractéristique",
-        "Valeurs/Vecteurs propres",
-        "Diagonalisation",
-        "Evaluation d'expression",
-
-    };
-
-    QPushButton* DiaOpButtons;
-
-    for(unsigned int i = 11; i < 15; ++i)
-    {
-        DiaOpButtons = new QPushButton(tabDiaOp[i-11]);
-        DiaOpButtons->setCursor(Qt::PointingHandCursor);
-        DiaOpButtons->setStyleSheet("QPushButton{ background-color: lightGrey } "
-                                    "QPushButton:hover{ background-color: lightBlue }");
-        DiaOpButtons->setMinimumSize(100,20);
-        DiaOpButtons->setMaximumSize(600,80);
-
-        DiaOpVBox -> addWidget(DiaOpButtons);
-          connect(DiaOpButtons, &QPushButton::clicked,
-                [i, this] () -> void
-                {
-                    this->computeChoice(i);
-                });
-    }
-
-    DiaOpBox->setLayout(DiaOpVBox);
-
-    return DiaOpBox;
 }
 
 void MatriXMiXWindow::updateCurrentOperationWidget() {
