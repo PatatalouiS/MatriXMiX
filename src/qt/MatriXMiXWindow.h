@@ -7,13 +7,13 @@
 #include "AbstractOperationWidget.h"
 
 /**
-@class MainWindow The class MainWindow generate the main page of the application
+@class MatriXMiXWindow The class MatriXMiXWindow generate the main page of the application
 MatriXMiX. This window contains all the operation buttons grouped in QGroupBox,
 the view of consulting operation and the view of result.
 */
 
 
-class MainWindow : public QMainWindow
+class MatriXMiXWindow : public QMainWindow
 {
     Q_OBJECT
     
@@ -21,15 +21,11 @@ class MainWindow : public QMainWindow
         /**
         * @brief Default constructor
         */
-        MainWindow ();
-        /**
-        * @brief Default destructor
-        */
-        ~MainWindow ();
+        MatriXMiXWindow ();
        
     private slots:
           /**
-          *@brief Show the library window and all the updates generated for MainWindow
+          *@brief Show the library window and all the updates generated for MatriXMiXWindow
           */
           void showLibraryWindow ();
           /**

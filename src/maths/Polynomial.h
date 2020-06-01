@@ -126,6 +126,8 @@ class Polynomial {
      */
     void regressionTest() const;
 
+    Polynomial check() const;
+
 };
 
 #endif

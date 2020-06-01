@@ -25,7 +25,7 @@ include(ext/latex/jkqtmathtext.pri);
 # external headers
 INCLUDEPATH += ext/Eigen/ ext/muparserx/parser
 
-# conditional for static build
+# conditionals for link static libraries
 unix:!macx {
     LIBS += -Lext/muparserx/lib/unix -lm -lmuparserx
 }
@@ -45,8 +45,9 @@ HEADERS += src/maths/Matrix.h \
         src/maths/Gauss.h \
         src/maths/MatrixLibrary.h \
         src/qt/ExprLineEdit.hpp \
-        src/qt/MainWindow.h \
         src/qt/LibraryWindow.h \
+        src/qt/MainWindow.hpp \
+        src/qt/MatriXMiXWindow.h \
         src/qt/QMatrixLibrary.hpp \
         src/qt/ShowMatrixWidget.h \
         src/qt/Error.h \
@@ -73,8 +74,9 @@ SOURCES += src/qt/main.cpp \
         src/maths/Gauss.cpp \
         src/maths/MatrixLibrary.cpp \
         src/qt/ExprLineEdit.cpp \
-        src/qt/MainWindow.cpp \
         src/qt/LibraryWindow.cpp \
+        src/qt/MainWindow.cpp \
+        src/qt/MatriXMiXWindow.cpp \
         src/qt/MatrixViewWidget.cpp \
         src/qt/Error.cpp \
         src/qt/MenuBar.cpp \

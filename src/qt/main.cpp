@@ -1,13 +1,13 @@
 
 #include <QApplication>
-#include "MainWindow.h"
+#include "MatriXMiXWindow.h"
 
 
 int main (int argc, char* argv[])
 {
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/img/icons/MatriXMiX.png"));
-    MainWindow mainWindow;
+    MatriXMiXWindow mainWindow;
     mainWindow.show();
     return app.exec();
 }

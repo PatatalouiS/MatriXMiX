@@ -80,7 +80,6 @@ public:
     int isNonZeroColumn(const Matrix &matrix, const int &column_id,
                         const int &rows, const int &next_row_id) const;
 
-
 };
 
 

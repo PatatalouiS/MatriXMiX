@@ -127,7 +127,7 @@ void UnaryOpWidget:: constructType(const type &t)
             setTitle("Trace");
             operation = [](MatrixPair a) -> QVariant
             {
-                DoubleResult res(a.first, a.second->traceMatrix());
+                DoubleResult res(a.first, a.second->trace());
                 QVariant resv;
                 resv.setValue(res);
                 return resv;

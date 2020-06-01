@@ -31,6 +31,7 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
                "border-radius:6px;}"
                "QScrollBar::add-line:vertical {height: 0px;}"
                "QScrollBar::sub-line:vertical {height: 0 px;}");
+
     scrollArea->horizontalScrollBar()->setStyleSheet("QScrollBar:horizontal "
                "{border: 1px solid #999999; background:white; height:15px;}"
                "QScrollBar::handle:horizontal {background: qlineargradient"
