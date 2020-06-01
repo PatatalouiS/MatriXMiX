@@ -28,7 +28,7 @@ Fraction::Fraction(const long int & n,
     numerator = n;
 }
 
-
+/*
 static std::string double2sqrt(const double & d,
                                 bool & isStr,
                                 bool & den) {
@@ -70,7 +70,7 @@ static std::string double2sqrt(const double & d,
 
     return s;
 
-}
+}*/
 
 
 Fraction::Fraction(const double & d) {

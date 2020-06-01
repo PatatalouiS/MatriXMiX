@@ -10,8 +10,7 @@
 using namespace std;
 
 
-const double EPSILON=0.0001;
-const Polynomial Polynomial:: polynomial_null = Polynomial();
+const double EPSILON = 0.00001;
 
 
 
@@ -77,7 +76,8 @@ void Polynomial::debugAffiche()
 
     for (i = 0; i < degree + 1; i++)
     {
-        cout << "degrée : " << i << "   " << tab[i].real() << " ; " << tab[i].imag() << endl;
+        std::cout << "degré : " << i << "   " << tab[i].real()
+                << " ; " << tab[i].imag() << "i" << std::endl;
     }
 
 }
@@ -310,7 +310,7 @@ const Polynomial Polynomial:: operator * (const double & scale)const
 }
 
 
-const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & rest)
+const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & remain)
 {
     Polynomial quotient(degree - divisor.degree);
     Polynomial copy(*this);
@@ -335,23 +335,23 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
     }
 
     copy = quotient * divisor;
-    rest = (*this) - copy;
+    remain = (*this) - copy;
 
 
     tampon = 0;
-    k = rest.degree;
-    while ((rest.tab[k] == 0.0) && (k != 0))
+    k = remain.degree;
+    while ((remain.tab[k] == 0.0) && (k != 0))
     {
         tampon++;
         k--;
     }
-    rest.degree = rest.degree - tampon;
+    remain.degree = remain.degree - tampon;
 
-    if (rest.degree > divisor.degree)
+    if (remain.degree > divisor.degree)
     {
 
-        Polynomial quotient2 (rest.degree - divisor.degree);
-        quotient2 = rest.division(divisor,rest);
+        Polynomial quotient2 (remain.degree - divisor.degree);
+        quotient2 = remain.division(divisor,remain);
         quotient = quotient+quotient2;
     }
 
@@ -363,11 +363,12 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
 void Polynomial::regressionTest() const
 {
   VectorX v;
-  complex<double> c1(1,0);
+  complex<double> c0(1,0);
+  v.push_back(c0);
+  complex<double> c1(0,0);
   v.push_back(c1);
-  complex<double> c2(0,0);
+  complex<double> c2(1,0);
   v.push_back(c2);
-  v.push_back(c1);
   Polynomial p(2,v);
   cout << "Affichage de p" << endl << p << endl << endl;
   cout << "Affichage debug de p" << endl;
