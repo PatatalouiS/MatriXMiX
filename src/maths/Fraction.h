@@ -7,7 +7,7 @@
 
 
 /**
- * @class The Fraction class
+ * @brief Representation of fractions
  */
 class Fraction
 {

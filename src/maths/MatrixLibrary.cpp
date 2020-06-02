@@ -220,19 +220,19 @@ bool MatrixLibrary:: highEqualPriority (const string & opd,
     switch (opd[0])
     {
         case '*':
-            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') 
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^')
                 || (opg[0] == '~'));
 
         case '/':
-            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^') 
+            return ((opg[0] == '*') || (opg[0] == '/') || (opg[0] == '^')
                 || (opg[0] == '~'));
 
         case '+':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') 
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*')
                 || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
 
         case '-':
-            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*') 
+            return ((opg[0] == '+') || (opg[0] == '-') || (opg[0] == '*')
                 || (opg[0] == '/') || (opg[0] == '^') || (opg[0] == '~'));
 
         case '^':
@@ -271,7 +271,8 @@ Matrix MatrixLibrary:: calculate (const string & op, const string & a,
 }
 
 
-double MatrixLibrary:: calculateFloat (const std::string & op, const std::string & a,
+double MatrixLibrary:: calculateFloat (const std::string & op,
+                                       const std::string & a,
                                        const std::string & b) const
 {
     if(op == "+")
@@ -290,8 +291,9 @@ double MatrixLibrary:: calculateFloat (const std::string & op, const std::string
 }
 
 
-Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op, const std::string & a,
-                                             const float & b)const
+Matrix MatrixLibrary:: calculateMatrixFloat (const std::string & op,
+                                             const std::string & a,
+                                             const double & b) const
 {
     const Matrix* m_a;
     m_a=find(a);
