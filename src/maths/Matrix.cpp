@@ -80,7 +80,7 @@ Matrix:: Matrix (const unsigned int rows, const unsigned int cols, const enum in
         {
             if (cols != rows)
             {
-                cerr << "Initialisatin d'une matrice identité impossible (rows != cols)" << endl;
+                cerr << "Initialisation d'une matrice identité impossible (rows != cols)" << endl;
                 exit(EXIT_FAILURE);
             }
 
@@ -268,7 +268,7 @@ Matrix Matrix::matrixRow(const unsigned int & i) const {
 }
 
 
-std::complex<double> Matrix::normeCol() const {
+std::complex<double> Matrix::colNorm() const {
     unsigned int i;
     std::complex<double> z (0.0,0.0);
     for (i = 0; i < cols; i++) {
@@ -278,7 +278,7 @@ std::complex<double> Matrix::normeCol() const {
 }
 
 
-std::complex<double> Matrix::normeRow() const {
+std::complex<double> Matrix::rowNorm() const {
     unsigned int i;
     std::complex<double> z (0.0,0.0);
     for (i = 0; i < rows ; i++) {
@@ -288,20 +288,20 @@ std::complex<double> Matrix::normeRow() const {
 }
 
 
-VectorX Matrix:: normaliseVectorX (const VectorX & v) const
+VectorX Matrix:: normalizeVectorX (const VectorX & v) const
 {
     VectorX res;
     unsigned int i;
-    double norme = 0;
+    double norm = 0;
 
     for (i = 0; i < rows; i++)
     {
-        norme += ( (v[i].real() * v[i].real()) + (v[i].imag() * v[i].imag()) );
+        norm += ( (v[i].real() * v[i].real()) + (v[i].imag() * v[i].imag()) );
     }
 
     for (i = 0; i < rows; i++)
     {
-        res.push_back(v[i] / sqrt(norme));
+        res.push_back(v[i] / sqrt(norm));
     }
 
     return res;
@@ -613,7 +613,7 @@ const Matrix Matrix:: operator * (const std::complex<double> & lambda) const
 }
 
 
-const Matrix operator * (const double & lambda, const Matrix & m)    // friend operator
+const Matrix operator * (const std::complex<double> & lambda, const Matrix & m)    // friend operator
 {
     return m * lambda;
 }
@@ -878,7 +878,7 @@ const Matrix Matrix:: gaussReduction()const
             complex<double> inverse (1./res.tab[static_cast<unsigned int>(pos->getRow())]
                         [static_cast<unsigned int>(pos->getCol())]);
 
-            res.tab[pos->getRow()] = res.normaliseVectorX(res.tab[pos->getRow()]);
+            res.tab[pos->getRow()] = res.normalizeVectorX(res.tab[pos->getRow()]);
         }
         for (int row = 0; row < r; row++)
         {
@@ -967,26 +967,27 @@ const VectorX Matrix:: eigenValues() const
 
 const Polynomial Matrix:: characteristicPolynomial()const
 {
-    unsigned int i,r;
-    r = getNbRows();
-    Polynomial result(r);
+    unsigned int i;
+    VectorX vect_res;
+    Polynomial result;
     Polynomial temp(1);
 
     vector<complex<double>> eigen_values;
     eigen_values = eigenValues();
 
-    result.tab[0] = eigen_values[0];
-    result.tab[1] = -1;
+    vect_res.push_back(eigen_values[0]);
+    vect_res.push_back(-1);
 
-    for(i = 2; i < r + 1; i++)
-    {
-        result.tab[i] = 0;
-    }
+    //result.tab[0] = eigen_values[0];
+    //result.tab[1] = -1;
 
-    for(i = 1; i < r; i++)
+    result = Polynomial(1,vect_res);
+
+    for(i = 1; i < eigen_values.size(); i++)
     {
-        temp.tab[0] = eigen_values[i];
-        temp.tab[1] = -1;
+        vect_res[0] = eigen_values[i];
+        vect_res[1] = -1;
+        temp = Polynomial(1,vect_res);
         result = result * temp;
     }
 
@@ -994,22 +995,22 @@ const Polynomial Matrix:: characteristicPolynomial()const
 }
 
 
-
 const vector<Polynomial> Matrix:: splitCharacteristicPolynomial()const
 {
-    unsigned int i,r;
-    r = getNbRows();
-    Polynomial result(r);
-    Polynomial temp(1);
+    unsigned int i;
+    VectorX temp_vect;
     std::vector<Polynomial> v;
-    vector<complex<double>> eigen_values;
-    eigen_values = eigenValues();
+    vector<complex<double>> eigen_values (eigenValues());
 
-    for(i = 0; i < r; i++)
+    temp_vect.push_back(eigen_values[0]);
+    temp_vect.push_back(-1);
+    v.push_back(Polynomial(1,temp_vect));
+
+    for(i = 1; i < eigen_values.size(); i++)
     {
-        temp.tab[0] = eigen_values[i];
-        temp.tab[1] = -1;
-        v.push_back(temp);
+        temp_vect[0] = eigen_values[i];
+        temp_vect[1] = -1;
+        v.push_back(Polynomial(1,temp_vect));
     }
 
     return v;
@@ -1065,8 +1066,8 @@ bool Matrix:: isDiagonalisableC()const
         return false;
 
     Matrix diag(*this);
-    Matrix p1(rows,rows,Matrix::Z);
-    Matrix p2(rows,rows,Matrix::Z);
+    Matrix p1(rows,cols,Matrix::Z);
+    Matrix p2(rows,cols,Matrix::Z);
 
     allMatrix(p1,diag,p2);
     if (p2 == matrix_null) {
@@ -1148,20 +1149,20 @@ void Matrix:: allMatrix (Matrix & transferC2B, Matrix & diagonal,
 }
 
 
-Matrix Matrix::normaliseMatrix() const {
+Matrix Matrix::normalizeMatrix() const {
     unsigned int i, j;
     Matrix res(*this);
-    std::complex<double> norme;
+    std::complex<double> norm;
 
     for (j = 0; j < cols; j++) {
-        norme = std::complex<double> (0.0,0.0);
+        norm = std::complex<double> (0.0,0.0);
         for (i = 0; i < rows; i++) {
-            norme += (res[i][j] * res[i][j]);
+            norm += (res[i][j] * res[i][j]);
         }
-        norme = sqrt(norme);
-        if (norme != std::complex<double>(0.0,0.0)) {
+        norm = sqrt(norm);
+        if (norm != std::complex<double>(0.0,0.0)) {
             for (i = 0; i < rows; i++) {
-                res[i][j] /= norme;
+                res[i][j] /= norm;
             }
         }
 
@@ -1268,7 +1269,7 @@ Matrix Matrix::gramSchmidt() const {
         q[i][0] = a[i][0];
     }
 
-    q = q.normaliseMatrix();
+    q = q.normalizeMatrix();
 
     for (i = 1; i < cols; i++) {
         coef = std::complex<double>(0.0, 0.0);
@@ -1278,7 +1279,7 @@ Matrix Matrix::gramSchmidt() const {
             coef /= (q.matrixCol(j).transposeMatrix() * q.matrixCol(j))[0][0];
             temp_matrix = temp_matrix - (q.matrixCol(j) * coef);
         }
-        temp_matrix = temp_matrix.normaliseMatrix();
+        temp_matrix = temp_matrix.normalizeMatrix();
 
         for(k = 0; k < rows; k++) {
             q[k][i] = temp_matrix[k][0];
@@ -1309,7 +1310,7 @@ std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
     for(i = 0; i < rows; i++) {
         q[i][0] = a[i][0];
     }
-    q = q.normaliseMatrix();
+    q = q.normalizeMatrix();
     r[0][0] = (a.matrixCol(0).transposeMatrix() * q.matrixCol(0))[0][0];
 
     for (i = 1; i < cols; i++) {
@@ -1321,7 +1322,7 @@ std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
             coef /= (q.matrixCol(j).transposeMatrix() * q.matrixCol(j))[0][0];
             temp_matrix = temp_matrix - (q.matrixCol(j) * coef);
         }
-        temp_matrix = temp_matrix.normaliseMatrix();
+        temp_matrix = temp_matrix.normalizeMatrix();
 
         for(k = 0; k < rows; k++) {
             q[k][i] = temp_matrix[k][0];
