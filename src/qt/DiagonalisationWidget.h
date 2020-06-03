@@ -6,6 +6,7 @@
 #include "AbstractOperationWidget.h"
 #include "MatrixViewWidget.h"
 #include <array>
+#include <QRadioButton>
 
 
 /**
@@ -20,12 +21,16 @@ class DiagonalisationWidget : public AbstractOperationWidget
 
     public:
 
+        enum type {
+            DIAGONALISATION_R,
+            DIAGONALISATION_C
+        };
         /** @brief Unique constructor of the class.
          * @param [in] library a pointer on a QMatrixLibrary .
          * @param [in,out] parent a pointer on a potential parent QWidget, mainly for ensure good deletion.
          */
 
-        DiagonalisationWidget (const QMatrixLibrary* lib, QWidget* parent = nullptr);
+        DiagonalisationWidget (const type t, const QMatrixLibrary* lib, QWidget* parent = nullptr);
 
     public slots:
 
@@ -49,6 +54,8 @@ class DiagonalisationWidget : public AbstractOperationWidget
         MatrixPair op;
         std::array<Matrix, 3> result;
         QWidget* choiceWidget;
+
+        void constructType(const type t);
 
 
     private slots:

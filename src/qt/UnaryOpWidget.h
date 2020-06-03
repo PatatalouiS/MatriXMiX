@@ -27,7 +27,8 @@ class UnaryOpWidget : public AbstractOperationWidget
             ROW_REDUCED_FORM,
             EIGEN_PROPERTIES,
             CARACTERISTIC_POLYNOMIAL,
-            KER_IMG_DIM
+            KER_IMG_DIM,
+            TRANSPOSE
         };
 
         /** @brief Unique constructor of the class.

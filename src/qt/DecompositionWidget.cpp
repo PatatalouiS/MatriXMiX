@@ -1,16 +1,22 @@
 
-#include "DiagonalisationWidget.h"
-#include "Error.h"
+#include "DecompositionWidget.h"
 #include <QVBoxLayout>
-#include <QRadioButton>
+#include "Error.h"
+
+#include <QDebug>
+
+using namespace std;
 
 
-DiagonalisationWidget::DiagonalisationWidget(const type t, const QMatrixLibrary* lib, QWidget* parent):
-AbstractOperationWidget (lib, parent)
-{
-    constructType(t);
+DecompositionWidget::DecompositionWidget(const type type, const QMatrixLibrary* lib,
+                QWidget* parent) : AbstractOperationWidget(lib, parent) {
 
-    result = std::array<Matrix,3>();
+    result1 = new QRadioButton("");
+    result2 = new QRadioButton("");
+    result1->setChecked(true);
+
+    constructType(type);
+
     op.first = "_";
     op.second = nullptr;
 
@@ -28,14 +34,10 @@ AbstractOperationWidget (lib, parent)
 
     description->setText(op.first);
 
-    QRadioButton* showP = new QRadioButton("Matrice de passage");
-    QRadioButton* showD = new QRadioButton("Matrice Diagonale");
-    showD->setChecked(true);
-    QRadioButton* showPInverse = new QRadioButton("Matrice de passage^-1");
     QHBoxLayout* choiceLayout = new QHBoxLayout;
-    choiceLayout->addWidget(showP);
-    choiceLayout->addWidget(showD);
-    choiceLayout->addWidget(showPInverse);
+    choiceLayout->addWidget(result1);
+    choiceLayout->addWidget(result2);
+
     choiceWidget = new QWidget;
     choiceWidget->setLayout(choiceLayout);
     choiceWidget->hide();
@@ -73,67 +75,73 @@ AbstractOperationWidget (lib, parent)
                 computeSelection();
             });
 
-    connect(showP, &QRadioButton::clicked,
+    connect(result1, &QRadioButton::clicked,
             [this]() -> void
             {
-                emitResultChoice(P);
+                emitResultChoice(0);
             });
 
-    connect(showD, &QRadioButton::clicked,
+    connect(result2, &QRadioButton::clicked,
             [this]() -> void
             {
-                emitResultChoice(D);
-            });
-
-    connect(showPInverse, &QRadioButton::clicked,
-            [this]() -> void
-            {
-                emitResultChoice(P_INVERSE);
+                emitResultChoice(1);
             });
 
     view->refresh(sortFunction);
     setLayout(mainLayout);
 }
 
-
-void DiagonalisationWidget::constructType(const type t) {
-    switch(t) {
-        case DIAGONALISATION_R : {
-            setTitle("Diagonalisation dans R");
+void DecompositionWidget::constructType(const type t) {
+    switch (t) {
+        case LU :{
+            setTitle("Décomposition LU");
+            result1->setText("Matrice L");
+            result2->setText("Matrice U");
             setSortFunction([](const Matrix* a) -> bool {
-                return a->isDiagonalisableR();
+                return a->isPositiveDefinite() &&
+                        a->isSQMatrix();
             });
+            operation = [](const Matrix* a) -> pair<Matrix, Matrix> {
+                return a->LUDecomposition();
+            };
             break;
-
         }
-        case DIAGONALISATION_C : {
-            setTitle("Diagonalisation dans C");
+        case QR :{
+            setTitle("Décomposition QR");
+            result1->setText("Matrice Q");
+            result2->setText("Matrice R");
             setSortFunction([](const Matrix* a) -> bool {
-                return a->isDiagonalisableC();
+                return a->getNbRows() >= a->getNbCols();
             });
+            operation = [](const Matrix* a) -> pair<Matrix, Matrix> {
+                return a->QR_Householder();
+            };
+            break;
+        }
+        case CHOLESKY:{
+            setTitle("Décomposition Cholesky");
+            result1->setText("Matrice C");
+            result2->setText("Matrice C*");
+            setSortFunction([](const Matrix* a) -> bool {
+                return a->isSQMatrix() &&
+                        a->isSQMatrix() &&
+                        a->isPositiveDefinite();
+            });
+            operation = [](const Matrix* a) -> pair<Matrix, Matrix> {
+                return a->cholesky();
+            };
             break;
         }
     }
 }
 
 
-void DiagonalisationWidget:: emitResultChoice(const ResultChoice& c)
-{
-    QVariant genericResult;
-    genericResult.setValue(result[c]);
-    emit newResult(genericResult);
-}
-
-
-
-void DiagonalisationWidget::updateViews()
-{
+void DecompositionWidget::updateViews() {
     view->refresh(sortFunction);
 }
 
 
-void DiagonalisationWidget:: computeSelection(const bool viewID)
-{
+void DecompositionWidget::computeSelection(const bool viewID) {
     (void)viewID;
 
     choiceWidget->hide();
@@ -143,15 +151,21 @@ void DiagonalisationWidget:: computeSelection(const bool viewID)
     description->setText(op.first);
 }
 
-void DiagonalisationWidget:: computeOperation()
-{
+void DecompositionWidget::computeOperation() {
     if(op.second == nullptr)
     {
-        Error::showError("opérande Manquante !", "Veuillez bien sélectionner votre matrice !", this);
+        Error::showError("opérande Manquante !",
+                         "Veuillez bien sélectionner votre matrice !", this);
         return;
     }
 
-    op.second->allMatrix(result[0], result[1], result[2]);
+    result = operation(op.second);
     choiceWidget->show();
-    emitResultChoice(D);
+    emitResultChoice(0);
+}
+
+void DecompositionWidget::emitResultChoice(const unsigned int choice) {
+    QVariant genericResult;
+    genericResult.setValue(choice ? result.second : result.first);
+    emit newResult(genericResult);
 }

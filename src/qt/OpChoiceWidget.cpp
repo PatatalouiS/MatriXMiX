@@ -100,13 +100,14 @@ OpChoiceWidget::OpChoiceWidget(QWidget* parent) : QWidget(parent)
 
 
 void OpChoiceWidget::setOperationsList(const OpType& type) {
-    const static QString opNames [15] = {
+    const static QString opNames [20] = {
         "Addition (A+B)",
         "Soustraction (A-B)",
         "Multiplication (A*B)",
         "Division (A/B)",
         "Multiplication (A*lambda)",
         "Puissance (A^n)",
+        "Transposée",
         "Déterminant",
         "Trace",
         "Inverse",
@@ -114,8 +115,12 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
         "Etudes des dimensions",
         "Polynôme caractéristique",
         "Valeurs/Vecteurs propres",
-        "Diagonalisation",
+        "Diagonalisation dans R",
+        "Diagonalisation dans C",
         "Evaluation d'expression",
+        "Décomposition LU",
+        "Decomposition QR",
+        "Décomposition Cholesky"
     };
 
     unsigned int firstIndex;
@@ -129,17 +134,17 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
         }
         case OpType::UNARY_OP : {
             firstIndex = 6;
-            lastIndex = 11;
+            lastIndex = 12;
             break;
         }
         case OpType::DIAGONALISATION : {
-            firstIndex = 11;
-            lastIndex = 15;
+            firstIndex = 12;
+            lastIndex = 16;
             break;
         }
         case OpType::DECOMPOSITION : {
-            firstIndex = 0;
-            lastIndex = 0;
+            firstIndex = 16;
+            lastIndex = 20;
             break;
         }
     }
@@ -155,6 +160,7 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
         QPushButton* btn = new QPushButton(opNames[i], this);
 
         connect(btn, &QPushButton::pressed, [this, i] () -> void {
+            qDebug() << i << " selected" << endl;
             emit opSelected(i);
         });
 

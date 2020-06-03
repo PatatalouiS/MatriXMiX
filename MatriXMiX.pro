@@ -44,6 +44,7 @@ HEADERS += src/maths/Matrix.h \
         src/maths/Fraction.h \
         src/maths/Gauss.h \
         src/maths/MatrixLibrary.h \
+        src/qt/DecompositionWidget.h \
         src/qt/ExprLineEdit.hpp \
         src/qt/LibraryWindow.h \
         src/qt/MainWindow.hpp \
@@ -74,6 +75,7 @@ SOURCES += src/qt/main.cpp \
         src/maths/Fraction.cpp \
         src/maths/Gauss.cpp \
         src/maths/MatrixLibrary.cpp \
+        src/qt/DecompositionWidget.cpp \
         src/qt/ExprLineEdit.cpp \
         src/qt/LibraryWindow.cpp \
         src/qt/MainWindow.cpp \

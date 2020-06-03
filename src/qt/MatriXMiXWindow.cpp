@@ -9,6 +9,7 @@
 #include "DiagonalisationWidget.h"
 #include "ExprEvalWidget.h"
 #include "OpChoiceWidget.h"
+#include "DecompositionWidget.h"
 
 MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : QWidget(parent)
 {
@@ -152,47 +153,72 @@ void MatriXMiXWindow::setFunctorTab()
     createWindow[6] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::DETERMINANT, library);
+         return new UnaryOpWidget(UnaryOpWidget::TRANSPOSE, library);
     };
     createWindow[7] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::TRACE, library);
+         return new UnaryOpWidget(UnaryOpWidget::DETERMINANT, library);
     };
     createWindow[8] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::INVERSE, library);
+         return new UnaryOpWidget(UnaryOpWidget::TRACE, library);
     };
     createWindow[9] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::ROW_REDUCED_FORM, library);
+         return new UnaryOpWidget(UnaryOpWidget::INVERSE, library);
     };
     createWindow[10] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, library);
+         return new UnaryOpWidget(UnaryOpWidget::ROW_REDUCED_FORM, library);
     };
     createWindow[11] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::CARACTERISTIC_POLYNOMIAL, library);
+         return new UnaryOpWidget(UnaryOpWidget::KER_IMG_DIM, library);
     };
     createWindow[12] =
     [this] () -> AbstractOperationWidget*
     {
-         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, library);
+         return new UnaryOpWidget(UnaryOpWidget::CARACTERISTIC_POLYNOMIAL, library);
     };
     createWindow[13] =
     [this] () -> AbstractOperationWidget*
     {
-         return new DiagonalisationWidget(library);
+         return new UnaryOpWidget(UnaryOpWidget::EIGEN_PROPERTIES, library);
     };
     createWindow[14] =
     [this] () -> AbstractOperationWidget*
     {
+         return new DiagonalisationWidget(DiagonalisationWidget::DIAGONALISATION_R, library);
+    };
+    createWindow[15] =
+    [this] () -> AbstractOperationWidget*
+    {
+         return new DiagonalisationWidget(DiagonalisationWidget::DIAGONALISATION_C, library);
+    };
+    createWindow[16] =
+    [this] () -> AbstractOperationWidget*
+    {
          return new ExprEvalWidget(library);
+    };
+    createWindow[17] =
+    [this] () -> AbstractOperationWidget*
+    {
+         return new DecompositionWidget(DecompositionWidget::LU, library);
+    };
+    createWindow[18] =
+    [this] () -> AbstractOperationWidget*
+    {
+         return new DecompositionWidget(DecompositionWidget::QR, library);
+    };
+    createWindow[19] =
+    [this] () -> AbstractOperationWidget*
+    {
+         return new DecompositionWidget(DecompositionWidget::CHOLESKY, library);
     };
 }
 
@@ -219,7 +245,8 @@ void MatriXMiXWindow:: computeChoice (const unsigned int choice)
 
 void MatriXMiXWindow:: transferResult (const QVariant& res)
 {
-    if(currentChoice <= 5 || currentChoice == 8 || currentChoice == 9 || currentChoice == 13 || currentChoice==14)
+    if(currentChoice <= 6 || currentChoice == 9
+            || currentChoice == 10 || currentChoice >= 14)
     {
         assert(res.canConvert<Matrix>());
         imgResult->computeImgMatrix(res.value<Matrix>());
@@ -246,7 +273,7 @@ void MatriXMiXWindow:: transferResult (const QVariant& res)
     {
         assert(res.canConvert<PolynomialResult>());
         PolynomialResult resP = res.value<PolynomialResult>();
-        imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP), std::get<0>(resP));
+        imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP),  std::get<0>(resP));
     }
     else if(currentChoice == 12)
     {

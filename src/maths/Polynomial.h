@@ -14,10 +14,10 @@ class Polynomial {
 private:
 
     unsigned int degree; /*< polynomial degree*/
-    std::vector < std::complex < double >> tab; /*< factors (from 0 to degree)*/
-
 
 public:
+
+    std::vector < std::complex < double >> tab; /*< factors (from 0 to degree)*/
 
     /**
     * @brief Default constructor

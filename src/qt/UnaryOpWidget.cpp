@@ -4,7 +4,6 @@
 #include "MatrixViewWidget.h"
 #include "Error.h"
 
-
 UnaryOpWidget::UnaryOpWidget(const type& t, const QMatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget(lib, parent)
 {
@@ -52,7 +51,6 @@ AbstractOperationWidget(lib, parent)
     mainLayout->setSpacing(10);
     mainLayout->addWidget(subWidget1);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
-
 
     connect(view, &MatrixViewWidget::clicked,
             [this] () -> void
@@ -212,13 +210,17 @@ void UnaryOpWidget:: constructType(const type &t)
             };
             break;
         }
+
+        case TRANSPOSE:
+        {
+            setTitle("Matrice Transposée");
+            operation = [](MatrixPair a) -> QVariant
+            {
+                QVariant resv;
+                resv.setValue(Matrix(a.second->transposeMatrix()));
+                return resv;
+            };
+            break;
+        }
     }
 }
-
-
-
-
-
-
-
-
