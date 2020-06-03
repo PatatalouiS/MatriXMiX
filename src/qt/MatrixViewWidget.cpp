@@ -38,8 +38,6 @@ MatrixViewWidget::MatrixViewWidget (const QMatrixLibrary* lib, QWidget* parent) 
             this, &MatrixViewWidget::showMatrixPreview);
 }
 
-
-
 void MatrixViewWidget:: showMatrixPreview () const
 {
     QString currentSelectedName = nameOfSelectedMatrix();
@@ -55,7 +53,7 @@ void MatrixViewWidget:: showMatrixPreview () const
     }
 
     assert(lib->exist(currentSelectedName));
-    const Matrix* currentMatrix = lib->find_matrix(currentSelectedName);
+    const Matrix* currentMatrix = lib->find(currentSelectedName);
     matrixPreview = new ShowMatrixWidget(nullptr);
     matrixPreview->setWindowFlag(Qt::Tool);
     connect(matrixPreview, &ShowMatrixWidget::destroyed,

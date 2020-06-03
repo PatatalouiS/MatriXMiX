@@ -60,10 +60,15 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
     QString latex = "\\begin{bmatrix}";
-    
+
     for(unsigned int i = 0; i < rows; ++i)
     {
         latex += "\t" +  complexLatex(mat[i][0]);
+
+        if(cols == 1) {
+            latex += "\\\\";
+        }
+
 
         for(unsigned int j = 1; j < cols; ++j)
         {

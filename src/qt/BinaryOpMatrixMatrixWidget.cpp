@@ -4,8 +4,6 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
-
-
 BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const QMatrixLibrary* lib, QWidget* parent) : AbstractOperationWidget(lib,parent)
 {    
     constructType(t);
@@ -123,14 +121,14 @@ void BinaryOpMatrixMatrixWidget:: computeSelection(const bool view)
 
         op1.first = view1->nameOfSelectedMatrix();
         assert(getLib()->exist(op1.first));
-        op1.second = getLib()->find_matrix(op1.first);
+        op1.second = getLib()->find(op1.first);
         view2->refresh(sortViewFunction(op1.second));
     }
     else
     {
         op2.first = view2->nameOfSelectedMatrix();
         assert(getLib()->exist(op2.first));
-        op2.second = getLib()->find_matrix(op2.first);
+        op2.second = getLib()->find(op2.first);
     }
 
     description->setText(op1.first + logo + op2.first);
@@ -219,6 +217,26 @@ void BinaryOpMatrixMatrixWidget:: constructType(const type& t)
 
             setTitle("Division");
             logo = " / ";
+            break;
+        }
+        case SOLVE :
+        {
+            sortViewFunction = [] (const Matrix* a) -> std::function<bool(const Matrix* b)>
+            {
+                return [a](const Matrix* b) -> bool
+                {
+                    return ((a->getNbRows() == b->getNbRows()) && a->isSQMatrix() && (b->getNbCols() == 1));
+                };
+            };
+
+            operation = [](const Matrix* a, const Matrix* b) -> Matrix
+            {
+                return  a->solveAx(*b);
+            };
+
+            setTitle("Résolution Ax = b");
+            logo = " x = ";
+            break;
         }
     }
 }

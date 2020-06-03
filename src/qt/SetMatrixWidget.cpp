@@ -30,8 +30,8 @@ SetMatrixWidget::SetMatrixWidget(const enum type& t, QMatrixLibrary* library, QW
                           "qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 lightBlue, stop: 1 blue)}"
                           "QSpinBox::up-arrow { image: url(:/img/plus.png); width: 35px; height:35px;}";
 
-    nbRowsSelector->setRange(2,10);
-    nbColsSelector->setRange(2,10);
+    nbRowsSelector->setRange(1,10);
+    nbColsSelector->setRange(1,10);
     nbRowsSelector->setFixedSize(75,35);
     nbColsSelector->setFixedSize(75,35);
     nbRowsSelector->setStyleSheet(styleButton);
@@ -153,7 +153,7 @@ bool SetMatrixWidget:: controlKeyboardInput() const
 
     if(type == ADD)
     {
-        if(library->find_matrix(name))
+        if(library->find(name))
         {
             Error::showError("La Matrice " + name + " existe déjà !",
                        "Veuillez changer de nom.");

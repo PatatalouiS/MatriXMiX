@@ -220,6 +220,11 @@ void MatriXMiXWindow::setFunctorTab()
     {
          return new ExprEvalWidget(library);
     };
+    createWindow[20] =
+    [this] () -> AbstractOperationWidget*
+    {
+         return new BinaryOpMatrixMatrixWidget(BinaryOpMatrixMatrixWidget::SOLVE, library);
+    };
 }
 
 

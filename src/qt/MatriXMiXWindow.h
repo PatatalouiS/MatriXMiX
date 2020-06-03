@@ -46,7 +46,7 @@ class MatriXMiXWindow : public QWidget
         QVBoxLayout* currentOpLayout;
         unsigned int currentChoice;
         ShowMatrixWidget* imgResult;
-        std::function<AbstractOperationWidget*(void)> createWindow [20];
+        std::function<AbstractOperationWidget*(void)> createWindow [21];
 
         // functions
         /**

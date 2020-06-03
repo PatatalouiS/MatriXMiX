@@ -13,7 +13,14 @@ MainWindow::MainWindow() : QMainWindow()
 
                          });
 
+    Matrix b (3, 1,
+    {
+        1, 2, 3
+
+              });
+
     library.addMatrix("A", a);
+    library.addMatrix("B", b);
     // Nouvelles matrices
 
     libraryWindow = new LibraryWindow(this, &library);

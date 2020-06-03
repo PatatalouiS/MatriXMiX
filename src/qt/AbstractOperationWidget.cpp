@@ -2,15 +2,23 @@
 
 #include "AbstractOperationWidget.h"
 
+#include <QVBoxLayout>
+
 
 AbstractOperationWidget:: AbstractOperationWidget(const QMatrixLibrary* lib, QWidget* parent): QWidget (parent)
 {
     this->lib = lib;
     sortFunction = [](const Matrix*){return true;};
 
+    //QVBoxLayout* generalLayout = new QVBoxLayout;
+
+
+
     description = new QLabel(this);
     description->setStyleSheet("font-size: 40px");
     description->setAlignment(Qt::AlignCenter);
+
+    //generalLayout->addWidget(title);
 
     title = new QLabel(this);
     title->setStyleSheet("font-size: 20px; font:bold;");
@@ -23,6 +31,8 @@ AbstractOperationWidget:: AbstractOperationWidget(const QMatrixLibrary* lib, QWi
     calculer->setFixedSize(300,30);
 
     setStyleSheet("background-color:white;");
+
+    //setLayout(generalLayout);
 
     connect(calculer, &QPushButton::clicked, this, &AbstractOperationWidget::computeOperation);
 }

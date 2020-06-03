@@ -25,7 +25,8 @@ class BinaryOpMatrixMatrixWidget : public AbstractOperationWidget
             ADDITION,
             SOUSTRACTION,
             MULTIPLICATION,
-            DIVISION
+            DIVISION,
+            SOLVE
         };
 
         /** @brief Unique constructor of the class.

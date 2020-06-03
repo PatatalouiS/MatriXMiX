@@ -89,7 +89,7 @@ void UnaryOpWidget:: computeSelection(const bool viewId)
     (void)viewId;
     op.first = view->nameOfSelectedMatrix();
     assert(getLib()->exist(op.first));
-    op.second = getLib()->find_matrix(op.first);
+    op.second = getLib()->find(op.first);
     description->setText(op.first);
 }
 
