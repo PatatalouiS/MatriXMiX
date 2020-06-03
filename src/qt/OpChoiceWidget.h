@@ -11,14 +11,15 @@ class OpChoiceWidget : public QWidget
 
     public:
 
-    OpChoiceWidget(QWidget* parent);
+        OpChoiceWidget(QWidget* parent);
 
-    enum class OpType {
-        BINARY_OP = 0,
-        UNARY_OP = 1,
-        DIAGONALISATION = 2,
-        DECOMPOSITION = 3
-    };
+        enum class OpType {
+            BINARY_OP = 0,
+            UNARY_OP = 1,
+            DIAGONALISATION = 2,
+            DECOMPOSITION = 3,
+            EXPR_EVAL = 4
+        };
 
     private:
 
@@ -32,8 +33,6 @@ class OpChoiceWidget : public QWidget
     signals:
 
         void opSelected(unsigned int index);
-
-
 };
 
 #endif // OPCHOICEWIDGET_H

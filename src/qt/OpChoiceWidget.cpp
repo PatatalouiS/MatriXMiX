@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QDebug>
+#include <QComboBox>
 
 OpChoiceWidget::OpChoiceWidget(QWidget* parent) : QWidget(parent)
 {
@@ -28,32 +29,23 @@ OpChoiceWidget::OpChoiceWidget(QWidget* parent) : QWidget(parent)
     QVBoxLayout* opTypesLayout = new QVBoxLayout;
     QGroupBox* opTypes = new QGroupBox("Type d'opération :", this);
     QFont fontUnderline("Arial");
+    QComboBox* typeChoice = new QComboBox(this);
     fontUnderline.setPointSize(14);
     opTypes->setFont(fontUnderline);
+    opTypes->setMaximumHeight(100);
 
-    static const QString opTypesNames[4] = {
-        "Opérations binaires",
-        "Opération unaires",
+    static const QList<QString> opTypesNames = {
+        "Opérations Binaires",
+        "Opérations Unaires",
         "Diagonalisation",
-        "Décompositions"
+        "Décompositions",
+        "Evaluation et Résolution"
     };
 
-    for(unsigned int i = 0; i < 4; ++i) {
-        QRadioButton* btn = new QRadioButton(opTypesNames[i], this);
-
-        if(i == 0) {
-            btn->setChecked(true);
-        }
-
-        connect(btn, &QRadioButton::clicked, [this, i]() -> void {
-                   setOperationsList(OpType(i));
-                });
-
-        opTypesLayout->addWidget(btn);
-    }
-
+    typeChoice->addItems(opTypesNames);
+    typeChoice->setCurrentIndex(static_cast<unsigned int>(OpType::BINARY_OP));
+    opTypesLayout->addWidget(typeChoice);
     opTypes->setLayout(opTypesLayout);
-
 
 
     opList = new QGroupBox("Opérations :", this);
@@ -92,15 +84,20 @@ OpChoiceWidget::OpChoiceWidget(QWidget* parent) : QWidget(parent)
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
 
+    connect(typeChoice, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [=](int index) -> void {
+        qDebug() << "selected : " << opTypesNames[index] << endl;
+        setOperationsList(static_cast<OpType>(index));
+    });
+
     setFont(font);
     setOperationsList(OpType::BINARY_OP);
     setLayout(mainLayout);
     setMinimumWidth(250);
 }
 
-
 void OpChoiceWidget::setOperationsList(const OpType& type) {
-    const static QString opNames [20] = {
+    const static QString opNames [21] = {
         "Addition (A+B)",
         "Soustraction (A-B)",
         "Multiplication (A*B)",
@@ -117,10 +114,11 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
         "Valeurs/Vecteurs propres",
         "Diagonalisation dans R",
         "Diagonalisation dans C",
-        "Evaluation d'expression",
         "Décomposition LU",
         "Decomposition QR",
-        "Décomposition Cholesky"
+        "Décomposition Cholesky",
+        "Evaluation d'expression",
+        "Résolution de système"
     };
 
     unsigned int firstIndex;
@@ -144,7 +142,12 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
         }
         case OpType::DECOMPOSITION : {
             firstIndex = 16;
-            lastIndex = 20;
+            lastIndex = 19;
+            break;
+        }
+        case OpType::EXPR_EVAL : {
+            firstIndex = 19;
+            lastIndex = 21;
             break;
         }
     }
@@ -158,6 +161,18 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
 
     for(unsigned int i = firstIndex; i < lastIndex; ++i) {
         QPushButton* btn = new QPushButton(opNames[i], this);
+        btn->setCursor(Qt::PointingHandCursor);
+        btn->setStyleSheet(
+                    "QPushButton {"
+                        "background-color : white;"
+                        "height : 30px;"
+                        "border : 1px solid lightGrey;"
+                        "border-radius : 4px;"
+                    "}"
+                    "QPushButton:hover {"
+                        "background-color:rgb(90,122,228);"
+                        "color : white;"
+                    "}");
 
         connect(btn, &QPushButton::pressed, [this, i] () -> void {
             qDebug() << i << " selected" << endl;

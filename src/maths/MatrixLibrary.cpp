@@ -7,8 +7,6 @@
 
 using namespace std;
 
-
-
 MatrixLibrary:: MatrixLibrary () : tab (map<string,Matrix>())
 {
 }
@@ -22,13 +20,9 @@ MatrixLibrary::  MatrixLibrary (const MatrixLibrary & lib)
     }
 }
 
-
 MatrixLibrary:: ~MatrixLibrary()
 {
 }
-
-
-
 
 unsigned long int MatrixLibrary:: size () const
 {

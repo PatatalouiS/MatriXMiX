@@ -203,22 +203,22 @@ void MatriXMiXWindow::setFunctorTab()
     createWindow[16] =
     [this] () -> AbstractOperationWidget*
     {
-         return new ExprEvalWidget(library);
+         return new DecompositionWidget(DecompositionWidget::LU, library);
     };
     createWindow[17] =
     [this] () -> AbstractOperationWidget*
     {
-         return new DecompositionWidget(DecompositionWidget::LU, library);
+         return new DecompositionWidget(DecompositionWidget::QR, library);
     };
     createWindow[18] =
     [this] () -> AbstractOperationWidget*
     {
-         return new DecompositionWidget(DecompositionWidget::QR, library);
+         return new DecompositionWidget(DecompositionWidget::CHOLESKY, library);
     };
     createWindow[19] =
     [this] () -> AbstractOperationWidget*
     {
-         return new DecompositionWidget(DecompositionWidget::CHOLESKY, library);
+         return new ExprEvalWidget(library);
     };
 }
 
