@@ -11,7 +11,7 @@ AbstractOperationWidget:: AbstractOperationWidget(const QMatrixLibrary* lib, QWi
     sortFunction = [](const Matrix*){return true;};
 
     QFont font ("Arial");
-    font.setPointSize(30);
+    font.setPointSize(20);
 
     description = new QLabel(this);
     description->setStyleSheet("font-size: 40px");

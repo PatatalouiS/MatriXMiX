@@ -184,7 +184,7 @@ void UnaryOpWidget:: constructType(const type &t)
             {
                 return a->isSQMatrix() && a->isDiagonalisableR();
             };
-            setTitle("PolynomeCaractéristique");
+            setTitle("Polynome Caractéristique");
             operation = [](MatrixPair a) -> QVariant
             {
                 QVariant resv;
