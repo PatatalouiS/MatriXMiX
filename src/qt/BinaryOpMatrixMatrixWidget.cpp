@@ -16,55 +16,52 @@ BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const QMa
 
     description->setText(op1.first + logo + op2.first);
 
+    QString style = "QLabel {"
+                        "background-color: rgb(243,243,243);"
+                        "border-top-left-radius : 4px;"
+                        "border-top-right-radius : 4px;"
+                        "border : 1px solid lightGrey;"
+                    "}";
+
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice 1 : ");
     op1Title -> setAlignment(Qt::AlignCenter);
+    op1Title->setStyleSheet(style);
     view1 = new MatrixViewWidget(lib, this);
+    view1->setMaximumWidth(300);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(view1);
-    op1ChoiceLayout->setContentsMargins(0,0,20,0);
+    op1ChoiceLayout->setSpacing(0);
+    op1ChoiceLayout->setContentsMargins(0,0,10,0);
 
     QVBoxLayout* op2ChoiceLayout = new QVBoxLayout;
     QLabel* op2Title = new QLabel("Choix de la matrice 2 : ");
     op2Title->setAlignment(Qt::AlignCenter);
+    op2Title->setStyleSheet(style);
     view2 = new MatrixViewWidget(lib, this);
+    view2->setMaximumWidth(300);
     op2ChoiceLayout->addWidget(op2Title);
     op2ChoiceLayout->addWidget(view2);
-    op2ChoiceLayout->setContentsMargins(20,0,0,0);
+    op2ChoiceLayout->setSpacing(0);
+    op2ChoiceLayout->setContentsMargins(10,0,0,0);
 
-    QHBoxLayout* formLayout = new QHBoxLayout;
-    formLayout->addLayout(op1ChoiceLayout);
-    formLayout->addLayout(op2ChoiceLayout);
-    formLayout->setAlignment(Qt::AlignCenter);
-    formLayout->setContentsMargins(0,0,20,0);
+    QVBoxLayout* rightLayout = new QVBoxLayout;
+    rightLayout->addWidget(description);
+    rightLayout->addWidget(calculer);
+    rightLayout->setAlignment(Qt::AlignCenter);
 
-    description->setText(op1.first + logo + op2.first);
+    QHBoxLayout* subLayout = new QHBoxLayout;
+    subLayout->addStretch(1);
+    subLayout->addLayout(op1ChoiceLayout);
+    subLayout->addStretch(1);
+    subLayout->addLayout(op2ChoiceLayout);
+    subLayout->addStretch(1);
+    subLayout->addLayout(rightLayout);
+    subLayout->addStretch(1);
+    subLayout->setAlignment(Qt::AlignCenter);
+    subLayout->setContentsMargins(22, 13, 22, 22);
 
-    QVBoxLayout* buttonLayout = new QVBoxLayout;
-    buttonLayout->addWidget(calculer);
-    buttonLayout->setAlignment(Qt::AlignCenter| Qt::AlignTop);
-
-    QVBoxLayout* subLayout1 = new QVBoxLayout;
-    subLayout1->addWidget(title);
-    subLayout1->addLayout(formLayout);
-
-    QVBoxLayout* subLayout2 = new QVBoxLayout;
-    subLayout2->addWidget(description);
-    subLayout2->addLayout(buttonLayout);
-
-    QHBoxLayout* subLayout3 = new QHBoxLayout;
-    subLayout3->addLayout(subLayout1);
-    subLayout3->addLayout(subLayout2);
-
-    QWidget* subWidget1 = new QWidget(this);
-    subWidget1->setLayout(subLayout3);
-    subWidget1->setMaximumHeight(300);
-    subWidget1->setMaximumWidth(800);
-
-    QVBoxLayout* mainLayout = new QVBoxLayout;
-    mainLayout->setSpacing(10);
-    mainLayout->addWidget(subWidget1);
-    mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
+    mainWidget->setLayout(subLayout);
 
     connect(view1, &MatrixViewWidget::clicked,
             [this] () -> void
@@ -79,8 +76,6 @@ BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const QMa
 
     view1->refresh(sortFunction);
     view2->refresh(sortFunction);
-
-    setLayout(mainLayout);
 }
 
 

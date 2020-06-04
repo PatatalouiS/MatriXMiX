@@ -28,10 +28,10 @@ OpChoiceWidget::OpChoiceWidget(QWidget* parent) : QWidget(parent)
 
     QVBoxLayout* opTypesLayout = new QVBoxLayout;
     QGroupBox* opTypes = new QGroupBox("Type d'opération :", this);
-    QFont fontUnderline("Arial");
+    QFont subFont("Arial");
     QComboBox* typeChoice = new QComboBox(this);
-    fontUnderline.setPointSize(14);
-    opTypes->setFont(fontUnderline);
+    subFont.setPointSize(14);
+    opTypes->setFont(subFont);
     opTypes->setMaximumHeight(100);
 
     static const QList<QString> opTypesNames = {
@@ -49,7 +49,7 @@ OpChoiceWidget::OpChoiceWidget(QWidget* parent) : QWidget(parent)
 
 
     opList = new QGroupBox("Opérations :", this);
-    opList->setFont(fontUnderline);
+    opList->setFont(subFont);
 
     QWidget* menu = new QWidget(this);
     menu->setStyleSheet(".QWidget{"

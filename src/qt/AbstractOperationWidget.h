@@ -1,5 +1,4 @@
 
-
 #ifndef AbstractOperationWidget_H
 #define AbstractOperationWidget_H
 
@@ -7,6 +6,7 @@
 #include <QPushButton>
 #include <QVariant>
 #include "QMatrixLibrary.hpp"
+#include <QVBoxLayout>
 
 using EigenResult = QPair<QString, std::vector<std::pair<std::complex<double>, VectorX>>>;
 using DoubleResult = QPair<QString, std::complex<double>>;
@@ -74,6 +74,9 @@ class AbstractOperationWidget : public QWidget
         QLabel* description;
         QLabel* title;
         QPushButton* calculer;
+        QVBoxLayout* mainLayout;
+        QWidget* mainWidget;
+
 
         /**
          *  @brief getter function, return a pointer on the const MatrixLibrary lib member

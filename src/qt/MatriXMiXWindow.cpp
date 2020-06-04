@@ -56,16 +56,10 @@ MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : 
     headerLayout->addWidget(logo);
     headerLayout->setAlignment(Qt::AlignHCenter);
 
-    currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
+    //currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
     currentOpLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
     currentOpWrapper->setLayout(currentOpLayout);
     currentOpLayout->setContentsMargins(0,0,0,0);
-    currentOpWrapper->setStyleSheet(".QWidget{"
-                                        "background-color : white;"
-                                        "border-radius : 5px;"
-                                        "border : 1px solid grey;"
-                                    "}");
-
 
     imgResult = new ShowMatrixWidget;
     imgResult->setStyleSheet("background-color: white;");
