@@ -37,12 +37,11 @@ AbstractOperationWidget (lib, parent)
     choiceLayout->setAlignment(Qt::AlignCenter);
     choiceWidget = new QWidget;
     choiceWidget->setLayout(choiceLayout);
-    choiceWidget->hide();
     choiceWidget->setStyleSheet(".QWidget {"
                                     "background-color : lightGrey;"
                                     "border : 1px solid grey;"
-                                "}"
-                                "font-size : 20px;");
+                                "}");
+    choiceWidget->hide();
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice : ");
@@ -58,15 +57,17 @@ AbstractOperationWidget (lib, parent)
     QVBoxLayout* rightLayout = new QVBoxLayout;
     rightLayout->addWidget(description);
     rightLayout->addWidget(calculer);
+    rightLayout->addWidget(resultAdder);
     rightLayout->setSpacing(15);
     rightLayout->setAlignment(Qt::AlignCenter);
 
     QHBoxLayout* centerLayout = new QHBoxLayout;
+    centerLayout->addStretch(3);
     centerLayout->addLayout(op1ChoiceLayout);
+    centerLayout->addStretch(2);
     centerLayout->addLayout(rightLayout);
+    centerLayout->addStretch(3);
     centerLayout->setAlignment(Qt::AlignCenter);
-    centerLayout->setStretch(0, 1);
-    centerLayout->setStretch(1, 1);
     centerLayout->setContentsMargins(0, 20, 0, 20);
 
     QVBoxLayout* subLayout = new QVBoxLayout;
@@ -146,6 +147,7 @@ void DiagonalisationWidget:: computeSelection(const bool viewID)
 {
     (void)viewID;
 
+    resultAdder->hide();
     choiceWidget->hide();
     op.first = view->nameOfSelectedMatrix();
     assert(getLib()->exist(op.first));

@@ -65,6 +65,7 @@ AbstractOperationWidget(lib, parent)
     QVBoxLayout* rightLayout = new QVBoxLayout;
     rightLayout->addWidget(description);
     rightLayout->addWidget(calculer);
+    rightLayout->addWidget(resultAdder);
     rightLayout->setAlignment(Qt::AlignCenter);
 
     QHBoxLayout* subLayout = new QHBoxLayout;
@@ -124,6 +125,8 @@ void BinaryOpMatrixNumberWidget:: computeOperation()
 
 void BinaryOpMatrixNumberWidget:: computeSelection(const bool viewId)
 {
+    resultAdder->hide();
+
     if(!viewId)
     {
         op1.first = view->nameOfSelectedMatrix();

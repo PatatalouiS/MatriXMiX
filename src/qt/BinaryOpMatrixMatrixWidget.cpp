@@ -1,8 +1,10 @@
 
 #include "BinaryOpMatrixMatrixWidget.h"
 #include "Error.h"
+#include "ResultAdderWidget.h"
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QLineEdit>
 
 BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const QMatrixLibrary* lib, QWidget* parent) : AbstractOperationWidget(lib,parent)
 {    
@@ -46,8 +48,11 @@ BinaryOpMatrixMatrixWidget:: BinaryOpMatrixMatrixWidget(const type& t, const QMa
     op2ChoiceLayout->setContentsMargins(10,0,0,0);
 
     QVBoxLayout* rightLayout = new QVBoxLayout;
+
+    resultAdder->hide();
     rightLayout->addWidget(description);
     rightLayout->addWidget(calculer);
+    rightLayout->addWidget(resultAdder);
     rightLayout->setAlignment(Qt::AlignCenter);
 
     QHBoxLayout* subLayout = new QHBoxLayout;
@@ -109,6 +114,7 @@ void BinaryOpMatrixMatrixWidget:: computeOperation()
 
 void BinaryOpMatrixMatrixWidget:: computeSelection(const bool view)
 {
+    resultAdder->hide();
     if(!view)
     {
         op2.second = nullptr;

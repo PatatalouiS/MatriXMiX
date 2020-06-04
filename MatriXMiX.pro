@@ -51,6 +51,7 @@ HEADERS += src/maths/Matrix.h \
         src/qt/MatriXMiXWindow.h \
         src/qt/OpChoiceWidget.h \
         src/qt/QMatrixLibrary.hpp \
+        src/qt/ResultAdderWidget.h \
         src/qt/ShowMatrixWidget.h \
         src/qt/Error.h \
         src/qt/MatrixViewWidget.h \
@@ -88,6 +89,7 @@ SOURCES += src/qt/main.cpp \
         src/qt/BinaryOpMatrixNumberWidget.cpp \
         src/qt/OpChoiceWidget.cpp \
         src/qt/QMatrixLibrary.cpp \
+        src/qt/ResultAdderWidget.cpp \
         src/qt/UnaryOpWidget.cpp \
         src/qt/DiagonalisationWidget.cpp \
         src/qt/ExprEvalWidget.cpp \

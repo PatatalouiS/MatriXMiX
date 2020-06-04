@@ -50,8 +50,9 @@ AbstractOperationWidget:: AbstractOperationWidget(const QMatrixLibrary* lib, QWi
                                   "background-color : white;"
                                   "border-bottom-left-radius : 5px;"
                                   "border-bottom-right-radius : 5px;"
-                              "}"
-                              );
+                              "}");
+
+
 
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(title);
@@ -60,7 +61,17 @@ AbstractOperationWidget:: AbstractOperationWidget(const QMatrixLibrary* lib, QWi
     mainLayout->setSpacing(0);
     mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 
-    connect(calculer, &QPushButton::clicked, this, &AbstractOperationWidget::computeOperation);
+    resultAdder = new ResultAdderWidget(const_cast<QMatrixLibrary*>(lib), this);
+    resultAdder->hide();
+
+    connect(calculer, &QPushButton::clicked,
+            this, &AbstractOperationWidget::computeOperation);
+
+    connect(this, &AbstractOperationWidget::newResult,
+            resultAdder, &ResultAdderWidget::showAndLoadResult );
+
+    connect(resultAdder, &ResultAdderWidget::newMatrixAdded,
+            this, &AbstractOperationWidget::libraryChanged);
 
     setLayout(mainLayout);
 }

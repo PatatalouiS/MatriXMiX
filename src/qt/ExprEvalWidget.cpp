@@ -67,12 +67,13 @@ AbstractOperationWidget (lib, parent)
 
     QVBoxLayout* btnLayout = new QVBoxLayout;
     btnLayout->addWidget(calculer);
-    btnLayout->setContentsMargins(0,30,0,0);
+    btnLayout->setContentsMargins(0,30,0,30);
     btnLayout->setAlignment(Qt::AlignCenter);
 
     QVBoxLayout* rightLayout = new QVBoxLayout;
     rightLayout->addWidget(exprBox);
     rightLayout->addLayout(btnLayout);
+    rightLayout->addWidget(resultAdder);
     rightLayout->setAlignment(Qt::AlignCenter);
 
     QHBoxLayout* subLayout = new QHBoxLayout;
@@ -86,6 +87,9 @@ AbstractOperationWidget (lib, parent)
     subLayout->setSpacing(0);
 
     mainWidget->setLayout(subLayout);
+
+    connect(expression, &QLineEdit::textEdited,
+            resultAdder, &ResultAdderWidget::hide);
 
     view->refresh(sortFunction);
 }

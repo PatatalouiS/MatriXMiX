@@ -35,6 +35,7 @@ AbstractOperationWidget(lib, parent)
     QVBoxLayout* rightLayout = new QVBoxLayout;
     rightLayout->addWidget(description);
     rightLayout->addWidget(calculer);
+    rightLayout->addWidget(resultAdder);
     rightLayout->setSpacing(15);
     rightLayout->setAlignment(Qt::AlignCenter);
 
@@ -84,6 +85,7 @@ void UnaryOpWidget:: computeOperation()
 void UnaryOpWidget:: computeSelection(const bool viewId)
 {
     (void)viewId;
+    resultAdder->hide();
     op.first = view->nameOfSelectedMatrix();
     assert(getLib()->exist(op.first));
     op.second = getLib()->find(op.first);
@@ -112,7 +114,6 @@ void UnaryOpWidget:: constructType(const type &t)
 
             break;
         }
-
         case TRACE:
         {
             sortFunction = [](const Matrix* a) -> bool
@@ -130,7 +131,6 @@ void UnaryOpWidget:: constructType(const type &t)
 
             break;
         }
-
         case INVERSE:
         {
             setTitle("Inverse");
@@ -147,7 +147,6 @@ void UnaryOpWidget:: constructType(const type &t)
 
             break;
         }
-
         case ROW_REDUCED_FORM:
         {
             setTitle("Echelonnage");
@@ -160,7 +159,6 @@ void UnaryOpWidget:: constructType(const type &t)
 
             break;
         }
-
         case EIGEN_PROPERTIES:
         {
             sortFunction = [](const Matrix* a) -> bool
@@ -177,7 +175,6 @@ void UnaryOpWidget:: constructType(const type &t)
 
             break;
         }
-
         case CARACTERISTIC_POLYNOMIAL:
         {
             sortFunction = [](const Matrix* a) -> bool
@@ -195,7 +192,6 @@ void UnaryOpWidget:: constructType(const type &t)
 
             break;
         }
-
         case KER_IMG_DIM:
         {
             setTitle("DimKer et Rang");
@@ -207,7 +203,6 @@ void UnaryOpWidget:: constructType(const type &t)
             };
             break;
         }
-
         case TRANSPOSE:
         {
             setTitle("Matrice Transposée");

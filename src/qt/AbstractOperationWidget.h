@@ -7,6 +7,7 @@
 #include <QVariant>
 #include "QMatrixLibrary.hpp"
 #include <QVBoxLayout>
+#include "ResultAdderWidget.h"
 
 using EigenResult = QPair<QString, std::vector<std::pair<std::complex<double>, VectorX>>>;
 using DoubleResult = QPair<QString, std::complex<double>>;
@@ -76,7 +77,7 @@ class AbstractOperationWidget : public QWidget
         QPushButton* calculer;
         QVBoxLayout* mainLayout;
         QWidget* mainWidget;
-
+        ResultAdderWidget* resultAdder;
 
         /**
          *  @brief getter function, return a pointer on the const MatrixLibrary lib member
@@ -106,6 +107,8 @@ class AbstractOperationWidget : public QWidget
     signals:
 
         void newResult(const QVariant res);
+
+        void libraryChanged();
 };
 
 

@@ -50,10 +50,14 @@ MainWindow::MainWindow() : QMainWindow()
             {
                 showFileTool(QFileDialog::AcceptOpen);
             });
+    connect(menuBar, &MenuBar::openLibraryWindow, [=] () -> void {
+        windowSwitcher->setCurrentWidget(libraryWindow);
+        libraryWindow->update();
+    });
 
     connect(matrixmixWindow, &MatriXMiXWindow::showLibraryWindow,[=] () -> void {
                 windowSwitcher->setCurrentWidget(libraryWindow);
-
+                libraryWindow->update();
             });
 
     connect(libraryWindow, &LibraryWindow::showMatrixmixWindow, [=] () -> void {

@@ -137,7 +137,6 @@ void SetMatrixWidget:: computeMatrix ()
     {
         library->erase(selectedMatrix.first);
         newMatrix = library->addMatrix(name, inputs);
-//        *selectedMatrix.second = newMatrix;
         emit matrixEdited(QPair<QString, Matrix&>(name, newMatrix));
         nameMatrix->setText("");
         selectedMatrix.first = "";

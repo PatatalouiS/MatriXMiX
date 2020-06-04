@@ -56,7 +56,6 @@ MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : 
     headerLayout->addWidget(logo);
     headerLayout->setAlignment(Qt::AlignHCenter);
 
-    //currentOpLayout->setSizeConstraint(QLayout::SetMinimumSize);
     currentOpLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
     currentOpWrapper->setLayout(currentOpLayout);
     currentOpLayout->setContentsMargins(0,0,0,0);
@@ -103,7 +102,8 @@ MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : 
                 emit showLibraryWindow();
             });
 
-    connect(opChoice, &OpChoiceWidget::opSelected, this, &MatriXMiXWindow::computeChoice);
+    connect(opChoice, &OpChoiceWidget::opSelected, this,
+            &MatriXMiXWindow::computeChoice);
 
     imgResult->show();
 
@@ -235,7 +235,11 @@ void MatriXMiXWindow:: computeChoice (const unsigned int choice)
     currentOpWidget->setStyleSheet("border : none;");
     currentOpLayout->addWidget(currentOpWidget);
 
-    connect(currentOpWidget, &AbstractOperationWidget::newResult, this, &MatriXMiXWindow::transferResult);
+    connect(currentOpWidget, &AbstractOperationWidget::newResult,
+            this, &MatriXMiXWindow::transferResult);
+
+    connect(currentOpWidget, &AbstractOperationWidget::libraryChanged,
+                currentOpWidget, &AbstractOperationWidget::updateViews);
 
     currentOpWidget->show();
     currentChoice = choice;
@@ -250,31 +254,31 @@ void MatriXMiXWindow:: transferResult (const QVariant& res)
         assert(res.canConvert<Matrix>());
         imgResult->computeImgMatrix(res.value<Matrix>());
     }
-    else if(currentChoice == 6)
+    else if(currentChoice == 7)
     {
         assert(res.canConvert<DoubleResult>());
         DoubleResult resD = res.value<DoubleResult>();
         imgResult->computeImgDet(resD.second, resD.first);
     }
-    else if(currentChoice == 7)
+    else if(currentChoice == 8)
     {
         assert(res.canConvert<DoubleResult>());
         DoubleResult resD = res.value<DoubleResult>();
         imgResult->computeImgTrace(resD.second, resD.first);
     }
-    else if(currentChoice == 10)
+    else if(currentChoice == 11)
     {
         assert(res.canConvert<KerImgDimResult>());
         KerImgDimResult resKI = res.value<KerImgDimResult>();
         imgResult->computeImgDimMatrix(resKI.second, resKI.first);
     }
-    else if(currentChoice == 11)
+    else if(currentChoice == 12)
     {
         assert(res.canConvert<PolynomialResult>());
         PolynomialResult resP = res.value<PolynomialResult>();
-        imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP),  std::get<0>(resP));
+        imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP), std::get<0>(resP));
     }
-    else if(currentChoice == 12)
+    else if(currentChoice == 13)
     {
         assert(res.canConvert<EigenResult>());
         EigenResult resE = res.value<EigenResult>();
