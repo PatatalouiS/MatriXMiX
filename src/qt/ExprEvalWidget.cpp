@@ -2,57 +2,92 @@
 #include "ExprEvalWidget.h"
 #include "Error.h"
 #include <QVBoxLayout>
-
-
+#include <QGroupBox>
 
 ExprEvalWidget::ExprEvalWidget(const QMatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget (lib, parent)
 {
+    QString style = "QLabel {"
+                        "background-color: rgb(243,243,243);"
+                        "border-top-left-radius : 4px;"
+                        "border-top-right-radius : 4px;"
+                        "border : 1px solid lightGrey;"
+                    "}";
+
     result = Matrix();
+
     setTitle("Evaluation d'expression");
 
+    QVBoxLayout* matrixView = new QVBoxLayout;
+    QLabel* op1Title = new QLabel("Matrices disponibles : ");
+    op1Title -> setAlignment(Qt::AlignCenter);
+    op1Title->setStyleSheet(style);
     view = new MatrixViewWidget(lib, this);
+    view->setMaximumWidth(300);
+    matrixView->addWidget(op1Title);
+    matrixView->addWidget(view);
+    matrixView->setSpacing(0);
+    matrixView->setAlignment(Qt::AlignCenter);
 
-    QVBoxLayout* subLayout1 = new QVBoxLayout;
-    subLayout1->addWidget(title);
-    subLayout1->addWidget(view);
-    subLayout1->setAlignment(Qt::AlignCenter);
-
-    QLabel* titleExpr = new QLabel("Insérer votre expression : ");
-    QLabel* title2 = new QLabel("Pour calculer l'inverse d'une matrice utiliser: A~");
-    title2->setStyleSheet("color:grey;");
-    titleExpr->setAlignment(Qt::AlignBottom |Qt::AlignCenter);
+    QLabel* info = new QLabel("Pour calculer l'inverse d'une matrice utiliser: A~");
+    info->setStyleSheet("color:grey;");
+    info->setAlignment(Qt::AlignCenter);
 
     expression = new QLineEdit();
-    expression->setMaximumSize(400, 40);
+    expression->setMinimumHeight(30);
     expression->setPlaceholderText("Ex: A+B*C/D");
+    expression->setStyleSheet("QLineEdit {"
+                                "border : 1px solid grey;"
+                                "border-radius : 4px;"
+                              "}");
 
-    QVBoxLayout* buttonLayout = new QVBoxLayout;
-    buttonLayout->addWidget(calculer);
-    buttonLayout->setAlignment(Qt::AlignCenter);
+    QVBoxLayout* exprLayout = new QVBoxLayout;
+    exprLayout->setContentsMargins(20,20,20,20);
 
-    QVBoxLayout* subLayout2 = new QVBoxLayout;
-    subLayout2->addWidget(titleExpr);
-    subLayout2->addWidget(expression);
-    subLayout2->addWidget(title2);
-    subLayout2->addLayout(buttonLayout);
+    QGroupBox* exprBox = new QGroupBox("Saisie de l'expression :");
+    exprLayout->addWidget(expression);
+    exprLayout->addWidget(info);
+    exprLayout->setSpacing(10);
 
-    QHBoxLayout* subLayout3 = new QHBoxLayout;
-    subLayout3->addLayout(subLayout1);
-    subLayout3->addLayout(subLayout2);
+    exprBox->setLayout(exprLayout);
+    exprBox->setMaximumSize(QSize(350, 250));
+    exprBox->setStyleSheet("QGroupBox { "
+                               "border: 1px solid silver;"
+                               "background-color:rgb(243,243,243);"
+                               "border-radius: 5px;"
+                               "margin-top: 15px; }"
+                               "QGroupBox::title { subcontrol-origin:margin;"
+                               "margin-top : 5px;"
+                               "background-color:rgb(235,235,235) ;"
+                               "border : 1px solid grey;"
+                               "border-radius : 5px;"
+                               "subcontrol-position: top;"
+                               "font: bold ; color: black;"
+                            "}");
 
-    QWidget* subWidget1 = new QWidget(this);
-    subWidget1->setLayout(subLayout3);
-    subWidget1->setMaximumHeight(300);
-    subWidget1->setMaximumWidth(600);
+    QVBoxLayout* btnLayout = new QVBoxLayout;
+    btnLayout->addWidget(calculer);
+    btnLayout->setContentsMargins(0,30,0,0);
+    btnLayout->setAlignment(Qt::AlignCenter);
 
-    QVBoxLayout* mainLayout = new QVBoxLayout;
-    mainLayout->setSpacing(10);
-    mainLayout->addWidget(subWidget1);
-    mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
+    QVBoxLayout* rightLayout = new QVBoxLayout;
+    rightLayout->addWidget(exprBox);
+    rightLayout->addLayout(btnLayout);
+    rightLayout->setAlignment(Qt::AlignCenter);
+
+    QHBoxLayout* subLayout = new QHBoxLayout;
+    subLayout->addStretch(3);
+    subLayout->addLayout(matrixView);
+    subLayout->addStretch(2);
+    subLayout->addLayout(rightLayout);
+    subLayout->addStretch(3);
+    subLayout->setAlignment(Qt::AlignCenter);
+    subLayout->setContentsMargins(20,20,20,20);
+    subLayout->setSpacing(0);
+
+    mainWidget->setLayout(subLayout);
 
     view->refresh(sortFunction);
-    setLayout(mainLayout);
 }
 
 

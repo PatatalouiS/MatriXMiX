@@ -11,63 +11,71 @@ using namespace std;
 DecompositionWidget::DecompositionWidget(const type type, const QMatrixLibrary* lib,
                 QWidget* parent) : AbstractOperationWidget(lib, parent) {
 
+    QString style = "QLabel {"
+                        "background-color: rgb(243,243,243);"
+                        "border-top-left-radius : 4px;"
+                        "border-top-right-radius : 4px;"
+                        "border : 1px solid lightGrey;"
+                    "}";
+
+    // Radio Button choices
     result1 = new QRadioButton("");
     result2 = new QRadioButton("");
     result1->setChecked(true);
-
+    QHBoxLayout* choiceLayout = new QHBoxLayout;
+    choiceLayout->addStretch(3);
+    choiceLayout->addWidget(result1);
+    choiceLayout->addStretch(2);
+    choiceLayout->addWidget(result2);
+    choiceLayout->addStretch(3);
+    choiceLayout->setAlignment(Qt::AlignCenter);
+    choiceWidget = new QWidget;
+    choiceWidget->setLayout(choiceLayout);
+    choiceWidget->hide();
+    choiceWidget->setStyleSheet(".QWidget {"
+                                    "background-color : lightGrey;"
+                                    "border : 1px solid grey;"
+                                "}"
+                                "font-size : 20px;");
     constructType(type);
 
     op.first = "_";
     op.second = nullptr;
+    description->setText(op.first);
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice : ");
     op1Title -> setAlignment(Qt::AlignCenter);
+    op1Title->setStyleSheet(style);
     view = new MatrixViewWidget(lib, this);
-
+    view->setMaximumWidth(300);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(view);
+    op1ChoiceLayout->setSpacing(0);
+    op1ChoiceLayout->setAlignment(Qt::AlignCenter);
 
-    QHBoxLayout* formLayout = new QHBoxLayout;
-    formLayout->addLayout(op1ChoiceLayout);
-    formLayout->setAlignment(Qt::AlignCenter);
+    QVBoxLayout* rightLayout = new QVBoxLayout;
+    rightLayout->addWidget(description);
+    rightLayout->addWidget(calculer);
+    rightLayout->setSpacing(15);
+    rightLayout->setAlignment(Qt::AlignCenter);
 
-    description->setText(op.first);
+    QHBoxLayout* centerLayout = new QHBoxLayout;
+    centerLayout->addLayout(op1ChoiceLayout);
+    centerLayout->addLayout(rightLayout);
+    centerLayout->setAlignment(Qt::AlignCenter);
+    centerLayout->setStretch(0, 1);
+    centerLayout->setStretch(1, 1);
+    centerLayout->setContentsMargins(0, 20, 0, 20);
 
-    QHBoxLayout* choiceLayout = new QHBoxLayout;
-    choiceLayout->addWidget(result1);
-    choiceLayout->addWidget(result2);
+    QVBoxLayout* subLayout = new QVBoxLayout;
+    subLayout->addLayout(centerLayout);
+    subLayout->addWidget(choiceWidget);
+    subLayout->setAlignment(Qt::AlignCenter);
+    subLayout->setContentsMargins(0,0,0,0);
+    subLayout->setSpacing(0);
 
-    choiceWidget = new QWidget;
-    choiceWidget->setLayout(choiceLayout);
-    choiceWidget->hide();
-
-    QVBoxLayout* buttonLayout = new QVBoxLayout;
-    buttonLayout->addWidget(calculer);
-    buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignTop);
-
-    QVBoxLayout* subLayout1 = new QVBoxLayout;
-    subLayout1->addWidget(title);
-    subLayout1->addLayout(formLayout);
-
-    QVBoxLayout* subLayout2 = new QVBoxLayout;
-    subLayout2->addWidget(description);
-    subLayout2->addLayout(buttonLayout);
-
-    QHBoxLayout* subLayout3 = new QHBoxLayout;
-    subLayout3->addLayout(subLayout1);
-    subLayout3->addLayout(subLayout2);
-
-    QWidget* subWidget1 = new QWidget(this);
-    subWidget1->setLayout(subLayout3);
-    subWidget1->setMaximumHeight(300);
-    subWidget1->setMaximumWidth(600);
-
-    QVBoxLayout* mainLayout = new QVBoxLayout;
-    mainLayout->setSpacing(10);
-    mainLayout->addWidget(subWidget1);
-    mainLayout->addWidget(choiceWidget);
-    mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
+    mainWidget->setLayout(subLayout);
 
     connect(view, &MatrixViewWidget::clicked,
             [this] () -> void
@@ -88,7 +96,6 @@ DecompositionWidget::DecompositionWidget(const type type, const QMatrixLibrary* 
             });
 
     view->refresh(sortFunction);
-    setLayout(mainLayout);
 }
 
 void DecompositionWidget::constructType(const type t) {

@@ -76,7 +76,7 @@ AbstractOperationWidget(lib, parent)
     subLayout->addLayout(rightLayout);
     subLayout->addStretch(1);
     subLayout->setAlignment(Qt::AlignCenter);
-    subLayout->setContentsMargins(22, 13, 22, 22);
+    subLayout->setContentsMargins(20, 20, 20, 20);
 
     mainWidget->setLayout(subLayout);
 
@@ -93,7 +93,6 @@ AbstractOperationWidget(lib, parent)
             });
 
     view->refresh(sortFunction);
-    setLayout(mainLayout);
 }
 
 

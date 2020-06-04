@@ -7,50 +7,48 @@
 UnaryOpWidget::UnaryOpWidget(const type& t, const QMatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget(lib, parent)
 {
+    QString style = "QLabel {"
+                        "background-color: rgb(243,243,243);"
+                        "border-top-left-radius : 4px;"
+                        "border-top-right-radius : 4px;"
+                        "border : 1px solid lightGrey;"
+                    "}";
+
     result.setValue(nullptr);
     op.first = "_";
     op.second = nullptr;
+    description->setText(op.first);
 
     constructType(t);
 
     QVBoxLayout* op1ChoiceLayout = new QVBoxLayout;
     QLabel* op1Title = new QLabel("Choix de la matrice : ");
     op1Title -> setAlignment(Qt::AlignCenter);
+    op1Title->setStyleSheet(style);
     view = new MatrixViewWidget(lib, this);
+    view->setMaximumWidth(300);
     op1ChoiceLayout->addWidget(op1Title);
     op1ChoiceLayout->addWidget(view);
+    op1ChoiceLayout->setSpacing(0);
+    op1ChoiceLayout->setAlignment(Qt::AlignCenter);
 
-    QHBoxLayout* formLayout = new QHBoxLayout;
-    formLayout->addLayout(op1ChoiceLayout);
-    formLayout->setAlignment(Qt::AlignCenter);
+    QVBoxLayout* rightLayout = new QVBoxLayout;
+    rightLayout->addWidget(description);
+    rightLayout->addWidget(calculer);
+    rightLayout->setSpacing(15);
+    rightLayout->setAlignment(Qt::AlignCenter);
 
-    QVBoxLayout* buttonLayout = new QVBoxLayout;
-    buttonLayout->addWidget(calculer);
-    buttonLayout->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+    QHBoxLayout* subLayout = new QHBoxLayout;
+    subLayout->addStretch(3);
+    subLayout->addLayout(op1ChoiceLayout);
+    subLayout->addStretch(2);
+    subLayout->addLayout(rightLayout);
+    subLayout->addStretch(3);
+    subLayout->setAlignment(Qt::AlignCenter);
+    subLayout->setContentsMargins(20,20,20,20);
+    subLayout->setSpacing(0);
 
-    description->setText(op.first);
-
-    QVBoxLayout* subLayout1 = new QVBoxLayout;
-    subLayout1->addWidget(title);
-    subLayout1->addLayout(formLayout);
-
-    QVBoxLayout* subLayout2 = new QVBoxLayout;
-    subLayout2->addWidget(description);
-    subLayout2->addLayout(buttonLayout);
-
-    QHBoxLayout* subLayout3 = new QHBoxLayout;
-    subLayout3->addLayout(subLayout1);
-    subLayout3->addLayout(subLayout2);
-
-    QWidget* subWidget1 = new QWidget(this);
-    subWidget1->setLayout(subLayout3);
-    subWidget1->setMaximumHeight(300);
-    subWidget1->setMaximumWidth(600);
-
-    QVBoxLayout* mainLayout = new QVBoxLayout;
-    mainLayout->setSpacing(10);
-    mainLayout->addWidget(subWidget1);
-    mainLayout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
+    mainWidget->setLayout(subLayout);
 
     connect(view, &MatrixViewWidget::clicked,
             [this] () -> void
@@ -59,7 +57,6 @@ AbstractOperationWidget(lib, parent)
             });
 
     view->refresh(sortFunction);
-    setLayout(mainLayout);
 }
 
 
