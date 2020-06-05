@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <!-- Thanks to MathJax examples for some of this code -->
+  <head>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script type="text/javascript" src="./MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script src="qrc:///qtwebchannel/qwebchannel.js"> </script>
+  </head>
+  <body>
+    <div id="latex" class="output">$${\Theta(n)}$$</div>
+    <script>
+
+      new QWebChannel(qt.webChannelTransport, function(channel) {
+        let webObj = channel.objects.webObj;
+        window.webObj = webObj;
+      });
+
+       MathJax.Hub.signal.Interest( function ( message ) {
+        const text = message[0];
+
+        if ( text == 'End Process' ) {
+          webObj.mathJaxDone(text);
+        }
+        else if ( /error/.test( message[0] ) ) {
+          window.status = 'Error';
+        }
+        else {
+          window.status = 'Loading';
+        }
+      });
+
+      window.loadLatex = function ( latexString ) {
+          const math = document.getElementById('latex').innerHTML = latexString;
+          MathJax.Hub.Queue([ "Typeset", MathJax.Hub, math ]);
+      } 
+
+      window.getSVG1 = function () {
+        return document.getElementsByTagName("svg")[0].outerHTML;
+      }
+
+      window.getSVG2 = function () {
+        return document.getElementsByTagName("svg")[1].outerHTML;
+      }
+
+      window.getStatus = () => window.status;
+            
+      
+    </script>
+  </body>
+</html>

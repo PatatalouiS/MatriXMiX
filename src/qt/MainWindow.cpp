@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
-
 #include <QStackedWidget>
+
+#include "MathjaxRenderer.h"
 
 MainWindow::MainWindow() : QMainWindow()
 {
@@ -25,6 +26,7 @@ MainWindow::MainWindow() : QMainWindow()
 
     libraryWindow = new LibraryWindow(this, &library);
     matrixmixWindow = new MatriXMiXWindow(this, &library);
+    MathjaxRenderer* render = new MathjaxRenderer(this);
 
     menuBar = new MenuBar(this);
     setMenuBar(menuBar);
@@ -38,7 +40,9 @@ MainWindow::MainWindow() : QMainWindow()
 
     QStackedWidget* windowSwitcher = new QStackedWidget(this);
     windowSwitcher->addWidget(matrixmixWindow);
-    windowSwitcher->addWidget(libraryWindow);
+    //windowSwitcher->addWidget(libraryWindow);
+
+    windowSwitcher->addWidget(render);
 
     connect(menuBar, &MenuBar::openSaveTool,
             [this]() -> void
@@ -56,8 +60,9 @@ MainWindow::MainWindow() : QMainWindow()
     });
 
     connect(matrixmixWindow, &MatriXMiXWindow::showLibraryWindow,[=] () -> void {
-                windowSwitcher->setCurrentWidget(libraryWindow);
-                libraryWindow->update();
+                //windowSwitcher->setCurrentWidget(libraryWindow);
+                //libraryWindow->update();
+                windowSwitcher->setCurrentWidget(render);
             });
 
     connect(libraryWindow, &LibraryWindow::showMatrixmixWindow, [=] () -> void {

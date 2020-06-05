@@ -6,14 +6,25 @@
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "../maths/Fraction.h"
 
+#include <QtWebEngineWidgets/QWebEngineView>
+#include <QtWebEngineWidgets/QWebEnginePage>
+
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
 {
+//    QWebEnginePage* page = new QWebEnginePage(this);
+//    page->load(QUrl(":/mathjax/mathjax/index.html"));
+//    QWebEngineView* view = new QWebEngineView(this);
+//    view->setPage(page);
+
+
+
     QHBoxLayout* showMatrixLayout = new QHBoxLayout;
     showMatrixLayout->setAlignment(Qt::AlignCenter);
     imgSelected = new QLabel(this);
     clear();
     showMatrixLayout->addWidget(imgSelected);
     showMatrixLayout->setAlignment(Qt::AlignHCenter);
+    //showMatrixLayout->addWidget(view);
     setLayout(showMatrixLayout);
     hide();
 }
@@ -229,6 +240,7 @@ void ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<std::complex
 
 void ShowMatrixWidget:: setPixmapToQLabel (const QColor &col, const QString& latex, const unsigned int sizeTxt)
 {
+
     clear();
     JKQTMathText mathText;
     mathText.useXITS();

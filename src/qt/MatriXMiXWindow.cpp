@@ -248,45 +248,67 @@ void MatriXMiXWindow:: computeChoice (const unsigned int choice)
 
 void MatriXMiXWindow:: transferResult (const QVariant& res)
 {
-    if(currentChoice <= 6 || currentChoice == 9
-            || currentChoice == 10 || currentChoice >= 14)
-    {
-        assert(res.canConvert<Matrix>());
+//    if(currentChoice <= 6 || currentChoice == 9
+//            || currentChoice == 10 || currentChoice >= 14)
+//    {
+//        assert(res.canConvert<Matrix>());
+//        imgResult->computeImgMatrix(res.value<Matrix>());
+//    }
+//    else if(currentChoice == 7)
+//    {
+//        assert(res.canConvert<DoubleResult>());
+//        DoubleResult resD = res.value<DoubleResult>();
+//        imgResult->computeImgDet(resD.second, resD.first);
+//    }
+//    else if(currentChoice == 8)
+//    {
+//        assert(res.canConvert<DoubleResult>());
+//        DoubleResult resD = res.value<DoubleResult>();
+//        imgResult->computeImgTrace(resD.second, resD.first);
+//    }
+//    else if(currentChoice == 11)
+//    {
+//        assert(res.canConvert<KerImgDimResult>());
+//        KerImgDimResult resKI = res.value<KerImgDimResult>();
+//        imgResult->computeImgDimMatrix(resKI.second, resKI.first);
+//    }
+//    else if(currentChoice == 12)
+//    {
+//        assert(res.canConvert<PolynomialResult>());
+//        PolynomialResult resP = res.value<PolynomialResult>();
+//        imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP), std::get<0>(resP));
+//    }
+//    else if(currentChoice == 13)
+//    {
+//        assert(res.canConvert<EigenResult>());
+//        EigenResult resE = res.value<EigenResult>();
+//        imgResult->computeImgEigen(resE.second, resE.first);
+//    }
+//    else
+//    {
+//        assert(false);
+//    }
+
+    if(res.canConvert<Matrix>()) {
         imgResult->computeImgMatrix(res.value<Matrix>());
     }
-    else if(currentChoice == 7)
-    {
-        assert(res.canConvert<DoubleResult>());
-        DoubleResult resD = res.value<DoubleResult>();
-        imgResult->computeImgDet(resD.second, resD.first);
-    }
-    else if(currentChoice == 8)
-    {
-        assert(res.canConvert<DoubleResult>());
-        DoubleResult resD = res.value<DoubleResult>();
-        imgResult->computeImgTrace(resD.second, resD.first);
-    }
-    else if(currentChoice == 11)
-    {
-        assert(res.canConvert<KerImgDimResult>());
+    else if(res.canConvert<KerImgDimResult>()) {
         KerImgDimResult resKI = res.value<KerImgDimResult>();
         imgResult->computeImgDimMatrix(resKI.second, resKI.first);
     }
-    else if(currentChoice == 12)
-    {
-        assert(res.canConvert<PolynomialResult>());
+    else if(res.canConvert<PolynomialResult>()) {
         PolynomialResult resP = res.value<PolynomialResult>();
         imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP), std::get<0>(resP));
     }
-    else if(currentChoice == 13)
-    {
-        assert(res.canConvert<EigenResult>());
+    else if(res.canConvert<EigenResult>()) {
         EigenResult resE = res.value<EigenResult>();
         imgResult->computeImgEigen(resE.second, resE.first);
     }
-    else
-    {
-        assert(false);
+    else {
+        DoubleResult resD = res.value<DoubleResult>();
+        currentChoice == 7
+                ? imgResult->computeImgDet(resD.second, resD.first)
+                : imgResult->computeImgTrace(resD.second, resD.first);
     }
 }
 
