@@ -4,6 +4,7 @@
 #include <cassert>
 #include <mpParser.h>
 #include <QDebug>
+#include <algorithm>
 
 using namespace std;
 
@@ -133,11 +134,15 @@ const Matrix& QMatrixLibrary:: addMatrix (const QString& name, const  UserInputs
 
 void QMatrixLibrary:: addMatrix (const QString& name, const Matrix& m) {
     if(isName(name)) {
+        unsigned int nbRows = m.getNbRows();
+        unsigned int nbCols = m.getNbCols();
 
-        UserInputs defaults(m.getNbRows(), m.getNbCols());
+        UserInputs defaults(nbRows, nbCols);
 
-        for(unsigned int i = 0; i < m.getNbRows() * m.getNbCols(); ++i) {
-            defaults.put(complexToExpr(m.getVal(i)));
+        for(unsigned int i = 0; i < nbRows; i++) {
+            for(unsigned int j = 0; j < nbCols; j++) {
+                defaults.put(complexToExpr(m[i][j]));
+            }
         }
 
         tab.insert( name, { m, defaults });
@@ -485,7 +490,14 @@ void QMatrixLibrary:: polish(const std::string & chain ,
 
 string QMatrixLibrary:: isCalculableExpression(const string & expression)const
 {
-   vector<string> result = explode(expression);
+   string expressionCopy = expression;
+   expressionCopy.insert(0, 1, '(');
+   expressionCopy.push_back(')');
+   expressionCopy.erase(remove(expressionCopy.begin(),
+                               expressionCopy.end(), ' '),
+                        expressionCopy.end());
+
+   vector<string> result = explode(expressionCopy);
    unsigned long int i, s = result.size();
 
    string calculable = "calculable";
@@ -702,10 +714,14 @@ string QMatrixLibrary:: isCalculableExpression(const string & expression)const
 
 Matrix QMatrixLibrary:: calculateExpression(const std::string & chain)const
 {
+    string chainCopy = chain;
+    chainCopy.insert(0, 1, '(');
+    chainCopy.push_back(')');
+    chainCopy.erase(remove(chainCopy.begin(), chainCopy.end(), ' '), chainCopy.end());
 
     QMatrixLibrary copy(*this);
     vector<string> polish_not;
-    copy.polish(chain,polish_not);      //I write my expression in Polish notation
+    copy.polish(chainCopy,polish_not);      //I write my expression in Polish notation
 
     stack<string> pile;
     Matrix temp;
@@ -826,83 +842,98 @@ Matrix QMatrixLibrary:: calculateExpression(const std::string & chain)const
 // to recode later, we must implement expr support
 void QMatrixLibrary:: saveFile (const string & filename) const
 {
-//    ofstream file (filename.c_str());
+    ofstream file (filename.c_str());
 
-//    if(!file.is_open())
-//    {
-//        cout << "Erreur lors de la lecture du fichier "
-//                "\nVeuillez vérifier le chemin du fichier" << endl;
-//        exit(EXIT_FAILURE);
-//    }
+    if(!file.is_open())
+    {
+        cout << "Erreur lors de la lecture du fichier "
+                "\nVeuillez vérifier le chemin du fichier" << endl;
+        exit(EXIT_FAILURE);
+    }
 
-//    file << "Matrix" << endl;
+    file << "Matrix .mtmx" << endl;
+    file << "nb " << size() << endl << endl;
 
-//    for (auto it = tab.begin(); it != tab.end(); it++ )
-//    {
-//       string matrixname = it->first;
-//       Matrix m(*find_matrix(matrixname));
+    for (const auto& [ name, userMatrix ] : *this)
+    {
+       string matrixname = name.toStdString();
+       Matrix matrix = userMatrix.matrix;
+       unsigned int nbRows = matrix.getNbRows();
+       unsigned int nbCols = matrix.getNbCols();
 
-//       file << endl << matrixname << endl;
-//       file << m.getNbRows() << " " << m.getNbCols() << endl;
+       file << endl;
+       file << "name " << matrixname << endl;
+       file << "rows " << nbRows << endl << "cols " << nbCols << endl;
 
-//       for (unsigned int i = 0; i < m.getNbRows(); i++)
-//       {
-//           for (unsigned int j = 0; j < m.getNbCols(); j++)
-//           {
+       for (unsigned int i = 0; i < nbRows; i++)
+       {
+           file << endl;
+           for (unsigned int j = 0; j < nbCols; j++)
+           {
+               file << userMatrix.entries[i * nbCols + j].toStdString();
+               file << endl;
+           }
+       }
+       cout << "La sauvegarde de la matrice " << matrixname
+            << " est réussie" << endl << endl;
+    }
 
-//               file << m[i][j] << " ";
-//           }
-//           file << endl;
-//       }
-//       cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
-//    }
-
-//    file.close();
+    file.close();
 }
 
 // To recode later, we must implement expr support
 void QMatrixLibrary:: readFile (const string & filename)
 {
-//    string matrixname;
-//    unsigned int r,c;
-//    ifstream file (filename.c_str());
+    string matrixname;
+    unsigned int r;
+    unsigned int c;
+    unsigned int nbMatrices;
+    ifstream file (filename.c_str());
 
-//    clear();
+    clear();
 
-//    if(!file.is_open())
-//    {
-//        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
-//    }
+    if(!file.is_open())
+    {
+      cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+    }
 
-//    string testfile;
-//    file >> testfile ;
+    string testfile;
+    string entry;
+    string trash;
 
-//    if( testfile == "Matrix")
-//    {
-//        while(!file.eof())
-//        {
-//            file >> matrixname;
-//            file >> r >> c;
+    getline(file, testfile); // read top indicator
 
-//            Matrix m(r,c);
+    if( testfile == "Matrix .mtmx")
+    {
+      file >> trash >> nbMatrices;
 
-//            for (unsigned int i = 0; i < r; i++)
-//            {
-//                for (unsigned int j = 0; j < c; j++)
-//                {
-//                    file >> m[i][j];
-//                }
+      for(unsigned int i = 0; i < nbMatrices; ++i)
+      {
+          file >> matrixname >> matrixname; // get name
+          file >> trash >> r; //get rows
+          file >> trash >> c; //get cols
 
-//            }
-//            addMatrix(matrixname,m);
-//        }
+          UserInputs inputs(r, c);
 
-//        file.close();
+          getline(file, trash); // cr/lf between matrices
 
-//    }
-//    else
-//    {
-//        cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
+          for(unsigned int i = 0; i < r; ++i) {
+              getline(file, trash); // cr/lf between lines
+              for(unsigned int j = 0; j < c; ++j) {
+                  getline(file, entry);
+                  inputs.put(QString::fromStdString(entry));
+              }
+          }
 
-//    }
+          addMatrix(QString::fromStdString(matrixname), inputs);
+      }
+
+      file.close();
+
+    }
+    else
+    {
+      cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
+
+    }
 }

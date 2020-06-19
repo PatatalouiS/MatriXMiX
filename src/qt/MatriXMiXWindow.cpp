@@ -11,6 +11,7 @@
 #include "OpChoiceWidget.h"
 #include "DecompositionWidget.h"
 
+
 MatriXMiXWindow:: MatriXMiXWindow(QWidget* parent, const QMatrixLibrary* lib) : QWidget(parent)
 {
     library = lib;
@@ -289,27 +290,31 @@ void MatriXMiXWindow:: transferResult (const QVariant& res)
 //        assert(false);
 //    }
 
+    QString latex;
+
     if(res.canConvert<Matrix>()) {
-        imgResult->computeImgMatrix(res.value<Matrix>());
+        latex = imgResult->computeImgMatrix(res.value<Matrix>());
     }
     else if(res.canConvert<KerImgDimResult>()) {
         KerImgDimResult resKI = res.value<KerImgDimResult>();
-        imgResult->computeImgDimMatrix(resKI.second, resKI.first);
+        latex = imgResult->computeImgDimMatrix(resKI.second, resKI.first);
     }
     else if(res.canConvert<PolynomialResult>()) {
         PolynomialResult resP = res.value<PolynomialResult>();
-        imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP), std::get<0>(resP));
+        latex = imgResult->computeImgPolynomial(std::get<1>(resP), std::get<2>(resP), std::get<0>(resP));
     }
     else if(res.canConvert<EigenResult>()) {
         EigenResult resE = res.value<EigenResult>();
-        imgResult->computeImgEigen(resE.second, resE.first);
+        latex = imgResult->computeImgEigen(resE.second, resE.first);
     }
     else {
         DoubleResult resD = res.value<DoubleResult>();
         currentChoice == 7
-                ? imgResult->computeImgDet(resD.second, resD.first)
-                : imgResult->computeImgTrace(resD.second, resD.first);
+                ? latex = imgResult->computeImgDet(resD.second, resD.first)
+                : latex = imgResult->computeImgTrace(resD.second, resD.first);
     }
+
+    //renderer->setLatex(latex.replace("$", ""));
 }
 
 void MatriXMiXWindow::updateCurrentOperationWidget() {

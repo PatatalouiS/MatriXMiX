@@ -24,7 +24,7 @@ class UserInputs {
     const QString& operator[] (const unsigned int ind) const;
 
 
-    private :
+    //private :
 
 
     unsigned int rows;

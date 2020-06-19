@@ -35,5 +35,5 @@ const QString& UserInputs::put(const QString& input) {
 }
 
 const QString& UserInputs::operator[](const unsigned int ind) const {
-    return inputs[ind];
+    return inputs.at(ind);
 }

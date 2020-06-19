@@ -28,15 +28,19 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     actionLoad->setIcon(im4);
     menuFile -> addAction(actionLoad);
 
-    menuMatrix = addMenu("Librarie");
+    menuMatrix = addMenu("Afficher");
     QPixmap im1(":/img/library.png");
     im1 = im1.scaled(50, 50);
 
     menuMatrix->setCursor(Qt::PointingHandCursor);
 
-    libraryMatrix = new QAction("Ouvrir" , this);
+    QPixmap imMenu(":/img/menu.png");
+    libraryMatrix = new QAction("Librairie" , this);
     libraryMatrix->setIcon(im1);
     menuMatrix -> addAction(libraryMatrix);
+    matrixmixWindow = new QAction("Menu", this);
+    matrixmixWindow->setIcon(imMenu);
+    menuMatrix->addAction(matrixmixWindow);
 
     menuHelp = addMenu("Aide");
     menuHelp->setCursor(Qt::PointingHandCursor);
@@ -71,6 +75,7 @@ MenuBar:: MenuBar(QWidget* parent) : QMenuBar(parent)
     connect(actionHelpQt, &QAction::triggered , this, &MenuBar::showPageQt);
     connect(actionQuit, &QAction::triggered, this , &QApplication::quit);
     connect(libraryMatrix, &QAction::triggered, this, &MenuBar::openLibraryWindow);
+    connect(matrixmixWindow, &QAction::triggered, this, &MenuBar::openMatrixmixWindow);
     connect(actionSave, &QAction::triggered, this, &MenuBar::openSaveTool);
     connect(actionLoad, &QAction::triggered, this, &MenuBar::openLoadTool);
 }

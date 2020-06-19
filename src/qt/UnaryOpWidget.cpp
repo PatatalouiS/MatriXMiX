@@ -163,7 +163,7 @@ void UnaryOpWidget:: constructType(const type &t)
         {
             sortFunction = [](const Matrix* a) -> bool
             {
-                return a->isSQMatrix() && a->isDiagonalisableR();
+                return a->isSQMatrix();
             };
             setTitle("Valeurs / Vecteurs Propres");
             operation = [](MatrixPair a) -> QVariant
@@ -179,7 +179,7 @@ void UnaryOpWidget:: constructType(const type &t)
         {
             sortFunction = [](const Matrix* a) -> bool
             {
-                return a->isSQMatrix() && a->isDiagonalisableR();
+                return a->isSQMatrix();
             };
             setTitle("Polynome Caractéristique");
             operation = [](MatrixPair a) -> QVariant

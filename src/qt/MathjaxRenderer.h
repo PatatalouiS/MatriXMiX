@@ -4,6 +4,7 @@
 #include <QObject>
 
 class WebObject : public QObject {
+
     Q_OBJECT
 
     public slots :
@@ -13,10 +14,6 @@ class WebObject : public QObject {
     private:
 
         bool firstRender = false;
-
-    signals :
-
-        void done();
 };
 
 
@@ -39,7 +36,7 @@ class MathjaxRenderer : public QWidget
         MathjaxRenderer(QWidget* parent = nullptr);
 
 
-        void setLatex(QString&& latex);
+        void setLatex(const QString& latex);
 
     public slots :
 
@@ -51,8 +48,6 @@ class MathjaxRenderer : public QWidget
         QWebEngineView* view;
         QWebChannel* channel;
         WebObject* webObj;
-        QSvgWidget* img;
-        QImage* img2;
 };
 
 #endif // MATHJAXRENDERER_H

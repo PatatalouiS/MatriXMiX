@@ -66,7 +66,7 @@ QString complexLatex (std::complex<double> coef)
 }
 
 
-void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt, const QColor& col)
+QString ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt, const QColor& col)
 {
     unsigned int rows = mat.getNbRows();
     unsigned int cols = mat.getNbCols();
@@ -92,36 +92,42 @@ void ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int s
         }
     }
     latex += "\\end{bmatrix}";
+
+
    setPixmapToQLabel(col, latex, sizeTxt);
+   return latex;
 }
 
 
-void ShowMatrixWidget:: computeImgDet(const std::complex<double> det, const QString& name, const QColor& col)
+QString ShowMatrixWidget:: computeImgDet(const std::complex<double> det, const QString& name, const QColor& col)
 {
     QString latex = "\\mathit{Det}\\(" + name + ") = " + complexLatex(det);
     setPixmapToQLabel(col, latex, 40);
+    return latex;
 }
 
 
-void ShowMatrixWidget:: computeImgTrace(const std::complex<double> scalar, const QString& name,
+QString ShowMatrixWidget:: computeImgTrace(const std::complex<double> scalar, const QString& name,
                                         const QColor& col)
 {
     QString latex = "\\mathit{Tr}\\(" + name + ") = " + complexLatex(scalar);
     setPixmapToQLabel(col, latex, 40);
+    return latex;
 }
 
 
-void ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, unsigned int>& res,
+QString ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, unsigned int>& res,
                                             const QString& name, const QColor& col)
 {
     QString latex = "\\begin{matrix}\\mathit{Rg}\\(" + name + ") = " + QString::number(res.first) +
                     "\\\\\\mathit{DimKer}\\(" + name + ") = " + QString::number(res.second) + "\\end{matrix}";
 
     setPixmapToQLabel(col, latex, 40);
+    return latex;
 }
 
 
- void ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2,
+ QString ShowMatrixWidget:: computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2,
                                               const QString& name, const QColor& col)
 {
     std::ostringstream flux;
@@ -190,10 +196,11 @@ void ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, unsign
                     "\\mathit{\\text{P}_{\\text{" + name + "}}}\\(X) = " + factorizedForm + "\\end{matrix}";
 
     setPixmapToQLabel(col, latex, 30);
+    return latex;
 }
 
 
-void ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<std::complex<double>, VectorX>>& res,
+QString ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<std::complex<double>, VectorX>>& res,
                                         const QString& name, const QColor& col)
 {
     QString spec;
@@ -235,6 +242,7 @@ void ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<std::complex
     latex += "\\end{matrix}";
 
     setPixmapToQLabel(col, latex, 30);
+    return latex;
 }
 
 

@@ -26,6 +26,7 @@ class MenuBar : public QMenuBar
         QAction *actionLoad;
         QMenu *menuMatrix;
         QAction *libraryMatrix;
+        QAction *matrixmixWindow;
         QMenu *menuHelp;
         QAction* actionHelpMatrix;
         QAction* actionHelpQt;
@@ -48,6 +49,8 @@ class MenuBar : public QMenuBar
          * @brief Open the library window
          */
         void openLibraryWindow();
+
+        void openMatrixmixWindow();
         /**
          * @brief Open the save tool
          */

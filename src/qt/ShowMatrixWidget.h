@@ -54,7 +54,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col The colour of the text
          */
 
-        void computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt = 20, const QColor& col = QColor(0,0,0,0));
+        QString computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt = 20, const QColor& col = QColor(0,0,0,0));
 
         /**
          * @brief computeImgDimMatrix Compute an image wich represents the Kernel Dimension and Image dimension of a Matrix
@@ -63,7 +63,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col The colour of the text
          */
 
-        void computeImgDimMatrix(const std::pair<unsigned int, unsigned int>& res,
+        QString computeImgDimMatrix(const std::pair<unsigned int, unsigned int>& res,
                                const QString& name, const QColor& col = QColor(0,0,0,0));
 
         /**
@@ -74,7 +74,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col the colour of the text
          */
 
-        void computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2,
+        QString computeImgPolynomial(const Polynomial& res1, const std::vector<Polynomial>& res2,
                                   const QString& name, const QColor& col = QColor(0,0,0,0));
 
         /**
@@ -84,7 +84,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col the colour of the text
          */
 
-        void computeImgEigen(const std::vector<std::pair<std::complex<double>, VectorX>>& res,
+        QString computeImgEigen(const std::vector<std::pair<std::complex<double>, VectorX>>& res,
                              const QString& name, const QColor& col = QColor(0,0,0,0));
 
         /**
@@ -94,7 +94,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col the colour of the text
          */
 
-        void computeImgDet(const std::complex<double> scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
+        QString computeImgDet(const std::complex<double> scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
 
         /**
          * @brief computeImgTrace Compute an Image wich represents the Trace of a Matrix
@@ -103,7 +103,7 @@ class ShowMatrixWidget : public QWidget
          * @param [in] col The colour of the text
          */
 
-        void computeImgTrace(const std::complex<double> scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
+        QString computeImgTrace(const std::complex<double> scalar, const QString& name, const QColor& col = QColor(0,0,0,0));
 
         /**
          * @brief clear clear the current Image

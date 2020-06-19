@@ -26,7 +26,6 @@ MainWindow::MainWindow() : QMainWindow()
 
     libraryWindow = new LibraryWindow(this, &library);
     matrixmixWindow = new MatriXMiXWindow(this, &library);
-    MathjaxRenderer* render = new MathjaxRenderer(this);
 
     menuBar = new MenuBar(this);
     setMenuBar(menuBar);
@@ -40,9 +39,7 @@ MainWindow::MainWindow() : QMainWindow()
 
     QStackedWidget* windowSwitcher = new QStackedWidget(this);
     windowSwitcher->addWidget(matrixmixWindow);
-    //windowSwitcher->addWidget(libraryWindow);
-
-    windowSwitcher->addWidget(render);
+    windowSwitcher->addWidget(libraryWindow);
 
     connect(menuBar, &MenuBar::openSaveTool,
             [this]() -> void
@@ -54,15 +51,19 @@ MainWindow::MainWindow() : QMainWindow()
             {
                 showFileTool(QFileDialog::AcceptOpen);
             });
+
     connect(menuBar, &MenuBar::openLibraryWindow, [=] () -> void {
         windowSwitcher->setCurrentWidget(libraryWindow);
         libraryWindow->update();
     });
 
+    connect(menuBar, &MenuBar::openMatrixmixWindow, [=] () -> void {
+        windowSwitcher->setCurrentWidget(matrixmixWindow);
+    });
+
     connect(matrixmixWindow, &MatriXMiXWindow::showLibraryWindow,[=] () -> void {
-                //windowSwitcher->setCurrentWidget(libraryWindow);
-                //libraryWindow->update();
-                windowSwitcher->setCurrentWidget(render);
+                windowSwitcher->setCurrentWidget(libraryWindow);
+                libraryWindow->update();
             });
 
     connect(libraryWindow, &LibraryWindow::showMatrixmixWindow, [=] () -> void {
