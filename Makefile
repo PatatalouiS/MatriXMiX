@@ -9,15 +9,15 @@ DOC_DIR = doc
 CC = g++
 LD = g++
 
-CC_FLAGS = -g -std=c++11 -Wall -c
-LD_FLAGS = -g -std=c++11 -Wall
+CC_FLAGS = -g -std=c++11 -Wall -Wextra -c -fPIC -O3
+LD_FLAGS = -g -std=c++11 -Wall -Wextra -fPIC -O3
 
 CLEAN_FLAGS = -v -r -f
 
 EIGEN = -I ext/Eigen
 
 
-all : TXT Qt Test
+all : TXT Qt Test Lib
 
 
 Qt : MatriXMiX.make
@@ -27,6 +27,10 @@ TXT : bin/MatriXMiX_TXT
 
 Test : bin/MatriXMiX_Test
 
+Lib : bin/libmatrix.a
+
+bin/libmatrix.a : obj/Matrix.o obj/MatrixLibrary.o obj/Polynomial.o obj/Fraction.o obj/MatriXMiXTXT.o obj/Gauss.o
+	ar rcs $@ $^
 
 
 MatriXMiX.make : MatriXMiX.pro
