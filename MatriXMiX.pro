@@ -7,7 +7,7 @@
 TEMPLATE = app
 CONFIG += release c++17
 
-QT += webenginewidgets svg
+QT += svg
 
 # names and dirnames
 MAKEFILE= MakefileQt
@@ -50,7 +50,6 @@ HEADERS += src/maths/Matrix.h \
         src/qt/ExprLineEdit.hpp \
         src/qt/LibraryWindow.h \
         src/qt/MainWindow.hpp \
-        src/qt/MathjaxRenderer.h \
         src/qt/MatriXMiXWindow.h \
         src/qt/OpChoiceWidget.h \
         src/qt/QMatrixLibrary.hpp \
@@ -83,7 +82,6 @@ SOURCES += src/qt/main.cpp \
         src/qt/ExprLineEdit.cpp \
         src/qt/LibraryWindow.cpp \
         src/qt/MainWindow.cpp \
-        src/qt/MathjaxRenderer.cpp \
         src/qt/MatriXMiXWindow.cpp \
         src/qt/MatrixViewWidget.cpp \
         src/qt/Error.cpp \

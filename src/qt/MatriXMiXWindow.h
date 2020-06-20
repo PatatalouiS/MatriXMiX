@@ -4,7 +4,6 @@
 #include "MenuBar.h"
 #include "LibraryWindow.h"
 #include "AbstractOperationWidget.h"
-#include "MathjaxRenderer.h"
 
 /**
 @class MatriXMiXWindow The class MatriXMiXWindow generate the main page of the application

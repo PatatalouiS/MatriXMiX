@@ -1,7 +1,6 @@
 #include "MainWindow.hpp"
 #include <QStackedWidget>
 
-#include "MathjaxRenderer.h"
 
 MainWindow::MainWindow() : QMainWindow()
 {

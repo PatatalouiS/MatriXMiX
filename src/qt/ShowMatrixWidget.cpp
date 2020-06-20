@@ -6,18 +6,9 @@
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "../maths/Fraction.h"
 
-#include <QtWebEngineWidgets/QWebEngineView>
-#include <QtWebEngineWidgets/QWebEnginePage>
 
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
 {
-//    QWebEnginePage* page = new QWebEnginePage(this);
-//    page->load(QUrl(":/mathjax/mathjax/index.html"));
-//    QWebEngineView* view = new QWebEngineView(this);
-//    view->setPage(page);
-
-
-
     QHBoxLayout* showMatrixLayout = new QHBoxLayout;
     showMatrixLayout->setAlignment(Qt::AlignCenter);
     imgSelected = new QLabel(this);
