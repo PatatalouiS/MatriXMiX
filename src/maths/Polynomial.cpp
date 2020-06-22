@@ -9,11 +9,6 @@
 
 using namespace std;
 
-
-const double EPSILON = 0.00001;
-
-
-
 Polynomial :: Polynomial() : tab (vector<complex<double>>(1,0))
 {
     this->degree = 0;

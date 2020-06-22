@@ -28,10 +28,19 @@ class OpChoiceWidget : public QWidget
 
     private slots :
 
+        /**
+         * @brief setOperationsList computes the new available opeation list choosed in function
+         *  of the user choice. (type)
+         * @param type the new type of operations choosed by user
+         */
         void setOperationsList(const OpType& type);
 
     signals:
 
+        /**
+         * @brief opSelected this signal is emitted when a new operation is selected by user
+         * @param index the new index of the new operation choosen
+         */
         void opSelected(unsigned int index);
 };
 

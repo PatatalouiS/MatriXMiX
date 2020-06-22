@@ -64,13 +64,17 @@ class QMatrixLibrary
 
 
 /**
- * @brief Add a matrix to the library
+ * @brief Add a matrix to the library by a UserInputs instance
  * @param [in] name (\e string)
- * @param [in] m (\e Matrix)
+ * @param [in] m the userInputs instance
  */
     const Matrix& addMatrix (const QString& name, const UserInputs& m);
 
-
+/**
+ * @brief Add a matrix to the library.
+ * @param [in] name (\e string)
+ * @param [in] m the Matrix to add
+ */
     void addMatrix(const QString& name, const Matrix& m);
 
 /**
@@ -82,31 +86,37 @@ class QMatrixLibrary
 
 /**
  * @brief Find a matrix in the library using its name
- * @param [in] name (\e string)
+ * @param [in] name
  * @return \e Matrix*
  */
     Matrix* find (const QString& name);
 
 /**
- * @brief Find a matrix determiant in the library using its name
- * @param [in] name (\e string)
- * @return \e std::complex<double>*
+ * @brief find_inputs find a UserInputs in the library using its name
+ * @param [in] name
+ * @return a pointer to a UserInputs if exists, else nullptr
  */
-    const Value* find_determinant (const QString& name) const;
-
-/**
- * @brief Find the matrix determinant in the library using its name
- * @param [in] name (\e string)
- * @return \e std::complex<double>*
- */
-    Value* find_determinant (const QString& name);
-
     const UserInputs* find_inputs(const QString& name) const;
 
+/**
+ * @brief find_inputs find a UserInputs in the library using its name
+ * @param [in] name
+ * @return a pointer to a UserInputs if exists, else nullptr
+ */
     UserInputs* find_inputs(const QString& name);
 
+/**
+ * @brief find_all find a UserMatfrix in the library using its name
+ * @param [in] name (\e string)
+ * @return a pointer to a UserMatrix if exists, else nullptr
+ */
     const UserMatrix* find_all(const QString& name) const;
 
+/**
+ * @brief find_all find a UserMatfrix in the library using its name
+ * @param [in] name (\e string)
+ * @return a pointer to a UserMatrix if exists, else nullptr
+ */
     UserMatrix* find_all(const QString& name);
 
 /**
@@ -121,8 +131,16 @@ class QMatrixLibrary
  */
     const QMap<QString, UserMatrix>& data () const;
 
+/**
+ * @brief begin allow range based for on the QMatrixLibrray by returning an iterator
+ * @return an iterator set on the fist element of the QMatrixLibrary
+ */
     const QMap<QString, UserMatrix>::const_key_value_iterator begin() const;
 
+/**
+ * @brief begin allow range based for on the QMatrixLibrray by returning an iterator
+ * @return an iterator set on the fist element of the QMatrixLibrary
+ */
     const QMap<QString, UserMatrix>::const_key_value_iterator end() const;
 
 
@@ -142,15 +160,6 @@ class QMatrixLibrary
  * @brief Regression test
  */
     void regressionTest() const;
-
-
-
-
-
-
-    // Parser section
-
-
 
 private:
 

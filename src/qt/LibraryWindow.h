@@ -75,6 +75,9 @@ class LibraryWindow : public QWidget
 
         void libraryChanged() const;
 
+        /**
+         * @brief showMatrixmixWindow this signal is emitted when the user wants to return to main window.
+         */
         void showMatrixmixWindow();
 };
 

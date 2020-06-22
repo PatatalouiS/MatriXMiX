@@ -25,6 +25,9 @@ class DecompositionWidget : public AbstractOperationWidget
 
     public slots :
 
+        /**
+         * @brief implementation of AbstractOperationWidget::updateViews()
+         */
         virtual void updateViews() override final;
 
     private:
@@ -37,13 +40,25 @@ class DecompositionWidget : public AbstractOperationWidget
         QRadioButton* result2;
         UnaryOpMatrix operation;
 
+        /**
+         * @brief constructType this fonction is called one time, when the object is constructed.\n
+         *       It construct the operation attributes and caracteristics in fonction of the enum DecompositionWidget::type given.
+         * @param [in] the type of the binary operation.
+         */
         void constructType(const type t);
 
     private slots :
 
+        /**
+         * @brief implementation of AbstractOperationWidget::computeSelection(const bool view)
+         */
         virtual void computeSelection(const bool view = 0) override final;
 
+        /**
+         * @brief implementation of AbstractOperationWidget::computeOperation()
+         */
         virtual void computeOperation() override final;
+
 
         void emitResultChoice(const unsigned int choice);
 };

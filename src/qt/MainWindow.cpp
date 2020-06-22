@@ -4,7 +4,6 @@
 
 MainWindow::MainWindow() : QMainWindow()
 {
-    //Aide pour le Debug
     Matrix a (3,3,
     {
         {1, 2}, 2, 0,

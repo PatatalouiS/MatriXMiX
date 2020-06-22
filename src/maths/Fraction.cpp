@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Fraction.h"
+#include "Utils.hpp"
 
 using namespace std;
 
@@ -28,89 +29,9 @@ Fraction::Fraction(const long int & n,
     numerator = n;
 }
 
-/*
-static std::string double2sqrt(const double & d,
-                                bool & isStr,
-                                bool & den) {
-
-    double res = abs(d);
-    std::string s;
-    isStr = true;
-    den = true;
-    s += "sqrt(";
-
-    if (res < 1) // cas 1/sqrt(x)
-        res = 1 / res;
-
-    int n = round(res * res);
-
-    if (res * res < 2.0) {
-        std::cout << res * res << std::endl;
-    }
-
-    if (abs((res * res) - n) < EPSILON)
-        s += std::to_string(n);
-    else if (abs((res * res) - n - 1) < EPSILON)
-        s += std::to_string(n);
-    else if (abs((res * res) - n + 1) < EPSILON)
-        s += std::to_string(9);
-    else {
-        s += "nada";
-        isStr = false;
-    }
-
-    s += ")";
-
-    if (abs(d) < 1) {
-      s = "1/" + s;
-      den = true;
-    }
-    if (d < 0.0)
-        s = "-" + s;
-
-    return s;
-
-}*/
-
-
 Fraction::Fraction(const double & d) {
-
- /*   isInteger = false;
-    isFraction = false;
-    isSqrt = false;
-    isSqrtFraction = false;
-
-    int n = round(d);
-
-    if (abs(n - d) < EPSILON) {    // d correspond à un entier
-      isInteger = true;
-      numerator = n;
-      denominator = 1;
-    }
-
-    bool isStr = true;
-    bool den = false;
-    std::string s = double2sqrt(d,isStr,den);
-
-    else if (isStr) {      // d correspond à une écriture avec sqrt
-        if (!den) {    // pas une fraction
-
-        }
-        else {    // fraction
-
-        }
-    }
-
-
-    else {
-
-    }
-
-
-*/
-
-    numerator = double2fraction(d).numerator;
-    denominator = double2fraction(d).denominator;
+    numerator = Utils::double2fraction(d).numerator;
+    denominator = Utils::double2fraction(d).denominator;
 }
 
 long int Fraction::getNumerator() const {
@@ -119,6 +40,14 @@ long int Fraction::getNumerator() const {
 
 long int Fraction::getDenominator() const {
     return denominator;
+}
+
+void Fraction::setNumerator(const long &n) {
+    numerator = n;
+}
+
+void Fraction::setDenominator(const long &d) {
+    denominator = d;
 }
 
 ostream & operator << (ostream & flux,
@@ -134,12 +63,11 @@ Fraction & Fraction::operator = (const Fraction & f) {
     return *this;
 }
 
-Fraction & Fraction::operator = (const double & d) {
-    numerator = double2fraction(d).numerator;
-    denominator = double2fraction(d).denominator;
-
+Fraction& Fraction::operator= (const double& d) {
+    *this = Fraction(d);
     return *this;
 }
+
 
 bool Fraction::operator == (const Fraction & f) const {
     long int num1, num2;
@@ -223,86 +151,17 @@ const Fraction Fraction::operator / (const Fraction & f) const {
     return res;
 }
 
-bool Fraction::isFraction(const double & d) const {
-    long int integer = static_cast < long int > (d);
-    double r = d - integer;
-    if (r == 0.0)
-        return false;
+//bool Fraction::isFraction(const double & d) const {
+//    long int integer = static_cast < long int > (d);
+//    double r = d - integer;
+//    if (r == 0.0)
+//        return false;
 
-    return true;
-}
+//    return true;
+//}
 
-void Fraction::recursived2f(vector < long int > & tab,
-    const double & rest) const {
-    if (tab.size() < 10 && rest > EPSILON) {
-        double div, rest2;
-        long int integer;
-        div = 1 / rest;
-        integer = static_cast < long int > (floor(div));
-        rest2 = div - integer;
-        tab.push_back(integer);
-        recursived2f(tab, rest2);
-    }
-}
-
-const Fraction Fraction::double2fraction(const double & d) const {
-    double abs_d = abs(d);
-    vector < long int > tab;
-
-    double rest;
-    long int integer;
-    unsigned long int size;
-
-    integer = static_cast < long int > (floor(abs_d));
-    rest = abs_d - integer;
-
-    tab.push_back(integer);
-    recursived2f(tab, rest);
-
-    size = tab.size();
-
-    if (size == 1) {
-        Fraction f(tab[0], 1);
-        if (d * f.numerator > 0 && d * f.denominator > 0) {
-            return f;
-        } else {
-            f.numerator *= -1;
-            return f;
-        }
-    }
-    if (size == 2) {
-        Fraction f(1, tab[1]);
-        f = f + tab[0];
-        if (d * f.numerator > 0 && d * f.denominator > 0) {
-            return f;
-        } else {
-            f.numerator *= -1;
-            return f;
-        }
-    }
-
-    Fraction f(1, tab[size - 1]);
-
-    for (unsigned long int i = size - 2; i > 0; i--) {
-        f = f + tab[i];
-        f = f.inverse();
-        f = f.simplify();
-    }
-
-    f = f + tab[0];
-    f = f.simplify();
-
-    if (d * f.numerator > 0 && d * f.denominator > 0) {
-        return f;
-    } else {
-        f.numerator *= -1;
-        return f;
-    }
-
-}
 
 void Fraction::regressionTest() const {
-
     cout << endl << endl <<
         "****** DEBUT DU TEST DE REGRESSION POUR FRACTION ******" <<
         endl << endl << endl;

@@ -3,8 +3,6 @@
 #include <QVBoxLayout>
 #include "Error.h"
 
-#include <QDebug>
-
 using namespace std;
 
 

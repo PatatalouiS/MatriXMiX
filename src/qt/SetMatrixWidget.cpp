@@ -3,7 +3,6 @@
 #include <cmath>
 #include "SetMatrixWidget.h"
 #include "Error.h"
-#include <QDebug>
 #include <sstream>
 
 
@@ -73,7 +72,17 @@ SetMatrixWidget::SetMatrixWidget(const enum type& t, QMatrixLibrary* library, QW
     compute = new QPushButton;
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
-    compute->setStyleSheet("QPushButton:hover{ background-color: lightBlue }");
+    compute->setStyleSheet("QPushButton {"
+                                "background-color : white;"
+                                "height : 30px;"
+                                "border : 1px solid lightGrey;"
+                                "border-radius : 4px;"
+                           "}"
+                           "QPushButton:hover {"
+                               "background-color:rgb(90,122,228);"
+                               "color : white;"
+                           "}");
+
     compute->setCursor(Qt::PointingHandCursor);
     compute->setMinimumSize(250,30);
     compute->setToolTip("Ajouter cette matrice à la librairie");
@@ -180,7 +189,7 @@ bool SetMatrixWidget:: controlKeyboardInput() const
     {
         if(!i->isValidExpr()) {
             Error::showError("Les valeurs de votre Matrice " + name + " sont incorrectes !",
-                                   "Vérifiez votre saisie. Chaque coefficient doit être un nombre Réel.");
+                                   "Vérifiez vos expressions");
             return false;
         }
     }

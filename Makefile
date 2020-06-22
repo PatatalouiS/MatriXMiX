@@ -17,26 +17,28 @@ CLEAN_FLAGS = -v -r -f
 EIGEN = -I ext/Eigen
 
 
-all : TXT Qt Test Lib
+all : makedir TXT Qt Test Lib
 
+makedir :
+	@mkdir -p bin obj resources moc
 
 Qt : MatriXMiX.make
 	make -f MatriXMiX.make
 
-TXT : bin/MatriXMiX_TXT
+TXT : makedir bin/MatriXMiX_TXT
 
-Test : bin/MatriXMiX_Test
+Test : makedir bin/MatriXMiX_Test
 
-Lib : bin/libmatrix.a
+Lib : makedir bin/libmatrix.a
 
-bin/libmatrix.a : obj/Matrix.o obj/MatrixLibrary.o obj/Polynomial.o obj/Fraction.o obj/MatriXMiXTXT.o obj/Gauss.o
+bin/libmatrix.a : obj/Matrix.o obj/MatrixLibrary.o obj/Polynomial.o obj/Fraction.o obj/MatriXMiXTXT.o obj/Gauss.o obj/Utils.o
 	ar rcs $@ $^
 
 
 MatriXMiX.make : MatriXMiX.pro
-	qmake -config release -o $@ $<
+	qmake -makefile -o $@ $<
 
-bin/MatriXMiX_TXT : obj/mainTXT.o obj/Matrix.o obj/MatrixLibrary.o obj/Polynomial.o obj/Fraction.o obj/MatriXMiXTXT.o obj/VectorX.o obj/Gauss.o
+bin/MatriXMiX_TXT : obj/mainTXT.o obj/Matrix.o obj/MatrixLibrary.o obj/Polynomial.o obj/Fraction.o obj/MatriXMiXTXT.o obj/VectorX.o obj/Gauss.o obj/Utils.o
 	$(LD) $^ -o $@
 
 obj/MatriXMiXTXT.o : src/txt/MatriXMiXTXT.cpp src/txt/MatriXMiXTXT.h src/maths/MatrixLibrary.h
@@ -47,7 +49,7 @@ obj/mainTXT.o : src/txt/mainTXT.cpp src/maths/MatrixLibrary.h
 
 
 
-bin/MatriXMiX_Test : obj/mainTest.o obj/Matrix.o obj/MatrixLibrary.o obj/Polynomial.o obj/Fraction.o obj/VectorX.o obj/Gauss.o
+bin/MatriXMiX_Test : obj/mainTest.o obj/Matrix.o obj/MatrixLibrary.o obj/Polynomial.o obj/Fraction.o obj/VectorX.o obj/Gauss.o obj/Utils.o
 	$(LD) $^ -o $@
 
 obj/mainTest.o : src/txt/mainTest.cpp src/maths/Fraction.h src/maths/MatrixLibrary.h
@@ -73,6 +75,8 @@ obj/VectorX.o : src/maths/VectorX.cpp src/maths/VectorX.h
 obj/Gauss.o : src/maths/Gauss.cpp src/maths/Gauss.h src/maths/Matrix.h
 	$(CC) $(CC_FLAGS) $< -o $@ $(EIGEN)
 
+obj/Utils.o : src/maths/Utils.cpp src/maths/Utils.hpp src/maths/Fraction.h
+	$(CC) $(CC_FLAGS) $< -o $@ $(EIGEN)
 
 
 clean :
@@ -80,7 +84,7 @@ clean :
 
 
 veryclean : clean
-	rm $(CLEAN_FLAGS) $(BIN_DIR)/* $(DOC_DIR)/html MatriXMiX.make
+	rm $(CLEAN_FLAGS) $(BIN_DIR)/* $(DOC_DIR)/html MatriXMiX.make MatriXMiX.pro.*
 
 
 docs :

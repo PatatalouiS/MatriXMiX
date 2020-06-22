@@ -7,6 +7,11 @@
 
 using Value = std::complex<double>;
 
+/**
+ * @brief The UserMatrix struct A little Wrapper to symbolise a Matrix by the
+ *  user entries but with the parsed values too.
+ */
+
 struct UserMatrix {
     Matrix matrix;
     UserInputs entries;

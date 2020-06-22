@@ -3,7 +3,6 @@
 #include <fstream>
 #include <cassert>
 #include <mpParser.h>
-#include <QDebug>
 #include <algorithm>
 
 using namespace std;

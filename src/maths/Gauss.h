@@ -19,8 +19,6 @@ private:
     int row; /*< pivot's row */
     int col; /*< pivot's column */
 
-
-
 public:
 
     /**

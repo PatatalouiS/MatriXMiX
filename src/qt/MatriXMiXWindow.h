@@ -56,5 +56,8 @@ class MatriXMiXWindow : public QWidget
 
     signals :
 
+        /**
+         * @brief this signal is emitted when the user wants to access the library window.
+         */
         void showLibraryWindow();
 };

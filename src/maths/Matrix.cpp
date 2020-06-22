@@ -875,9 +875,6 @@ const Matrix Matrix:: gaussReduction()const
     {
         if (pos->getVal(res).real() != 1.0)
         {
-            complex<double> inverse (1./res.tab[static_cast<unsigned int>(pos->getRow())]
-                        [static_cast<unsigned int>(pos->getCol())]);
-
             res.tab[pos->getRow()] = res.normalizeVectorX(res.tab[pos->getRow()]);
         }
         for (int row = 0; row < r; row++)
@@ -1262,7 +1259,7 @@ Matrix Matrix::gramSchmidt() const {
 
     Matrix temp_matrix (1,rows,Matrix::Z);
     unsigned int i, j, k;
-    std::complex<double> coef, temp_coef;
+    std::complex<double> coef;
     VectorX temp_vect;
 
     for(i = 0; i < rows; i++) {
@@ -1304,7 +1301,7 @@ std::pair<Matrix,Matrix> Matrix::QR_GramSchmidt() const {
 
     Matrix temp_matrix (1,rows,Matrix::Z);
     unsigned int i, j, k;
-    std::complex<double> coef, temp_coef;
+    std::complex<double> coef;
     VectorX temp_vect;
 
     for(i = 0; i < rows; i++) {
@@ -1423,7 +1420,6 @@ Matrix Matrix::solveAx(const Matrix & b) const {
     Matrix r (qr.second);
     Matrix x (cols,1);
     unsigned int i, j;
-    std::complex<double> temp (0.0,0.0);
 
     x[cols - 1][0] = q[cols - 1][0] / r[cols - 1][cols - 1];
 

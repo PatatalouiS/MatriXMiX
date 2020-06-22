@@ -20,9 +20,8 @@ TARGET = MatriXMiX
 # icon
 macx:ICON = data/icons/MatriXMiX.icns
 
-# sources for jkqtmathtext, QtMathjax
-include(ext/latex/jkqtmathtext.pri);
-#include(ext/QtMathjax/qtmathjax.pri);
+# sources for jkqtmathtext
+include(ext/latex/jkqtmathtext.pri)
 
 # external headers
 INCLUDEPATH += ext/Eigen/ ext/muparserx/parser
@@ -41,6 +40,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Input
 
 HEADERS += src/maths/Matrix.h \
+        src/maths/Utils.hpp \
         src/maths/VectorX.h \
         src/maths/Polynomial.h \
         src/maths/Fraction.h \
@@ -73,6 +73,7 @@ HEADERS += src/maths/Matrix.h \
 
 SOURCES += src/qt/main.cpp \
         src/maths/Matrix.cpp \
+        src/maths/Utils.cpp \
         src/maths/VectorX.cpp \
         src/maths/Polynomial.cpp \
         src/maths/Fraction.cpp \

@@ -2,8 +2,6 @@
 
 #include "MatrixViewWidget.h"
 #include <QHeaderView>
-#include <QDebug>
-
 
 ShowMatrixWidget* MatrixViewWidget::matrixPreview = nullptr;
 

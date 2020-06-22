@@ -12,6 +12,7 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
 {
     lib = library;
     matrixView = new MatrixViewWidget(lib, this);
+    matrixView->setMinimumWidth(250);
     addMatrix = new SetMatrixWidget(SetMatrixWidget::ADD, lib, this);
     editMatrix = new SetMatrixWidget(SetMatrixWidget::EDIT, lib, this);
     showMatrixWidget = new ShowMatrixWidget(this);
@@ -78,7 +79,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
 
 
     QVBoxLayout* leftLayout = new QVBoxLayout;
-    leftLayout->setContentsMargins(0, 5, 0, 0);
     leftLayout->addWidget(showMatrixmixButton);
     leftLayout->addWidget(matrixView);
     leftLayout->addLayout(viewFooterLayout);

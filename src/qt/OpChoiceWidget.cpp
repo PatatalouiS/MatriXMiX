@@ -3,7 +3,6 @@
 #include <QRadioButton>
 #include <QPushButton>
 #include <QLabel>
-#include <QDebug>
 #include <QComboBox>
 
 OpChoiceWidget::OpChoiceWidget(QWidget* parent) : QWidget(parent)
@@ -86,8 +85,15 @@ OpChoiceWidget::OpChoiceWidget(QWidget* parent) : QWidget(parent)
 
     connect(typeChoice, QOverload<int>::of(&QComboBox::currentIndexChanged),
         [=](int index) -> void {
-        qDebug() << "selected : " << opTypesNames[index] << endl;
-        setOperationsList(static_cast<OpType>(index));
+            setOperationsList(static_cast<OpType>(index));
+            switch (index) {
+                case 0 : emit opSelected(0); break;
+                case 1 : emit opSelected(6); break;
+                case 2 : emit opSelected(12); break;
+                case 3 : emit opSelected(16); break;
+                case 4 : emit opSelected(19); break;
+                default : break;
+            }
     });
 
     setFont(font);
@@ -175,7 +181,6 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
                     "}");
 
         connect(btn, &QPushButton::pressed, [this, i] () -> void {
-            qDebug() << i << " selected" << endl;
             emit opSelected(i);
         });
 

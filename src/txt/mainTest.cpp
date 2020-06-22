@@ -3,10 +3,6 @@
 #include "../maths/Fraction.h"
 
 
-static const int EPSILON = 0.000001;
-
-
-
 int main ()
 {
     

@@ -5,6 +5,16 @@
 #include "ShowMatrixWidget.h"
 #include "jkqtmathtext/jkqtmathtext.h"
 #include "../maths/Fraction.h"
+#include "../maths/Utils.hpp"
+
+
+namespace {
+
+QString complexToQLaTeX(const std::complex<double> & v) {
+    return QString::fromStdString(Utils::complex2LaTeX(v));
+}
+
+}
 
 
 ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
@@ -15,7 +25,6 @@ ShowMatrixWidget::ShowMatrixWidget(QWidget *parent) : QWidget(parent)
     clear();
     showMatrixLayout->addWidget(imgSelected);
     showMatrixLayout->setAlignment(Qt::AlignHCenter);
-    //showMatrixLayout->addWidget(view);
     setLayout(showMatrixLayout);
     hide();
 }
@@ -27,35 +36,6 @@ const QPixmap& ShowMatrixWidget:: getCurrentPixmap() const
     return *temp;
 }
 
-QString complexLatex (std::complex<double> coef)
-{
-    QString str;
-
-    if (coef.real() != 0.0)
-    {
-        if (coef.imag() > 0)
-            str = QString::number(coef.real()) + " + " + QString::number(coef.imag()) + "$i$";
-        else if (coef.imag() < 0)
-        {
-            str = QString::number(coef.real()) + " - " + QString::number(abs(coef.imag())) + "$i$";
-        }
-        else
-        {
-            str = QString::number(coef.real());
-        }
-    }
-
-    else
-    {
-        if (coef.imag() != 0.0)
-            str = QString::number(coef.imag()) + "$i$";
-        else
-            str = QString::number(0);
-    }
-
-    return str;
-}
-
 
 QString ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned int sizeTxt, const QColor& col)
 {
@@ -65,7 +45,7 @@ QString ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned in
 
     for(unsigned int i = 0; i < rows; ++i)
     {
-        latex += "\t" +  complexLatex(mat[i][0]);
+        latex += "\t" +  complexToQLaTeX(mat[i][0]);
 
         if(cols == 1) {
             latex += "\\\\";
@@ -78,7 +58,7 @@ QString ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned in
                 latex += " & ";
             else latex += " &";
 
-            latex += "\t" +  complexLatex(mat[i][j]);
+            latex += "\t" +  complexToQLaTeX(mat[i][j]);
             if((j == cols-1) && (i != rows-1)) latex += "\\\\";
         }
     }
@@ -92,7 +72,7 @@ QString ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned in
 
 QString ShowMatrixWidget:: computeImgDet(const std::complex<double> det, const QString& name, const QColor& col)
 {
-    QString latex = "\\mathit{Det}\\(" + name + ") = " + complexLatex(det);
+    QString latex = "\\mathit{Det}\\(" + name + ") = " + complexToQLaTeX(det);
     setPixmapToQLabel(col, latex, 40);
     return latex;
 }
@@ -101,7 +81,7 @@ QString ShowMatrixWidget:: computeImgDet(const std::complex<double> det, const Q
 QString ShowMatrixWidget:: computeImgTrace(const std::complex<double> scalar, const QString& name,
                                         const QColor& col)
 {
-    QString latex = "\\mathit{Tr}\\(" + name + ") = " + complexLatex(scalar);
+    QString latex = "\\mathit{Tr}\\(" + name + ") = " + complexToQLaTeX(scalar);
     setPixmapToQLabel(col, latex, 40);
     return latex;
 }
@@ -124,8 +104,6 @@ QString ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, uns
     std::ostringstream flux;
     QString developpedForm;
     QString factorizedForm;
-
-    //flux << res1.check();
 
     for(unsigned int i = 0; i < res1.tab.size(); i++)
     {
@@ -179,7 +157,7 @@ QString ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, uns
     for(auto i : res2)
     {
         flux.str("");
-        //flux << i.check();
+        flux << i.check();
         factorizedForm += QString::fromStdString( "(" + flux.str() + ") ");
     }
 
@@ -208,13 +186,13 @@ QString ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<std::comp
     for(auto i : res)
     {
         temp = "( ";
-        coef = complexLatex(i.first);
+        coef = complexToQLaTeX(i.first);
         tab.push_back(coef);
         spec += coef + ", ";
 
         for(auto j : i.second)
         {
-            temp += complexLatex(j) + ", ";
+            temp += complexToQLaTeX(j) + ", ";
         }
 
         temp.truncate(temp.size() - 2);

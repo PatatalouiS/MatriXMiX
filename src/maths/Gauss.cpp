@@ -29,7 +29,6 @@ complex<double> Gauss::getVal(const Matrix & m) const {
 
 void Gauss::rowScale(tab2D_iter row,
     const complex < double > & ratio) const {
-    //cout << "Le ratio : " << ratio << endl;
     for (auto & i: * row) {
         i *= ratio;
     }

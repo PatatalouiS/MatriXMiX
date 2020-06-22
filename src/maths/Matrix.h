@@ -531,20 +531,10 @@ public:
     Matrix solveAx(const Matrix & b) const;
 
 
-
-
-
-
-
-
-
-/**
- * @brief Regression test
- */
-    void regressionTest() const;
-
-
-
+    /**
+     * @brief Regression test
+     */
+        void regressionTest() const;
 
 };
 

@@ -13,24 +13,10 @@ class Fraction
 {
 
 private:
+
     long int numerator, denominator;
 
-    double d;
-
     std::string num, den;
-
-    bool isInteger, isFrct, isSqrt, isSqrtFraction;
-
-
-private:
-
-/**
- * @brief Private recursive function which add floor to vector tab
- * @param [out] tab (\e std::vector<long int>)
- * @param [int] rest (\e double)
- */
-    void recursived2f (std::vector<long int> &tab, const double & rest) const;
-
 
 public:
 /**
@@ -51,8 +37,11 @@ public:
 */
     Fraction(const long int & n, const long int & d);
 
+/**
+ * @brief Constructor
+ * @param [in] d (\e double)
+ */
     Fraction(const double & d);
-
 
 /**
  * @brief Accessor
@@ -65,6 +54,18 @@ public:
  * @return Denominator (\e long \e int)
  */
     long int getDenominator() const;
+
+/**
+ * @brief Setter
+ * @param the new Numerator of Fraction
+ */
+    void setNumerator(const long int& n);
+
+/**
+ * @brief Setter
+ * @param the new Denominator of Fraction
+ */
+    void setDenominator(const long int& d);
 
 /**
  * @brief Operator <<
@@ -155,32 +156,12 @@ public:
  * @param [in] d \e double
  * @return \e bool \n Return false if the fraction is an integer
  */
-    bool isFraction (const double & d) const;
-
-/**
- * @brief Convert a double to a Fraction
- * @param [in] d \e double
- * @return \e Fraction
- */
-    const Fraction double2fraction (const double & d) const;
+    //bool isFraction (const double & d) const;
 
 /**
  * @brief regressionTest
  */
     void regressionTest() const;
-
-
-
-
 };
-
-
-
-
-
-
-
-
-
 
 #endif
