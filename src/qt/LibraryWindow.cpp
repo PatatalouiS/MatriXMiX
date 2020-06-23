@@ -7,6 +7,13 @@
 
 using namespace std;
 
+bool isMac(){
+    #if defined(Q_OS_MACOS)
+    return true;
+    #else
+    return false;
+    #endif
+}
 
 LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget(main)
 {
@@ -55,8 +62,6 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
                                  "QPushButton:pressed{ background-color : grey; }"
                                 "QPushButton:hover{background-color:rgb(150,0,0); }");
 
-
-
     QHBoxLayout* viewFooterLayout = new QHBoxLayout;
     viewFooterLayout->addWidget(remove);
 
@@ -66,6 +71,7 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
     showMatrixmixButton->setIcon(QIcon(imButton));
     showMatrixmixButton->setIconSize(QSize(25, 25));
     showMatrixmixButton->setCursor(Qt::PointingHandCursor);
+
 
     showMatrixmixButton->setStyleSheet("QPushButton {"
                                      "height: 50px;"
@@ -83,18 +89,25 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
     leftLayout->addWidget(matrixView);
     leftLayout->addLayout(viewFooterLayout);
 
+    QString tabStyleMac = "QTabWidget::pane {"
+                              "background-color : white;"
+                              "border : 1px;"
+                              "border-radius: 3px;"
+                              "top : -10px;"
+                          "}";
+
+    QString tabStyleUnix = "QTabWidget::pane {"
+                               "background-color : white;"
+                               "border : 1px;"
+                               "top : -2px;"
+
+                           "}";
+
     choice = new QTabWidget(this);
     choice->addTab(scrollArea, "Visualiser");
     choice->addTab(addMatrix, "Ajouter");
     choice->addTab(editMatrix, "Modifier");
-    choice->setStyleSheet("QTabWidget::pane {"
-                            "background-color : white;"
-                            "border : 1px;"
-                            "border-radius: 3px;"
-                            "top : -10px;"
-                          "}"
-
-                           );
+    choice->setStyleSheet(isMac() ?tabStyleMac : tabStyleUnix);
 
     QHBoxLayout* mainLayout = new QHBoxLayout;
     mainLayout->addLayout(leftLayout);

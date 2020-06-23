@@ -5,7 +5,6 @@
 
 #include "Utils.hpp"
 
-
 const double EPSILON = 0.000001;
 
 namespace {
@@ -171,28 +170,29 @@ std::string Utils::print(const double & d) {
 }
 
 
-std::string Utils::complex2LaTeX (const std::complex<double> & coef)
+std::string Utils::complex2LaTeX (const std::complex<double> & coeff)
 {
     std::string str;
+    std::complex<double> casted = checkCast(coeff);
 
-    if (coef.real() != 0.0)
+    if (casted.real() != 0.0)
     {
-        if (coef.imag() > 0)
-            str = print(coef.real()) + " + " + print(coef.imag()) + "$i$";
-        else if (coef.imag() < 0)
+        if (casted.imag() > 0)
+            str = print(casted.real()) + " + " + print(casted.imag()) + "$i$";
+        else if (casted.imag() < 0)
         {
-            str = print(coef.real()) + " - " + print(abs(coef.imag())) + "$i$";
+            str = print(casted.real()) + " - " + print(abs(casted.imag())) + "$i$";
         }
         else
         {
-            str = print(coef.real());
+            str = print(casted.real());
         }
     }
 
     else
     {
-        if (coef.imag() != 0.0)
-            str = print(coef.imag()) + "$i$";
+        if (casted.imag() != 0.0)
+            str = print(casted.imag()) + "$i$";
         else
             str = print(0);
     }
@@ -200,4 +200,18 @@ std::string Utils::complex2LaTeX (const std::complex<double> & coef)
     return str;
 }
 
+std::complex<double> Utils::checkCast(const std::complex<double> & c)
+{
+    double re = c.real(), im = c.imag();
+    int temp;
 
+    temp = round(c.real());
+    if (abs(temp - re) < EPSILON)
+        re = static_cast<double>(temp);
+
+    temp = round(c.imag());
+    if (abs(temp - im) < EPSILON)
+        im = static_cast<double>(temp);
+
+    return { re, im };
+}

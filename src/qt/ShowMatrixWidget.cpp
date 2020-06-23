@@ -14,6 +14,10 @@ QString complexToQLaTeX(const std::complex<double> & v) {
     return QString::fromStdString(Utils::complex2LaTeX(v));
 }
 
+QString doubleToQLaTeX(const double & d) {
+    return QString::fromStdString(Utils::print(d));
+}
+
 }
 
 
@@ -111,6 +115,9 @@ QString ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, uns
         QString power;
         std::complex<double> temp = res1.tab[i];
 
+        double real = temp.real();
+        double imag = temp.imag();
+
         if (i == 0)
             x = QString("");
         else
@@ -122,30 +129,30 @@ QString ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, uns
             power = QString::number(i);
 
 
-        if(temp.real() == 0.0)
+        if(real == 0.0)
         {
-            if(temp.imag() != 0.0)
-                developpedForm += QString::number(temp.imag()) + "i";
+            if(imag != 0.0)
+                developpedForm += doubleToQLaTeX(imag) + "i";
         }
 
-        else if(temp.real() < 0.0)
+        else if(real < 0.0)
         {
-            if(temp.imag() == 0.0)
-                developpedForm += QString::number(temp.real());
-            else if (temp.imag() < 0.0)
-                developpedForm += " - (" + QString::number(abs(temp.real())) + QString::number(abs(temp.imag())) + "i)";
+            if(imag == 0.0)
+                developpedForm += doubleToQLaTeX(real);
+            else if (imag < 0.0)
+                developpedForm += " - (" + doubleToQLaTeX(abs(real)) + doubleToQLaTeX(abs(imag)) + "i)";
             else
-                developpedForm += " + (" + QString::number(temp.real()) + "+" + QString::number(temp.imag()) + "i)";
+                developpedForm += " + (" + doubleToQLaTeX(real) + "+" + doubleToQLaTeX(imag) + "i)";
         }
 
         else
         {
-            if(temp.imag() == 0.0)
-                developpedForm += "+" + QString::number(temp.real());
-            else if (temp.imag() < 0.0)
-                developpedForm += "+ (" + QString::number(temp.real()) + QString::number(temp.imag()) + "i)";
+            if(imag == 0.0)
+                developpedForm += "+" + doubleToQLaTeX(real);
+            else if (imag < 0.0)
+                developpedForm += "+ (" + doubleToQLaTeX(real) + doubleToQLaTeX(imag) + "i)";
             else
-                developpedForm += "+ (" + QString::number(temp.real()) + "+" + QString::number(temp.imag()) + "i)";
+                developpedForm += "+ (" + doubleToQLaTeX(real) + "+" + doubleToQLaTeX(imag) + "i)";
         }
 
         if (x != "")

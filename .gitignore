@@ -19,3 +19,4 @@ src/AbstractOperationWindow.h.autosave
 src/BinaryOperationWindow.h.autosave
 MakefileQt
 MatriXMiX.make
+matrixmix_plugin_import.cpp

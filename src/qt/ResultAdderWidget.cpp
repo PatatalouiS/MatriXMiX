@@ -16,6 +16,7 @@ ResultAdderWidget::ResultAdderWidget(QMatrixLibrary* lib, QWidget* parent) :
     adderName->setValidator(regex);
     adderName->setFixedHeight(30);
     adderName->setMaximumWidth(60);
+    adderName->setPlaceholderText("Nom");
     adderName->setStyleSheet("QLineEdit {"
                                 "border : 1px solid lightGrey;"
                              "}");

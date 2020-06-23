@@ -96,13 +96,6 @@ private:
     std::vector<std::string> explode (const std::string & expression) const;
 
     /**
-     * @brief Round to the nearest integer (if difference < EPSILON)
-     * @param[in] z (\e std::complex<double>)
-     * @return rounded \e std::complex<double>
-    */
-    std::complex<double> checkCast (const std::complex<double> & z) const;
-
-    /**
      * @brief Round values to nearests integers (if difference < EPSILON)
      * @param[in] v (\e VectorX)
      * @return rounded \e VectorX

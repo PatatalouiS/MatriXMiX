@@ -127,8 +127,8 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
         "Résolution de système"
     };
 
-    unsigned int firstIndex;
-    unsigned int lastIndex;
+    unsigned int firstIndex = 0;
+    unsigned int lastIndex = 0;
 
     switch(type) {
         case OpType::BINARY_OP : {

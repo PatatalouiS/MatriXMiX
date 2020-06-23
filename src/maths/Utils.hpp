@@ -48,6 +48,13 @@ namespace Utils {
      * @return the LaTeX formatted string
      */
     std::string complex2LaTeX(const std::complex<double>& c);
+
+    /**
+     * @brief Round to the nearest integer (if difference < EPSILON)
+     * @param[in] z (\e std::complex<double>)
+     * @return rounded \e std::complex<double>
+    */
+    std::complex<double> checkCast (const std::complex<double> & z);
 }
 
 #endif

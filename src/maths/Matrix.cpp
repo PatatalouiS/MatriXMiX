@@ -9,7 +9,7 @@
 #include "Matrix.h"
 #include "Polynomial.h"
 #include "Gauss.h"
-
+#include "Utils.hpp"
 
 using namespace std;
 
@@ -172,29 +172,12 @@ vector<string> Matrix:: explode (const string & expression) const
 }
 
 
-complex<double> Matrix::checkCast(const complex<double> & c) const
-{
-    double re = c.real(), im = c.imag();
-    int temp;
-
-    temp = round(c.real());
-    if (abs(temp - re) < EPSILON)
-        re = static_cast<double>(temp);
-
-    temp = round(c.imag());
-    if (abs(temp - im) < EPSILON)
-        im = static_cast<double>(temp);
-
-    return (complex<double>(re,im));
-}
-
-
 VectorX Matrix:: checkCast(const VectorX & v) const
 {
     VectorX res;
     for (unsigned int i = 0; i < v.size(); i++)
     {
-        res.push_back(checkCast(v[i]));
+        res.push_back(Utils::checkCast(v[i]));
     }
     return res;
 }
