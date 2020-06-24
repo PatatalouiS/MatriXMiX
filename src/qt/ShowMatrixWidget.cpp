@@ -58,7 +58,7 @@ QString ShowMatrixWidget:: computeImgMatrix(const Matrix& mat, const unsigned in
 
         for(unsigned int j = 1; j < cols; ++j)
         {
-            if(j != cols) 
+            if(j != cols)
                 latex += " & ";
             else latex += " &";
 
@@ -109,56 +109,10 @@ QString ShowMatrixWidget:: computeImgDimMatrix(const std::pair<unsigned int, uns
     QString developpedForm;
     QString factorizedForm;
 
-    for(unsigned int i = 0; i < res1.tab.size(); i++)
-    {
-        QString x;
-        QString power;
-        std::complex<double> temp = res1.tab[i];
 
-        double real = temp.real();
-        double imag = temp.imag();
-
-        if (i == 0)
-            x = QString("");
-        else
-            x = QString("+X^{");
-
-        if (i == 1)
-            power = QString ("");
-        else
-            power = QString::number(i);
-
-
-        if(real == 0.0)
-        {
-            if(imag != 0.0)
-                developpedForm += doubleToQLaTeX(imag) + "i";
-        }
-
-        else if(real < 0.0)
-        {
-            if(imag == 0.0)
-                developpedForm += doubleToQLaTeX(real);
-            else if (imag < 0.0)
-                developpedForm += " - (" + doubleToQLaTeX(abs(real)) + doubleToQLaTeX(abs(imag)) + "i)";
-            else
-                developpedForm += " + (" + doubleToQLaTeX(real) + "+" + doubleToQLaTeX(imag) + "i)";
-        }
-
-        else
-        {
-            if(imag == 0.0)
-                developpedForm += "+" + doubleToQLaTeX(real);
-            else if (imag < 0.0)
-                developpedForm += "+ (" + doubleToQLaTeX(real) + doubleToQLaTeX(imag) + "i)";
-            else
-                developpedForm += "+ (" + doubleToQLaTeX(real) + "+" + doubleToQLaTeX(imag) + "i)";
-        }
-
-        if (x != "")
-            developpedForm += x + power + "}";
-
-    }
+    flux.str("");
+    flux << res1.check();
+    developpedForm += QString::fromStdString(flux.str());
 
 
     for(auto i : res2)
@@ -184,11 +138,6 @@ QString ShowMatrixWidget:: computeImgEigen(const std::vector<std::pair<std::comp
     QVector<QString> tab;
     QString temp, coef;
 
-
-    if (res.empty())
-    {
-
-    }
 
     for(auto i : res)
     {
@@ -245,13 +194,3 @@ void ShowMatrixWidget:: clear ()
 {
     imgSelected->setPixmap(QPixmap());
 }
-
-
-
-
-
-
-
-
-
-

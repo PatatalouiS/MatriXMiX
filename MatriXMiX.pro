@@ -5,7 +5,7 @@
 
 # Config QMAKE
 TEMPLATE = app
-CONFIG += release c++17 static
+CONFIG += release c++17
 
 QT += svg
 
