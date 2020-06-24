@@ -98,9 +98,11 @@ LibraryWindow:: LibraryWindow (QWidget* main, QMatrixLibrary* library) : QWidget
 
     QString tabStyleUnix = "QTabWidget::pane {"
                                "background-color : white;"
-                               "border : 1px;"
                                "top : -2px;"
-
+                               "border : 1px solid lightGrey;"
+                               "border-bottom-left-radius : 3px;"
+                               "border-bottom-right-radius : 3px;"
+                               "border-top-right-radius : 3px;"
                            "}";
 
     choice = new QTabWidget(this);
