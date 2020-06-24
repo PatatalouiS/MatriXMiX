@@ -533,7 +533,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
             if (i == s - 1)
                 return ("Impossible de calculer " + no_parenthesis[i-1] + no_parenthesis[i]);
             if (isOperator(no_parenthesis[i-1]) && no_parenthesis[i-1] != "~")
-                return ("Calcul de " + no_parenthesis[i] + no_parenthesis[i+1] + " impossible!");
+                return ("Calcul de " + no_parenthesis[i] + no_parenthesis[i+1] + " impossible");
         }
 
         else if (isName(no_parenthesis[i]))
@@ -598,7 +598,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
                             + "\nVeuillez utiliser 'M~' pour désigner l'inverser d'une matrice M");
                 if (atof(no_parenthesis[i].c_str())
                         - atoi(no_parenthesis[i].c_str()) != 0.0)
-                    return ("Calcul d'une puissance réelle impossible, "
+                    return ("Calcul d'une puissance réelle impossible"
                             "veuillez saisir un entier");
             }
             else if ( (i < s - 1) && isName(no_parenthesis[i+1]) )
@@ -770,7 +770,6 @@ void MatrixLibrary:: saveFile (const string & filename) const
            }
            file << endl;
        }
-       cout << "La sauvegarde de la matrice " << matrixname << " est réussie" << endl << endl;
     }
 
     file.close();
@@ -787,7 +786,7 @@ void MatrixLibrary:: readFile (const string & filename)
 
     if(!file.is_open())
     {
-        cout << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << endl;
+        std::cerr << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << std::endl;
     }
 
     string testfile;
@@ -818,7 +817,7 @@ void MatrixLibrary:: readFile (const string & filename)
     }
     else
     {
-        cout << "Erreur, ce fichier ne contient pas des matrices !" << endl ;
+        std::cerr << "Erreur, ce fichier ne contient pas des matrices !" << std::endl ;
 
     }
 }

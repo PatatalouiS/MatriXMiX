@@ -30,7 +30,7 @@ namespace {
 
         if (d < 1)
             r = abs(1 / d);
-        while (i < 100 && !found) {
+        while (i < 1000 && !found) {
             j = 2;
             while (j < i && !found) {
                 if (abs((sqrt(i) / sqrt(j)) - r) < EPSILON) {
@@ -153,18 +153,18 @@ std::string Utils::print(const double & d) {
     if (abs(round(d) - d) < EPSILON)
         return std::to_string(static_cast<int>(round(d)));
 
+    std::string s = double2sqrt(d);
+
+    if (s != "")
+        return s;
+
     Fraction f (d);
 
-    std::string s = std::to_string(f.getNumerator());
+    s = std::to_string(f.getNumerator());
 
     if (s.size() < 4)
       return "\\frac{" + std::to_string(f.getNumerator()) + "}{"
               + std::to_string(f.getDenominator()) + "}";
-
-    s = double2sqrt(d);
-
-    if (s != "")
-        return s;
 
     return std::to_string(d);
 }

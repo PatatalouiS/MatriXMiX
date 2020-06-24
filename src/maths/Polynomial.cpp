@@ -6,8 +6,13 @@
 #include <complex>
 #include "VectorX.h"
 #include "Polynomial.h"
+#include "Utils.hpp"
 
 using namespace std;
+
+
+static const double EPSILON = 0.000001;
+
 
 Polynomial :: Polynomial() : tab (vector<complex<double>>(1,0))
 {
@@ -49,11 +54,11 @@ Polynomial Polynomial::check() const {
     VectorX vect;
     double re, im;
     for (unsigned int i = 0 ; i <= degree ; i++) {
-        if (abs(tab[i].real() - std::round(tab[i].real())) < 0.0)
+        if (abs(tab[i].real() - std::round(tab[i].real())) < EPSILON)
             re = std::round(tab[i].real());
         else
             re = tab[i].real();
-        if (abs(tab[i].imag() - std::round(tab[i].imag())) < 0.0)
+        if (abs(tab[i].imag() - std::round(tab[i].imag())) < EPSILON)
             im = std::round(tab[i].imag());
         else
             im = tab[i].imag();
@@ -82,87 +87,123 @@ ostream& operator << (ostream& flux, const Polynomial & p)
 {
 
     unsigned int i;
+	double re = p.tab[0].real();
+    double im = p.tab[0].imag();
 
-    if (p.tab[0].real() == 0.0)
+
+    if (re == 0.0)
     {
-        if (p.tab[0].imag() != 0.0)
+        if (im != 0.0)
             {
-                if (p.tab[0].imag() == 1.0)
+                if (im == 1.0)
                     flux << "i";
-                else if (p.tab[0].imag() == - 1.0)
+                else if (im == - 1.0)
                     flux << "-i";
                 else
-                    flux << p.tab[0].imag() << "i";
+                    flux << Utils::print(im) << "i";
             }
     }
-    else if (p.tab[0].real() > 0.0)
+    else if (re > 0.0)
     {
 
-        if (p.tab[0].imag() > 0.0)
-            flux << "(" << p.tab[0].real() << "+" << p.tab[0].imag() << "i)";
-        else if (p.tab[0].imag() < 0.0)
-            flux << "(" << p.tab[0].real() << p.tab[0].imag() << "i)";
-        else //p.tab[0].imag() == 0.0
-            flux << p.tab[0].real();
+        if (im > 0.0)
+		{
+			if (im == 1.0)
+				flux << "(" << Utils::print(re) << "+i)";
+			else
+				flux << "(" << Utils::print(re) << "+" << Utils::print(im) << "i)";
+		} 
+        else if (im < 0.0) {
+			if (im == -1.0)
+				flux << "(" << Utils::print(re) << "-i)";
+			else
+				flux << "(" << Utils::print(re) << Utils::print(im) << "i)";
+		}
+        else //im == 0.0
+            flux << Utils::print(re);
     }
-    else //p.tab[0].real() < 0.0
+    else //re < 0.0
     {
-        if (p.tab[0].imag() == 0.0)
-            flux << p.tab[0].real();
-        else if (p.tab[0].imag() > 0.0)
-            flux << "(" << p.tab[0].real() << "+" << p.tab[0].imag() << "i)";
-        else //p.tab[0].imag() < 0.0
-            flux << "- (" << abs(p.tab[0].real()) << "+" << abs(p.tab[0].imag()) << "i)";
+        if (im == 0.0)
+            flux << Utils::print(re);
+        else if (im > 0.0)
+            flux << "(" << Utils::print(re) << "+" << Utils::print(im) << "i)";
+        else //im < 0.0
+            flux << "-(" << Utils::print(abs(re)) << "+"
+                  << Utils::print(abs(im)) << "i)";
     }
-
 
     for (i = 1; i < p.degree + 1; i++  )
     {
-        double re (p.tab[i].real());
-        double im (p.tab[i].imag());
+        re = p.tab[i].real();
+		im = p.tab[i].imag();
 
         if (re == 0.0)
         {
             if (im > 0.0)
                 {
                     if (im == 1.0)
-                        flux << " + iX^" << i;
+                        flux << " + iX";
                     else
-                        flux << " + " << im << "iX^" << i;
+                        flux << " + " << Utils::print(im) << "iX";
                   }
             else if (im < 0.0)
                 {
                     if (im == -1.0)
-                        flux << " - iX^" << i;
+                        flux << " - iX";
                     else
-                        flux << " - " << abs(im) << "iX^" << i;
+                        flux << " - " << Utils::print(abs(im)) << "iX";
                 }
         }
         else if (re > 0.0)
         {
 
-                if (im > 0.0)
-                {
-                    flux << " + (" << re << "+" << im << "i)X^" << i;
-                }
-                else if (im < 0.0)
-                    flux << " + (" << re << im << "i)X^" << i;
-                else //im == 0.0
-                    flux << " + " << re << "X^" << i;
+            if (im > 0.0)
+            {
+                flux << " + (" << Utils::print(re) << "+" << Utils::print(im) << "i)X";
+            }
+            else if (im < 0.0)
+                flux << " + (" << Utils::print(re) << Utils::print(im) << "i)X";
+            else //im == 0.0
+            {
+                if (re == 1.0)
+                    flux << " X";
+                else
+                    flux << " + " << Utils::print(re) << "X";
+            }
 
         }
         else //re < 0.0
         {
             if (im == 0.0)
-                flux << " + " << re << "X^" << i;
+            {
+                if (re == -1.0)
+                    flux << " - X";
+                else
+                    flux << " " << Utils::print(re) << "X";
+            }
+
             else if (im > 0.0)
-                flux << " + (" << re << "+" << im << "i)X^" << i;
-            else //im < 0.0
-                flux << "-(" << abs(re) << "+" << abs(im) << "i)X^" << i;
+			{
+				if (im == 1.0)
+                	flux << " + (" << Utils::print(re) << "+i)X";
+				else
+					flux << " + (" << Utils::print(re) << "+" << Utils::print(im) << "i)X";
+			}
+
+            else //im < 0.0 
+			{
+				if (im == -1.0)
+					flux << "- (" << Utils::print(abs(re)) << "+i)X";
+				else
+					flux << "- (" << Utils::print(abs(re)) << "+" << Utils::print(abs(im)) << "i)X";
+			}
         }
+
+		if (i != 1)
+			flux << "^" << i ;
+
     }
-
-
 
     return flux;
 }

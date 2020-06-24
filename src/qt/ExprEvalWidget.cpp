@@ -3,6 +3,7 @@
 #include "Error.h"
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <iostream>
 
 ExprEvalWidget::ExprEvalWidget(const QMatrixLibrary* lib, QWidget* parent) :
 AbstractOperationWidget (lib, parent)
