@@ -527,7 +527,7 @@ public:
     /**
      * @brief Regression test
      */
-        void regressionTest() const;
+    void regressionTest() const;
 
 };
 

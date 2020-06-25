@@ -8,19 +8,18 @@
 #include "Polynomial.h"
 #include "Utils.hpp"
 
-using namespace std;
-
 
 static const double EPSILON = 0.000001;
 
 
-Polynomial :: Polynomial() : tab (vector<complex<double>>(1,0))
+Polynomial :: Polynomial() : tab (std::vector<std::complex<double>>(1,0))
 {
     this->degree = 0;
 }
 
 
-Polynomial :: Polynomial(const unsigned int & d) : tab(vector<complex<double>>(d+1,1))
+Polynomial :: Polynomial(const unsigned int & d) : 
+                tab(std::vector<std::complex<double>>(d+1,1))
 {
     this->degree = d;
 }
@@ -30,7 +29,7 @@ Polynomial :: Polynomial(const unsigned int & d, const VectorX & values)
 {
     if ( values.size() != d + 1 )
     {
-        cerr << "Erreur : Pas le nombre de coefficients" << endl;
+        std::cerr << "Erreur : Pas le nombre de coefficients" << std::endl;
         return;
     }
 
@@ -44,7 +43,8 @@ Polynomial :: Polynomial(const unsigned int & d, const VectorX & values)
 }
 
 
-Polynomial::Polynomial(const Polynomial &p) : tab (vector<complex<double>>(p.tab))
+Polynomial::Polynomial(const Polynomial &p) : 
+            tab (std::vector<std::complex<double>>(p.tab))
 {
     degree = p.degree;
 }
@@ -72,7 +72,8 @@ Polynomial Polynomial::check() const {
 void Polynomial::debugAffiche()
 {
     unsigned int i;
-    cout << "Affichage du polynôme de degrée " << degree << endl << endl;
+    std::cout << "Affichage du polynôme de degrée " 
+                << degree << std::endl << std::endl;
 
     for (i = 0; i < degree + 1; i++)
     {
@@ -83,7 +84,7 @@ void Polynomial::debugAffiche()
 }
 
 
-ostream& operator << (ostream& flux, const Polynomial & p)
+std::ostream& operator << (std::ostream& flux, const Polynomial & p)
 {
 
     unsigned int i;
@@ -212,7 +213,7 @@ ostream& operator << (ostream& flux, const Polynomial & p)
 Polynomial& Polynomial:: operator = (const Polynomial & p)
 {
     this->degree = p.degree;
-    tab = vector<complex<double>>(this->degree + 1,0);
+    tab = std::vector<std::complex<double>>(this->degree + 1,0);
     unsigned int i;
     for (i = 0; i <= degree; i++)
     {
@@ -398,15 +399,83 @@ const Polynomial Polynomial:: division(const Polynomial & divisor, Polynomial & 
 
 void Polynomial::regressionTest() const
 {
-  VectorX v;
-  complex<double> c0(1,0);
-  v.push_back(c0);
-  complex<double> c1(0,0);
-  v.push_back(c1);
-  complex<double> c2(1,0);
-  v.push_back(c2);
-  Polynomial p(2,v);
-  cout << "Affichage de p" << endl << p << endl << endl;
-  cout << "Affichage debug de p" << endl;
-  p.debugAffiche();
+    Polynomial p1(1,{0,1});
+    Polynomial p2(1,{1,1});
+    Polynomial p3(2,{6,5,1});
+    Polynomial p4(2,{2,3,1});
+    Polynomial p5(5,{1,2,0,0,3,0.5});
+    Polynomial p6(2,{-1,0,1});
+    Polynomial p7(0,{1});
+
+    Polynomial res1(1,{1,2});
+    Polynomial res2(1,{4,2});
+    Polynomial res3(3,{1,3,3,1});
+    Polynomial res4(4,{0,0,6,5,1});
+    Polynomial res5(5,{2,4,0,0,6,1});
+    Polynomial res6(3,{18,34,18,3});
+    Polynomial res7(1,{-1,1});
+    Polynomial res8(1,{2,1});
+    Polynomial res9(4,{2,0,0,3,0.5});
+    Polynomial res10;
+    Polynomial rest7(0);
+    Polynomial rest9(0,{1});
+
+
+    Polynomial result;
+    Polynomial rest;
+
+    result = p1 + p2;
+    assert(result == res1);
+    assert(result.degree == res1.degree);
+
+    result = p3 - p4;
+    assert(result == res2);
+    assert(result.degree == res2.degree);
+
+    result = p1 * p4 + p2;
+    assert(result == res3);
+    assert(result.degree == res3.degree);
+
+    result = p1 * p1 * p3;
+    assert(result == res4);
+    assert(result.degree == res4.degree);
+
+    result = p1 * p1 * p3;
+    assert(result == res4);
+    assert(result.degree == res4.degree);
+
+    result = p5 * 2;
+    assert(result == res5);
+    assert(result.degree == res5.degree);
+
+    result = p1 + p2 * p3 * 3;
+    assert(result == res6);
+    assert(result.degree == res6.degree);
+
+    result = p6.division(p2,rest);
+    assert(result == res7);
+    assert(result.degree == res7.degree);
+    assert(rest == rest7);
+    assert(rest.degree == rest7.degree);
+
+    result = p4.division(p2,rest);
+    assert(result == res8);
+    assert(result.degree == res8.degree);
+    assert(rest == rest7);
+    assert(rest.degree == rest7.degree);
+
+    result = p5.division(p1,rest);
+    assert(result == res9);
+    assert(result.degree == res9.degree);
+    assert(rest == rest9);
+    assert(rest.degree == rest9.degree);
+
+
+    result = p3.division(p7,rest);
+    assert(result == p3);
+    assert(result.degree == p3.degree);
+    assert(rest == rest7);
+    assert(rest.degree == rest7.degree);
+
+
 }

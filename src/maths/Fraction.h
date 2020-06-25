@@ -14,9 +14,9 @@ class Fraction
 
 private:
 
-    long int numerator, denominator;
+    long int numerator; /*<Fraction's numerator*/
+    long int denominator; /*<Fraction's denominator*/
 
-    std::string num, den;
 
 public:
 /**
@@ -150,13 +150,6 @@ public:
  * @return \e Fraction
  */
     const Fraction operator / (const Fraction & f) const;
-
-/**
- * @brief test if the real is not an integer
- * @param [in] d \e double
- * @return \e bool \n Return false if the fraction is an integer
- */
-    //bool isFraction (const double & d) const;
 
 /**
  * @brief regressionTest
