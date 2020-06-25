@@ -1470,3 +1470,212 @@ std::pair<Matrix,Matrix> Matrix::cholesky() const {
     return std::pair<Matrix,Matrix> (l,l.conjugateTranspose());
 
 }
+
+
+
+void Matrix:: regressionTest() const
+{
+
+    cout << endl << endl << "****** DEBUT DU TEST DE REGRESSION DE MATRIX******" << endl << endl << endl;
+
+    complex<double> tra, det ;
+
+    Matrix a(5, 5, {-19,-4,-12,17,4,19,-14,-5,-3,18,-4,-1,-13,0,19,16,5,-25,-22,-23,-9,-9,22,-9,21});
+    Matrix b(5, 5, {-13,-24,13,-23,-5,5,12,-24,1,-18,21,-2,-21,-5,-4,-15,13,-11,14,8,12,5,8,-24,-2});
+    Matrix c(4, 5, {6,2,0,0,-14,21,-6,21,-16,19,-25,8,-24,-1,-12,15,-6,3,-17,21});
+    Matrix d(4, 5, {7,7,14,-13,-12,-7,-10,4,-2,-9,-7,-17,-13,-5,-6,5,19,-15,-3,-21});
+    Matrix e(5, 4, {24,-7,15,5,10,-24,-2,-3,-9,-19,5,-9,-5,-22,20,18,-21,18,22,-24});
+    Matrix f(5, 5, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25});
+    Matrix g(3, 3, {1,2,3,4,5,6,7,8,0});
+    Matrix h(3, 3, {1,2,3,4,5,6,7,8,9});
+
+    Matrix r1(5, 5, {-32,-28,1,-6,-1,24,-2,-29,-2,0,17,-3,-34,-5,15,1,18,-36,-8,-15,3,-4,30,-33,19});
+    Matrix r2(4, 5, {13,9,14,-13,-26,14,-16,25,-18,10,-32,-9,-37,-6,-18,20,13,-12,-20,0});
+    Matrix r3(5, 5, {-6,20,-25,40,9,14,-26,19,-4,36,-25,1,8,5,23,31,-8,-14,-36,-31,-21,-14,14,15,23});
+    Matrix r4(4, 4, {458,-342,-222,360,-64,292,530,-810,-47,245,-795,337,-83,734,374,-744});
+    Matrix r5(3, 3, {-16,8,-1,14,-7,2,-1,2,-1});
+    Matrix r6(5, 5, {-16687473,-2859275,4429957,38295027,6405675,
+                     11243373,2777717,844201,-31171603,-3135973,
+                     -12584028,-3513568,10329116,6874376,20116276,
+                     24146480,10255020,-32022704,-24798036,-33093968,
+                     -8375425,-5884917,24096783,-17068165,33210649});
+    Matrix r7(3, 3, {1,0,0,0,1,0,0,0,1});
+    Matrix r8(3, 3, {1,0,-1,0,1,2,0,0,0});
+
+    Matrix x(3, 3);
+    Matrix x1(3, 3);
+    Matrix x2(3, 3);
+    Matrix x3(3, 3);
+    Matrix y(4, 4);
+    Matrix z(5, 5);
+    Matrix z1(5, 5);
+    Matrix z2(5, 5);
+    Matrix z3(5, 5);
+
+
+    cout << "! Addition de 2 matrices carrées: 5*5 + 5*5" << endl;
+    {
+        z = a + b;
+        z = z.checkCast();
+        if(z == r1)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+    }
+
+    cout << "! Addition de 2 matrices non carrées: 4*5 + 4*5" << endl;
+    {
+        z = c + d;
+        z = z.checkCast();
+        if (z == r2)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Soustraction de matrices non carrées: 4*5 - 4*5" << endl;
+    {
+        z = a - b;
+        z = z.checkCast();
+        if(z == r3)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Multiplication de 2 matrices: 4*5 * 5*4" << endl;
+    {
+        y = c * e;
+        y = y.checkCast();
+        if (y == r4)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Calcul de trace" << endl;
+    {
+        tra = a.trace();
+        if(tra + (complex<double>(47.0,0.0)) == 0.0)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl;
+        cout << endl;
+    }
+
+    cout << "! Calcul de déterminant" << endl;
+    {
+        det = f.determinant();
+        if (abs(det.real()) < EPSILON && abs(det.imag()) < EPSILON)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl;
+        cout << endl;
+    }
+
+    cout << "! Calcul d'inverse et test de l'opérateur scale*Matrix" << endl;
+    {
+        x = (g^-1)*9;
+        x = x.checkCast();
+        if (x == r5)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Calcul de puissance" << endl;
+    {
+        z = a^5;
+        z = z.checkCast();
+        if (r6 == z)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Calcul de G * G^-1" << endl;
+    {
+        x = g*(g^-1);
+        x = x.checkCast();
+        if (x == r7)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl ;
+        cout << endl ;
+    }
+
+    cout << "! Test de allMatrix" << endl;
+    {
+        g.allMatrix(x1,x2,x3);
+        x = x1 * x2 * x3 ;
+        x = x.checkCast();
+        if (x == g)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+
+        cout << "- Test avec une seconde matrice..." << endl; ;
+
+        a.allMatrix(z1,z2,z3);
+        z = z1 * z2 * z3;
+        if (z.checkCast() == a)
+            cout << "Résultat correct! Poursuite..." << endl;
+        else
+        {
+            cout << "Erreur détectée! \nEchec du test..." << endl;
+            return ;
+        }
+        cout << endl << endl  ;
+    }
+
+
+
+
+    cout << endl << endl << "******* TEST REUSSI ******" << endl << endl
+           <<  "****** FIN DU TEST DE REGRESSION DE MATRIX ******" << endl << endl ;
+
+}

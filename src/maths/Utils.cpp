@@ -34,8 +34,14 @@ namespace {
             j = 2;
             while (j < i && !found) {
                 if (abs((sqrt(i) / sqrt(j)) - r) < EPSILON) {
-                    num =  std::string("\\sqrt{" + std::to_string(i)) + "}";
-                    denum =  std::string("\\sqrt{" + std::to_string(j)) + "}";
+                    if (abs(std::round(sqrt(i)) - sqrt(i)) < EPSILON)
+                        num = std::to_string(static_cast<int>(std::round(sqrt(i))));
+                    else
+                        num =  std::string("\\sqrt{" + std::to_string(i)) + "}";
+                    if (abs(std::round(sqrt(j)) - sqrt(j)) < EPSILON)
+                        denum = std::to_string(static_cast<int>(std::round(sqrt(j))));
+                    else
+                        denum =  std::string("\\sqrt{" + std::to_string(j)) + "}";
                     found = true;
                 }
                 j++;
@@ -44,12 +50,14 @@ namespace {
         }
         if (!found)
             return "";
+
         if (abs(d) < 1)
             s = "\\frac{" + denum + "}{" + num + "}";
         else
             s = "\\frac{" + num + "}{" + denum + "}";
         if (d < 0.0)
             s = "-" + s;
+
         return s;
     }
 }
@@ -125,7 +133,6 @@ const Fraction Utils::double2fraction(const double & d) {
 std::string Utils:: double2sqrt(const double & d) {
     double res = abs(d);
     std::string s;
-    s += "\\sqrt{";
 
     if (res < 1) // cas 1/sqrt(x)
         res = 1 / res;
@@ -133,10 +140,14 @@ std::string Utils:: double2sqrt(const double & d) {
     int n = round(res * res);
 
     if (abs((res * res) - n) < EPSILON)
-        s += std::to_string(n);
+    {
+        if (abs(std::round(sqrt(n)) - sqrt(n)) < EPSILON)
+            s += std::to_string(static_cast<int>(std::round(sqrt(n))));
+        else
+            s += "\\sqrt{" + std::to_string(n) += "}";;
+    }
     else
         return double2sqrt_hard(d);
-    s += "}";
 
     if (abs(d) < 1) {
       s = "\\frac{1}{" + s + "}";

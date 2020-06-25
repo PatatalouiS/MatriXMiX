@@ -87,5 +87,5 @@ veryclean : clean
 	rm $(CLEAN_FLAGS) $(BIN_DIR)/* $(DOC_DIR)/html MatriXMiX.make MatriXMiX.pro.*
 
 
-docs :
+documentation :
 	doxygen doc/MatriXMiX.doxy

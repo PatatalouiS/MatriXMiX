@@ -151,19 +151,10 @@ const Fraction Fraction::operator / (const Fraction & f) const {
     return res;
 }
 
-//bool Fraction::isFraction(const double & d) const {
-//    long int integer = static_cast < long int > (d);
-//    double r = d - integer;
-//    if (r == 0.0)
-//        return false;
-
-//    return true;
-//}
-
 
 void Fraction::regressionTest() const {
     cout << endl << endl <<
-        "****** DEBUT DU TEST DE REGRESSION POUR FRACTION ******" <<
+        "****** DEBUT DU TEST DE REGRESSION DE FRACTION ******" <<
         endl << endl << endl;
 
     Fraction f1(1, 1);
@@ -273,7 +264,7 @@ void Fraction::regressionTest() const {
     }
 
     cout << endl << endl << "******* TEST REUSSI ******" << endl << endl <<
-        "****** FIN DU TEST DE REGRESSION POUR FRACTION ******" <<
+        "****** FIN DU TEST DE REGRESSION DE FRACTION ******" <<
         endl << endl;
 
 }

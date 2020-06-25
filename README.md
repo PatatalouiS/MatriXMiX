@@ -1,18 +1,20 @@
+
 <div align='center'>
 	<img src='http://storage.patatalouis.fr/logo.png'/>
 </div>
 
 <h1> Introduction </h1>
 
-This project is a tool for manipulating and calculating matrices in <img src="https://latex.codecogs.com/gif.latex?\mathbb{R}"/> 
-and <img src="https://latex.codecogs.com/gif.latex?\mathbb{C}"/> sets. It will allow you to perform basic matrix operations as well as certain decomposition and diagonalization operations. The tool is currently geared towards teaching and allows students to easily correct their algebra exercices, wich are often difficult to correct on their own. All this with a beautiful <img src="https://latex.codecogs.com/gif.latex?\LaTeX"/> typesetting.  For developpers, the library we created for matrix calculations can be reused as a static or shared library in your own programs.
+This project is developped to provide a tool to compute and manipulate matrices in <img src="https://latex.codecogs.com/gif.latex?\mathbb{R}"/>
+and <img src="https://latex.codecogs.com/gif.latex?\mathbb{C}"/> sets. It allows to perform basic matrix operations as well as some decomposition and diagonalization operations. This tool is currently geared towards teaching and allows students to easily correct their algebra exercices, which are often difficult to correct by themselves. To print, it uses the beautiful <img src="https://latex.codecogs.com/gif.latex?\LaTeX"/> typesetting.
+For developers : the library that we coded for matrix computations can be reused as a static or shared library in their own programs.
 
 <h4>⚠️ Please read the installation and build instructions carefully ️⚠️ </h4>
 <h4>⚠️ All the bash commands described here are executed from the root of the project ️⚠️ </h4>
 
 <h1> Install </h1>
- 
-Statically executables are available to avoid having to compile teh sources yourself. However, some consitions must be met to be able to execute them without error. If you do not have the 	requisite conditions please read the Build section. For the moment the application is not available on Windows but we wiil do the necesseray to hava a complete cross-compilation later.
+
+Static executables are available you to compile the sources yourself. However, some conditions must be fulfilled to execute them without error. If you do not have the necessary conditions, please read the Build section. For the moment, the application is not available on Windows, but we are working to provide a complete cross-compilation application.
 
 your OS must be :
 <ul>
@@ -29,7 +31,7 @@ Make sure the AppImage is executable with :
 and after :
 <pre>$ ./MatriXMiX-x86_64.AppImage </pre>
 
-After, only if you want, you can put the executable in your Desktop entries with the <a href='https://github.com/TheAssassin/AppImageLauncher'> AppImageLauncher tool </a>.
+After that, if you want, you can put the executable in your Desktop entries with the <a href='https://github.com/TheAssassin/AppImageLauncher'> AppImageLauncher tool </a>.
 
 <b>OSX</b>
 
@@ -39,13 +41,13 @@ Just double click on the .dmg ! <i> (And drag it to your Applictions folder if y
 
 <b> OSX and Unix </b>
 
-Before compiling, you need to install the only dependencies of the project : The <b>Qt</b> Framework. Please note, sometimes its installation can be a bit tedious. We advise you to install <b>Qt</b> OpenSource via their graphic installer available on the <a href='https://www.qt.io/download-open-source?hsCtaTracking=9f6a2170-a938-42df-a8e2-a9f0b1d6cdce%7C6cb0de4f-9bb5-4778-ab02-bfb62735f3e5'>Official Website</a>. Preferably, choose in the utility ti install version <b>12.8</b> of <b>Qt</b> because <b>MatriXMiX</b> has been developed on it its entirely.
+Before compiling, you must install the only dependencies of the project : The <b>Qt</b> Framework. Please note: sometimes, its installation can be a bit tedious. We advise you to install <b>Qt</b> OpenSource via their graphic installer available on the <a href='https://www.qt.io/download-open-source?hsCtaTracking=9f6a2170-a938-42df-a8e2-a9f0b1d6cdce%7C6cb0de4f-9bb5-4778-ab02-bfb62735f3e5'>Official Website</a>. Preferably, choose in the utility install version <b>12.8</b> of <b>Qt</b> because <b>MatriXMiX</b> has been entirely developed on it.
 
-After, make sure the qmake tool is availble in your PATH env variable by :
+After, make sure the qmake tool is available in your PATH env variable by :
 <pre>$ export PATH=~/Qt/5.12.8/gcc_64/bin:$PATH                 <i> // Unix systems </i></pre>
 <pre>$ export PATH=~/Qt/5.12.8/clang_64/bin:$PATH               <i> // OSX systems </i></pre>
 
-finally, you can do : 
+Finally, you can execute the following command:
 <pre>$ make </pre>
 Which will generate the following executables in <code><b>./bin</b></code> folder :
 <ul>
@@ -61,14 +63,14 @@ And execute MatriXMiX with :
 
 <h4> Other Makefile rules </h4>
 <ul>
-	<li><b>make clean</b> : clean .obj files, all the stuff to make the finla binaries</li>
-	<li><b>make veryclean</b> : clean all </li>
+	<li><b>make clean</b> : clean .obj files, all the stuff to make the final binaries</li>
+	<li><b>make veryclean</b> : clean all files generated by the <i>make</i> command</li>
 	<li><b>make documentation</b> : generates the <code><b>Doxygen</b></code> documentation</li>
 </ul>
 
 <h1> Documentation </h1>
 
-As explaned before, you can generate full documentation with the command :
+As explained before, you can generate full documentation with the command :
 <pre>$ make documentation </pre>
 
 Be ensure you have the required <code><b>Doxygen</b></code> tool for this. if not, you can install it with :
@@ -77,11 +79,11 @@ Be ensure you have the required <code><b>Doxygen</b></code> tool for this. if no
 
 <h1> Use MatriXMiX </h1>
 
-Using MatriXMiX is very simple, you have just to put some matrices in the Library an after, make calculations on these matrices in the main menu.
-If you don't see your matrix for a calculation, it's because your matrix is not mathematically compatible with this operation.
+Using MatriXMiX is very simple. You can put some matrices in the Library section. To compute, you must go to main menu and select the type of operation you want.
+If you don't see a matrix for one of the operation , it's because the operation you have selected can not be executed for the matrix.
 
-You can save your current library with the File menu. a .mtmx txt file is created.
-Also, you can load a .mtmx file to restore a previous library.
+You can save your current library with the File menu. A <i>.mtmx</i> txt file is created.
+Also, you can load a <i>.mtmx</i> file to restore a previous library.
 
 <h1> Third Party Libraries </h1>
 
@@ -94,7 +96,7 @@ The MatriXMiX app uses :
 
 <h1> Contact </h1>
 
-If you have any problems for runing, building, or using MatriXMiX please contact us : <br>
+For any problem of running, building, or using MatriXMiX, please contact us : <br>
 <a href="mailto:maxime.olivie@etu.univ-lyon1.fr">Support 1</a> <br>
 <a href="mailto:tarik.boumaza@etu.univ-lyon1.fr">Support 2</a>
 

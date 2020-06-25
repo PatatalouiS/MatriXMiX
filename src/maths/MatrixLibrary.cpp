@@ -5,9 +5,9 @@
 #include <fstream>
 #include <cassert>
 
-using namespace std;
 
-MatrixLibrary:: MatrixLibrary () : tab (map<string,Matrix>())
+
+MatrixLibrary:: MatrixLibrary () : tab (std::map<std::string,Matrix>())
 {
 }
 
@@ -42,7 +42,7 @@ void MatrixLibrary:: clear ()
 }
 
 
-bool MatrixLibrary:: exist (const string& name) const
+bool MatrixLibrary:: exist (const std::string& name) const
 {
     return (tab.count(name) != 0);
 }
@@ -52,14 +52,14 @@ void MatrixLibrary:: print () const
 {
     for(const auto& Mat: tab)
     {
-        cout << "Matrice " << Mat.first << " : ";
-        cout << endl << endl << Mat.second << endl;;
+        std::cout << "Matrice " << Mat.first << " : ";
+        std::cout << std::endl << std::endl << Mat.second << std::endl;;
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 
-bool MatrixLibrary:: isName(const string & chain) const
+bool MatrixLibrary:: isName(const std::string & chain) const
 {
     unsigned long int i = 1, s = chain.length();
 
@@ -81,15 +81,16 @@ bool MatrixLibrary:: isName(const string & chain) const
 
 
 
-void MatrixLibrary:: addMatrix (const string& name, const Matrix & m)
+void MatrixLibrary:: addMatrix (const std::string& name, const Matrix & m)
 {
     if (isName(name))
         tab.insert({name,m});
-    else cout<<"Nom de matrice non autorisé, veuillez choisir un autre..."<<endl;
+    else std::cout <<"Nom de matrice non autorisé, veuillez choisir un autre..."
+            <<std::endl;
 }
 
 
-const Matrix* MatrixLibrary:: find (const string& name) const
+const Matrix* MatrixLibrary:: find (const std::string& name) const
 {
     if(tab.count(name) == 0)
     {
@@ -99,7 +100,7 @@ const Matrix* MatrixLibrary:: find (const string& name) const
 }
 
 
-Matrix* MatrixLibrary:: find (const string& name)
+Matrix* MatrixLibrary:: find (const std::string& name)
 {
     if(tab.count(name) == 0)
     {
@@ -109,17 +110,17 @@ Matrix* MatrixLibrary:: find (const string& name)
 }
 
 
-void MatrixLibrary:: erase (const string & name)
+void MatrixLibrary:: erase (const std::string & name)
 {
     tab.erase(name);
     if(exist(name))
     {
-        cout << "Suppression non effectuée" << endl;
+        std::cout << "Suppression non effectuée" << std::endl;
     }
 }
 
 
-const map<string,Matrix>& MatrixLibrary:: data () const
+const std::map<std::string,Matrix>& MatrixLibrary:: data () const
 {
     return tab;
 }
@@ -136,7 +137,7 @@ void MatrixLibrary::copyVector(std::vector<std::string>& expression,
 }
 
 
-bool MatrixLibrary:: isFloat(const string & chain) const
+bool MatrixLibrary:: isFloat(const std::string & chain) const
 {
     unsigned long int i = 0, s = chain.length();
     unsigned short int nbcoma = 0;
@@ -158,7 +159,7 @@ bool MatrixLibrary:: isFloat(const string & chain) const
 }
 
 
-bool MatrixLibrary:: isOperator (const string & chain) const
+bool MatrixLibrary:: isOperator (const std::string & chain) const
 {
     return ( (chain == "+")
              ||  (chain == "-")
@@ -169,7 +170,7 @@ bool MatrixLibrary:: isOperator (const string & chain) const
 }
 
 
-bool MatrixLibrary:: isSpecialCaractere(const string & chain) const
+bool MatrixLibrary:: isSpecialCaractere(const std::string & chain) const
 {
     if (!isName(chain) && !isFloat(chain) &&
             !isOperator(chain))
@@ -178,10 +179,10 @@ bool MatrixLibrary:: isSpecialCaractere(const string & chain) const
 }
 
 
-vector<string> MatrixLibrary:: explode (const string & expression)const
+std::vector<std::string> MatrixLibrary:: explode (const std::string & expression)const
 {
-    vector<string> tab;
-    string c, temp;
+    std::vector<std::string> tab;
+    std::string c, temp;
     temp="";
 
     for (auto i : expression)
@@ -208,8 +209,8 @@ vector<string> MatrixLibrary:: explode (const string & expression)const
 }
 
 
-bool MatrixLibrary:: highEqualPriority (const string & opd,
-                                          const string & opg) const
+bool MatrixLibrary:: highEqualPriority (const std::string & opd,
+                                          const std::string & opg) const
 {
     switch (opd[0])
     {
@@ -240,8 +241,8 @@ bool MatrixLibrary:: highEqualPriority (const string & opd,
 }
 
 
-Matrix MatrixLibrary:: calculate (const string & op, const string & a,
-                                  const string & b) const
+Matrix MatrixLibrary:: calculate (const std::string & op, const std::string & a,
+                                  const std::string & b) const
 {
     const Matrix* m_a;
     const Matrix* m_b;
@@ -339,8 +340,8 @@ void MatrixLibrary:: polish(const std::string & chain ,
                             std::vector<std::string> & polish_notation)const
 {
 
-    stack<string> p;
-    vector<string> expression;
+    std::stack<std::string> p;
+    std::vector<std::string> expression;
     copyVector(expression,explode(chain));
 
     for (auto i : expression)
@@ -399,12 +400,12 @@ void MatrixLibrary:: polish(const std::string & chain ,
 }
 
 
-string MatrixLibrary:: isCalculableExpression(const string & expression)const
+std::string MatrixLibrary:: isCalculableExpression(const std::string & expression)const
 {
-   vector<string> result = explode(expression);
+   std::vector<std::string> result = explode(expression);
    unsigned long int i, s = result.size();
 
-   string calculable = "calculable";
+   std::string calculable = "calculable";
 
    if (s == 0)
        return "Expression vide";
@@ -441,7 +442,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
    if (nbp != 0)
        return "Nombre de parenthèses ouvrantes différent du nombre de parenthèses fermantes" ;
 
-   vector<string> no_parenthesis;
+   std::vector<std::string> no_parenthesis;
 
    for (i = 0; i < s; i++)
    {
@@ -474,7 +475,7 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
 
     s = no_parenthesis.size();
 
-    string error1 = "Expression vide" ;
+    std::string error1 = "Expression vide" ;
 
     if (s == 0)
         return error1;
@@ -491,8 +492,8 @@ string MatrixLibrary:: isCalculableExpression(const string & expression)const
             return ("Aucune matrice dans l'expression saisie");
     }
 
-    string error3a = "Calcul de " ;
-    string error3b = " impossible" ;
+    std::string error3a = "Calcul de " ;
+    std::string error3b = " impossible" ;
     bool matrix_result = false;
 
     for(i = 0; i < s; i++)
@@ -620,12 +621,12 @@ Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
 {
 
     MatrixLibrary copy(*this);
-    vector<string> polish_not;
+    std::vector<std::string> polish_not;
     copy.polish(chain,polish_not);      //I write my expression in Polish notation
 
-    stack<string> pile;
+    std::stack<std::string> pile;
     Matrix temp;
-    string identify;
+    std::string identify;
     int name=0;
 
     for (auto i : polish_not)
@@ -634,7 +635,7 @@ Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
         {
             /* if the current element is a tilde, I calculate the inverse of the matrix*/
 
-            string a = pile.top();
+            std::string a = pile.top();
             pile.pop();
 
             temp= *(copy.find(a))^-1;
@@ -648,9 +649,9 @@ Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
         {
             /* In the case of binary operation, I extract both operands from the stack*/
 
-            string b = pile.top();
+            std::string b = pile.top();
             pile.pop();
-            string a = pile.top();
+            std::string a = pile.top();
             pile.pop();
 
             /* depending on the type of the two operands I calculate the result */
@@ -705,9 +706,9 @@ Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
             else if (  copy.isFloat(a) && copy.isFloat(b) )
             {
                 /* if both operands are floats i calculate the result diffrently then i store it in the stack */
-                ostringstream ss;
+                std::ostringstream ss;
                 ss << copy.calculateFloat (i,a,b);
-                string res = ss.str();
+                std::string res = ss.str();
                 pile.push(res);
             }
             else
@@ -740,26 +741,26 @@ Matrix MatrixLibrary:: calculateExpression(const std::string & chain)const
 
 
 
-void MatrixLibrary:: saveFile (const string & filename) const
+void MatrixLibrary:: saveFile (const std::string & filename) const
 {
-    ofstream file (filename.c_str());
+    std::ofstream file (filename.c_str());
 
     if(!file.is_open())
     {
-        cout << "Erreur lors de la lecture du fichier "
-                "\nVeuillez vérifier le chemin du fichier" << endl;
+        std::cout << "Erreur lors de la lecture du fichier "
+                "\nVeuillez vérifier le chemin du fichier" << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    file << "Matrix" << endl;
+    file << "Matrix" << std::endl;
 
     for (auto it = tab.begin(); it != tab.end(); it++ )
     {
-       string matrixname = it->first;
+       std::string matrixname = it->first;
        Matrix m(*find(matrixname));
 
-       file << endl << matrixname << endl;
-       file << m.getNbRows() << " " << m.getNbCols() << endl;
+       file << std::endl << matrixname << std::endl;
+       file << m.getNbRows() << " " << m.getNbCols() << std::endl;
 
        for (unsigned int i = 0; i < m.getNbRows(); i++)
        {
@@ -768,7 +769,7 @@ void MatrixLibrary:: saveFile (const string & filename) const
 
                file << m[i][j] << " ";
            }
-           file << endl;
+           file << std::endl;
        }
     }
 
@@ -776,11 +777,11 @@ void MatrixLibrary:: saveFile (const string & filename) const
 }
 
 
-void MatrixLibrary:: readFile (const string & filename)
+void MatrixLibrary:: readFile (const std::string & filename)
 {
-    string matrixname;
+    std::string matrixname;
     unsigned int r,c;
-    ifstream file (filename.c_str());
+    std::ifstream file (filename.c_str());
 
     clear();
 
@@ -789,7 +790,7 @@ void MatrixLibrary:: readFile (const string & filename)
         std::cerr << "Erreur lors de la lecture du file \nVeuillez vérifier le chemin du file" << std::endl;
     }
 
-    string testfile;
+    std::string testfile;
     file >> testfile ;
 
     if( testfile == "Matrix")
@@ -820,4 +821,167 @@ void MatrixLibrary:: readFile (const string & filename)
         std::cerr << "Erreur, ce fichier ne contient pas des matrices !" << std::endl ;
 
     }
+}
+
+
+
+void MatrixLibrary:: regressionTest() const
+{
+     std::cout << std::endl << std::endl
+                << "****** DEBUT DU TEST DE REGRESSION DE MATRIXLIBRARY ******"
+                << std::endl << std::endl << std::endl;
+
+    MatrixLibrary lib;
+
+    Matrix identite(3,3,{1,0,0,0,1,0,0,0,1});
+    Matrix a(3,3,{1,2,3,4,5,6,7,8,9});
+    Matrix b(3,3,{1,2,3,2,4,5,3,5,1});
+
+    std::string exp1("1+2*14");
+    std::string exp2("identite~matrice1");
+    std::string exp3("identite~2");
+    std::string exp4("+14*marice1-");
+    std::string exp5("matrice1++matrice2");
+    std::string exp6("matrice2^~6");
+    std::string exp7("identite=matrice1");
+    std::string exp8("5~+matrice1");
+    std::string exp9("matrice1+/matrice2");
+    std::string exp10("matrice1*-identite");
+    std::string exp11("matrice1*(-identite)");
+    std::string exp12("6^2*matrice2");
+    std::string exp13("matrice1^identite");
+    std::string exp14("20/matrice1");
+
+    std::string exp15("matrice1");
+    std::string exp16("matrice1/matrice1");
+    std::string exp17("matrice1/2");
+    std::string exp18("identite~");
+    std::string exp19("identite+5-3");
+    std::string exp20("2*3*matrice");
+    std::string exp21("matrice2~^2");
+    std::string exp22("identite~*4");
+    std::string exp23("2-matrice1");
+
+
+
+    /* fonction IsName */
+
+    assert(isName("identite"));
+    assert(!isName("5identite"));
+    assert(!isName("545"));
+    assert(isName("Identite12"));
+    assert(!isName("~Identite+"));
+
+    /* fonctions size,isEmpty,exist,addMatrix,find,erase */
+
+    assert(lib.size() == 0);
+    assert(lib.isEmpty());
+
+    lib.addMatrix("identite",identite);
+    lib.addMatrix("matrice1",a);
+    lib.addMatrix("matrice2",b);
+
+    assert(!lib.isEmpty());
+    assert(lib.exist("matrice1"));
+
+    lib.erase("matrice2");
+
+    assert(!lib.exist("matrice2"));
+    assert(*lib.find("identite") == identite);
+    assert(*lib.find("matrice1") == a);
+    assert(lib.size() == 2);
+
+
+
+    /* fonctions isCalculableExpression */
+
+
+    /* fonctions calculateExpression */
+
+    // the calculateExpression function is used to test several functions such as polish
+
+    lib.addMatrix("matrice2",b);
+
+    Matrix res;
+    Matrix resultat1(3,3,{2,0,0,0,2,0,0,0,2});
+    Matrix resultat2(3,3,{7,2,3,4,11,6,7,8,15});
+    Matrix resultat3(3,3,{45360,55728,66096,102708,126198,
+                          149688,160056,196668,233280});
+    Matrix resultat4(3,3,{33,-13,2,-13,20,-1,2,-1,12});
+    Matrix resultat5(3,3,{615,-379,55,-379,235,-34,55,-34,6});
+    Matrix resultat6(3,3,0);
+    Matrix resultat7(3,3,{5,0,0,0,5,0,0,0,5});
+
+
+    res = lib.calculateExpression("identite+identite~");
+    assert(res == resultat1);
+
+
+    res = lib.calculateExpression("identite+identite~*5+matrice1");
+    assert(res == resultat2);
+
+
+    res = lib.calculateExpression("3*2*matrice1^4");
+    assert(res == resultat3);
+
+
+    res = lib.calculateExpression("matrice2~+6*2");
+    assert(res == resultat4);
+
+
+    res = lib.calculateExpression("1+(matrice2~)^2");
+    assert(res == resultat5);
+
+
+    res = lib.calculateExpression("2*matrice2*matrice2*(matrice2*matrice2)~-2");
+    assert(res == resultat6);
+
+
+    res = lib.calculateExpression("matrice1*2/2-1+1");
+    assert(res == a);
+
+
+    res = lib.calculateExpression("matrice2/matrice2");
+    assert(res == identite);
+
+
+    res = lib.calculateExpression("2+3*identite/identite~^3");
+    assert(res == resultat7);
+
+
+    res = lib.calculateExpression("identite~~");
+    assert(res == identite);
+
+
+    std::cout << "! Test isCalculable" << std::endl << std::endl;
+
+    std::cout << "Expressions non calculable..." << std::endl << std::endl;
+    std::cout << exp1 << "  :  " << isCalculableExpression(exp1) << std::endl;
+    std::cout << exp2 << "  :  " << isCalculableExpression(exp2) << std::endl;
+    std::cout << exp3 << "  :  " << isCalculableExpression(exp3) << std::endl;
+    std::cout << exp4 << "  :  " << isCalculableExpression(exp4) << std::endl;
+    std::cout << exp5 << "  :  " << isCalculableExpression(exp5) << std::endl;
+    std::cout << exp6 << "  :  " << isCalculableExpression(exp6) << std::endl;
+    std::cout << exp7 << "  :  " << isCalculableExpression(exp7) << std::endl;
+    std::cout << exp8 << "  :  " << isCalculableExpression(exp8) << std::endl;
+    std::cout << exp9 << "  :  " << isCalculableExpression(exp9) << std::endl;
+    std::cout << exp10 << "  :  " << isCalculableExpression(exp10) << std::endl;
+    std::cout << exp11 << "  :  " << isCalculableExpression(exp11) << std::endl;
+    std::cout << exp12 << "  :  " << isCalculableExpression(exp12) << std::endl;
+    std::cout << exp13 << "  :  " << isCalculableExpression(exp13) << std::endl << std::endl << std::endl;
+    std::cout << "Expressions calculable" << std::endl << std::endl;
+    std::cout << exp14 << "  :  " << isCalculableExpression(exp14) << std::endl;
+    std::cout << exp15 << "  :  " << isCalculableExpression(exp15) << std::endl;
+    std::cout << exp16 << "  :  " << isCalculableExpression(exp16) << std::endl;
+    std::cout << exp17 << "  :  " << isCalculableExpression(exp17) << std::endl;
+    std::cout << exp18 << "  :  " << isCalculableExpression(exp18) << std::endl;
+    std::cout << exp19 << "  :  " << isCalculableExpression(exp19) << std::endl;
+    std::cout << exp20 << "  :  " << isCalculableExpression(exp20) << std::endl;
+    std::cout << exp21 << "  :  " << isCalculableExpression(exp21) << std::endl;
+    std::cout << exp22 << "  :  " << isCalculableExpression(exp22) << std::endl;
+    std::cout << exp23 << "  :  " << isCalculableExpression(exp23) << std::endl;
+
+    std::cout << std::endl << std::endl << std::endl
+                << "****** FIN DU TEST DE REGRESSION DE MATRIXLIBRARY******"
+                << std::endl << std::endl ;
 }
