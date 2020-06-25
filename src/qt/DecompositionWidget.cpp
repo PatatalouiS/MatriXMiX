@@ -130,7 +130,7 @@ void DecompositionWidget::constructType(const type t) {
             result2->setText("Matrice C*");
             setSortFunction([](const Matrix* a) -> bool {
                 return a->isSQMatrix() &&
-                        a->isSQMatrix() &&
+                        a->isSymetric() &&
                         a->isPositiveDefinite();
             });
             operation = [](const Matrix* a) -> pair<Matrix, Matrix> {
