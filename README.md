@@ -1,6 +1,7 @@
 
 <div align='center'>
 	<img src='http://storage.patatalouis.fr/logo.png'/>
+	<p> GNU/GPL v3 </p>
 </div>
 
 <h1> Introduction </h1>
