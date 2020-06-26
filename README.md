@@ -54,7 +54,7 @@ Which will generate the following executables in <code><b>./bin</b></code> folde
 	<li><b>MatriXMiX</b> : the MatriXMiX app in graphic version</li>
 	<li><b>MatriXMiX_TXT</b> : A TXT Version of MatriXMiX </li>
 	<li><b>MatriXMiX_Test</b> : regression tests for MatriXMiX </li>
-	<li><b>libMatriXMiX.a</b> : a static lib of our Matrix Module for your <code><b>C++</code></b> programs </li>
+	<li><b>libMatriXMiX.a</b> : a static lib of our Matrix Module for your <code><b>C++</b></code> programs </li>
 </ul>
 
 And execute MatriXMiX with :
