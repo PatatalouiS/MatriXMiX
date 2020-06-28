@@ -39,10 +39,6 @@ QString complexToQLaTeX(const std::complex<double> & v) {
     return QString::fromStdString(Utils::complex2LaTeX(v));
 }
 
-QString doubleToQLaTeX(const double & d) {
-    return QString::fromStdString(Utils::print(d));
-}
-
 }
 
 
