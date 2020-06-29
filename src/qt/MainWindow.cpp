@@ -30,24 +30,6 @@ along with MatriXMiX.  If not, see <https://www.gnu.org/licenses/>
 
 MainWindow::MainWindow() : QMainWindow()
 {
-    Matrix a (3,3,
-    {
-        {1, 2}, 2, 0,
-        4, {0, -3}, {0, 1},
-        {0, -1}, 8, {2, 0}
-
-                         });
-
-    Matrix b (3, 1,
-    {
-        1, 2, 3
-
-              });
-
-    library.addMatrix("A", a);
-    library.addMatrix("B", b);
-    // Nouvelles matrices
-
     libraryWindow = new LibraryWindow(this, &library);
     matrixmixWindow = new MatriXMiXWindow(this, &library);
 
