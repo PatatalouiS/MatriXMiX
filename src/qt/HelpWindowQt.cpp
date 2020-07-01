@@ -57,10 +57,10 @@ HelpWindowQt::HelpWindowQt(QWidget* parent) : QDialog (parent)
                 "subcontrol-position:top left;"
                 "font-weight:75; color: #283676;}");
 
-    QLabel* defIntro = new QLabel("L'afichage graphique de l'application MatriXMix"
+    QLabel* defIntro = new QLabel("L'affichage graphique de l'application MatriXMiX"
                                   " a été réalisé à l'aide de la librarie QT. "
-                                  "Des classes prédéfinis \n fournis par la "
-                                  "librarie QT ont été utilisées.");
+                                  "Des classes prédéfinies \net fournies par la "
+                                  "librairie QT ont été utilisées.");
 
     documentation = new QGroupBox(tr("Documentation"));
     documentation->setFont(font);

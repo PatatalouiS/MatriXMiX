@@ -135,7 +135,7 @@ void OpChoiceWidget::setOperationsList(const OpType& type) {
         "Division (A/B)",
         "Multiplication (A*lambda)",
         "Puissance (A^n)",
-        "Transposée",
+        "Adjointe",
         "Déterminant",
         "Trace",
         "Inverse",

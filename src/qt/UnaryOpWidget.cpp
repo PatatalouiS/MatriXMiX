@@ -230,11 +230,11 @@ void UnaryOpWidget:: constructType(const type &t)
         }
         case TRANSPOSE:
         {
-            setTitle("Matrice Transposée");
+            setTitle("Matrice Adjointe");
             operation = [](MatrixPair a) -> QVariant
             {
                 QVariant resv;
-                resv.setValue(Matrix(a.second->transposeMatrix()));
+                resv.setValue(Matrix(a.second->conjugateTranspose()));
                 return resv;
             };
             break;
